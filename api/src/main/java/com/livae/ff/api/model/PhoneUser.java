@@ -33,7 +33,6 @@ public class PhoneUser implements Serializable {
 	@Index
 	private String authToken;
 
-
 	public PhoneUser() {
 
 	}

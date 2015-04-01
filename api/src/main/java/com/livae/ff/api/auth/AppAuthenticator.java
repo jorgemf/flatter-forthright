@@ -6,8 +6,6 @@ import com.livae.ff.api.model.PhoneUser;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.livae.ff.api.OfyService.ofy;
-
 public class AppAuthenticator implements Authenticator {
 
 	public AppAuthenticator() {

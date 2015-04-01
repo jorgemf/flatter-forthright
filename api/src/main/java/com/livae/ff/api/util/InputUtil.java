@@ -1,5 +1,8 @@
 package com.livae.ff.api.util;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.livae.ff.api.Settings;
 
 public class InputUtil {
@@ -23,8 +26,21 @@ public class InputUtil {
 		return limit;
 	}
 
-	public static boolean isValidNumber(Long number) {
-		// TODO check it is a valid phone number
-		return false;
+	public static Long getValidNumber(String number, String countryCode) {
+		try {
+			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+			Phonenumber.PhoneNumber phoneNumber = null;
+			phoneNumber = phoneUtil.parseAndKeepRawInput(number, countryCode);
+			PhoneNumberUtil.PhoneNumberType numberType = phoneUtil.getNumberType(phoneNumber);
+			if (phoneUtil.isValidNumber(phoneNumber) &&
+				numberType == PhoneNumberUtil.PhoneNumberType.MOBILE) {
+				return Long.parseLong(Integer.toString(phoneNumber.getCountryCode()) +
+									  Long.toString(phoneNumber.getNationalNumber()));
+			} else {
+				return null;
+			}
+		} catch (NumberParseException e) {
+			return null;
+		}
 	}
 }

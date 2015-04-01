@@ -1,8 +1,109 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-    </style>
+	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/primary</item>
+		<item name="colorPrimaryDark">@color/primaryDark</item>
+		<item name="colorAccent">@color/accent</item>
+		<item name="android:textColorPrimary">@color/black_light</item>
+		<item name="android:textColorPrimaryInverse">@color/white</item>
+		<item name="android:textColorSecondary">@color/grey_dark</item>
+		<item name="android:textColorSecondaryInverse">@color/grey_light</item>
+		<item name="android:textColorTertiary">@color/grey</item>
+		<item name="android:textColorTertiaryInverse">@color/grey</item>
+		<item name="android:windowBackground">@color/blue_light</item>
+		<item name="android:dialogTheme">@style/Dialog</item>
+		<item name="android:alertDialogTheme">@style/Dialog</item>
+		<item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
+		<item name="android:textAppearanceSmallInverse">@style/TextAppearance.Small.Inverse</item>
+		<item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
+		<item name="android:textAppearanceMediumInverse">@style/TextAppearance.Medium.Inverse</item>
+		<item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
+		<item name="android:textAppearanceLargeInverse">@style/TextAppearance.Large.Inverse</item>
+		<item name="android:windowSoftInputMode">adjustResize</item>
+
+		<item name="android:buttonStyle">@style/ButtonWhite</item>
+
+	</style>
+
+	<style name="NetworkImage">
+		<item name="actualImageScaleType">fitCenter</item>
+		<item name="placeholderImage">@color/darker</item>
+		<item name="placeholderImageScaleType">fitCenter</item>
+	</style>
+
+	<style name="CircularImage" parent="NetworkImage">
+		<item name="roundAsCircle">true</item>
+	</style>
+
+	<style name="ButtonWhite" parent="android:Widget.Holo.Button">
+		<item name="android:background">@drawable/apptheme_btn_default_holo_dark</item>
+		<item name="android:textColor">@color/black_light</item>
+	</style>
+
+	<style name="Toolbar" parent="Widget.AppCompat.Toolbar">
+		<item name="android:background">@color/blue</item>
+		<item name="popupTheme">@style/ToolbarPopup</item>
+		<item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+		<item name="titleTextAppearance">@style/ToolbarTitle</item>
+	</style>
+
+	<style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+		<item name="android:textSize">@dimen/text_size_large</item>
+	</style>
+
+	<style name="ToolbarPopup" parent="AppTheme">
+		<item name="android:colorBackground">@color/white</item>
+	</style>
+
+	<style name="Dialog" parent="android:Theme.Holo.Dialog">
+		<item name="android:background">@color/white</item>
+	</style>
+
+	<style name="EditText">
+		<item name="baseColor">@color/black</item>
+		<item name="errorColor">?colorAccent</item>
+		<item name="floatingLabel">normal</item>
+		<item name="helperTextAlwaysShown">true</item>
+		<item name="primaryColor">?colorPrimary</item>
+		<item name="android:ellipsize">end</item>
+		<item name="android:maxLines">1</item>
+	</style>
+
+	<style name="Button" parent="android:Widget.Holo.Button">
+		<item name="android:textColor">@color/button_flat</item>
+	</style>
+
+	<style name="Button.Borderless" parent="android:Widget.Holo.Button.Borderless">
+		<item name="android:textColor">@color/button_flat</item>
+	</style>
+
+	<style name="Button.Borderless.Colored"
+	       parent="android:Widget.Holo.Button.Borderless">
+		<item name="android:textColor">@color/button_flat_accent</item>
+	</style>
+
+	<style name="TextAppearance.Small" parent="TextAppearance.AppCompat.Small">
+		<item name="android:textSize">@dimen/text_size_small</item>
+	</style>
+
+	<style name="TextAppearance.Small.Inverse" parent="TextAppearance.AppCompat.Small.Inverse">
+		<item name="android:textSize">@dimen/text_size_small</item>
+	</style>
+
+	<style name="TextAppearance.Medium" parent="TextAppearance.AppCompat.Medium">
+		<item name="android:textSize">@dimen/text_size_medium</item>
+	</style>
+
+	<style name="TextAppearance.Medium.Inverse" parent="TextAppearance.AppCompat.Inverse">
+		<item name="android:textSize">@dimen/text_size_medium</item>
+	</style>
+
+	<style name="TextAppearance.Large" parent="TextAppearance.AppCompat.Large">
+		<item name="android:textSize">@dimen/text_size_large</item>
+	</style>
+
+	<style name="TextAppearance.Large.Inverse" parent="TextAppearance.AppCompat.Inverse">
+		<item name="android:textSize">@dimen/text_size_large</item>
+	</style>
 
 </resources>

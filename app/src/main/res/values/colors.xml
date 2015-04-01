@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="yellow">#ffd42a</color>
+	<color name="pink">#ffa1ff</color>
+	<color name="yellow_light">#fffff8e6</color>
+	<color name="pink_light">#ffffedff</color>
+	<color name="black">#000000</color>
+	<color name="black_light">#323232</color>
+	<color name="grey_dark">#777</color>
+	<color name="grey">#AAA</color>
+	<color name="grey_light">#D4D4D4</color>
+	<color name="white">#FFF</color>
+	<color name="darker">#33000000</color>
+
+	<!-- alias -->
+	<color name="primary_flatter">@color/pink</color>
+	<color name="primary_forthright">@color/yellow</color>
+	<color name="primary_flatter_light">@color/pink_light</color>
+	<color name="primary_forthright_light">@color/yellow_light</color>
+
+</resources>

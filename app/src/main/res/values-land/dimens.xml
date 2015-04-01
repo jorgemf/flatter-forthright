@@ -1,0 +1,4 @@
+<resources>
+	<dimen name="action_bar_padding">47dp</dimen>
+	<dimen name="action_bar_height_padding">48dp</dimen>
+</resources>

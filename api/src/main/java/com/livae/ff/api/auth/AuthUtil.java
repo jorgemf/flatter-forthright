@@ -12,12 +12,12 @@ import static com.livae.ff.api.OfyService.ofy;
 public class AuthUtil {
 
 	private static final byte[] KEY = {61 - 128, 163 - 128, 4 - 128, 48 - 128, 244 - 128, 148 - 128,
-			69 - 128, 133 - 128, 16 - 128, 111 - 128, 110 - 128,
-			237 - 128, 231 - 128, 70 - 128, 100 - 128, 178 - 128,
-			210 - 128, 144 - 128, 148 - 128, 221 - 128, 192 - 128,
-			254 - 128, 1 - 128, 242 - 128, 214 - 128, 210 - 128,
-			183 - 128, 229 - 128, 23 - 128, 130 - 128, 163 - 128,
-			102 - 128, 203 - 128};
+									   69 - 128, 133 - 128, 16 - 128, 111 - 128, 110 - 128,
+									   237 - 128, 231 - 128, 70 - 128, 100 - 128, 178 - 128,
+									   210 - 128, 144 - 128, 148 - 128, 221 - 128, 192 - 128,
+									   254 - 128, 1 - 128, 242 - 128, 214 - 128, 210 - 128,
+									   183 - 128, 229 - 128, 23 - 128, 130 - 128, 163 - 128,
+									   102 - 128, 203 - 128};
 
 	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
@@ -25,8 +25,8 @@ public class AuthUtil {
 		byte[] bytesLong = ByteBuffer.allocate(8).putLong(someId).array();
 		byte[] hash = hash(bytesLong);
 		byte[] bytes = ByteBuffer.allocate(32).putLong(SECURE_RANDOM.nextLong()).putLong(System
-				.currentTimeMillis())
-				.put(hash, 0, 16).array();
+																						   .currentTimeMillis())
+								 .put(hash, 0, 16).array();
 		for (int i = 0; i < bytes.length; i++) {
 			bytes[i] = (byte) (bytes[i] ^ KEY[i]);
 		}
@@ -62,7 +62,7 @@ public class AuthUtil {
 			int twoHalfs = 0;
 			do {
 				buf.append((0 <= halfByte) && (halfByte <= 9) ? (char) ('0' + halfByte)
-						: (char) ('a' + (halfByte - 10)));
+															  : (char) ('a' + (halfByte - 10)));
 				halfByte = b & 0x0F;
 			} while (twoHalfs++ < 1);
 		}

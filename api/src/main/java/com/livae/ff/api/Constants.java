@@ -5,7 +5,6 @@ package com.livae.ff.api;
 //import com.google.api.client.json.JsonFactory;
 //import com.google.api.client.json.jackson2.JacksonFactory;
 
-
 public class Constants {
 
 	public static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";

@@ -1,84 +1,84 @@
 import java.text.SimpleDateFormat
 
 def getBuildDate() {
-    return new SimpleDateFormat("yyMMddHH").format(new Date());
+	return new SimpleDateFormat("yyMMddHH").format(new Date());
 }
 
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+	compileSdkVersion 22
+	buildToolsVersion "22.0.1"
 
-    defaultConfig {
-        applicationId "com.livae.ff.app"
-        minSdkVersion 16
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
-        buildConfigField "int", "BUILD_DATE", getBuildDate()
-        buildConfigField "boolean", "DEV", "false"
-    }
-    signingConfigs {
-        release {
-            storeFile file(KEYSTORE_FILE)
-            storePassword KEYSTORE_PASSWORD
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PASSWORD
-        }
-    }
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            minifyEnabled true
-            shrinkResources true
-            debuggable false
-        }
-        debug {
-            signingConfig signingConfigs.release
-        }
-    }
-    productFlavors {
-        production {
-        }
-        dev {
-            versionName "development"
-            applicationId "com.livae.apphunt.app.dev"
-            minSdkVersion 15
-            buildConfigField "boolean", "DEV", "true"
-        }
-    }
+	defaultConfig {
+		applicationId "com.livae.ff.app"
+		minSdkVersion 16
+		targetSdkVersion 22
+		versionCode 1
+		versionName "1.0"
+		buildConfigField "int", "BUILD_DATE", getBuildDate()
+		buildConfigField "boolean", "DEV", "false"
+	}
+	signingConfigs {
+		release {
+			storeFile file(KEYSTORE_FILE)
+			storePassword KEYSTORE_PASSWORD
+			keyAlias KEY_ALIAS
+			keyPassword KEY_PASSWORD
+		}
+	}
+	buildTypes {
+		release {
+			signingConfig signingConfigs.release
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+			minifyEnabled true
+			shrinkResources true
+			debuggable false
+		}
+		debug {
+			signingConfig signingConfigs.release
+		}
+	}
+	productFlavors {
+		production {
+		}
+		dev {
+			versionName "development"
+			applicationId "com.livae.apphunt.app.dev"
+			minSdkVersion 15
+			buildConfigField "boolean", "DEV", "true"
+		}
+	}
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(path: ':api', configuration: 'android-endpoints')
-    compile project(':common')
-    compile 'com.android.support:support-v4:22.0.0'
-    compile 'com.android.support:recyclerview-v7:22.0.0'
-    compile 'com.android.support:appcompat-v7:22.0.0'
-    compile 'com.android.support:cardview-v7:22.0.0'
-    compile 'com.google.android.gms:play-services-analytics:7.0.0'
-    compile 'com.google.android.gms:play-services-gcm:7.0.0'
-    compile 'com.squareup.okhttp:okhttp:2.3.0'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
+	compile fileTree(dir: 'libs', include: ['*.jar'])
+	compile project(path: ':api', configuration: 'android-endpoints')
+	compile project(':common')
+	compile 'com.android.support:support-v4:22.0.0'
+	compile 'com.android.support:recyclerview-v7:22.0.0'
+	compile 'com.android.support:appcompat-v7:22.0.0'
+	compile 'com.android.support:cardview-v7:22.0.0'
+	compile 'com.google.android.gms:play-services-analytics:7.0.0'
+	compile 'com.google.android.gms:play-services-gcm:7.0.0'
+	compile 'com.squareup.okhttp:okhttp:2.3.0'
+	compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
 }
 
 buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.github.triplet.gradle:play-publisher:1.0.2'
-    }
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.github.triplet.gradle:play-publisher:1.0.2'
+	}
 }
 
 apply plugin: 'play'
 
 play {
-    serviceAccountEmail = '912982181540-t4mv71tkl7so07u4pa12tusqggnfnou9@developer.gserviceaccount.com'
-    pk12File = file('../flatter-forthright-853f79f83cc5.p12')
-    uploadImages = true
-    track = 'alpha'
+	serviceAccountEmail = '912982181540-t4mv71tkl7so07u4pa12tusqggnfnou9@developer.gserviceaccount.com'
+	pk12File = file('../flatter-forthright-853f79f83cc5.p12')
+	uploadImages = true
+	track = 'alpha'
 }

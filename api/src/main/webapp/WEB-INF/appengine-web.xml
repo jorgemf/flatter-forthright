@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-    <application>flatter-forthright</application>
-    <version>1</version>
-    <threadsafe>true</threadsafe>
+	<application>flatter-forthright</application>
+	<version>1</version>
+	<threadsafe>true</threadsafe>
 
-    <system-properties>
-        <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
+	<system-properties>
+		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
 
-        <property name="app.developers.email" value="ff@livae.com"/>
+		<property name="app.developers.email" value="ff@livae.com"/>
 
-        <property name="google.api.key" value="AIzaSyAnvfve2LB0jlxlFa1Cz1LZ-hCbNNcTdtE"/>
-        <property name="google.client.id"
-                  value="912982181540-n4jhed6tvtcf9p7prl2svefbu7vkkot9.apps.googleusercontent.com"/>
-    </system-properties>
+		<property name="google.api.key" value="AIzaSyAnvfve2LB0jlxlFa1Cz1LZ-hCbNNcTdtE"/>
+		<property name="google.client.id"
+		          value="912982181540-n4jhed6tvtcf9p7prl2svefbu7vkkot9.apps.googleusercontent.com"/>
+	</system-properties>
 </appengine-web-app>

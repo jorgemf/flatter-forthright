@@ -49,6 +49,9 @@
     <orderEntry type="library" exported="" name="appengine-endpoints-deps-1.9.18" level="project" />
     <orderEntry type="library" exported="" name="objectify-5.1.5" level="project" />
     <orderEntry type="library" exported="" name="gcm-server-1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="libphonenumber-7.0.4" level="project" />
+    <orderEntry type="library" exported="" name="prefixmapper-2.20" level="project" />
+    <orderEntry type="library" exported="" name="geocoder-2.20" level="project" />
     <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.18" level="project" />
     <orderEntry type="library" exported="" name="guava-18.0" level="project" />
     <orderEntry type="library" exported="" name="json-simple-1.1" level="project" />

@@ -26,7 +26,7 @@ public class AdminAuthenticator implements Authenticator {
 	public static boolean isAdminUser(PhoneUser user) {
 		Long phone = user.getPhone();
 		return ALLOWED_PHONES.contains(phone) ||
-				ofy().load().type(AdminUser.class).id(phone).now() != null;
+			   ofy().load().type(AdminUser.class).id(phone).now() != null;
 	}
 
 	@Override
@@ -34,7 +34,8 @@ public class AdminAuthenticator implements Authenticator {
 		String token = request.getHeader("Authorization");
 		if (token != null) {
 			try {
-				PhoneUser phoneUser = ofy().load().type(PhoneUser.class).filter("token", token).first().safe();
+				PhoneUser phoneUser = ofy().load().type(PhoneUser.class).filter("token", token)
+										   .first().safe();
 				if (isAdminUser(phoneUser)) {
 					return new User(token);
 				} else if ("127.0.0.1".equals(request.getRemoteHost())) {
