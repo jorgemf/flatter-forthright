@@ -8,6 +8,7 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.annotation.Nonnull;
@@ -16,7 +17,6 @@ import static com.livae.ff.api.OfyService.ofy;
 
 @Entity
 @Cache
-@SuppressWarnings("UnusedDeclaration")
 public class PhoneUser implements Serializable {
 
 	@Id
@@ -78,4 +78,5 @@ public class PhoneUser implements Serializable {
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
 	}
+
 }

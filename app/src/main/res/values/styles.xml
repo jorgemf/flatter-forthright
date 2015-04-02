@@ -1,16 +1,14 @@
 <resources>
 
-	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-		<item name="colorPrimary">@color/primary</item>
-		<item name="colorPrimaryDark">@color/primaryDark</item>
-		<item name="colorAccent">@color/accent</item>
+	<style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimaryDark">@color/darker</item>
+		<item name="colorAccent">@color/black</item>
 		<item name="android:textColorPrimary">@color/black_light</item>
 		<item name="android:textColorPrimaryInverse">@color/white</item>
 		<item name="android:textColorSecondary">@color/grey_dark</item>
 		<item name="android:textColorSecondaryInverse">@color/grey_light</item>
 		<item name="android:textColorTertiary">@color/grey</item>
 		<item name="android:textColorTertiaryInverse">@color/grey</item>
-		<item name="android:windowBackground">@color/blue_light</item>
 		<item name="android:dialogTheme">@style/Dialog</item>
 		<item name="android:alertDialogTheme">@style/Dialog</item>
 		<item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
@@ -23,6 +21,16 @@
 
 		<item name="android:buttonStyle">@style/ButtonWhite</item>
 
+	</style>
+
+	<style name="BaseTheme.Flatter">
+		<item name="colorPrimary">@color/primary_flatter</item>
+		<item name="android:windowBackground">@color/primary_flatter_light</item>
+	</style>
+
+	<style name="BaseTheme.ForthRight">
+		<item name="colorPrimary">@color/primary_forthright</item>
+		<item name="android:windowBackground">@color/primary_forthright_light</item>
 	</style>
 
 	<style name="NetworkImage">

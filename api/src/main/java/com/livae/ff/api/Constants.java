@@ -7,6 +7,8 @@ package com.livae.ff.api;
 
 public class Constants {
 
+	public static final Long RANDOM_LONG = 829371357082421158L;
+
 	public static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
 
 	public static final String HTTP_HEADER_CONTENT_LENGTH = "Content-Length";

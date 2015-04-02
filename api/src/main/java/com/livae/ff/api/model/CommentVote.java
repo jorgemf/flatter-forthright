@@ -11,7 +11,6 @@ import java.util.Date;
 import javax.annotation.Nonnull;
 
 @Entity
-@SuppressWarnings("UnusedDeclaration")
 public class CommentVote implements Serializable {
 
 	@Id

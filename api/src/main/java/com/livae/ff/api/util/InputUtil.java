@@ -43,4 +43,17 @@ public class InputUtil {
 			return null;
 		}
 	}
+
+	public static boolean isValidNumber(Long number) {
+		try {
+			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+			Phonenumber.PhoneNumber phoneNumber = null;
+			phoneNumber = phoneUtil.parseAndKeepRawInput("+" + Long.toString(number), null);
+			PhoneNumberUtil.PhoneNumberType numberType = phoneUtil.getNumberType(phoneNumber);
+			return phoneUtil.isValidNumber(phoneNumber) &&
+				   numberType == PhoneNumberUtil.PhoneNumberType.MOBILE;
+		} catch (NumberParseException e) {
+			return false;
+		}
+	}
 }

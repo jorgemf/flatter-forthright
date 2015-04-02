@@ -33,6 +33,8 @@ public abstract class AbstractActivity extends ActionBarActivity {
 
 	protected static final String LOG_TAG = "ACTIVITY";
 
+	private static final String SAVE_FRAGMENT_TYPE = "SAVE_FRAGMENT_TYPE";
+
 	private static final String STATE_SNACK_BAR_VISIBLE = "STATE_SNACK_BAR_VISIBLE";
 
 	private static final String STATE_SNACK_BAR_AUTOHIDE = "STATE_SNACK_BAR_AUTOHIDE";
@@ -60,6 +62,8 @@ public abstract class AbstractActivity extends ActionBarActivity {
 		}
 
 	};
+
+	private FRAGMENT_TYPE fragmentType;
 
 	private View snackBar;
 
@@ -305,9 +309,56 @@ public abstract class AbstractActivity extends ActionBarActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putSerializable(SAVE_FRAGMENT_TYPE, fragmentType);
 		if (snackBar != null && snackBar.getTag() == null) {
 			outState.putBoolean(STATE_SNACK_BAR_VISIBLE, snackBar.getVisibility() == View.VISIBLE);
 			outState.putBoolean(STATE_SNACK_BAR_AUTOHIDE, snackBarAutohide);
 		}
 	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_activity_card_flip);
+
+		if (savedInstanceState == null) {
+			fragmentType = FRAGMENT_TYPE.FLATTER;
+			getApplication().setTheme(R.style.Flatter);
+			getFragmentManager().beginTransaction().add(R.id.container, getFragment(fragmentType))
+								.commit();
+		} else {
+			fragmentType = (FRAGMENT_TYPE) savedInstanceState.getSerializable(SAVE_FRAGMENT_TYPE);
+		}
+	}
+
+	public void toggleApp() {
+		switch (fragmentType) {
+			case FLATTER:
+				fragmentType = FRAGMENT_TYPE.FORTHRIGHT;
+				getApplication().setTheme(R.style.ForthRight);
+				getFragmentManager().beginTransaction()
+									.setCustomAnimations(R.animator.card_flip_right_in,
+														 R.animator.card_flip_right_out,
+														 R.animator.card_flip_left_in,
+														 R.animator.card_flip_left_out)
+									.replace(R.id.container, getFragment(fragmentType))
+									.addToBackStack(null).commit();
+				break;
+			case FORTHRIGHT:
+				fragmentType = FRAGMENT_TYPE.FLATTER;
+				getApplication().setTheme(R.style.Flatter);
+				getFragmentManager().beginTransaction()
+									.setCustomAnimations(R.animator.card_flip_left_in,
+														 R.animator.card_flip_left_out,
+														 R.animator.card_flip_right_in,
+														 R.animator.card_flip_right_out)
+									.replace(R.id.container, getFragment(fragmentType))
+									.addToBackStack(null).commit();
+				break;
+		}
+	}
+
+	protected abstract Fragment getFragment(FRAGMENT_TYPE fragmentType);
+
+	public enum FRAGMENT_TYPE {FLATTER, FORTHRIGHT}
 }

@@ -12,7 +12,6 @@ import static com.livae.ff.api.OfyService.ofy;
 
 @Entity
 @Cache
-@SuppressWarnings("UnusedDeclaration")
 public class AdminUser implements Serializable {
 
 	@Id

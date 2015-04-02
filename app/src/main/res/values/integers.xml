@@ -2,4 +2,6 @@
 <resources>
 	<integer name="snack_bar_autohide_delay">4000</integer>
 	<integer name="default_preload_ahead">3</integer>
+	<integer name="card_flip_time_full">400</integer>
+	<integer name="card_flip_time_half">200</integer>
 </resources>

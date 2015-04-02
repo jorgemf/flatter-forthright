@@ -1,8 +1,7 @@
 <resources>
 
-	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-		<item name="colorPrimary">@color/primary</item>
-		<item name="colorPrimaryDark">@color/primaryDark</item>
+	<style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimaryDark">@color/darker</item>
 		<item name="colorAccent">@color/accent</item>
 		<item name="android:textColorPrimary">@color/black_light</item>
 		<item name="android:textColorPrimaryInverse">@color/white</item>
@@ -10,9 +9,7 @@
 		<item name="android:textColorSecondaryInverse">@color/grey_light</item>
 		<item name="android:textColorTertiary">@color/grey</item>
 		<item name="android:textColorTertiaryInverse">@color/grey</item>
-		<item name="android:windowBackground">@color/blue_light</item>
 		<item name="android:dialogTheme">@style/Dialog</item>
-		<item name="android:alertDialogTheme">@style/Dialog</item>
 		<item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
 		<item name="android:textAppearanceSmallInverse">@style/TextAppearance.Small.Inverse</item>
 		<item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
@@ -26,22 +23,41 @@
 
 		<item name="android:windowTranslucentStatus">true</item>
 		<item name="android:colorButtonNormal">@color/white</item>
-		<item name="android:colorControlHighlight">@color/controlHighlight</item>
 
 		<item name="android:windowContentTransitions">true</item>
-		<!--<item name="android:windowEnterTransition">@transition/fade</item>-->        <!--<item name="android:windowExitTransition">@transition/fade</item>-->
 		<item name="android:windowAllowEnterTransitionOverlap">true</item>
 		<item name="android:windowAllowReturnTransitionOverlap">true</item>
 		<item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
 		<item name="android:windowSharedElementExitTransition">@android:transition/move</item>
 	</style>
 
-	<style name="Dialog" parent="android:Theme.Material.Light.Dialog">
-		<item name="android:colorPrimary">@color/primary</item>
-		<item name="android:colorPrimaryDark">@color/primaryDark</item>
-		<item name="android:colorAccent">@color/accent</item>
+	<style name="BaseTheme.Flatter">
+		<item name="colorPrimary">@color/primary_flatter</item>
+		<item name="android:windowBackground">@color/primary_flatter_light</item>
+		<item name="android:alertDialogTheme">@style/BaseDialog.Flatter</item>
+		<item name="android:colorControlHighlight">@color/primary_flatter</item>
+	</style>
+
+	<style name="BaseTheme.ForthRight">
+		<item name="colorPrimary">@color/primary_forthright</item>
+		<item name="android:windowBackground">@color/primary_forthright_light</item>
+		<item name="android:alertDialogTheme">@style/BaseDialog.ForthRight</item>
+		<item name="android:colorControlHighlight">@color/primary_forthright</item>
+	</style>
+
+	<style name="BaseDialog" parent="android:Theme.Material.Light.Dialog">
+		<item name="android:colorPrimaryDark">@color/darker</item>
+		<item name="android:colorAccent">@color/black</item>
 		<item name="android:background">@color/white</item>
 		<item name="android:windowTitleStyle">@style/TitleDialog</item>
+	</style>
+
+	<style name="BaseDialog.Flatter">
+		<item name="android:colorPrimary">@color/primary_flatter</item>
+	</style>
+
+	<style name="BaseDialog.ForthRight">
+		<item name="android:colorPrimary">@color/primary_forthright</item>
 	</style>
 
 	<style name="TitleDialog" parent="android:TextAppearance.Material.DialogWindowTitle">
