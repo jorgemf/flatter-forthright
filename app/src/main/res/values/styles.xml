@@ -49,9 +49,8 @@
 	</style>
 
 	<style name="Toolbar" parent="Widget.AppCompat.Toolbar">
-		<item name="android:background">@color/blue</item>
 		<item name="popupTheme">@style/ToolbarPopup</item>
-		<item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+		<item name="theme">@style/ThemeOverlay.AppCompat.ActionBar</item>
 		<item name="titleTextAppearance">@style/ToolbarTitle</item>
 	</style>
 
@@ -59,8 +58,16 @@
 		<item name="android:textSize">@dimen/text_size_large</item>
 	</style>
 
-	<style name="ToolbarPopup" parent="AppTheme">
+	<style name="ToolbarPopup" parent="BaseTheme">
 		<item name="android:colorBackground">@color/white</item>
+	</style>
+
+	<style name="Toolbar.Forthright">
+		<item name="android:background">@color/primary_forthright</item>
+	</style>
+
+	<style name="Toolbar.Flatter">
+		<item name="android:background">@color/primary_flatter</item>
 	</style>
 
 	<style name="Dialog" parent="android:Theme.Holo.Dialog">

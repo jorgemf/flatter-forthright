@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+	<android.support.v7.widget.CardView
+		android:id="@+id/card_view"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:elevation="@dimen/space_small"
+		android:layout_gravity="center"
+		android:layout_margin="@dimen/space_normal"
+		android:minWidth="@dimen/item_user_width"
+		android:padding="@dimen/space_normal"
+		card_view:cardCornerRadius="@dimen/card_view_round_corner"
+		xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+		<RelativeLayout
+			android:id="@+id/clickable_container"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="?android:attr/selectableItemBackground"
+			android:orientation="vertical"
+			android:padding="@dimen/space_normal">
+
+			<TextView
+				android:id="@+id/user_flagged_times"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentTop="true"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:textColor="@color/accent"
+				android:visibility="gone"/>
+
+			<com.facebook.drawee.view.SimpleDraweeView
+				android:id="@+id/user_image"
+				style="@style/CircularImage"
+				android:layout_width="@dimen/item_user_image_size"
+				android:layout_height="@dimen/item_user_image_size"
+				android:layout_alignParentTop="true"
+				android:layout_centerHorizontal="true"/>
+
+			<TextView
+				android:id="@+id/relationship"
+				android:layout_width="@dimen/item_user_relationship_size"
+				android:layout_height="@dimen/item_user_relationship_size"
+				android:background="@drawable/relationship_background"
+				android:gravity="center"
+				android:layout_alignLeft="@id/user_image"
+				android:layout_alignStart="@id/user_image"
+				android:layout_alignTop="@id/user_image"
+				android:text="F"
+				android:textAppearance="?android:attr/textAppearanceLargeInverse"
+				android:textColor="@color/white"
+				android:textStyle="bold"
+				tools:ignore="HardcodedText"/>
+
+			<TextView
+				android:id="@+id/user_name"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:ellipsize="end"
+				android:gravity="center"
+				android:layout_below="@id/user_image"
+				android:layout_marginTop="@dimen/space_medium"
+				android:maxLines="1"
+				android:text="@string/lorem_ipsum"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textColor="@color/grey_dark"/>
+
+			<TextView
+				android:id="@+id/user_tagline"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:ellipsize="end"
+				android:gravity="center"
+				android:layout_below="@id/user_name"
+				android:layout_marginTop="@dimen/space_small"
+				android:lines="2"
+				android:text="@string/lorem_ipsum"
+				android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+		</RelativeLayout>
+	</android.support.v7.widget.CardView>
+</FrameLayout>

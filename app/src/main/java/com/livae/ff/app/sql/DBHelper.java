@@ -7,9 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-	private static final String NAME = "apphunt.sqlite";
+	private static final String NAME = "ff.sqlite";
 
-	private static final int VERSION = 2;
+	private static final int VERSION = 1;
 
 	private static DBHelper instance;
 
@@ -36,11 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase sqLiteDatabase) {
 		try {
-			sqLiteDatabase.execSQL(Table.AppEntry.CREATE_SQL);
 			sqLiteDatabase.execSQL(Table.Comment.CREATE_SQL);
-			sqLiteDatabase.execSQL(Table.User.CREATE_SQL);
-			sqLiteDatabase.execSQL(Table.UserApplicationRelated.CREATE_SQL);
-			sqLiteDatabase.execSQL(Table.Vote.CREATE_SQL);
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 		}
@@ -49,10 +45,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 		switch (oldVersion) {
-			case 2: // current version
-			case 3: // next version
-				sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.User.NAME);
-				sqLiteDatabase.execSQL(Table.User.CREATE_SQL);
+			case 1: // current version
+			case 2: // next version
 		}
 	}
 
@@ -68,11 +62,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	private void clearData(SQLiteDatabase sqLiteDatabase) {
-		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.AppEntry.NAME);
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Comment.NAME);
-		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.User.NAME);
-		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.UserApplicationRelated.NAME);
-		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Vote.NAME);
 		onCreate(sqLiteDatabase);
 	}
 }

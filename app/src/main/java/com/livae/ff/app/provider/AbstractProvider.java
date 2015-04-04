@@ -7,16 +7,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.livae.apphunt.app.BuildConfig;
-import com.livae.apphunt.app.sql.DBHelper;
+import com.livae.ff.app.BuildConfig;
+import com.livae.ff.app.sql.DBHelper;
 
 public abstract class AbstractProvider extends ContentProvider {
 
 	protected static final String CONTENT_URI_BASE = "content://";
 
-	protected static final String TYPE_LIST_BASE = "vnd.android.cursor.dir/vnd.apphunt.livae.";
+	protected static final String TYPE_LIST_BASE = "vnd.android.cursor.dir/vnd.ff.livae.";
 
-	protected static final String TYPE_ITEM_BASE = "vnd.android.cursor.item/vnd.apphunt.livae.";
+	protected static final String TYPE_ITEM_BASE = "vnd.android.cursor.item/vnd.ff.livae.";
 
 	protected UriMatcher uriMatcher;
 
@@ -29,7 +29,7 @@ public abstract class AbstractProvider extends ContentProvider {
 	public static String getAuthority(Class objectClass) {
 		String authority = objectClass.getCanonicalName();
 		if (BuildConfig.DEV) {
-			authority = authority.replace("com.livae.apphunt.app.", "com.livae.apphunt.app.dev.");
+			authority = authority.replace("com.livae.ff.app.", "com.livae.ff.app.dev.");
 		}
 		return authority;
 	}

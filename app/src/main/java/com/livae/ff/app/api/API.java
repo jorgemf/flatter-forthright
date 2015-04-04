@@ -7,10 +7,9 @@ import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.okhttp.OkHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.livae.ff.api.ff.Apphunt;
-import com.livae.ff.api.ff.ApphuntRequest;
-import com.livae.ff.api.ff.ApphuntRequestInitializer;
-import com.livae.ff.api.ff.model.Version;
+import com.livae.ff.api.ff.Ff;
+import com.livae.ff.api.ff.FfRequest;
+import com.livae.ff.api.ff.FfRequestInitializer;
 import com.livae.ff.app.AppUser;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.BuildConfig;
@@ -24,9 +23,9 @@ public class API {
 
 	private static API instance = new API(Settings.API_URL);
 
-	private Apphunt endpoint;
+	private Ff endpoint;
 
-	private Admin adminEndpoint;
+//	private Admin adminEndpoint;
 
 	private API(String url) {
 		GoogleClientRequestInitializer initializer = new GoogleClientRequestInitializer() {
@@ -38,10 +37,10 @@ public class API {
 				}
 			}
 		};
-		ApphuntRequestInitializer apphuntRequestInitializer = (new ApphuntRequestInitializer() {
+		FfRequestInitializer apphuntRequestInitializer = (new FfRequestInitializer() {
 			@Override
-			protected void initializeApphuntRequest(ApphuntRequest<?> request) throws IOException {
-				super.initializeApphuntRequest(request);
+			protected void initializeFfRequest(FfRequest<?> request) throws IOException {
+				super.initializeFfRequest(request);
 				AppUser appUser = Application.appUser();
 				if (appUser.isDeviceConnected()) {
 					HttpHeaders headers = request.getRequestHeaders();
@@ -52,10 +51,9 @@ public class API {
 		});
 		OkHttpTransport okHttpTransport = new OkHttpTransport();
 		JacksonFactory jacksonFactory = new JacksonFactory();
-		endpoint = new Apphunt.Builder(okHttpTransport, jacksonFactory, null).setRootUrl(url)
-																			 .setGoogleClientRequestInitializer(initializer)
-																			 .setApphuntRequestInitializer(apphuntRequestInitializer)
-																			 .build();
+		Ff.Builder builder = new Ff.Builder(okHttpTransport, jacksonFactory, null);
+		endpoint = builder.setRootUrl(url).setGoogleClientRequestInitializer(initializer)
+						  .setFfRequestInitializer(apphuntRequestInitializer).build();
 //		if (Application.isAdmin()) {
 //			AdminRequestInitializer adminRequestInitializer = (new AdminRequestInitializer() {
 //				@Override
@@ -84,32 +82,16 @@ public class API {
 		instance = new API(url);
 	}
 
-	public static Version version() throws IOException {
-		return instance.endpoint.apiEndpoint().version(Settings.PLATFORM.name()).execute();
-	}
+//	public static Version version() throws IOException {
+//		return instance.endpoint.apiEndpoint().version(Settings.PLATFORM.name()).execute();
+//	}
 
 	public static void wakeup() throws IOException {
 		instance.endpoint.apiEndpoint().wakeup().execute();
 	}
 
-	public static Apphunt.ApplicationEndpoint app() {
-		return instance.endpoint.applicationEndpoint();
-	}
-
-	public static Apphunt.UserEndpoint user() {
-		return instance.endpoint.userEndpoint();
-	}
-
-	public static Apphunt.UserDeviceEndpoint device() {
-		return instance.endpoint.userDeviceEndpoint();
-	}
-
-	public static Apphunt.CommentEndpoint comment() {
-		return instance.endpoint.commentEndpoint();
-	}
-
-	public static Admin.AdminEndpoint admin() {
-		return instance.adminEndpoint.adminEndpoint();
+	public static Ff.ApiEndpoint endpoint() {
+		return instance.endpoint.apiEndpoint();
 	}
 
 }

@@ -7,112 +7,62 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.livae.android.loading.CursorRecyclerAdapter;
-import com.livae.apphunt.app.AppUser;
-import com.livae.apphunt.app.Application;
-import com.livae.apphunt.app.R;
-import com.livae.apphunt.app.listener.ApplicationClickListener;
-import com.livae.apphunt.app.listener.CommentActionListener;
-import com.livae.apphunt.app.listener.UserClickListener;
-import com.livae.apphunt.app.sql.Table;
-import com.livae.apphunt.app.viewholders.CommentsViewHolder;
-import com.livae.apphunt.common.Constants.CommentVoteType;
-import com.livae.apphunt.common.Constants.Relationship;
+import com.livae.ff.app.R;
+import com.livae.ff.app.listener.CommentActionListener;
+import com.livae.ff.app.sql.Table;
+import com.livae.ff.app.viewholders.CommentsViewHolder;
+import com.livae.ff.common.Constants.CommentVoteType;
 
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
-public class CommentsAdapter extends CursorRecyclerAdapter<CommentsViewHolder> {
+public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 
 	public static final String[] PROJECTION = {Table.Comment.T_ID, Table.Comment.USER_ID,
-											   Table.Comment.APPLICATION_ENTRY_ID,
-											   Table.Comment.DATE, Table.Comment.UP_VOTES,
-											   Table.Comment.DOWN_VOTES, Table.Comment.COMMENT,
-											   Table.Comment.VOTE_TYPE, Table.User.IMAGE_URL,
-											   Table.User.USER_NAME, Table.User.TAGLINE,
-											   Table.User.ANONYMOUS, Table.AppEntry.TITLE,
-											   Table.AppEntry.DESCRIPTION, Table.AppEntry.IMAGE_URL,
-											   Table.UserApplicationRelated.RELATIONSHIP};
+											   Table.Comment.PHONE, Table.Comment.DATE,
+											   Table.Comment.AGREE_VOTES, Table.Comment.VOTE_TYPE,
+											   Table.Comment.DISAGREE_VOTES, Table.Comment.COMMENT};
 
 	private int iId;
 
 	private int iUserId;
 
-	private int iUserImageUrl;
-
-	private int iUserName;
-
-	private int iUserTagline;
-
-	private int iUserAnonymous;
-
-	private int iAppId;
-
-	private int iAppImageUrl;
-
-	private int iAppTitle;
-
-	private int iAppDescription;
+	private int iPhone;
 
 	private int iDate;
 
-	private int iUpVotes;
+	private int iAgreeVotes;
 
-	private int iDownVotes;
+	private int iDisagreeVotes;
 
 	private int iComment;
 
 	private int iVoteType;
 
-	private int iRelationship;
-
 	private CommentActionListener commentActionListener;
 
-	private UserClickListener userClickListener;
-
-	private ApplicationClickListener applicationClickListener;
-
 	private LayoutInflater layoutInflater;
-
-	private boolean userAnonymous;
 
 	private Long userId;
 
 	private HashMap<Long, CommentVoteType> commentVoteTypeHashMap;
 
-	private boolean showApp;
-
-	private long updateCommentWindow;
-
-	private HashMap<Long, String> commentsUpdated;
-
 	public CommentsAdapter(@Nonnull Activity activity,
-						   @Nonnull CommentActionListener commentActionListener,
-						   @Nonnull UserClickListener userClickListener,
-						   @Nonnull ApplicationClickListener applicationClickListener) {
+						   @Nonnull CommentActionListener commentActionListener) {
 		layoutInflater = activity.getLayoutInflater();
 		this.commentActionListener = commentActionListener;
-		this.userClickListener = userClickListener;
-		this.applicationClickListener = applicationClickListener;
-		AppUser appUser = Application.appUser();
-		userAnonymous = appUser.isAnonymous();
-		userId = appUser.getUserId();
 		commentVoteTypeHashMap = new HashMap<>();
-		commentsUpdated = new HashMap<>();
-		showApp = false;
-		int minutes = activity.getResources().getInteger(R.integer.comment_update_time_minutes);
-		updateCommentWindow = TimeUnit.MINUTES.toMillis(minutes);
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	@Override
 	public CommentsViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int type) {
 		View view = layoutInflater.inflate(R.layout.item_comment, viewGroup, false);
-		if (showApp) {
-			return new CommentsViewHolder(view, commentActionListener, applicationClickListener);
-		} else {
-			return new CommentsViewHolder(view, commentActionListener, userClickListener);
-		}
+		return new CommentsViewHolder(view, commentActionListener);
 	}
 
 	public void votedComment(Long commentId, CommentVoteType voteType) {
@@ -129,20 +79,12 @@ public class CommentsAdapter extends CursorRecyclerAdapter<CommentsViewHolder> {
 	public void findIndexes(Cursor cursor) {
 		iId = cursor.getColumnIndex(Table.Comment.ID);
 		iUserId = cursor.getColumnIndex(Table.Comment.USER_ID);
-		iUserImageUrl = cursor.getColumnIndex(Table.User.IMAGE_URL);
-		iUserName = cursor.getColumnIndex(Table.User.USER_NAME);
-		iUserTagline = cursor.getColumnIndex(Table.User.TAGLINE);
-		iUserAnonymous = cursor.getColumnIndex(Table.User.ANONYMOUS);
-		iAppId = cursor.getColumnIndex(Table.Comment.APPLICATION_ENTRY_ID);
-		iAppImageUrl = cursor.getColumnIndex(Table.AppEntry.IMAGE_URL);
-		iAppTitle = cursor.getColumnIndex(Table.AppEntry.TITLE);
-		iAppDescription = cursor.getColumnIndex(Table.AppEntry.DESCRIPTION);
 		iDate = cursor.getColumnIndex(Table.Comment.DATE);
-		iUpVotes = cursor.getColumnIndex(Table.Comment.UP_VOTES);
-		iDownVotes = cursor.getColumnIndex(Table.Comment.DOWN_VOTES);
+		iAgreeVotes = cursor.getColumnIndex(Table.Comment.AGREE_VOTES);
+		iDisagreeVotes = cursor.getColumnIndex(Table.Comment.DISAGREE_VOTES);
 		iComment = cursor.getColumnIndex(Table.Comment.COMMENT);
 		iVoteType = cursor.getColumnIndex(Table.Comment.VOTE_TYPE);
-		iRelationship = cursor.getColumnIndex(Table.UserApplicationRelated.RELATIONSHIP);
+		iPhone = cursor.getColumnIndex(Table.Comment.PHONE);
 	}
 
 	@Override
@@ -232,15 +174,5 @@ public class CommentsAdapter extends CursorRecyclerAdapter<CommentsViewHolder> {
 		}
 		holder.setVotes(upVotes, downVotes);
 		holder.setVoteType(voteType);
-		holder.canBeUpdated(userId == this.userId &&
-							date + updateCommentWindow > System.currentTimeMillis());
-	}
-
-	public void setShowApp(boolean showApp) {
-		this.showApp = showApp;
-	}
-
-	public void setCommentText(Long id, String comment) {
-		commentsUpdated.put(id, comment);
 	}
 }
