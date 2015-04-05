@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
+public abstract class ReverseEndlessCursorAdapter<k extends RecyclerView.ViewHolder>
   extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	private static final int TYPE_ERROR = -2;
@@ -24,7 +24,7 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	private ViewCreator viewCreator;
 
-	public EndlessCursorAdapter(Context context, Cursor cursor, ViewCreator viewCreator) {
+	public ReverseEndlessCursorAdapter(Context context, Cursor cursor, ViewCreator viewCreator) {
 		this.layoutInflater = LayoutInflater.from(context);
 		isLoading = false;
 		isError = false;
@@ -49,32 +49,30 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	public void setIsLoading(boolean loading) {
 		if (loading != isLoading) {
-			int size = cursor == null ? 0 : cursor.getCount();
 			isLoading = loading;
 			if (isLoading) {
 				if (isError) {
 					isError = false;
-					notifyItemRemoved(size);
+					notifyItemRemoved(0);
 				}
-				notifyItemInserted(size);
+				notifyItemInserted(0);
 			} else {
-				notifyItemRemoved(size);
+				notifyItemRemoved(0);
 			}
 		}
 	}
 
 	public void setIsError(boolean error) {
 		if (error != isError) {
-			int size = cursor == null ? 0 : cursor.getCount();
 			isError = error;
 			if (isError) {
-				notifyItemInserted(size);
 				if (isLoading) {
 					isLoading = false;
-					notifyItemRemoved(size + 1);
+					notifyItemRemoved(0);
 				}
+				notifyItemInserted(0);
 			} else {
-				notifyItemRemoved(size);
+				notifyItemRemoved(0);
 			}
 		}
 	}
@@ -107,14 +105,10 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	public int getItemViewType(int position) {
 		int size = cursor == null ? 0 : cursor.getCount();
-		if (size == position) {
-			if (isError) {
-				return TYPE_ERROR;
-			} else {
-				return TYPE_LOADING;
-			}
-		} else if (size > position) {
+		if (isLoading && position == 0) {
 			return TYPE_LOADING;
+		} else if (isError && position == 0) {
+			return TYPE_ERROR;
 		}
 		return getCustomItemViewType(position);
 	}
