@@ -21,11 +21,13 @@ import com.livae.ff.api.model.Comment;
 import com.livae.ff.api.model.CommentVote;
 import com.livae.ff.api.model.Contact;
 import com.livae.ff.api.model.PhoneUser;
+import com.livae.ff.api.model.Version;
 import com.livae.ff.api.util.InputUtil;
 import com.livae.ff.api.v1.model.Contacts;
 import com.livae.ff.api.v1.model.Text;
 import com.livae.ff.common.Constants.CommentType;
 import com.livae.ff.common.Constants.CommentVoteType;
+import com.livae.ff.common.Constants.Platform;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -77,6 +79,15 @@ public class ApiEndpoint {
 
 	private static Long obfuscatePhone(Long userPhone, Long contactPhone) {
 		return userPhone ^ contactPhone ^ Constants.RANDOM_LONG;
+	}
+
+	@ApiMethod(path = "version/{platform}", httpMethod = ApiMethod.HttpMethod.GET)
+	public Version version(@Named("platform") Platform platform) throws NotFoundException {
+		Version version = Version.getVersion(platform);
+		if (version == null) {
+			throw new NotFoundException("Platform not found: " + platform.name());
+		}
+		return version;
 	}
 
 	@ApiMethod(path = "wakeup", httpMethod = ApiMethod.HttpMethod.GET)

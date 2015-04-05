@@ -2,17 +2,17 @@ package com.livae.ff.app.task;
 
 import android.support.v4.util.Pair;
 
-import com.livae.apphunt.api.apphunt.model.Comment;
-import com.livae.apphunt.app.Application;
-import com.livae.apphunt.app.api.API;
-import com.livae.apphunt.app.api.Model;
-import com.livae.apphunt.app.async.NetworkAsyncTask;
+import com.livae.ff.api.ff.model.Comment;
+import com.livae.ff.app.Application;
+import com.livae.ff.app.api.API;
+import com.livae.ff.app.api.Model;
+import com.livae.ff.app.async.NetworkAsyncTask;
 
 public class TaskNoVoteComment extends NetworkAsyncTask<Pair<Long, Integer>, Comment> {
 
 	@Override
 	protected Comment doInBackground(Pair<Long, Integer> param) throws Exception {
-		Comment comment = API.comment().noVoteComment(param.first).execute();
+		Comment comment = API.endpoint().noVoteComment(param.first).execute();
 		Model model = Application.model();
 		model.parse(comment);
 		model.save();

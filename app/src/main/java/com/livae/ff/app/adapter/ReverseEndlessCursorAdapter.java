@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.annotation.Nonnull;
+
 public abstract class ReverseEndlessCursorAdapter<k extends RecyclerView.ViewHolder>
   extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -14,7 +16,7 @@ public abstract class ReverseEndlessCursorAdapter<k extends RecyclerView.ViewHol
 
 	private static final int TYPE_LOADING = -3;
 
-	private LayoutInflater layoutInflater;
+	protected LayoutInflater layoutInflater;
 
 	private boolean isLoading;
 
@@ -24,7 +26,7 @@ public abstract class ReverseEndlessCursorAdapter<k extends RecyclerView.ViewHol
 
 	private ViewCreator viewCreator;
 
-	public ReverseEndlessCursorAdapter(Context context, Cursor cursor, ViewCreator viewCreator) {
+	public ReverseEndlessCursorAdapter(Context context, ViewCreator viewCreator) {
 		this.layoutInflater = LayoutInflater.from(context);
 		isLoading = false;
 		isError = false;
@@ -33,19 +35,28 @@ public abstract class ReverseEndlessCursorAdapter<k extends RecyclerView.ViewHol
 
 	public void setCursor(Cursor cursor) {
 		if (cursor != this.cursor) {
+			if (cursor != null) {
+				findIndexes(cursor);
+			}
 			int currentSize = this.cursor == null ? 0 : this.cursor.getCount();
 			int newSize = cursor == null ? 0 : cursor.getCount();
 			this.cursor = cursor;
 			int diff = newSize - currentSize;
+			int start = 0;
+			if (isLoading || isError) {
+				start++;
+			}
 			if (diff > 0) {
-				notifyItemRangeInserted(currentSize, diff);
+				notifyItemRangeInserted(start, diff);
 			} else if (diff < 0) {
-				notifyItemRangeRemoved(0, -diff);
+				notifyItemRangeRemoved(start, -diff);
 			}
 			setIsLoading(false);
 			setIsError(false);
 		}
 	}
+
+	protected abstract void findIndexes(@Nonnull Cursor cursor);
 
 	public void setIsLoading(boolean loading) {
 		if (loading != isLoading) {

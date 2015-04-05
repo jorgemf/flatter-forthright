@@ -1,6 +1,6 @@
 package com.livae.ff.app.task;
 
-import com.livae.apphunt.api.apphunt.model.Text;
+import com.livae.ff.api.ff.model.Text;
 
 public class TextId {
 

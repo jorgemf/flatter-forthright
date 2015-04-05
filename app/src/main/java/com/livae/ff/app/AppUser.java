@@ -4,15 +4,21 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.livae.ff.common.Constants.Profile;
+
 public class AppUser {
 
 	private static final String APP_VERSION = "ff.app.version";
 
 	private static final String CLOUD_MESSAGES_ID = "ff.device.cloud_messages.id";
 
-	private static final String USER_ID = "ff.user.id";
+	private static final String USER_PHONE = "ff.user.phone";
 
 	private static final String ACCESS_TOKEN = "ff.user.access_token";
+
+	private static final String USER_PROFILE = "ff.user.profile";
+
+	private static final String USER_COUNTRY_CODE = "ff.user.country_code";
 
 	private Integer appVersion;
 
@@ -20,7 +26,11 @@ public class AppUser {
 
 	private String accessToken;
 
-	private Long userId;
+	private Long userPhone;
+
+	private String countryCode;
+
+	private Profile profile;
 
 	private SharedPreferences prefs;
 
@@ -32,11 +42,13 @@ public class AppUser {
 		prefs = context.getSharedPreferences(Settings.PREFERENCES_USER_FILE, Context.MODE_PRIVATE);
 		appVersion = prefs.getInt(APP_VERSION, 0);
 		cloudMessagesId = prefs.getString(CLOUD_MESSAGES_ID, null);
-		userId = prefs.getLong(USER_ID, 0L);
-		if (userId == 0) {
-			userId = null;
+		countryCode = prefs.getString(USER_COUNTRY_CODE, null);
+		userPhone = prefs.getLong(USER_PHONE, 0L);
+		if (userPhone == 0) {
+			userPhone = null;
 		}
 		accessToken = prefs.getString(ACCESS_TOKEN, null);
+		setProfile(prefs.getString(USER_PROFILE, null));
 	}
 
 	public Integer getAppVersion() {
@@ -66,21 +78,55 @@ public class AppUser {
 		prefs.edit().putString(ACCESS_TOKEN, accessToken).apply();
 	}
 
-	public Long getUserId() {
-		return userId;
+	public Long getUserPhone() {
+		return userPhone;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-		if (userId == null) {
-			prefs.edit().remove(USER_ID).apply();
+	public void setUserPhone(Long userPhone) {
+		this.userPhone = userPhone;
+		if (userPhone == null) {
+			prefs.edit().remove(USER_PHONE).apply();
 		} else {
-			prefs.edit().putLong(USER_ID, userId).apply();
+			prefs.edit().putLong(USER_PHONE, userPhone).apply();
 		}
+	}
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+		prefs.edit().putString(USER_COUNTRY_CODE, countryCode).apply();
 	}
 
 	public boolean isDeviceConnected() {
 		return accessToken != null;
+	}
+
+	public Profile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+		if (profile == null) {
+			prefs.edit().putString(USER_PROFILE, null).apply();
+		} else {
+			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
+		}
+	}
+
+	public void setProfile(String profile) {
+		try {
+			if (profile == null) {
+				this.profile = null;
+			} else {
+				this.profile = Profile.valueOf(profile);
+			}
+			prefs.edit().putString(USER_PROFILE, profile).apply();
+		} catch (Exception ignore) {
+		}
 	}
 
 	public void clean(Context context) {

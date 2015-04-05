@@ -11,14 +11,11 @@ import com.livae.ff.app.api.API;
 import com.livae.ff.app.api.Model;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
-import com.livae.ff.app.service.TopPastService;
 import com.livae.ff.app.sql.DBHelper;
 import com.livae.ff.app.task.TaskWakeup;
 import com.livae.ff.common.Constants;
-import com.livae.ff.common.Constants.Connection;
 
-import org.apache.http.HttpStatus;
-
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 
 public class Application extends android.app.Application {
@@ -96,17 +93,9 @@ public class Application extends android.app.Application {
 		instance = this;
 		super.onCreate();
 		trackers = new HashMap<>();
+		getGoogleTracker(); // maybe fix the problem caught exceptions
 		CustomUncaughtExceptionHandler.configure();
 		DBHelper.clearData(this);
-//		if (BuildConfig.DEBUG) {
-//			DumperPluginsProvider dumper = Stetho.defaultDumperPluginsProvider(this);
-//			InspectorModulesProvider inspector = Stetho.defaultInspectorModulesProvider(this);
-//			Stetho.InitializerBuilder builder = Stetho.newInitializerBuilder(this)
-//													  .enableDumpapp(dumper)
-//													  .enableWebKitInspector(inspector);
-//			Stetho.initialize(builder.build());
-//		}
-
 		appUser = new AppUser(getApplicationContext());
 		setAdmin();
 		seeAdmin = false;
@@ -132,11 +121,10 @@ public class Application extends android.app.Application {
 			public void onError(CustomAsyncTask<Void, Void> task, Void param, Exception e) {
 				if (e instanceof GoogleJsonResponseException) {
 					GoogleJsonResponseException jsonException = (GoogleJsonResponseException) e;
-					if (jsonException.getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
+					if (jsonException.getStatusCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
 						AppUser user = Application.appUser();
 						user.setAccessToken(null);
-						user.setConnection((Connection) null);
-						user.setUserId(null);
+						user.setUserPhone(null);
 					}
 				}
 			}

@@ -1,111 +1,55 @@
 package com.livae.ff.app.viewholders;
 
-import android.content.Context;
-import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.livae.apphunt.app.Application;
-import com.livae.apphunt.app.R;
-import com.livae.apphunt.app.listener.UserClickListener;
-import com.livae.apphunt.app.utils.EnumUtils;
-import com.livae.apphunt.app.utils.ImageUtils;
-import com.livae.apphunt.common.Constants.Relationship;
+import com.livae.ff.app.listener.UserClickListener;
+import com.livae.ff.app.view.CircularImageView;
 
 public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-	private Long userId;
+	private Long userPhone;
 
-	private SimpleDraweeView userImage;
+	private TextView userNameTextView;
 
-	private TextView userRelationship;
-
-	private TextView userName;
-
-	private TextView userTagLine;
-
-	private TextView timesFlaggedText;
+	private CircularImageView userImageView;
 
 	private UserClickListener userClickListener;
-
-	private View cardView;
 
 	public UserViewHolder(View itemView, UserClickListener userClickListener) {
 		super(itemView);
 		this.userClickListener = userClickListener;
-		userImage = (SimpleDraweeView) itemView.findViewById(R.id.user_image);
-		userRelationship = (TextView) itemView.findViewById(R.id.relationship);
-		userRelationship.setOnClickListener(this);
-		userName = (TextView) itemView.findViewById(R.id.user_name);
-		userTagLine = (TextView) itemView.findViewById(R.id.user_tagline);
-		timesFlaggedText = (TextView) itemView.findViewById(R.id.user_flagged_times);
-		itemView.findViewById(R.id.clickable_container).setOnClickListener(this);
-		cardView = itemView.findViewById(R.id.card_view);
+		itemView.setOnClickListener(this);
+		userNameTextView = (TextView) itemView.findViewById(R.id.user_name);
+		userImageView = (CircularImageView) itemView.findViewById(R.id.user_image);
 	}
 
 	public void clear() {
-		userImage.setImageURI(null);
-		userRelationship.setText(null);
-		userName.setText(null);
-		userTagLine.setText(null);
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public void setUserImageUrl(String userImageUrl) {
-		if (userImageUrl == null) {
-			this.userImage.setImageResource(R.drawable.anom_user);
-		} else {
-			ImageUtils.loadDefault(this.userImage, userImageUrl);
-		}
-	}
-
-	public void setUserRelationship(Relationship userRelationship) {
-		if (userRelationship != null) {
-			this.userRelationship.setVisibility(View.VISIBLE);
-			Context context = this.userRelationship.getContext();
-			CharSequence c = EnumUtils.getRelationshipChar(context, userRelationship);
-			this.userRelationship.setText(c);
-		} else {
-			this.userRelationship.setVisibility(View.GONE);
-		}
-	}
-
-	public void setUserName(String userName) {
-		this.userName.setText(userName);
-		Typeface nameTypeFace = this.userName.getTypeface();
-		this.userName.setTypeface(Typeface.create(nameTypeFace, Typeface.NORMAL));
-		this.userName.setText(userName);
-		if (userName == null || userName.trim().length() == 0) {
-			this.userName.setTypeface(Typeface.create(nameTypeFace, Typeface.ITALIC));
-			this.userName.setText(R.string.anonymous);
-		}
-	}
-
-	public void setUserTagLine(String userTagLine) {
-		this.userTagLine.setText(userTagLine);
+		userImageView.setImageBitmap(null);
+		userNameTextView.setText(null);
+		userPhone = null;
 	}
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.relationship:
-				userClickListener.userRelationshipClicked();
-				break;
-			case R.id.clickable_container:
-				userClickListener.userClicked(userId, userImage, userName, userTagLine, cardView);
-		}
+		userClickListener.userClicked(userPhone, userNameTextView, userImageView);
 	}
 
-	public void setTimesFlagged(Integer timesFlagged) {
-		timesFlaggedText.setText(null);
-		if (timesFlagged != null && timesFlagged > 0 && Application.getSeeAdmin()) {
-			timesFlaggedText.setText(Integer.toString(timesFlagged));
-			timesFlaggedText.setVisibility(View.VISIBLE);
-		}
+	public Long getUserPhone() {
+		return userPhone;
+	}
+
+	public void setUserPhone(Long userPhone) {
+		this.userPhone = userPhone;
+	}
+
+	public void setUserName(CharSequence name) {
+		this.userNameTextView.setText(name);
+	}
+
+	public void setUserImageView(Drawable drawable) {
+		this.userImageView.setImageDrawable(drawable);
 	}
 }

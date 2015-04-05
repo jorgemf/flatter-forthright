@@ -1,12 +1,10 @@
 package com.livae.ff.app.adapter;
 
-import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.livae.android.loading.CursorRecyclerAdapter;
 import com.livae.ff.app.R;
 import com.livae.ff.app.listener.UserClickListener;
 import com.livae.ff.app.sql.Table;
@@ -23,27 +21,26 @@ public class UsersAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 
 	private UserClickListener userClickListener;
 
-	private LayoutInflater layoutInflater;
-
-	public UsersAdapter(@Nonnull Activity activity, @Nonnull UserClickListener userClickListener) {
-		layoutInflater = activity.getLayoutInflater();
+	public UsersAdapter(@Nonnull Context context, @Nonnull ViewCreator viewCreator,
+						@Nonnull UserClickListener userClickListener) {
+		super(context, viewCreator);
 		this.userClickListener = userClickListener;
 	}
 
 	@Override
-	public CommentsViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int type) {
+	protected void findIndexes(Cursor cursor) {
+		iId = cursor.getColumnIndex(Table.Comment.ID);
+	}
+
+	@Override
+	protected CommentsViewHolder createCustomViewHolder(final ViewGroup viewGroup, final int type) {
 		View view = layoutInflater.inflate(R.layout.item_user, viewGroup, false);
 		return new UserViewHolder(view, userClickListener);
 	}
 
 	@Override
-	public void findIndexes(Cursor cursor) {
-		iId = cursor.getColumnIndex(Table.Comment.ID);
-	}
-
-	@Override
-	public void onBindViewHolder(final CommentsViewHolder holder, final Cursor cursor,
-								 final int position) {
+	protected void bindCustomViewHolder(CommentsViewHolder holder, int position, Cursor cursor) {
 		holder.clear();
 	}
+
 }

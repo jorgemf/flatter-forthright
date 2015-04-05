@@ -6,9 +6,9 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.livae.ff.common.Constants.Profile;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 
 import javax.annotation.Nonnull;
@@ -32,6 +32,9 @@ public class PhoneUser implements Serializable {
 
 	@Index
 	private String authToken;
+
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+	private Profile profile;
 
 	public PhoneUser() {
 
@@ -79,4 +82,11 @@ public class PhoneUser implements Serializable {
 		this.authToken = authToken;
 	}
 
+	public Profile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+	}
 }

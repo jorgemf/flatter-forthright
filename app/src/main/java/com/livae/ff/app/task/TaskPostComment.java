@@ -1,29 +1,22 @@
 package com.livae.ff.app.task;
 
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.livae.apphunt.api.apphunt.Apphunt.CommentEndpoint.AddComment;
-import com.livae.apphunt.api.apphunt.model.Comment;
-import com.livae.apphunt.app.Application;
-import com.livae.apphunt.app.api.API;
-import com.livae.apphunt.app.api.Model;
-import com.livae.apphunt.app.async.NetworkAsyncTask;
+import android.support.v4.util.Pair;
 
-import org.apache.http.HttpStatus;
+import com.livae.ff.api.ff.model.Comment;
+import com.livae.ff.app.Application;
+import com.livae.ff.app.api.API;
+import com.livae.ff.app.api.Model;
+import com.livae.ff.app.async.NetworkAsyncTask;
+import com.livae.ff.common.Constants.CommentType;
 
-public class TaskPostComment extends NetworkAsyncTask<TextId, Comment> {
+public class TaskPostComment extends NetworkAsyncTask<Pair<TextId, CommentType>, Comment> {
 
 	@Override
-	protected Comment doInBackground(TextId params) throws Exception {
-		AddComment request;
-		try {
-			request = API.comment().addComment(params.getId(), params.getText());
-		} catch (GoogleJsonResponseException exception) {
-			if (exception.getDetails().getCode() == HttpStatus.SC_FORBIDDEN) {
-				Application.appUser().setCommentsLeft(0);
-			}
-			throw exception;
-		}
-		Comment comment = request.execute();
+	protected Comment doInBackground(Pair<TextId, CommentType> params) throws Exception {
+		TextId textId = params.first;
+		CommentType commentType = params.second;
+		Comment comment = API.endpoint().postComment(textId.getId(), commentType.name(),
+													 textId.getText()).execute();
 		Model model = Application.model();
 		model.parse(comment);
 		model.save();

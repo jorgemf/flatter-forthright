@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.annotation.Nonnull;
+
 public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
   extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -14,7 +16,7 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	private static final int TYPE_LOADING = -3;
 
-	private LayoutInflater layoutInflater;
+	protected LayoutInflater layoutInflater;
 
 	private boolean isLoading;
 
@@ -24,7 +26,7 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	private ViewCreator viewCreator;
 
-	public EndlessCursorAdapter(Context context, Cursor cursor, ViewCreator viewCreator) {
+	public EndlessCursorAdapter(@Nonnull Context context, @Nonnull ViewCreator viewCreator) {
 		this.layoutInflater = LayoutInflater.from(context);
 		isLoading = false;
 		isError = false;
@@ -33,6 +35,9 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	public void setCursor(Cursor cursor) {
 		if (cursor != this.cursor) {
+			if (cursor != null) {
+				findIndexes(cursor);
+			}
 			int currentSize = this.cursor == null ? 0 : this.cursor.getCount();
 			int newSize = cursor == null ? 0 : cursor.getCount();
 			this.cursor = cursor;
@@ -46,6 +51,8 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 			setIsError(false);
 		}
 	}
+
+	protected abstract void findIndexes(@Nonnull Cursor cursor);
 
 	public void setIsLoading(boolean loading) {
 		if (loading != isLoading) {
