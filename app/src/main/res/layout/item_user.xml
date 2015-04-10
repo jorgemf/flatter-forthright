@@ -14,7 +14,6 @@
 		android:elevation="@dimen/space_small"
 		android:layout_gravity="center"
 		android:layout_margin="@dimen/space_normal"
-		android:minWidth="@dimen/item_user_width"
 		android:padding="@dimen/space_normal"
 		card_view:cardCornerRadius="@dimen/card_view_round_corner"
 		xmlns:card_view="http://schemas.android.com/apk/res-auto">
@@ -27,39 +26,12 @@
 			android:orientation="vertical"
 			android:padding="@dimen/space_normal">
 
-			<TextView
-				android:id="@+id/user_flagged_times"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentEnd="true"
-				android:layout_alignParentRight="true"
-				android:layout_alignParentTop="true"
-				android:textAppearance="?android:attr/textAppearanceLarge"
-				android:textColor="@color/accent"
-				android:visibility="gone"/>
-
-			<com.facebook.drawee.view.SimpleDraweeView
+			<ImageView
 				android:id="@+id/user_image"
-				style="@style/CircularImage"
 				android:layout_width="@dimen/item_user_image_size"
 				android:layout_height="@dimen/item_user_image_size"
 				android:layout_alignParentTop="true"
 				android:layout_centerHorizontal="true"/>
-
-			<TextView
-				android:id="@+id/relationship"
-				android:layout_width="@dimen/item_user_relationship_size"
-				android:layout_height="@dimen/item_user_relationship_size"
-				android:background="@drawable/relationship_background"
-				android:gravity="center"
-				android:layout_alignLeft="@id/user_image"
-				android:layout_alignStart="@id/user_image"
-				android:layout_alignTop="@id/user_image"
-				android:text="F"
-				android:textAppearance="?android:attr/textAppearanceLargeInverse"
-				android:textColor="@color/white"
-				android:textStyle="bold"
-				tools:ignore="HardcodedText"/>
 
 			<TextView
 				android:id="@+id/user_name"
@@ -75,7 +47,7 @@
 				android:textColor="@color/grey_dark"/>
 
 			<TextView
-				android:id="@+id/user_tagline"
+				android:id="@+id/user_number"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:ellipsize="end"

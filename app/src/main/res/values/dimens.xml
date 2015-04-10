@@ -29,6 +29,10 @@
 	<dimen name="button_stroke">3dp</dimen>
 	<dimen name="card_view_round_corner">4dp</dimen>
 
+	<dimen name="item_comment_user_image_size">40dp</dimen>
+	<dimen name="item_user_image_size">40dp</dimen>
+	<dimen name="item_flag_size">28dp</dimen>
+
 	<dimen name="item_max_width">400dp</dimen>
 
 </resources>

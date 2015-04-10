@@ -1,22 +1,12 @@
 package com.livae.ff.app.task;
 
-import com.livae.apphunt.common.Constants.Order;
-
 public class QueryParamId extends QueryParam {
 
 	private Long id;
 
-	public QueryParamId(Long id, Integer limit, Order order) {
-		super(limit, order);
-		this.id = id;
-	}
-
-	public QueryParamId(Long id, Order order) {
-		this(id, null, order);
-	}
-
 	public QueryParamId(Long id, Integer limit) {
-		this(id, limit, null);
+		super(limit);
+		this.id = id;
 	}
 
 	public QueryParamId(Long id) {

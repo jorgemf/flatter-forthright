@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.livae.android.loading.CursorRecyclerAdapter;
 import com.livae.ff.app.R;
 import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.sql.Table;
@@ -93,43 +92,13 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 		holder.clear();
 		long commentId = cursor.getLong(iId);
 		holder.setCommentId(commentId);
-		long appId = cursor.getLong(iAppId);
 		long userId = cursor.getLong(iUserId);
-		if (showApp) {
-			holder.setAppId(appId);
-			holder.setAppImageUrl(cursor.getString(iAppImageUrl));
-			holder.setTitle(cursor.getString(iAppTitle));
-			holder.setSubtitle(cursor.getString(iAppDescription));
-		} else {
-			holder.setUserId(userId);
-			String userName = cursor.getString(iUserName);
-			if (userName == null || userName.length() == 0 || cursor.getInt(iUserAnonymous) != 0) {
-				holder.setUserAnonymous();
-			} else {
-				holder.setTitle(userName);
-				holder.setSubtitle(cursor.getString(iUserTagline));
-				holder.setUserImageUrl(cursor.getString(iUserImageUrl));
-			}
-			Relationship relationship = null;
-			String relationshipString = cursor.getString(iRelationship);
-			if (relationshipString != null) {
-				try {
-					relationship = Relationship.valueOf(relationshipString);
-				} catch (Exception ignore) {
-				}
-			}
-			holder.setUserRelationship(relationship);
-		}
+		holder.setUserId(userId);
 		long date = cursor.getLong(iDate);
 		holder.setDate(date);
-		if (commentsUpdated.containsKey(commentId)) {
-			holder.setComment(commentsUpdated.get(commentId));
-		} else {
-			holder.setComment(cursor.getString(iComment));
-		}
-		int upVotes = cursor.getInt(iUpVotes);
-		int downVotes = cursor.getInt(iDownVotes);
-		holder.setCanVote(!userAnonymous && userId != this.userId);
+		holder.setComment(cursor.getString(iComment));
+		int agreeVotes = cursor.getInt(iAgreeVotes);
+		int disagreeVotes = cursor.getInt(iDisagreeVotes);
 		CommentVoteType voteType = null;
 		if (commentVoteTypeHashMap.containsKey(commentId)) {
 			voteType = commentVoteTypeHashMap.get(commentId);
@@ -143,24 +112,24 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 				}
 			}
 			if (voteType == null) {
-				if (previousVoteType == CommentVoteType.UP) {
-					upVotes -= 1;
-				} else if (previousVoteType == CommentVoteType.DOWN) {
-					downVotes -= 1;
+				if (previousVoteType == CommentVoteType.AGREE) {
+					agreeVotes -= 1;
+				} else if (previousVoteType == CommentVoteType.DISAGREE) {
+					disagreeVotes -= 1;
 				}
-			} else if (voteType == CommentVoteType.UP) {
+			} else if (voteType == CommentVoteType.AGREE) {
 				if (previousVoteType == null) {
-					upVotes += 1;
-				} else if (previousVoteType == CommentVoteType.DOWN) {
-					upVotes += 1;
-					downVotes -= 1;
+					agreeVotes += 1;
+				} else if (previousVoteType == CommentVoteType.DISAGREE) {
+					agreeVotes += 1;
+					disagreeVotes -= 1;
 				}
-			} else if (voteType == CommentVoteType.DOWN) {
+			} else if (voteType == CommentVoteType.DISAGREE) {
 				if (previousVoteType == null) {
-					downVotes += 1;
-				} else if (previousVoteType == CommentVoteType.UP) {
-					downVotes += 1;
-					upVotes -= 1;
+					disagreeVotes += 1;
+				} else if (previousVoteType == CommentVoteType.AGREE) {
+					disagreeVotes += 1;
+					agreeVotes -= 1;
 				}
 			}
 		} else {
@@ -172,7 +141,7 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 				}
 			}
 		}
-		holder.setVotes(upVotes, downVotes);
+		holder.setVotes(agreeVotes, disagreeVotes);
 		holder.setVoteType(voteType);
 	}
 }

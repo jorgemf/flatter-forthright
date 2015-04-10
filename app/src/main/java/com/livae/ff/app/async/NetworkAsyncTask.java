@@ -1,7 +1,7 @@
 package com.livae.ff.app.async;
 
-import com.livae.apphunt.app.Application;
-import com.livae.apphunt.app.utils.DeviceUtils;
+import com.livae.ff.app.Application;
+import com.livae.ff.app.utils.DeviceUtils;
 
 public abstract class NetworkAsyncTask<Param, Result> extends CustomAsyncTask<Param, Result> {
 

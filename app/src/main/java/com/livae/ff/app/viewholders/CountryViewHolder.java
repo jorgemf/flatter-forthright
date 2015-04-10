@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.livae.apphunt.app.Constants;
-import com.livae.apphunt.app.R;
+import com.livae.ff.app.Constants;
+import com.livae.ff.app.R;
 
 public class CountryViewHolder {
 

@@ -22,10 +22,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.livae.apphunt.app.R;
-import com.livae.apphunt.app.Settings;
-import com.livae.apphunt.app.dialog.LoginGoogleDialogFragment;
-import com.livae.apphunt.app.listener.AnimatorListener;
+import com.livae.ff.app.R;
+import com.livae.ff.app.Settings;
+import com.livae.ff.app.listener.AnimatorListener;
 
 import java.net.ConnectException;
 
@@ -292,17 +291,6 @@ public abstract class AbstractActivity extends ActionBarActivity {
 		super.onBackPressed();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			finishAfterTransition();
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Settings.RequestCode.GOOGLE_SIGN_IN) {
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			Fragment f = fragmentManager.findFragmentByTag(LoginGoogleDialogFragment.TAG);
-			DialogFragment dialog = (DialogFragment) f;
-			dialog.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 

@@ -20,18 +20,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.livae.android.loading.CursorRecyclerAdapter;
-import com.livae.android.loading.LoadingHelper;
-import com.livae.apphunt.app.BuildConfig;
-import com.livae.apphunt.app.R;
-import com.livae.apphunt.app.activity.AbstractActivity;
-import com.livae.apphunt.app.async.Callback;
-import com.livae.apphunt.app.async.CustomAsyncTask;
-import com.livae.apphunt.app.async.NetworkAsyncTask;
-import com.livae.apphunt.app.task.ListResult;
-import com.livae.apphunt.app.task.QueryParam;
-import com.livae.apphunt.app.utils.Debug;
-import com.livae.apphunt.common.Constants.Order;
+import com.livae.ff.loading.CursorRecyclerAdapter;
+import com.livae.ff.loading.LoadingHelper;
+import com.livae.ff.app.BuildConfig;
+import com.livae.ff.app.R;
+import com.livae.ff.app.activity.AbstractActivity;
+import com.livae.ff.app.async.Callback;
+import com.livae.ff.app.async.CustomAsyncTask;
+import com.livae.ff.app.async.NetworkAsyncTask;
+import com.livae.ff.app.task.ListResult;
+import com.livae.ff.app.task.QueryParam;
+import com.livae.ff.app.utils.Debug;
 
 public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder, QUERY extends QueryParam>
   extends Fragment implements LoadingHelper.LoadListener, LoadingHelper.ErrorViewsCreator,

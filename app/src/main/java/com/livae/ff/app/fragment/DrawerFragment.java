@@ -10,14 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.livae.apphunt.app.Application;
-import com.livae.apphunt.app.R;
-import com.livae.apphunt.app.activity.AboutActivity;
-import com.livae.apphunt.app.activity.AppHuntActivity;
-import com.livae.apphunt.app.activity.SettingsActivity;
-import com.livae.apphunt.app.admin.activity.AdminActivity;
-import com.livae.apphunt.app.listener.LoginListener;
-import com.livae.apphunt.app.utils.LoginUtils;
+import com.livae.ff.app.Application;
+import com.livae.ff.app.R;
+import com.livae.ff.app.activity.AboutActivity;
+import com.livae.ff.app.activity.AppHuntActivity;
+import com.livae.ff.app.activity.SettingsActivity;
+import com.livae.ff.app.admin.activity.AdminActivity;
+import com.livae.ff.app.listener.LoginListener;
+import com.livae.ff.app.utils.LoginUtils;
 
 public class DrawerFragment extends Fragment implements View.OnClickListener, LoginListener {
 
