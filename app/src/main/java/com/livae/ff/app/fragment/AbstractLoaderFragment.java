@@ -1,5 +1,7 @@
 package com.livae.ff.app.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +20,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
-import com.livae.ff.loading.CursorRecyclerAdapter;
-import com.livae.ff.loading.LoadingHelper;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.R;
 import com.livae.ff.app.activity.AbstractActivity;
+import com.livae.ff.app.adapter.EndlessCursorAdapter;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.async.NetworkAsyncTask;
@@ -33,8 +34,9 @@ import com.livae.ff.app.task.QueryParam;
 import com.livae.ff.app.utils.Debug;
 
 public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder, QUERY extends QueryParam>
-  extends Fragment implements LoadingHelper.LoadListener, LoadingHelper.ErrorViewsCreator,
-							  LoaderManager.LoaderCallbacks<Cursor>, Callback<QUERY, ListResult> {
+  extends Fragment
+  implements EndlessCursorAdapter.ViewCreator, LoaderManager.LoaderCallbacks<Cursor>,
+			 Callback<QUERY, ListResult> {
 
 	private static final int LOADER_ID = 1;
 
@@ -48,13 +50,11 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 
 	private final String KEY_SAVED_SELECTION_ARGS = "KEY_SAVED_SELECTION_ARGS";
 
+	private final String KEY_SAVED_FINISH_LOADING = "KEY_SAVED_FINISH_LOADING";
+
 	private View emptyView;
 
-	private LoadingHelper<VH> loadingHelper;
-
-	private CursorRecyclerAdapter<VH> adapter;
-
-	private Order order;
+	private EndlessCursorAdapter<VH> adapter;
 
 	private String nextCursor;
 
@@ -62,17 +62,27 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 
 	private NetworkAsyncTask<QUERY, ListResult> loaderTask;
 
-	private boolean loadingInitial;
-
 	private String selection;
 
 	private String[] selectionArgs;
 
 	private RecyclerView recyclerView;
 
+	private RecyclerView.OnScrollListener onScrollListener;
+
 	private LifeCycleListener lifeCycleListener;
 
+	private int preloadAhead;
+
 	private Menu menu;
+
+	private ProgressBar loading;
+
+	private boolean finishLoading;
+
+	private View topPaddingView;
+
+	private View bottomPaddingView;
 
 	public void setSelection(String selection, String[] selectionArgs) {
 		this.selection = selection;
@@ -80,29 +90,46 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 	}
 
 	public void setRecyclerViewTopPadding(final View view) {
-		loadingHelper.setHeaderView(createViewWithHeight(view));
+		if (topPaddingView == null) {
+			topPaddingView = createViewWithHeight(view);
+			adapter.setHeaderView(topPaddingView);
+		} else {
+			setSameHeight(view, topPaddingView);
+		}
 	}
 
 	public void setRecyclerViewBottomPadding(final View view) {
-		loadingHelper.setFooterView(createViewWithHeight(view));
+		if (bottomPaddingView == null) {
+			bottomPaddingView = createViewWithHeight(view);
+			adapter.setFooterView(bottomPaddingView);
+		} else {
+			setSameHeight(view, bottomPaddingView);
+		}
 	}
 
 	public void setColumnsLayoutManager(int columns) {
-		loadingHelper.setLayoutManager(new GridLayoutManager(getActivity(), columns,
-															 GridLayoutManager.VERTICAL, false));
+		GridLayoutManager gridLayoutManager;
+		gridLayoutManager = new GridLayoutManager(getActivity(), columns,
+												  GridLayoutManager.VERTICAL, false);
+		gridLayoutManager.setSpanSizeLookup(new GridSpanSize(gridLayoutManager));
+		recyclerView.setLayoutManager(gridLayoutManager);
 	}
 
-	public View createViewWithHeight(View view) {
+	private View createViewWithHeight(View view) {
+		View viewPadding = new View(getActivity());
+		setSameHeight(view, viewPadding);
+		return viewPadding;
+	}
+
+	private void setSameHeight(View view, View viewPadding) {
 		view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 		int height = view.getMeasuredHeight();
 		ViewGroup.MarginLayoutParams lp;
 		lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-		View viewPadding = new View(getActivity());
 		int newHeight = height + lp.topMargin + lp.bottomMargin;
 		RecyclerView.LayoutParams rlp;
 		rlp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, newHeight);
 		viewPadding.setLayoutParams(rlp);
-		return viewPadding;
 	}
 
 	@Override
@@ -110,14 +137,14 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		adapter = getAdapter();
-		order = Order.VOTES;
 		totalLoaded = 0;
+		finishLoading = false;
 		if (savedInstanceState != null) {
-			order = (Order) savedInstanceState.getSerializable(KEY_SAVED_ORDER);
 			nextCursor = savedInstanceState.getString(KEY_SAVED_NEXT_CURSOR);
 			totalLoaded = savedInstanceState.getInt(KEY_SAVED_TOTAL_LOADED);
 			selection = savedInstanceState.getString(KEY_SAVED_SELECTION);
 			selectionArgs = savedInstanceState.getStringArray(KEY_SAVED_SELECTION_ARGS);
+			finishLoading = savedInstanceState.getBoolean(KEY_SAVED_FINISH_LOADING);
 		}
 	}
 
@@ -135,20 +162,42 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 			emptyView.setVisibility(View.GONE);
 		}
 		recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-		ContentLoadingProgressBar loading;
-		loading = (ContentLoadingProgressBar) view.findViewById(R.id.center_progressbar);
-		loadingHelper = new LoadingHelper<>(getActivity(), recyclerView, adapter, this, loading,
-											this);
-		loadingHelper.enableInitialProgressLoading(true);
-		loadingHelper.enableEndlessLoading(true);
-		loadingHelper.enablePullToRefreshUpdate(true);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		recyclerView.setAdapter(adapter);
+		loading = (ProgressBar) view.findViewById(R.id.center_progressbar);
 		Resources res = getResources();
-		loadingHelper.setColorCircularLoading(res.getColor(R.color.primary));
-		loadingHelper.setColorCircularLoadingActive(res.getColor(R.color.accent));
-		loadingHelper.endlessLoadingPreloadAhead(res.getInteger(R.integer.default_preload_ahead));
-		if (lifeCycleListener != null) {
-			lifeCycleListener.onViewCreated(this);
-		}
+		preloadAhead = res.getInteger(R.integer.default_preload_ahead);
+		recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+				if (onScrollListener != null) {
+					onScrollListener.onScrollStateChanged(recyclerView, newState);
+				}
+			}
+
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+				if (onScrollListener != null) {
+					onScrollListener.onScrolled(recyclerView, dx, dy);
+				}
+				checkLoadNext();
+			}
+		});
+		// fix bug in recycler library when removing the last element
+		View viewFooterPadding = new View(getActivity());
+		RecyclerView.LayoutParams rlp;
+		int height = 1;
+		rlp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+		viewFooterPadding.setLayoutParams(rlp);
+		adapter.setFooterView(viewFooterPadding);
+		// fix auto scroll to the bottom
+		View viewHeaderPadding = new View(getActivity());
+		height = 1;
+		rlp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+		viewHeaderPadding.setLayoutParams(rlp);
+		adapter.setHeaderView(viewHeaderPadding);
 	}
 
 	@Override
@@ -158,158 +207,82 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 			lifeCycleListener.onResumed(this);
 		}
 		loaderTask = getLoaderTask();
-		loadingHelper.onResume();
 		if (totalLoaded == 0 && nextCursor == null) {
-			loadingHelper.start();
-		} else if (!loadingHelper.isLoading()) {
+			loadNext();
+		} else {
+			hideLoading();
 			reloadCursor();
-		}
-		if (menu != null) {
-			switch (order) {
-				case DATE:
-					MenuItem orderLatest = menu.findItem(R.id.action_order_latest);
-					if (orderLatest != null) {
-						orderLatest.setChecked(true);
-					}
-					break;
-				case VOTES:
-					MenuItem orderVotes = menu.findItem(R.id.action_order_votes);
-					if (orderVotes != null) {
-						orderVotes.setChecked(true);
-					}
-					break;
-			}
 		}
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(KEY_SAVED_ORDER, order);
 		outState.putString(KEY_SAVED_NEXT_CURSOR, nextCursor);
 		outState.putInt(KEY_SAVED_TOTAL_LOADED, totalLoaded);
 		outState.putString(KEY_SAVED_SELECTION, selection);
 		outState.putStringArray(KEY_SAVED_SELECTION_ARGS, selectionArgs);
+		outState.putBoolean(KEY_SAVED_FINISH_LOADING, finishLoading);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 		loaderTask.cancel();
+		adapter.setIsLoading(false);
+		finishLoading = false;
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.menu_order, menu);
-	}
 
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		super.onPrepareOptionsMenu(menu);
-		this.menu = menu;
-		switch (order) {
-			case DATE:
-				menu.findItem(R.id.action_order_latest).setChecked(true);
-				break;
-			case VOTES:
-				menu.findItem(R.id.action_order_votes).setChecked(true);
-				break;
-		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_order_latest:
-				item.setChecked(true);
-				if (order != Order.DATE) {
-					order = Order.DATE;
-					restart();
+	private void checkLoadNext() {
+		if (!finishLoading) {
+			LinearLayoutManager layoutManager;
+			layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+			int lastVisiblePosition = layoutManager.findLastVisibleItemPosition();
+			if (lastVisiblePosition + preloadAhead >= adapter.getItemCount()) {
+				if (!adapter.isLoading() && !adapter.isError() &&
+					adapter.getCursorItemCount() > 0) {
+					loadNext();
 				}
-				return true;
-			case R.id.action_order_votes:
-				item.setChecked(true);
-				if (order != Order.VOTES) {
-					order = Order.VOTES;
-					restart();
-				}
-				return true;
+			}
 		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	public void clear() {
 		nextCursor = null;
 		totalLoaded = 0;
+		finishLoading = false;
+		adapter.setCursor(null);
 	}
 
 	public void setOnScrollListener(RecyclerView.OnScrollListener listener) {
-		recyclerView.setOnScrollListener(listener);
+		onScrollListener = listener;
 	}
 
 	protected abstract NetworkAsyncTask<QUERY, ListResult> getLoaderTask();
 
 	protected abstract Uri getUriCursor();
 
-	protected abstract CursorRecyclerAdapter<VH> getAdapter();
+	protected abstract EndlessCursorAdapter<VH> getAdapter();
 
 	protected abstract String[] getProjection();
 
 	protected abstract QUERY getBaseQueryParams();
 
-	protected abstract String getOrderString(Order order);
+	protected abstract String getOrderString();
 
-	@Override
-	public void clearAdapter() {
-		adapter.changeCursor(null);
-	}
-
-	@Override
-	public void loadPrevious() {
-		restart();
-	}
-
-	@Override
 	public void loadNext() {
 		QUERY query = getBaseQueryParams();
-		query.setOrder(order);
 		query.setCursor(nextCursor);
 		loaderTask.execute(query, this);
-	}
-
-	@Override
-	public void loadInitial() {
-		loadingHelper.enableEndlessLoading(true);
-		if (totalLoaded > 0) {
-			LoaderManager lm = getLoaderManager();
-			lm.restartLoader(LOADER_ID, null, new LoaderManager.LoaderCallbacks<Cursor>() {
-
-				@Override
-				public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-					return AbstractLoaderFragment.this.onCreateLoader(LOADER_ID, args);
-				}
-
-				@Override
-				public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-					int previous = adapter.getItemCount();
-					adapter.changeCursor(data);
-					int difference = data.getCount() - previous;
-					loadingHelper.finishLoadingInitial(false, difference, nextCursor != null);
-				}
-
-				@Override
-				public void onLoaderReset(Loader<Cursor> loader) {
-					// nothing
-				}
-			});
-		} else {
-			loadingInitial = true;
-			QUERY query = getBaseQueryParams();
-			query.setOrder(order);
-			loaderTask.execute(query, this);
-		}
 		if (emptyView != null) {
 			emptyView.setVisibility(View.GONE);
+		}
+		if (totalLoaded > 0) {
+			adapter.setIsLoading(true);
+		} else {
+			adapter.setIsError(false);
+			showLoading();
 		}
 	}
 
@@ -324,8 +297,8 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 
 			@Override
 			public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-				adapter.changeCursor(data);
-				adapter.notifyDataSetChanged();
+				adapter.setCursor(data);
+				setEmptyView();
 			}
 
 			@Override
@@ -338,78 +311,37 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 	@Override
 	public void onComplete(CustomAsyncTask<QUERY, ListResult> task, QUERY param,
 						   ListResult result) {
-		if (loaderTask == task) {
-			if (task.isCancelled()) {
-				finishLoadingHelper(false, 0, false);
-			} else {
-				nextCursor = result.getNextCursor();
-				totalLoaded += result.getSize();
-				if (result.getSize() == 0) {
-					nextCursor = null;
-					loadingHelper.enableEndlessLoading(false);
-					setEmptyView();
-					finishLoadingHelper(false, 0, false);
-				} else {
-					getLoaderManager().restartLoader(LOADER_ID, null, this);
-				}
-			}
+		if (!task.isCancelled() && loaderTask == task) {
+			nextCursor = result.getNextCursor();
+			totalLoaded += result.getSize();
+			finishLoading = result.getSize() == 0;
+			getLoaderManager().restartLoader(LOADER_ID, null, this);
 		}
 	}
 
 	@Override
 	public void onError(CustomAsyncTask<QUERY, ListResult> task, QUERY param, Exception e) {
-		finishLoadingHelper(true, 0, false);
 		if (!task.isCancelled()) {
 			AbstractActivity activity = (AbstractActivity) getActivity();
 			activity.showSnackBarException(e);
+			adapter.setIsError(true);
+			hideLoading();
 		}
 	}
 
-	private void finishLoadingHelper(boolean errorView, int added, boolean continueLoading) {
-		if (loadingHelper.isLoading()) {
-			if (loadingInitial) {
-				loadingInitial = false;
-				loadingHelper.finishLoadingInitial(errorView, added, continueLoading);
-			} else {
-				loadingHelper.finishLoadingNext(errorView, added, continueLoading);
-			}
-		}
+	public View createLoadingView(LayoutInflater layoutInflater, ViewGroup parent) {
+		return layoutInflater.inflate(R.layout.item_loading, parent, false);
 	}
 
-	@Override
-	public View createTopErrorView(ViewGroup viewGroup) {
-		LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-		View view = layoutInflater.inflate(R.layout.item_retry, viewGroup, false);
+	public View createErrorView(LayoutInflater layoutInflater, ViewGroup parent) {
+		View view = layoutInflater.inflate(R.layout.item_retry, parent, false);
 		view.findViewById(R.id.button_retry).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				loadingHelper.retryLoadPrevious();
+				loadNext();
 			}
 		});
 		return view;
-	}
-
-	@Override
-	public View createBottomErrorView(ViewGroup viewGroup) {
-		LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-		View view = layoutInflater.inflate(R.layout.item_retry, viewGroup, false);
-		view.findViewById(R.id.button_retry).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				loadingHelper.retryLoadNext();
-			}
-		});
-		return view;
-	}
-
-	@Override
-	public boolean hasTopErrorView() {
-		return true;
-	}
-
-	@Override
-	public boolean hasBottomErrorView() {
-		return true;
 	}
 
 	public void restart() {
@@ -417,14 +349,18 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		loaderTask = getLoaderTask();
 		totalLoaded = 0;
 		nextCursor = null;
-		loadingInitial = false;
+		finishLoading = false;
 		getLoaderManager().destroyLoader(LOADER_ID);
-		loadingHelper.reset();
+		adapter.setCursor(null);
+		adapter.notifyDataSetChanged();
+		showLoading();
+		loadNext();
 	}
 
 	protected void setEmptyView() {
+		hideLoading();
 		if (emptyView != null) {
-			if (adapter.getItemCount() == 0) {
+			if (adapter.getCursorItemCount() == 0) {
 				emptyView.setVisibility(View.VISIBLE);
 			} else {
 				emptyView.setVisibility(View.GONE);
@@ -444,11 +380,9 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 
 			@Override
 			public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-				adapter.changeCursor(data);
-				adapter.notifyItemRemoved(adapterPosition);
-				if (totalLoaded == 0) {
-					setEmptyView();
-				}
+				adapter.setCursor(data);
+				adapter.notifyDataSetChanged();
+				setEmptyView();
 			}
 
 			@Override
@@ -473,19 +407,69 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		return 1;
 	}
 
-	public Order getOrder() {
-		return order;
+	private void showLoading() {
+		if (loading.getVisibility() == View.GONE) {
+			loading.animate().alpha(1).setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationStart(Animator animation) {
+					loading.setVisibility(View.VISIBLE);
+				}
+
+			}).start();
+		}
 	}
 
-	public void setOrder(Order order) {
-		this.order = order;
+	private void hideLoading() {
+		if (loading.getVisibility() == View.VISIBLE) {
+			loading.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
+
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					loading.setVisibility(View.GONE);
+				}
+			}).start();
+		}
 	}
 
 	public interface LifeCycleListener {
 
-		public void onViewCreated(AbstractLoaderFragment fragment);
-
 		public void onResumed(AbstractLoaderFragment fragment);
+	}
+
+	public class GridSpanSize extends GridLayoutManager.SpanSizeLookup {
+
+		private GridLayoutManager.SpanSizeLookup mSpanSizeLookUpWrapped;
+
+		private int spanCount;
+
+		public GridSpanSize(GridLayoutManager gridLayoutManager) {
+			mSpanSizeLookUpWrapped = gridLayoutManager.getSpanSizeLookup();
+			spanCount = gridLayoutManager.getSpanCount();
+		}
+
+		@Override
+		public int getSpanSize(int position) {
+			if (adapter.isHeader()) {
+				position -= 1;
+			}
+			if (position < 0 || position >= adapter.getCursorItemCount()) {
+				return spanCount;
+			} else {
+				return mSpanSizeLookUpWrapped.getSpanSize(position);
+			}
+		}
+
+		@Override
+		public int getSpanIndex(int position, int spanCount) {
+			if (adapter.isHeader()) {
+				position -= 1;
+			}
+			if (position < 0 || position >= adapter.getCursorItemCount()) {
+				return 0;
+			} else {
+				return position % spanCount;
+			}
+		}
 	}
 
 	@Override
@@ -502,32 +486,17 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> objectLoader, Cursor cursor) {
-		Cursor previousCursor = adapter.getCursor();
-		int initialElements = 0;
-		if (previousCursor != null) {
-			initialElements = previousCursor.getCount();
-		}
-		int newElements = cursor.getCount() - initialElements;
 		if (BuildConfig.DEBUG) {
 			Debug.print(cursor);
 		}
-		adapter.changeCursor(cursor);
-		finishLoadingHelper(false, newElements, newElements != 0);
+		adapter.setCursor(cursor);
 		setEmptyView();
+		checkLoadNext();
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> objectLoader) {
-		Cursor previousCursor = adapter.getCursor();
-		int elements = 0;
-		if (previousCursor != null) {
-			elements = previousCursor.getCount();
-		}
-		adapter.changeCursor(null);
-		if (elements > 0) {
-			adapter.notifyItemRangeRemoved(0, elements);
-		}
-		totalLoaded = 0;
+		// nothing
 	}
 
 }

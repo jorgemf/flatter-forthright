@@ -12,12 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.livae.apphunt.app.Analytics;
-import com.livae.apphunt.app.AppUser;
-import com.livae.apphunt.app.Application;
-import com.livae.apphunt.app.R;
-import com.livae.apphunt.app.utils.DeviceUtils;
-import com.livae.apphunt.app.utils.IntentUtils;
+import com.livae.ff.app.Analytics;
+import com.livae.ff.app.AppUser;
+import com.livae.ff.app.Application;
+import com.livae.ff.app.R;
+import com.livae.ff.app.utils.DeviceUtils;
+import com.livae.ff.app.utils.IntentUtils;
 
 public class AboutActivity extends AbstractActivity implements View.OnClickListener {
 
@@ -67,8 +67,7 @@ public class AboutActivity extends AbstractActivity implements View.OnClickListe
 		findViewById(R.id.button_share_this_app).setOnClickListener(this);
 		findViewById(R.id.button_details_rate_app).setOnClickListener(this);
 		findViewById(R.id.button_details_feedback).setOnClickListener(this);
-		findViewById(R.id.button_google_community).setOnClickListener(this);
-		findViewById(R.id.button_details_terms_conditions).setOnClickListener(this);
+//		findViewById(R.id.button_details_terms_conditions).setOnClickListener(this);
 
 		TextView versionTextView = (TextView) findViewById(R.id.about_app_version);
 		versionTextView.setText(getString(R.string.app_version,
@@ -90,16 +89,12 @@ public class AboutActivity extends AbstractActivity implements View.OnClickListe
 				Analytics.event(Analytics.Category.USER, Analytics.Action.SEND_FEEDBACK);
 				sendFeedback(this);
 				break;
-			case R.id.button_google_community:
-				Analytics.event(Analytics.Category.USER, Analytics.Action.VISITED_COMMUNITY);
-				IntentUtils.launchGooglePlusCommunity(this);
-				break;
-			case R.id.button_details_terms_conditions:
-				Analytics.event(Analytics.Category.USER, Analytics.Action.VISITED_TERMS);
-				String urlTermsConditions = getString(R.string.url_terms_conditions);
-				String title = getString(R.string.activity_about);
-				WebViewActivity.start(this, urlTermsConditions, title);
-				break;
+//			case R.id.button_details_terms_conditions:
+//				Analytics.event(Analytics.Category.USER, Analytics.Action.VISITED_TERMS);
+//				String urlTermsConditions = getString(R.string.url_terms_conditions);
+//				String title = getString(R.string.activity_about);
+//				WebViewActivity.start(this, urlTermsConditions, title);
+//				break;
 		}
 	}
 }

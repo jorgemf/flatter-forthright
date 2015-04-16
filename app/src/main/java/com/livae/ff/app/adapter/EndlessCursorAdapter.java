@@ -2,6 +2,7 @@ package com.livae.ff.app.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.provider.BaseColumns;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,15 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	private static final int TYPE_LOADING = -3;
 
+	private static final int TYPE_HEADER = -4;
+
+	private static final int TYPE_FOOTER = -5;
+
 	protected LayoutInflater layoutInflater;
+
+	private View headerView;
+
+	private View footerView;
 
 	private boolean isLoading;
 
@@ -26,37 +35,77 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	private ViewCreator viewCreator;
 
+	private int iId;
+
 	public EndlessCursorAdapter(@Nonnull Context context, @Nonnull ViewCreator viewCreator) {
 		this.layoutInflater = LayoutInflater.from(context);
 		isLoading = false;
 		isError = false;
 		this.viewCreator = viewCreator;
+		setHasStableIds(true);
+	}
+
+	public void setHeaderView(View headerView) {
+		if (this.headerView != null) {
+			notifyItemRemoved(0);
+		}
+		this.headerView = headerView;
+		notifyItemInserted(0);
+	}
+
+	public void setFooterView(View footerView) {
+		int size = getCursorItemCount();
+		if (headerView != null) {
+			size++;
+		}
+		if (isError) {
+			size++;
+		}
+		if (isLoading) {
+			size++;
+		}
+		if (this.footerView != null) {
+			notifyItemRemoved(size);
+		}
+		this.footerView = footerView;
+		notifyItemInserted(size);
 	}
 
 	public void setCursor(Cursor cursor) {
-		if (cursor != this.cursor) {
-			if (cursor != null) {
-				findIndexes(cursor);
-			}
-			int currentSize = this.cursor == null ? 0 : this.cursor.getCount();
-			int newSize = cursor == null ? 0 : cursor.getCount();
-			this.cursor = cursor;
-			int diff = newSize - currentSize;
-			if (diff > 0) {
-				notifyItemRangeInserted(currentSize, diff);
-			} else if (diff < 0) {
-				notifyItemRangeRemoved(0, -diff);
-			}
-			setIsLoading(false);
-			setIsError(false);
+		if (cursor != null) {
+			iId = cursor.getColumnIndexOrThrow(BaseColumns._ID);
+			findIndexes(cursor);
 		}
+		int currentSize = getCursorItemCount();
+		if (this.cursor != null && this.cursor != cursor) {
+			this.cursor.close();
+		}
+		this.cursor = cursor;
+		int newSize = getCursorItemCount();
+		int diff = newSize - currentSize;
+		int start = 0;
+		if (headerView != null) {
+			start++;
+		}
+		if (diff > 0) {
+			notifyItemRangeInserted(start + currentSize, diff);
+		} else if (diff < 0) {
+			notifyItemRangeRemoved(start, -diff);
+		} else {
+			notifyDataSetChanged();
+		}
+		setIsLoading(false);
+		setIsError(false);
 	}
 
 	protected abstract void findIndexes(@Nonnull Cursor cursor);
 
 	public void setIsLoading(boolean loading) {
 		if (loading != isLoading) {
-			int size = cursor == null ? 0 : cursor.getCount();
+			int size = getCursorItemCount();
+			if (headerView != null) {
+				size++;
+			}
 			isLoading = loading;
 			if (isLoading) {
 				if (isError) {
@@ -72,7 +121,10 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	public void setIsError(boolean error) {
 		if (error != isError) {
-			int size = cursor == null ? 0 : cursor.getCount();
+			int size = getCursorItemCount();
+			if (headerView != null) {
+				size++;
+			}
 			isError = error;
 			if (isError) {
 				notifyItemInserted(size);
@@ -90,10 +142,18 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
 		switch (type) {
 			case TYPE_LOADING:
-				return new EndlessViewHolder(viewCreator.createLoadingView(layoutInflater));
+				return new EndlessViewHolder(viewCreator.createLoadingView(layoutInflater,
+																		   viewGroup));
 //			break;
 			case TYPE_ERROR:
-				return new EndlessViewHolder(viewCreator.createErrorView(layoutInflater));
+				return new EndlessViewHolder(viewCreator.createErrorView(layoutInflater,
+																		 viewGroup));
+//			break;
+			case TYPE_HEADER:
+				return new EndlessViewHolder(headerView);
+//			break;
+			case TYPE_FOOTER:
+				return new EndlessViewHolder(footerView);
 //			break;
 			default:
 				return createCustomViewHolder(viewGroup, type);
@@ -103,8 +163,11 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-		int size = cursor == null ? 0 : cursor.getCount();
-		if (position < size) {
+		int size = getCursorItemCount();
+		if (headerView != null) {
+			position--;
+		}
+		if (position >= 0 && position < size) {
 			//noinspection ConstantConditions
 			cursor.moveToPosition(position);
 			//noinspection unchecked
@@ -113,29 +176,69 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 	}
 
 	public int getItemViewType(int position) {
-		int size = cursor == null ? 0 : cursor.getCount();
-		if (size == position) {
-			if (isError) {
-				return TYPE_ERROR;
-			} else {
-				return TYPE_LOADING;
-			}
-		} else if (size > position) {
-			return TYPE_LOADING;
+		int size = getCursorItemCount();
+		if (headerView != null && position == 0) {
+			return TYPE_HEADER;
 		}
-		return getCustomItemViewType(position);
+		if (headerView != null) {
+			position--;
+		}
+		if (position < size) {
+			return getCustomItemViewType(position);
+		}
+		if (isError && size == position) {
+			return TYPE_ERROR;
+		} else if (isError && isLoading && size + 1 == position) {
+			return TYPE_LOADING;
+		} else if (isError && isLoading && footerView != null && size + 2 == position) {
+			return TYPE_FOOTER;
+		} else if (isError && !isLoading && footerView != null && size + 1 == position) {
+			return TYPE_FOOTER;
+		} else if (!isError && isLoading && size == position) {
+			return TYPE_LOADING;
+		} else if (!isError && isLoading && footerView != null && size + 1 == position) {
+			return TYPE_FOOTER;
+		} else if (!isError && !isLoading && footerView != null && size == position) {
+			return TYPE_FOOTER;
+		} else {
+			throw new RuntimeException("Should not happen");
+		}
+	}
+
+	@Override
+	public long getItemId(int position) {
+		int size = getCursorItemCount();
+		if (headerView != null) {
+			position--;
+		}
+		if (position >= 0 && position < size) {
+			cursor.moveToPosition(position);
+			return cursor.getLong(iId);
+		} else {
+			return RecyclerView.NO_ID;
+		}
 	}
 
 	@Override
 	public int getItemCount() {
-		int size = cursor == null ? 0 : cursor.getCount();
+		int size = getCursorItemCount();
 		if (isError) {
 			size++;
 		}
 		if (isLoading) {
 			size++;
 		}
+		if (headerView != null) {
+			size++;
+		}
+		if (footerView != null) {
+			size++;
+		}
 		return size;
+	}
+
+	public int getCursorItemCount() {
+		return cursor == null ? 0 : cursor.getCount();
 	}
 
 	protected int getCustomItemViewType(int position) {
@@ -146,11 +249,27 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	protected abstract void bindCustomViewHolder(k viewHolder, int position, Cursor cursor);
 
-	interface ViewCreator {
+	public boolean isHeader() {
+		return headerView != null;
+	}
 
-		public View createLoadingView(LayoutInflater layoutInflater);
+	public boolean isFooter() {
+		return footerView != null;
+	}
 
-		public View createErrorView(LayoutInflater layoutInflater);
+	public boolean isLoading() {
+		return isLoading;
+	}
+
+	public boolean isError() {
+		return isError;
+	}
+
+	public interface ViewCreator {
+
+		public View createLoadingView(LayoutInflater layoutInflater, ViewGroup parent);
+
+		public View createErrorView(LayoutInflater layoutInflater, ViewGroup parent);
 	}
 
 	class EndlessViewHolder extends RecyclerView.ViewHolder {

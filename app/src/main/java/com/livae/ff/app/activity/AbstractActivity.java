@@ -348,5 +348,4 @@ public abstract class AbstractActivity extends ActionBarActivity {
 
 	protected abstract Fragment getFragment(FRAGMENT_TYPE fragmentType);
 
-	public enum FRAGMENT_TYPE {FLATTER, FORTHRIGHT}
 }

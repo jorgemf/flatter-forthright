@@ -14,9 +14,11 @@ import java.util.List;
 
 public class DataProvider extends AbstractProvider {
 
-	private static final int URI_PHONE_COMMENTS = 1;
+	private static final int URI_CONTACTS = 1;
 
-	private static final int URI_COMMENTS = 2;
+	private static final int URI_PHONE_COMMENTS = 2;
+
+	private static final int URI_COMMENTS = 3;
 
 	private static Uri getContentUri() {
 		return Uri.parse(CONTENT_URI_BASE + getAuthority(DataProvider.class));
@@ -31,10 +33,16 @@ public class DataProvider extends AbstractProvider {
 		return Uri.withAppendedPath(getContentUri(), Table.Comment.NAME);
 	}
 
+	public static Uri getUriContacts() {
+		return Uri.withAppendedPath(getContentUri(), Table.LocalUser.NAME);
+	}
+
 	@Override
 	public boolean onCreate() {
 		final boolean result = super.onCreate();
 		final String authority = getAuthority(this.getClass());
+		uriMatcher.addURI(authority, Table.LocalUser.NAME, URI_CONTACTS);
+		uriMatcher.addURI(authority, Table.Comment.NAME, URI_COMMENTS);
 		uriMatcher.addURI(authority, Table.Comment.NAME + "/#/*/", URI_PHONE_COMMENTS);
 		return result;
 	}
@@ -49,6 +57,16 @@ public class DataProvider extends AbstractProvider {
 		final SQLiteDatabase db = getWritableDatabase();
 		db.beginTransaction();
 		switch (uriId) {
+			case URI_CONTACTS:
+				table = Table.LocalUser.NAME;
+				query = Table.LocalUser.ID + "=?";
+				for (ContentValues value : values) {
+					args[0] = value.getAsString(Table.LocalUser.ID);
+					if (db.update(table, value, query, args) == 0) {
+						db.insert(table, null, value);
+					}
+				}
+				break;
 			case URI_COMMENTS:
 				table = Table.Comment.NAME;
 				query = Table.Comment.ID + "=?";
@@ -74,7 +92,15 @@ public class DataProvider extends AbstractProvider {
 		final SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		List<String> pathSegments = uri.getPathSegments();
 		switch (uriId) {
-			case URI_COMMENTS:
+			case URI_CONTACTS:
+				qb.setTables(Table.LocalUser.NAME);
+				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
+				break;
+//			case URI_COMMENTS:
+//				qb.setTables(Table.Comment.NAME);
+//				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
+//				break;
+			case URI_PHONE_COMMENTS:
 				where = Table.Comment.USER_ID + "=? AND " + Table.Comment.TYPE + "=?";
 				args = new String[2];
 				args[0] = uri.getPathSegments().get(1);
@@ -91,6 +117,8 @@ public class DataProvider extends AbstractProvider {
 	@Override
 	public String getType(Uri uri) {
 		switch (uriMatcher.match(uri)) {
+			case URI_CONTACTS:
+				return TYPE_LIST_BASE + Table.LocalUser.NAME;
 			case URI_COMMENTS:
 				return TYPE_LIST_BASE + Table.Comment.NAME;
 			case URI_PHONE_COMMENTS:
@@ -130,6 +158,9 @@ public class DataProvider extends AbstractProvider {
 				args[1] = uri.getLastPathSegment();
 				deleted = getWritableDatabase().delete(Table.Comment.NAME, query, args);
 				break;
+			case URI_CONTACTS:
+				deleted = getWritableDatabase().delete(Table.LocalUser.NAME, query, args);
+				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -141,6 +172,9 @@ public class DataProvider extends AbstractProvider {
 		final int uriId = uriMatcher.match(uri);
 		int updated;
 		switch (uriId) {
+			case URI_CONTACTS:
+				updated = getWritableDatabase().update(Table.LocalUser.NAME, values, query, args);
+				break;
 			case URI_COMMENTS:
 				updated = getWritableDatabase().update(Table.Comment.NAME, values, query, args);
 				break;

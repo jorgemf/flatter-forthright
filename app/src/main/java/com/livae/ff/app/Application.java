@@ -94,7 +94,9 @@ public class Application extends android.app.Application {
 		super.onCreate();
 		trackers = new HashMap<>();
 		getGoogleTracker(); // maybe fix the problem caught exceptions
-		CustomUncaughtExceptionHandler.configure();
+		if(!BuildConfig.DEBUG) {
+			CustomUncaughtExceptionHandler.configure();
+		}
 		DBHelper.clearData(this);
 		appUser = new AppUser(getApplicationContext());
 		setAdmin();
@@ -144,4 +146,5 @@ public class Application extends android.app.Application {
 			return xml;
 		}
 	}
+
 }

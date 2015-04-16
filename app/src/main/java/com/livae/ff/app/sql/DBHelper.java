@@ -36,6 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase sqLiteDatabase) {
 		try {
+			sqLiteDatabase.execSQL(Table.LocalUser.CREATE_SQL);
 			sqLiteDatabase.execSQL(Table.Comment.CREATE_SQL);
 		} catch (SQLiteException e) {
 			e.printStackTrace();
@@ -62,6 +63,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	private void clearData(SQLiteDatabase sqLiteDatabase) {
+		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.LocalUser.NAME);
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Comment.NAME);
 		onCreate(sqLiteDatabase);
 	}

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.livae.ff.common.Constants.CommentType;
 import com.livae.ff.common.Constants.Profile;
 
 public class AppUser {
@@ -18,6 +19,8 @@ public class AppUser {
 
 	private static final String USER_PROFILE = "ff.user.profile";
 
+	private static final String USER_COMMENT_TYPE = "ff.user.comment_type";
+
 	private static final String USER_COUNTRY_CODE = "ff.user.country_code";
 
 	private Integer appVersion;
@@ -31,6 +34,8 @@ public class AppUser {
 	private String countryCode;
 
 	private Profile profile;
+
+	private CommentType commentType;
 
 	private SharedPreferences prefs;
 
@@ -49,6 +54,7 @@ public class AppUser {
 		}
 		accessToken = prefs.getString(ACCESS_TOKEN, null);
 		setProfile(prefs.getString(USER_PROFILE, null));
+		setCommentType(prefs.getString(USER_COMMENT_TYPE, null));
 	}
 
 	public Integer getAppVersion() {
@@ -125,6 +131,31 @@ public class AppUser {
 				this.profile = Profile.valueOf(profile);
 			}
 			prefs.edit().putString(USER_PROFILE, profile).apply();
+		} catch (Exception ignore) {
+		}
+	}
+
+	public CommentType getCommentType() {
+		return commentType;
+	}
+
+	public void setCommentType(CommentType commentType) {
+		this.commentType = commentType;
+		if (commentType == null) {
+			prefs.edit().putString(USER_COMMENT_TYPE, null).apply();
+		} else {
+			prefs.edit().putString(USER_COMMENT_TYPE, commentType.name()).apply();
+		}
+	}
+
+	public void setCommentType(String commentType) {
+		try {
+			if (commentType == null) {
+				this.commentType = null;
+			} else {
+				this.commentType = CommentType.valueOf(commentType);
+			}
+			prefs.edit().putString(USER_COMMENT_TYPE, commentType).apply();
 		} catch (Exception ignore) {
 		}
 	}

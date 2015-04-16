@@ -4,6 +4,31 @@ import android.provider.BaseColumns;
 
 public class Table {
 
+	public static class LocalUser {
+
+		public static final String NAME = "local_user";
+
+		public static final String PHONE = NAME + "_" + "phone";
+
+		public static final String CONTACT = NAME + "_" + "contact";
+
+		public static final String IMAGE = NAME + "_" + "image";
+
+		public static final String FAVORITE = NAME + "_" + "favorite";
+
+		public static final String ID = BaseColumns._ID;
+
+		public static final String T_ID = NAME + "." + ID;
+
+		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
+												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+												PHONE + " INTEGER NOT NULL, " +
+												CONTACT + " TEXT, " +
+												IMAGE + " TEXT, " +
+												FAVORITE + " INTEGER " +
+												" );";
+	}
+
 	public static class Comment {
 
 		public static final String NAME = "comment";

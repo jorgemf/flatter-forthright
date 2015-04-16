@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.livae.ff.app.listener.UserClickListener;
-import com.livae.ff.app.view.CircularImageView;
 
 public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -14,7 +13,11 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
 	private TextView userNameTextView;
 
-	private CircularImageView userImageView;
+	private TextView userPhoneTextView;
+
+	private ImageView favoriteImageView;
+
+	private ImageView userImageView;
 
 	private UserClickListener userClickListener;
 
@@ -23,13 +26,17 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 		this.userClickListener = userClickListener;
 		itemView.setOnClickListener(this);
 		userNameTextView = (TextView) itemView.findViewById(R.id.user_name);
-		userImageView = (CircularImageView) itemView.findViewById(R.id.user_image);
+		userPhoneTextView = (TextView) itemView.findViewById(R.id.user_phone);
+		userImageView = (ImageView) itemView.findViewById(R.id.user_image);
+		favoriteImageView = (ImageView) itemView.findViewById(R.id.user_favorite);
 	}
 
 	public void clear() {
 		userImageView.setImageBitmap(null);
 		userNameTextView.setText(null);
+		userPhoneTextView.setText(null);
 		userPhone = null;
+		// TODO user favorite image view
 	}
 
 	@Override
@@ -43,13 +50,27 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
 	public void setUserPhone(Long userPhone) {
 		this.userPhone = userPhone;
+		this.userPhoneTextView.setText(userPhone);// TODO parse text
 	}
 
 	public void setUserName(CharSequence name) {
 		this.userNameTextView.setText(name);
 	}
 
+	public void setUser(CharSequence name) {
+		this.userNameTextView.setText(name);
+	}
+
 	public void setUserImageView(Drawable drawable) {
 		this.userImageView.setImageDrawable(drawable);
+	}
+
+	public void setFavorite(boolean favorite) {
+		// TODO
+		if (favorite) {
+
+		} else {
+
+		}
 	}
 }
