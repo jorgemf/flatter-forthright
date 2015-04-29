@@ -35,11 +35,11 @@ public class AboutActivity extends AbstractActivity implements View.OnClickListe
 		Uri uri = Uri.fromParts("mailto", context.getString(R.string.feedback_email), null);
 		Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
 		AppUser appUser = Application.appUser();
-		Long userId = appUser.getUserId();
+		Long userPhone = appUser.getUserPhone();
 		intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.feedback_email_subject) +
 											  " [" + DeviceUtils.getApplicationVersionString() +
 											  "-" + Build.VERSION.SDK_INT + "-" + Build.MODEL +
-											  "-" + Build.DEVICE + " - " + userId + "]");
+											  "-" + Build.DEVICE + " - " + userPhone + "]");
 		intent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.feedback_email_body));
 		context.startActivity(Intent.createChooser(intent,
 												   context.getString(R.string.send_feedback)));

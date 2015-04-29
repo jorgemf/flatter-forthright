@@ -114,25 +114,57 @@ public class Analytics {
 
 	public static class Screen {
 
-		public static final String S = "S";
+		public static final String SETTINGS = "SETTINGS";
+
+		public static final String ABOUT = "ABOUT";
+
+		public static final String CONTACTS = "CONTACTS";
+
+		public static final String COMMENTS = "COMMENTS";
 
 	}
 
 	public static class Category {
 
-		public static final String C = "C";
+		public static final String CONTENT = "CONTENT";
+
+		public static final String USER = "USER";
 
 	}
 
 	public static class Action {
 
-		public static final String A = "A";
+		// CONTENT
+
+		public static final String COMMENT_CREATED = "COMMENT_CREATED"; // QUALITY CONTENT METRIC 2
+
+		public static final String COMMENT_UPDATED = "COMMENT_UPDATED";
+
+		public static final String COMMENT_VOTED_UP = "COMMENT_VOTED_UP"; // QUALITY CONTENT METRIC 1
+
+		public static final String COMMENT_VOTED_DOWN = "COMMENT_VOTED_DOWN";
+
+		public static final String COMMENT_VOTE_REMOVED = "COMMENT_VOTE_REMOVED";
+
+		public static final String FLAG_USER = "FLAG_USER"; // QUALITY CONTENT METRIC 3
+
+		// USER
+
+		public static final String EDITED_PROFILE = "EDITED_PROFILE";
+
+		public static final String REVIEW_APP = "REVIEW_APP";
+
+		public static final String SEND_FEEDBACK = "SEND_FEEDBACK";
+
+		public static final String VISITED_COMMUNITY = "VISITED_COMMUNITY";
+
+		public static final String VISITED_TERMS = "VISITED_TERMS";
+
+		public static final String SHARED_APP = "SHARED_APP";
 
 	}
 
 	public static class Label {
-
-		public static final String L = "L";
 
 	}
 

@@ -11,7 +11,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,11 +24,12 @@ import android.widget.TextView;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.livae.ff.app.R;
 import com.livae.ff.app.Settings;
+import com.livae.ff.common.Constants.CommentType;
 import com.livae.ff.app.listener.AnimatorListener;
 
 import java.net.ConnectException;
 
-public abstract class AbstractActivity extends ActionBarActivity {
+public abstract class AbstractActivity extends AppCompatActivity {
 
 	protected static final String LOG_TAG = "ACTIVITY";
 
@@ -62,7 +63,7 @@ public abstract class AbstractActivity extends ActionBarActivity {
 
 	};
 
-	private FRAGMENT_TYPE fragmentType;
+	private CommentType fragmentType;
 
 	private View snackBar;
 
@@ -322,7 +323,7 @@ public abstract class AbstractActivity extends ActionBarActivity {
 	public void toggleApp() {
 		switch (fragmentType) {
 			case FLATTER:
-				fragmentType = FRAGMENT_TYPE.FORTHRIGHT;
+				fragmentType = CommentType.FORTHRIGHT;
 				getApplication().setTheme(R.style.ForthRight);
 				getFragmentManager().beginTransaction()
 									.setCustomAnimations(R.animator.card_flip_right_in,
@@ -333,7 +334,7 @@ public abstract class AbstractActivity extends ActionBarActivity {
 									.addToBackStack(null).commit();
 				break;
 			case FORTHRIGHT:
-				fragmentType = FRAGMENT_TYPE.FLATTER;
+				fragmentType = CommentType.FLATTER;
 				getApplication().setTheme(R.style.Flatter);
 				getFragmentManager().beginTransaction()
 									.setCustomAnimations(R.animator.card_flip_left_in,
@@ -346,6 +347,6 @@ public abstract class AbstractActivity extends ActionBarActivity {
 		}
 	}
 
-	protected abstract Fragment getFragment(FRAGMENT_TYPE fragmentType);
+	protected abstract Fragment getFragment(CommentType fragmentType);
 
 }

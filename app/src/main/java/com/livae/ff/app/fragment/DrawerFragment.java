@@ -14,7 +14,7 @@ import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.activity.AboutActivity;
 
-public class DrawerFragment extends Fragment implements View.OnClickListener, LoginListener {
+public class DrawerFragment extends Fragment implements View.OnClickListener {
 
 	private Button signInGoogleButton;
 

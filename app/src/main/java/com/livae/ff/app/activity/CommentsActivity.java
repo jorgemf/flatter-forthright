@@ -27,7 +27,7 @@ public class CommentsActivity extends AbstractActivity implements View.OnClickLi
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Analytics.screen(Analytics.Screen.CONTACTS);
+		Analytics.screen(Analytics.Screen.COMMENTS);
 	}
 
 	@Override

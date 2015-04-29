@@ -33,14 +33,14 @@ public class IntentUtils {
 		}
 	}
 
-	public static void shareApp(Context context, long appId) {
-		Analytics.event(Analytics.Category.CONTENT, Analytics.Action.APP_SHARED);
-		Intent sendIntent = new Intent();
-		sendIntent.setAction(Intent.ACTION_SEND);
-		sendIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_app_link, appId));
-		sendIntent.setType("text/plain");
-		context.startActivity(sendIntent);
-	}
+//	public static void shareApp(Context context, long appId) {
+//		Analytics.event(Analytics.Category.CONTENT, Analytics.Action.APP_SHARED);
+//		Intent sendIntent = new Intent();
+//		sendIntent.setAction(Intent.ACTION_SEND);
+//		sendIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_app_link, appId));
+//		sendIntent.setType("text/plain");
+//		context.startActivity(sendIntent);
+//	}
 
 	public static void shareApp(Context context, String packageName) {
 		Intent sendIntent = new Intent();

@@ -187,6 +187,7 @@ public class ApiEndpoint {
 		}
 		Long userPhone = user.getPhone();
 		Long userId = obfuscatePhone(userPhone, contactPhone);
+		// TODO give a new id if the last comment was more than one week ago, or use the last time stamp
 		Comment comment = new Comment(commentType, contactPhone, userId, commentText);
 		ofy().save().entity(comment);
 		return comment;

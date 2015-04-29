@@ -1,9 +1,6 @@
 package com.livae.ff.app.viewholders;
 
-import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -123,91 +120,91 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder
 															   getAdapterPosition());
 				}
 				break;
-			case R.id.button_delete:
-				if (Application.getSeeAdmin()) {
-					commentActionListener.commentDelete(commentId, comment.getText().toString(),
-														getAdapterPosition());
-				}
-				break;
+//			case R.id.button_delete:
+//				if (Application.getSeeAdmin()) {
+//					commentActionListener.commentDelete(commentId, comment.getText().toString(),
+//														getAdapterPosition());
+//				}
+//				break;
 		}
 	}
 
 	public void setVoteType(CommentVoteType voteType) {
-		this.voteType = voteType;
-		Resources resources = itemView.getContext().getResources();
-		int colorAccent = resources.getColor(R.color.accent);
-		int colorNormal = resources.getColor(R.color.black);
-		Drawable thumbUp = resources.getDrawable(R.drawable.ic_action_thumb_up);
-		Drawable thumbDown = resources.getDrawable(R.drawable.ic_action_thumb_down);
-		Drawable thumbUpAccent = resources.getDrawable(R.drawable.ic_action_thumb_up_accent);
-		Drawable thumbDownAccent = resources.getDrawable(R.drawable.ic_action_thumb_down_accent);
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-			if (voteType == null) {
-				voteAgreeButton.setTextColor(colorNormal);
-				voteAgreeButton.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbUp, null, null,
-																				null);
-				voteDisagreeButton.setTextColor(colorNormal);
-				voteDisagreeButton.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDown, null,
-																				   null, null);
-			} else {
-				switch (voteType) {
-					case AGREE:
-						voteAgreeButton.setTextColor(colorAccent);
-						voteAgreeButton
-						  .setCompoundDrawablesRelativeWithIntrinsicBounds(thumbUpAccent, null,
-																		   null, null);
-						voteDisagreeButton.setTextColor(colorNormal);
-						voteDisagreeButton
-						  .setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDown, null, null,
-																		   null);
-						break;
-					case DISAGREE:
-						voteAgreeButton.setTextColor(colorNormal);
-						voteAgreeButton.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbUp,
-																						null, null,
-																						null);
-						voteDisagreeButton.setTextColor(colorAccent);
-						voteDisagreeButton
-						  .setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDownAccent, null,
-																		   null, null);
-						break;
-				}
-			}
-		} else {
-			if (voteType == null) {
-				voteAgreeButton.setTextColor(colorNormal);
-				voteAgreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbUp, null, null, null);
-				voteDisagreeButton.setTextColor(colorNormal);
-				voteDisagreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbDown, null, null,
-																		   null);
-			} else {
-				switch (voteType) {
-					case AGREE:
-						voteAgreeButton.setTextColor(colorAccent);
-						voteAgreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbUpAccent, null,
-																				null, null);
-						voteDisagreeButton.setTextColor(colorNormal);
-						voteDisagreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbDown, null,
-																				   null, null);
-						break;
-					case DISAGREE:
-						voteAgreeButton.setTextColor(colorNormal);
-						voteAgreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbUp, null, null,
-																				null);
-						voteDisagreeButton.setTextColor(colorAccent);
-						voteDisagreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbDownAccent,
-																				   null, null,
-																				   null);
-						break;
-				}
-			}
-		}
+//		this.voteType = voteType;
+//		Resources resources = itemView.getContext().getResources();
+//		int colorAccent = resources.getColor(R.color.accent);
+//		int colorNormal = resources.getColor(R.color.black);
+//		Drawable thumbUp = resources.getDrawable(R.drawable.ic_action_thumb_up);
+//		Drawable thumbDown = resources.getDrawable(R.drawable.ic_action_thumb_down);
+//		Drawable thumbUpAccent = resources.getDrawable(R.drawable.ic_action_thumb_up_accent);
+//		Drawable thumbDownAccent = resources.getDrawable(R.drawable.ic_action_thumb_down_accent);
+//		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+//			if (voteType == null) {
+//				voteAgreeButton.setTextColor(colorNormal);
+//				voteAgreeButton.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbUp, null, null,
+//																				null);
+//				voteDisagreeButton.setTextColor(colorNormal);
+//				voteDisagreeButton.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDown, null,
+//																				   null, null);
+//			} else {
+//				switch (voteType) {
+//					case AGREE:
+//						voteAgreeButton.setTextColor(colorAccent);
+//						voteAgreeButton
+//						  .setCompoundDrawablesRelativeWithIntrinsicBounds(thumbUpAccent, null,
+//																		   null, null);
+//						voteDisagreeButton.setTextColor(colorNormal);
+//						voteDisagreeButton
+//						  .setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDown, null, null,
+//																		   null);
+//						break;
+//					case DISAGREE:
+//						voteAgreeButton.setTextColor(colorNormal);
+//						voteAgreeButton.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbUp,
+//																						null, null,
+//																						null);
+//						voteDisagreeButton.setTextColor(colorAccent);
+//						voteDisagreeButton
+//						  .setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDownAccent, null,
+//																		   null, null);
+//						break;
+//				}
+//			}
+//		} else {
+//			if (voteType == null) {
+//				voteAgreeButton.setTextColor(colorNormal);
+//				voteAgreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbUp, null, null, null);
+//				voteDisagreeButton.setTextColor(colorNormal);
+//				voteDisagreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbDown, null, null,
+//																		   null);
+//			} else {
+//				switch (voteType) {
+//					case AGREE:
+//						voteAgreeButton.setTextColor(colorAccent);
+//						voteAgreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbUpAccent, null,
+//																				null, null);
+//						voteDisagreeButton.setTextColor(colorNormal);
+//						voteDisagreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbDown, null,
+//																				   null, null);
+//						break;
+//					case DISAGREE:
+//						voteAgreeButton.setTextColor(colorNormal);
+//						voteAgreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbUp, null, null,
+//																				null);
+//						voteDisagreeButton.setTextColor(colorAccent);
+//						voteDisagreeButton.setCompoundDrawablesWithIntrinsicBounds(thumbDownAccent,
+//																				   null, null,
+//																				   null);
+//						break;
+//				}
+//			}
+//		}
 	}
 
 	@Override
 	public boolean onLongClick(View v) {
-		commentActionListener.commentUpdate(commentId, comment.getText().toString(),
-											getAdapterPosition());
+//		commentActionListener.commentUpdate(commentId, comment.getText().toString(),
+//											getAdapterPosition());
 		return true;
 	}
 }

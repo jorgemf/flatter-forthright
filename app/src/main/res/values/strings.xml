@@ -1,5 +1,6 @@
 <resources>
-	<string name="app_name">To flatter or to be forthright?</string>
+	<string name="app_name">Thoughts</string>
+	<!--<string name="app_name">To flatter or to be forthright?</string>-->
 	<string name="time_now">Now</string>
 	<string name="time_few_minutes_ago">few minutes ago</string>
 	<string name="time_yesterday">Yesterday</string>

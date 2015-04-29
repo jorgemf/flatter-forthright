@@ -40,7 +40,7 @@ public class UsersAdapter extends EndlessCursorAdapter<UserViewHolder> {
 		iId = cursor.getColumnIndex(Table.LocalUser.ID);
 		iContact = cursor.getColumnIndex(Table.LocalUser.CONTACT);
 		iPhone = cursor.getColumnIndex(Table.LocalUser.PHONE);
-		iImage;=cursor.getColumnIndex(Table.LocalUser.IMAGE);
+		iImage = cursor.getColumnIndex(Table.LocalUser.IMAGE);
 		iFavorite = cursor.getColumnIndex(Table.LocalUser.FAVORITE);
 	}
 
@@ -59,7 +59,7 @@ public class UsersAdapter extends EndlessCursorAdapter<UserViewHolder> {
 		String image = cursor.getString(iImage);
 		holder.setUserName(name);
 		holder.setUserPhone(phone);
-		holder.setUserImageView(image); // TODO fix this
+//		holder.setUserImageView(image); // TODO fix this
 		holder.setFavorite(favorite);
 	}
 

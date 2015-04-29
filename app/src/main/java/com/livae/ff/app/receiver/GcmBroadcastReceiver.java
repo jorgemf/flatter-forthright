@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-import com.livae.apphunt.app.service.GcmIntentService;
+import com.livae.ff.app.service.GcmIntentService;
 
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 

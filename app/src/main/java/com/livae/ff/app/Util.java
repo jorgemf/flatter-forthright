@@ -18,18 +18,20 @@ public class Util {
 		Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
 		if (cur.getCount() > 0) {
 			while (cur.moveToNext()) {
-				String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-				String name = cur.getString(cur
-											  .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-				if (Integer.parseInt(cur.getString(cur
-													 .getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) >
-					0) {
+				int iId = cur.getColumnIndex(ContactsContract.Contacts._ID);
+				String id = cur.getString(iId);
+				int iName = cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+				String name = cur.getString(iName);
+				int iHasPhone = cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER);
+				if (Integer.parseInt(cur.getString(iHasPhone)) > 0) {
 					Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
 										   ContactsContract.CommonDataKinds.Phone.CONTACT_ID +
 										   " = ?", new String[]{id}, null);
+					int iNumber = pCur
+									.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
 					while (pCur.moveToNext()) {
-						String phoneNo = pCur.getString(pCur
-														  .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+						String phoneNo = pCur.getString(iNumber);
+						// TODO
 					}
 					pCur.close();
 				}

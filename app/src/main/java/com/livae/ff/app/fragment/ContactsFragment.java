@@ -4,18 +4,18 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.livae.android.loading.CursorRecyclerAdapter;
-import com.livae.apphunt.app.Analytics;
-import com.livae.apphunt.app.Application;
-import com.livae.apphunt.app.activity.UserActivity;
-import com.livae.apphunt.app.adapter.CommentsAdapter;
-import com.livae.apphunt.app.async.NetworkAsyncTask;
-import com.livae.apphunt.app.provider.DataProvider;
-import com.livae.apphunt.app.task.ListResult;
-import com.livae.apphunt.app.task.QueryParamId;
-import com.livae.apphunt.app.task.TaskGetUserComments;
-import com.livae.apphunt.app.viewholders.CommentsViewHolder;
-import com.livae.apphunt.common.Constants.Order;
+import com.livae.ff.loading.CursorRecyclerAdapter;
+import com.livae.ff.app.Analytics;
+import com.livae.ff.app.Application;
+import com.livae.ff.app.activity.UserActivity;
+import com.livae.ff.app.adapter.CommentsAdapter;
+import com.livae.ff.app.async.NetworkAsyncTask;
+import com.livae.ff.app.provider.DataProvider;
+import com.livae.ff.app.task.ListResult;
+import com.livae.ff.app.task.QueryParamId;
+import com.livae.ff.app.task.TaskGetUserComments;
+import com.livae.ff.app.viewholders.CommentsViewHolder;
+import com.livae.ff.common.Constants.Order;
 
 public class ContactsFragment extends AbstractCommentsFragment<QueryParamId> {
 

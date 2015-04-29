@@ -3,8 +3,10 @@ package com.livae.ff.app.viewholders;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.livae.ff.app.R;
 import com.livae.ff.app.listener.UserClickListener;
 
 public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -50,7 +52,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
 	public void setUserPhone(Long userPhone) {
 		this.userPhone = userPhone;
-		this.userPhoneTextView.setText(userPhone);// TODO parse text
+		this.userPhoneTextView.setText(Long.toString(userPhone));// TODO parse text
 	}
 
 	public void setUserName(CharSequence name) {
