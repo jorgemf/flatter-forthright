@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.activity.AbstractActivity;
-import com.livae.ff.app.activity.UserActivity;
 import com.livae.ff.app.adapter.CommentsAdapter;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;

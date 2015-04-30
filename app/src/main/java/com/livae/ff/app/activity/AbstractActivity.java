@@ -3,12 +3,10 @@ package com.livae.ff.app.activity;
 import android.accounts.NetworkErrorException;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -23,9 +21,8 @@ import android.widget.TextView;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.livae.ff.app.R;
-import com.livae.ff.app.Settings;
-import com.livae.ff.common.Constants.CommentType;
 import com.livae.ff.app.listener.AnimatorListener;
+import com.livae.ff.common.Constants.CommentType;
 
 import java.net.ConnectException;
 
@@ -282,11 +279,6 @@ public abstract class AbstractActivity extends AppCompatActivity {
 		return toolbar;
 	}
 
-	public void setSupportActionBar(Toolbar toolbar) {
-		this.toolbar = toolbar;
-		super.setSupportActionBar(toolbar);
-	}
-
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
@@ -308,41 +300,47 @@ public abstract class AbstractActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_activity_card_flip);
+		setContentView(R.layout.activity_card_flip);
 
 		if (savedInstanceState == null) {
-			fragmentType = FRAGMENT_TYPE.FLATTER;
-			getApplication().setTheme(R.style.Flatter);
-			getFragmentManager().beginTransaction().add(R.id.container, getFragment(fragmentType))
-								.commit();
+			fragmentType = CommentType.FLATTER;
+			getApplication().setTheme(R.style.BaseTheme_Flatter);
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			fragmentManager.beginTransaction().add(R.id.fragment_container,
+												   getFragment(fragmentType)).commit();
 		} else {
-			fragmentType = (FRAGMENT_TYPE) savedInstanceState.getSerializable(SAVE_FRAGMENT_TYPE);
+			fragmentType = (CommentType) savedInstanceState.getSerializable(SAVE_FRAGMENT_TYPE);
 		}
 	}
 
+	public void setSupportActionBar(Toolbar toolbar) {
+		this.toolbar = toolbar;
+		super.setSupportActionBar(toolbar);
+	}
+
 	public void toggleApp() {
+		FragmentManager fragmentManager = getSupportFragmentManager();
 		switch (fragmentType) {
 			case FLATTER:
 				fragmentType = CommentType.FORTHRIGHT;
-				getApplication().setTheme(R.style.ForthRight);
-				getFragmentManager().beginTransaction()
-									.setCustomAnimations(R.animator.card_flip_right_in,
-														 R.animator.card_flip_right_out,
-														 R.animator.card_flip_left_in,
-														 R.animator.card_flip_left_out)
-									.replace(R.id.container, getFragment(fragmentType))
-									.addToBackStack(null).commit();
+				getApplication().setTheme(R.style.BaseTheme_ForthRight);
+				fragmentManager.beginTransaction()
+							   .setCustomAnimations(R.animator.card_flip_right_in,
+													R.animator.card_flip_right_out,
+													R.animator.card_flip_left_in,
+													R.animator.card_flip_left_out)
+							   .replace(R.id.fragment_container, getFragment(fragmentType))
+							   .addToBackStack(null).commit();
 				break;
 			case FORTHRIGHT:
 				fragmentType = CommentType.FLATTER;
-				getApplication().setTheme(R.style.Flatter);
-				getFragmentManager().beginTransaction()
-									.setCustomAnimations(R.animator.card_flip_left_in,
-														 R.animator.card_flip_left_out,
-														 R.animator.card_flip_right_in,
-														 R.animator.card_flip_right_out)
-									.replace(R.id.container, getFragment(fragmentType))
-									.addToBackStack(null).commit();
+				getApplication().setTheme(R.style.BaseTheme_Flatter);
+				fragmentManager.beginTransaction().setCustomAnimations(R.animator.card_flip_left_in,
+																	   R.animator.card_flip_left_out,
+																	   R.animator.card_flip_right_in,
+																	   R.animator.card_flip_right_out)
+							   .replace(R.id.fragment_container, getFragment(fragmentType))
+							   .addToBackStack(null).commit();
 				break;
 		}
 	}

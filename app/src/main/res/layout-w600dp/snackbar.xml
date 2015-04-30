@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="560dp"
+	android:layout_height="wrap_content"
+	android:background="@drawable/snackbar_rounded"
+	android:gravity="center_vertical"
+	android:layout_margin="@dimen/space_large"
+	android:orientation="horizontal"
+	android:paddingLeft="@dimen/space_large"
+	android:paddingRight="@dimen/space_large">
+
+	<TextView
+		android:id="@+id/snak_text"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:ellipsize="end"
+		android:layout_marginEnd="@dimen/space_large"
+		android:layout_marginRight="@dimen/space_large"
+		android:layout_weight="1"
+		android:maxLines="2"
+		android:text="@string/lorem_ipsum"
+		android:textAppearance="?android:attr/textAppearanceSmallInverse"
+		android:textColor="@color/white"/>
+
+	<Button
+		android:id="@+id/snack_button_action"
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/ok"
+		android:textColor="?colorAccent"/>
+
+</LinearLayout>

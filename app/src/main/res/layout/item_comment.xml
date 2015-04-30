@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
-
-	<ImageView
-		android:id="@+id/user_image"
-		android:layout_width="@dimen/item_comment_user_image_size"
-		android:layout_height="@dimen/item_comment_user_image_size"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentStart="true"
-		android:layout_alignParentTop="true"
-		android:layout_marginEnd="@dimen/space_normal"
-		android:layout_marginLeft="@dimen/space_large"
-		android:layout_marginRight="@dimen/space_normal"
-		android:layout_marginStart="@dimen/space_large"
-		android:layout_marginTop="@dimen/space_normal"/>
+	android:layout_height="wrap_content"
+	android:padding="@dimen/space_normal">
 
 	<TextView
 		android:id="@+id/comment"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/user_image"
 		android:layout_marginBottom="@dimen/space_normal"
-		android:layout_marginLeft="@dimen/space_large"
-		android:layout_marginRight="@dimen/space_large"
 		android:text="@string/lorem_ipsum"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:textColor="@color/black_light"/>
@@ -37,9 +23,6 @@
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
 		android:layout_below="@id/comment"
-		android:layout_marginBottom="@dimen/space_normal"
-		android:layout_marginEnd="@dimen/space_large"
-		android:layout_marginRight="@dimen/space_large"
 		android:layout_marginTop="@dimen/space_normal"
 		android:text="2 hours ago"
 		android:textAppearance="?android:attr/textAppearanceSmall"
@@ -53,8 +36,6 @@
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
 		android:layout_below="@id/comment"
-		android:layout_marginLeft="@dimen/space_large"
-		android:layout_marginStart="@dimen/space_large"
 		android:minHeight="@dimen/space_press_small"
 		android:minWidth="@dimen/space_press_small"
 		android:paddingBottom="@dimen/space_small"
@@ -97,11 +78,4 @@
 		android:layout_toRightOf="@id/vote_disagree"
 		android:text="Delete"
 		android:visibility="gone"/>
-
-	<View
-		android:layout_width="match_parent"
-		android:layout_height="1dp"
-		android:background="@color/darker"
-		android:layout_below="@id/comment_date"
-		android:layout_marginTop="@dimen/space_normal"/>
 </RelativeLayout>

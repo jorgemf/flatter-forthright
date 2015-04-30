@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -19,7 +20,7 @@ import com.livae.ff.app.R;
 import com.livae.ff.app.utils.DeviceUtils;
 import com.livae.ff.app.utils.IntentUtils;
 
-public class AboutActivity extends AbstractActivity implements View.OnClickListener {
+public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
 
 	public static void start(Activity activity) {
 		Intent intent = new Intent(activity, AboutActivity.class);

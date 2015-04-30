@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.listener.CommentActionListener;
-import com.livae.ff.app.utils.ImageUtils;
 import com.livae.ff.app.utils.UnitUtils;
 import com.livae.ff.common.Constants.CommentVoteType;
 
@@ -72,7 +71,7 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder
 	}
 
 	public void setUserImageUrl(String userImageUrl) {
-		ImageUtils.loadDefault(this.userImage, userImageUrl);
+//		ImageUtils.loadDefault(this.userImage, userImageUrl);
 		this.userImage.setVisibility(View.VISIBLE);
 	}
 
