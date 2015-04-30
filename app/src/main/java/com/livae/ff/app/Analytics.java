@@ -136,13 +136,11 @@ public class Analytics {
 
 		// CONTENT
 
-		public static final String COMMENT_CREATED = "COMMENT_CREATED"; // QUALITY CONTENT METRIC 2
+		public static final String COMMENT_CREATED = "COMMENT_CREATED"; // MAIN METRIC
 
-		public static final String COMMENT_UPDATED = "COMMENT_UPDATED";
+		public static final String COMMENT_VOTED_AGREE = "COMMENT_VOTED_AGREE"; // QUALITY CONTENT METRIC 2
 
-		public static final String COMMENT_VOTED_UP = "COMMENT_VOTED_UP"; // QUALITY CONTENT METRIC 1
-
-		public static final String COMMENT_VOTED_DOWN = "COMMENT_VOTED_DOWN";
+		public static final String COMMENT_VOTED_DISAGREE = "COMMENT_VOTED_DISAGREE"; // QUALITY CONTENT METRIC 1
 
 		public static final String COMMENT_VOTE_REMOVED = "COMMENT_VOTE_REMOVED";
 
@@ -155,8 +153,6 @@ public class Analytics {
 		public static final String REVIEW_APP = "REVIEW_APP";
 
 		public static final String SEND_FEEDBACK = "SEND_FEEDBACK";
-
-		public static final String VISITED_COMMUNITY = "VISITED_COMMUNITY";
 
 		public static final String VISITED_TERMS = "VISITED_TERMS";
 

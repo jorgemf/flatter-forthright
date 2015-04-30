@@ -29,7 +29,8 @@ public class TaskRegisterNewDevice extends NetworkAsyncTask<Pair<String, String>
 			appUser.setUserPhone(phoneUser.getPhone());
 			Constants.Profile profile = null;
 			try {
-				profile = Constants.Profile.valueOf(phoneUser.getProfile());
+//				profile = Constants.Profile.valueOf(phoneUser.getProfile());
+				// TODO set profile
 			} catch (Exception ignore) {
 			}
 			appUser.setProfile(profile);

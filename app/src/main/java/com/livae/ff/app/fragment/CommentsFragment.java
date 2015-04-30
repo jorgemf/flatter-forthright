@@ -1,30 +1,30 @@
 package com.livae.ff.app.fragment;
 
+import android.net.Uri;
 import android.support.v4.util.Pair;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.activity.AbstractActivity;
 import com.livae.ff.app.adapter.CommentsAdapter;
+import com.livae.ff.app.adapter.EndlessCursorAdapter;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
+import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.app.listener.CommentActionListener;
-import com.livae.ff.app.listener.UserClickListener;
 import com.livae.ff.app.sql.Table;
-import com.livae.ff.app.task.QueryParam;
+import com.livae.ff.app.task.ListResult;
+import com.livae.ff.app.task.QueryComments;
+import com.livae.ff.app.task.TaskGetUserComments;
 import com.livae.ff.app.task.TaskNoVoteComment;
 import com.livae.ff.app.task.TaskVoteAgreeComment;
 import com.livae.ff.app.task.TaskVoteDisagreeComment;
 import com.livae.ff.app.viewholders.CommentsViewHolder;
+import com.livae.ff.common.Constants.CommentType;
 import com.livae.ff.common.Constants.CommentVoteType;
 
-public abstract class AbstractCommentsFragment<Q extends QueryParam>
-  extends AbstractLoaderFragment<CommentsViewHolder, Q>
-  implements CommentActionListener, UserClickListener {
+public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder, QueryComments>
+  implements CommentActionListener {
 
 	private TaskVoteAgreeComment taskVoteAgreeComment;
 
@@ -34,9 +34,9 @@ public abstract class AbstractCommentsFragment<Q extends QueryParam>
 
 //	private TaskDeleteComment taskDeleteComment;
 
-//	private TaskUpdateComment taskUpdateComment;
-
 	private Long userId;
+
+	private CommentType commentType;
 
 	private CommentsAdapter commentsAdapter;
 
@@ -61,8 +61,18 @@ public abstract class AbstractCommentsFragment<Q extends QueryParam>
 	}
 
 	@Override
-	protected CursorRecyclerAdapter<CommentsViewHolder> getAdapter() {
-		commentsAdapter = new CommentsAdapter(getActivity(), this, this, this);
+	protected NetworkAsyncTask<QueryComments, ListResult> getLoaderTask() {
+		return new TaskGetUserComments();
+	}
+
+	@Override
+	protected Uri getUriCursor() {
+		return null;
+	}
+
+	@Override
+	protected EndlessCursorAdapter<CommentsViewHolder> getAdapter() {
+		commentsAdapter = new CommentsAdapter(this, this);
 		return commentsAdapter;
 	}
 
@@ -72,18 +82,13 @@ public abstract class AbstractCommentsFragment<Q extends QueryParam>
 	}
 
 	@Override
-	protected String getOrderString(Order order) {
-		String orderString = null;
-		switch (order) {
-			case VOTES:
-				orderString = "(" + Table.Comment.DOWN_VOTES + "-" + Table.Comment.UP_VOTES + ")" +
-							  " , -" + Table.Comment.DATE;
-				break;
-			case DATE:
-				orderString = "-" + Table.Comment.DATE;
-				break;
-		}
-		return orderString;
+	protected QueryComments getBaseQueryParams() {
+		return new QueryComments(userId, commentType);
+	}
+
+	@Override
+	protected String getOrderString() {
+		return "-" + Table.Comment.DATE;
 	}
 
 	@Override
@@ -96,8 +101,8 @@ public abstract class AbstractCommentsFragment<Q extends QueryParam>
 			@Override
 			public void onComplete(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
 								   Pair<Long, Integer> param, Comment result) {
-				Analytics.event(Analytics.Category.COMMUNITY, Analytics.Action.COMMENT_VOTED_UP);
-				commentsAdapter.votedComment(param.first, CommentVoteType.UP);
+				Analytics.event(Analytics.Category.CONTENT, Analytics.Action.COMMENT_VOTED_AGREE);
+				commentsAdapter.votedComment(param.first, CommentVoteType.AGREE);
 				if (!task.isCancelled()) {
 					commentsAdapter.notifyItemChanged(param.second);
 				}
@@ -124,8 +129,9 @@ public abstract class AbstractCommentsFragment<Q extends QueryParam>
 			@Override
 			public void onComplete(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
 								   Pair<Long, Integer> param, Comment result) {
-				Analytics.event(Analytics.Category.COMMUNITY, Analytics.Action.COMMENT_VOTED_DOWN);
-				commentsAdapter.votedComment(param.first, CommentVoteType.DOWN);
+				Analytics.event(Analytics.Category.CONTENT,
+								Analytics.Action.COMMENT_VOTED_DISAGREE);
+				commentsAdapter.votedComment(param.first, CommentVoteType.DISAGREE);
 				if (!task.isCancelled()) {
 					commentsAdapter.notifyItemChanged(param.second);
 				}
@@ -152,8 +158,7 @@ public abstract class AbstractCommentsFragment<Q extends QueryParam>
 			@Override
 			public void onComplete(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
 								   Pair<Long, Integer> param, Comment result) {
-				Analytics.event(Analytics.Category.COMMUNITY,
-								Analytics.Action.COMMENT_VOTE_REMOVED);
+				Analytics.event(Analytics.Category.CONTENT, Analytics.Action.COMMENT_VOTE_REMOVED);
 				commentsAdapter.votedComment(param.first, null);
 				if (!task.isCancelled()) {
 					commentsAdapter.notifyItemChanged(param.second);
@@ -212,54 +217,4 @@ public abstract class AbstractCommentsFragment<Q extends QueryParam>
 //		}).show();
 //	}
 
-//	@Override
-//	public void commentUpdate(final Long commentId, final String commentText,
-//							  final int adapterPosition) {
-//		EditTextDialogFragment dialog = new EditTextDialogFragment() {
-//			@Override
-//			protected void performAction(EditTextDialogFragment dialog, String newText) {
-//				updateComment(dialog, commentId, newText, adapterPosition);
-//			}
-//		};
-//		dialog.show(getActivity(), getFragmentManager(), R.string.dialog_update_comment_title,
-//					R.string.dialog_update_comment_message, R.integer.comment_min_chars,
-//					R.integer.comment_max_chars, commentText);
-//	}
-
-	@Override
-	public void userClicked(Long userId, ImageView imageView, TextView name, TextView tagline,
-							View cardView) {
-		Toolbar toolbar = ((AbstractActivity) getActivity()).getToolbar();
-		UserActivity.start(getActivity(), userId, imageView, name, tagline, cardView);
-	}
-
-//	private void updateComment(final EditTextDialogFragment dialog, long commentId, String text,
-//							   final int adapterPosition) {
-//
-//		if (taskUpdateComment == null) {
-//			taskUpdateComment = new TaskUpdateComment();
-//		}
-//		TextId textId = new TextId(text, commentId);
-//		taskUpdateComment.execute(textId, new Callback<TextId, Comment>() {
-//			@Override
-//			public void onComplete(CustomAsyncTask<TextId, Comment> task, TextId param,
-//								   Comment result) {
-//				Analytics.event(Analytics.Category.COMMUNITY, Analytics.Action.COMMENT_UPDATED);
-//				commentsAdapter.setCommentText(result.getId(), result.getComment());
-//				commentsAdapter.notifyItemChanged(adapterPosition);
-//				if (!task.isCancelled()) {
-//					dialog.dismiss();
-//				}
-//			}
-//
-//			@Override
-//			public void onError(CustomAsyncTask<TextId, Comment> task, TextId param, Exception e) {
-//				if (!task.isCancelled()) {
-//					dialog.retry();
-//					AbstractActivity activity = (AbstractActivity) getActivity();
-//					activity.showSnackBarException(e);
-//				}
-//			}
-//		});
-//	}
 }

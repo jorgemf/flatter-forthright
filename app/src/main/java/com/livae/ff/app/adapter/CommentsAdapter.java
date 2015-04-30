@@ -1,12 +1,12 @@
 package com.livae.ff.app.adapter;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.livae.ff.app.R;
+import com.livae.ff.app.fragment.AbstractLoaderFragment;
 import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.viewholders.CommentsViewHolder;
@@ -47,9 +47,10 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 
 	private HashMap<Long, CommentVoteType> commentVoteTypeHashMap;
 
-	public CommentsAdapter(@Nonnull Activity activity,
+	public CommentsAdapter(@Nonnull AbstractLoaderFragment fragment,
 						   @Nonnull CommentActionListener commentActionListener) {
-		layoutInflater = activity.getLayoutInflater();
+		super(fragment.getActivity(), fragment);
+		layoutInflater = fragment.getActivity().getLayoutInflater();
 		this.commentActionListener = commentActionListener;
 		commentVoteTypeHashMap = new HashMap<>();
 	}
@@ -58,20 +59,14 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 		this.userId = userId;
 	}
 
-	@Override
-	public CommentsViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int type) {
-		View view = layoutInflater.inflate(R.layout.item_comment, viewGroup, false);
-		return new CommentsViewHolder(view, commentActionListener);
-	}
-
 	public void votedComment(Long commentId, CommentVoteType voteType) {
 		commentVoteTypeHashMap.put(commentId, voteType);
 	}
 
 	@Override
-	public void changeCursor(Cursor cursor) {
+	public void setCursor(Cursor cursor) {
 		commentVoteTypeHashMap.clear();
-		super.changeCursor(cursor);
+		super.setCursor(cursor);
 	}
 
 	@Override
@@ -87,8 +82,13 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 	}
 
 	@Override
-	public void onBindViewHolder(final CommentsViewHolder holder, final Cursor cursor,
-								 final int position) {
+	protected CommentsViewHolder createCustomViewHolder(ViewGroup viewGroup, int type) {
+		View view = layoutInflater.inflate(R.layout.item_comment, viewGroup, false);
+		return new CommentsViewHolder(view, commentActionListener);
+	}
+
+	@Override
+	protected void bindCustomViewHolder(CommentsViewHolder holder, int position, Cursor cursor) {
 		holder.clear();
 		long commentId = cursor.getLong(iId);
 		holder.setCommentId(commentId);

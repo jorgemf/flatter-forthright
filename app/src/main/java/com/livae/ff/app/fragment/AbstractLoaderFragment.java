@@ -16,8 +16,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -39,8 +37,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 			 Callback<QUERY, ListResult> {
 
 	private static final int LOADER_ID = 1;
-
-	private final String KEY_SAVED_ORDER = "KEY_SAVED_ORDER";
 
 	private final String KEY_SAVED_NEXT_CURSOR = "KEY_SAVED_NEXT_CURSOR";
 
@@ -232,7 +228,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		adapter.setIsLoading(false);
 		finishLoading = false;
 	}
-
 
 	private void checkLoadNext() {
 		if (!finishLoading) {
@@ -477,7 +472,7 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		switch (id) {
 			case LOADER_ID:
 				return new CursorLoader(getActivity(), getUriCursor(), getProjection(), selection,
-										selectionArgs, getOrderString(order) + " LIMIT " +
+										selectionArgs, getOrderString() + " LIMIT " +
 													   totalLoaded);
 			// break
 		}

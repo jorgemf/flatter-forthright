@@ -1,7 +1,5 @@
 package com.livae.ff.app.task;
 
-import android.support.v4.util.Pair;
-
 import com.livae.ff.api.ff.Ff.ApiEndpoint.GetComments;
 import com.livae.ff.api.ff.model.CollectionResponseComment;
 import com.livae.ff.app.Application;
@@ -10,19 +8,17 @@ import com.livae.ff.app.api.Model;
 import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.common.Constants.CommentType;
 
-public class TaskGetUserComments
-  extends NetworkAsyncTask<Pair<QueryParamId, CommentType>, ListResult> {
+public class TaskGetUserComments extends NetworkAsyncTask<QueryComments, ListResult> {
 
 	@Override
-	protected ListResult doInBackground(Pair<QueryParamId, CommentType> params) throws Exception {
-		QueryParamId queryParamId = params.first;
-		CommentType commentType = params.second;
-		GetComments request = API.endpoint().getComments(queryParamId.getId(), commentType.name());
-		if (queryParamId.getLimit() != null) {
-			request.setLimit(queryParamId.getLimit());
+	protected ListResult doInBackground(QueryComments queryParams) throws Exception {
+		CommentType commentType = queryParams.getCommentType();
+		GetComments request = API.endpoint().getComments(queryParams.getId(), commentType.name());
+		if (queryParams.getLimit() != null) {
+			request.setLimit(queryParams.getLimit());
 		}
-		if (queryParamId.getCursor() != null) {
-			request.setCursor(queryParamId.getCursor());
+		if (queryParams.getCursor() != null) {
+			request.setCursor(queryParams.getCursor());
 		}
 		CollectionResponseComment comments = request.execute();
 		Model model = Application.model();
