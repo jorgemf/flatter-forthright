@@ -189,10 +189,6 @@ public class Comment implements Serializable {
 		this.isMe = isMe;
 	}
 
-	public void setIsMe(Long userId) {
-		this.isMe = this.userId.equals(userId);
-	}
-
 	public CommentVoteType getUserVoteType() {
 		return userVoteType;
 	}

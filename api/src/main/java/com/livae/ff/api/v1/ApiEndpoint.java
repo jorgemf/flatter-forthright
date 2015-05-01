@@ -244,7 +244,7 @@ public class ApiEndpoint {
 			if (commentVote != null) {
 				comment.setVoteType(commentVote.getType());
 			}
-			comment.setIsMe(userId);
+			comment.setIsMe(comment.getUserId().equals(userId));
 			commentList.add(comment);
 		}
 		return CollectionResponse.<Comment>builder().setItems(commentList)

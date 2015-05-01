@@ -55,7 +55,9 @@ public class Model {
 		val.put(Table.Comment.PHONE, comment.getPhone());
 		val.put(Table.Comment.USER_ID, comment.getUser());
 		val.put(Table.Comment.VOTE_TYPE, comment.getVoteType());
+		val.put(Table.Comment.USER_VOTE_TYPE, comment.getUserVoteType());
 		val.put(Table.Comment.COMMENT, comment.getComment());
+		val.put(Table.Comment.IS_ME, comment.getIsMe());
 
 		commentsList.add(val);
 	}
