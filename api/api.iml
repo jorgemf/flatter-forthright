@@ -15,7 +15,7 @@
         </option>
         <option name="WAR_DIR" value="/tmp/gradlebuild/flatter-forthright/api/exploded-app" />
         <option name="WEB_APP_DIR" value="$MODULE_DIR$/src/main/webapp" />
-        <option name="APPENGINE_SDKROOT" value="$USER_HOME$/.gradle/appengine-sdk/appengine-java-sdk-1.9.19" />
+        <option name="APPENGINE_SDKROOT" value="$USER_HOME$/.gradle/appengine-sdk/appengine-java-sdk-1.9.20" />
       </configuration>
     </facet>
     <facet type="java-gradle" name="Java-Gradle">
@@ -44,20 +44,20 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="common" exported="" />
+    <orderEntry type="library" exported="" name="appengine-endpoints-1.9.20" level="project" />
+    <orderEntry type="library" exported="" name="appengine-endpoints-deps-1.9.20" level="project" />
     <orderEntry type="library" exported="" name="servlet-api-2.5" level="project" />
-    <orderEntry type="library" exported="" name="appengine-endpoints-1.9.19" level="project" />
-    <orderEntry type="library" exported="" name="appengine-endpoints-deps-1.9.19" level="project" />
     <orderEntry type="library" exported="" name="objectify-5.1.5" level="project" />
     <orderEntry type="library" exported="" name="gcm-server-1.0.2" level="project" />
-    <orderEntry type="library" exported="" name="libphonenumber-7.0.4" level="project" />
-    <orderEntry type="library" exported="" name="prefixmapper-2.20" level="project" />
-    <orderEntry type="library" exported="" name="geocoder-2.20" level="project" />
-    <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.19" level="project" />
+    <orderEntry type="library" exported="" name="libphonenumber-7.0.5" level="project" />
+    <orderEntry type="library" exported="" name="prefixmapper-2.21" level="project" />
+    <orderEntry type="library" exported="" name="geocoder-2.21" level="project" />
+    <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.20" level="project" />
     <orderEntry type="library" exported="" name="guava-18.0" level="project" />
     <orderEntry type="library" exported="" name="json-simple-1.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="appengine-api-labs-1.9.19" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="appengine-api-stubs-1.9.19" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="appengine-testing-1.9.19" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="appengine-api-labs-1.9.20" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="appengine-api-stubs-1.9.20" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="appengine-testing-1.9.20" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="google-http-client-1.20.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="google-http-client-jackson2-1.20.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />

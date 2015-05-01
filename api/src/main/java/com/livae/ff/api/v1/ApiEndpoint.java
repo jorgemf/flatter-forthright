@@ -14,7 +14,7 @@ import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.cmd.Query;
-import com.livae.ff.api.Constants;
+import com.livae.ff.api.Settings;
 import com.livae.ff.api.auth.AppAuthenticator;
 import com.livae.ff.api.auth.AuthUtil;
 import com.livae.ff.api.model.Comment;
@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import javax.mail.Address;
@@ -77,8 +78,9 @@ public class ApiEndpoint {
 		Transport.send(msg);
 	}
 
-	private static Long obfuscatePhone(Long userPhone, Long contactPhone) {
-		return userPhone ^ contactPhone ^ Constants.RANDOM_LONG;
+	private static Long obfuscatePhone(Long userPhone) {
+		Random random = new Random();
+		return userPhone ^ random.nextLong();
 	}
 
 	@ApiMethod(path = "version/{platform}", httpMethod = ApiMethod.HttpMethod.GET)
@@ -185,10 +187,19 @@ public class ApiEndpoint {
 		if (InputUtil.isEmpty(commentText)) {
 			throw new BadRequestException("Empty comment");
 		}
-		Long userPhone = user.getPhone();
-		Long userId = obfuscatePhone(userPhone, contactPhone);
-		// TODO give a new id if the last comment was more than one week ago, or use the last time stamp
-		Comment comment = new Comment(commentType, contactPhone, userId, commentText);
+		Long userId = user.getPhone();
+		// get previous comments for previous fake id
+		Comment previousComment = ofy().load().type(Comment.class).filter("phone", contactPhone)
+									   .filter("userId", userId).order("-date").first().now();
+		Long userFakeId;
+		if (previousComment == null || previousComment.getDate().getTime() <
+									   System.currentTimeMillis() -
+									   Settings.TIME_BETWEEN_ANONYMOUS_COMMENTS) {
+			userFakeId = obfuscatePhone(userId);
+		} else {
+			userFakeId = previousComment.getUser();
+		}
+		Comment comment = new Comment(commentType, contactPhone, userFakeId, userId, commentText);
 		ofy().save().entity(comment);
 		return comment;
 	}
@@ -233,6 +244,7 @@ public class ApiEndpoint {
 			if (commentVote != null) {
 				comment.setVoteType(commentVote.getType());
 			}
+			comment.setIsMe(userId);
 			commentList.add(comment);
 		}
 		return CollectionResponse.<Comment>builder().setItems(commentList)
@@ -270,6 +282,9 @@ public class ApiEndpoint {
 			commentVote = new CommentVote(comment.getId(), user.getPhone(), CommentVoteType.AGREE);
 			comment.setAgreeVotes(comment.getAgreeVotes() + 1);
 		}
+		if (user.getPhone().equals(comment.getPhone())) {
+			comment.setUserVoteType(CommentVoteType.AGREE);
+		}
 		ofy().save().entity(commentVote);
 		ofy().save().entity(comment);
 		return comment;
@@ -306,6 +321,9 @@ public class ApiEndpoint {
 										  CommentVoteType.DISAGREE);
 			comment.setDisagreeVotes(comment.getDisagreeVotes() + 1);
 		}
+		if (user.getPhone().equals(comment.getPhone())) {
+			comment.setUserVoteType(CommentVoteType.DISAGREE);
+		}
 		ofy().save().entity(commentVote);
 		ofy().save().entity(comment);
 		return comment;
@@ -340,6 +358,9 @@ public class ApiEndpoint {
 			}
 		} else {
 			throw new NotFoundException("Comment was never voted");
+		}
+		if (user.getPhone().equals(comment.getPhone())) {
+			comment.setUserVoteType(null);
 		}
 		ofy().delete().entity(commentVote);
 		ofy().save().entity(comment);

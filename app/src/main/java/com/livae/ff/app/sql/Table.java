@@ -37,6 +37,8 @@ public class Table {
 
 		public static final String USER_ID = NAME + "_" + "user_id";
 
+		public static final String IS_ME = NAME + "_" + "is_me";
+
 		public static final String PHONE = NAME + "_" + "phone";
 
 		public static final String TYPE = NAME + "_" + "type";
@@ -46,6 +48,8 @@ public class Table {
 		public static final String AGREE_VOTES = NAME + "_" + "agree_votes";
 
 		public static final String DISAGREE_VOTES = NAME + "_" + "disagree_votes";
+
+		public static final String USER_VOTE_TYPE = NAME + "_" + "user_vote_type";
 
 		public static final String VOTE_TYPE = NAME + "_" + "vote_type";
 
@@ -58,10 +62,12 @@ public class Table {
 												DATE + " INTEGER NOT NULL, " +
 												PHONE + " INTEGER NOT NULL, " +
 												USER_ID + " INTEGER NOT NULL, " +
+												IS_ME + " INTEGER NOT NULL, " +
 												COMMENT + " TEXT NOT NULL, " +
 												TYPE + " TEXT NOT NULL, " +
 												AGREE_VOTES + " INTEGER, " +
 												DISAGREE_VOTES + " INTEGER, " +
+												USER_VOTE_TYPE + " TEXT, " +
 												VOTE_TYPE + " TEXT " +
 												" );";
 	}

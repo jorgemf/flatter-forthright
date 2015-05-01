@@ -2,6 +2,8 @@ package com.livae.ff.api;
 
 import com.google.appengine.api.utils.SystemProperty;
 
+import java.util.concurrent.TimeUnit;
+
 public class Settings {
 
 	public static final String APP_NAME = SystemProperty.applicationId.get();
@@ -15,6 +17,8 @@ public class Settings {
 	public static final int GCM_NOTIFICATION_RETRIES = 5;
 
 	public static final String APP_DEVELOPERS_EMAIL = System.getProperty("app.developers.email");
+
+	public static final long TIME_BETWEEN_ANONYMOUS_COMMENTS = TimeUnit.DAYS.toMillis(10);
 
 	public static class Google {
 

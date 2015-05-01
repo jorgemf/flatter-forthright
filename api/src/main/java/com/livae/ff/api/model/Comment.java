@@ -25,6 +25,9 @@ public class Comment implements Serializable {
 
 	private Long user;
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+	private Long userId;
+
 	@Index
 	private Long phone;
 
@@ -45,12 +48,13 @@ public class Comment implements Serializable {
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Integer votes;
 
-	@Index(IfTrue.class)
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	private Boolean isDownVoted;
-
 	@Ignore
 	private CommentVoteType voteType;
+
+	private CommentVoteType userVoteType;
+
+	@Ignore
+	private Boolean isMe;
 
 	@Index(IfTrue.class)
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
@@ -60,17 +64,19 @@ public class Comment implements Serializable {
 	}
 
 	public Comment(@Nonnull CommentType commentType, @Nonnull Long phone, @Nonnull Long user,
-				   @Nonnull String comment) {
+				   @Nonnull Long userId, @Nonnull String comment) {
 		this.commentType = commentType;
 		this.user = user;
+		this.userId = userId;
 		this.phone = phone;
 		this.comment = comment;
-		this.isDownVoted = false;
 		date = new Date();
 		agreeVotes = 0;
 		disagreeVotes = 0;
 		votes = 0;
+		userVoteType = null;
 		deleted = false;
+		isMe = false;
 	}
 
 	public static Comment get(Long id) {
@@ -91,6 +97,14 @@ public class Comment implements Serializable {
 
 	public void setUser(Long user) {
 		this.user = user;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public Long getPhone() {
@@ -124,7 +138,6 @@ public class Comment implements Serializable {
 	public void setAgreeVotes(Integer agreeVotes) {
 		this.agreeVotes = agreeVotes;
 		this.votes = this.agreeVotes - this.disagreeVotes;
-		this.isDownVoted = votes < 0;
 	}
 
 	public Integer getDisagreeVotes() {
@@ -134,7 +147,6 @@ public class Comment implements Serializable {
 	public void setDisagreeVotes(Integer disagreeVotes) {
 		this.disagreeVotes = disagreeVotes;
 		this.votes = this.agreeVotes - this.disagreeVotes;
-		this.isDownVoted = votes < 0;
 	}
 
 	public Integer getVotes() {
@@ -167,5 +179,25 @@ public class Comment implements Serializable {
 
 	public void setCommentType(CommentType commentType) {
 		this.commentType = commentType;
+	}
+
+	public Boolean getIsMe() {
+		return isMe;
+	}
+
+	public void setIsMe(Boolean isMe) {
+		this.isMe = isMe;
+	}
+
+	public void setIsMe(Long userId) {
+		this.isMe = this.userId.equals(userId);
+	}
+
+	public CommentVoteType getUserVoteType() {
+		return userVoteType;
+	}
+
+	public void setUserVoteType(CommentVoteType userVoteType) {
+		this.userVoteType = userVoteType;
 	}
 }
