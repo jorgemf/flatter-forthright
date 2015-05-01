@@ -2,15 +2,14 @@ package com.livae.ff.app.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,9 +31,8 @@ import com.livae.ff.app.task.QueryParam;
 import com.livae.ff.app.utils.Debug;
 
 public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder, QUERY extends QueryParam>
-  extends Fragment
-  implements EndlessCursorAdapter.ViewCreator, LoaderManager.LoaderCallbacks<Cursor>,
-			 Callback<QUERY, ListResult> {
+  extends AbstractFragment
+  implements LoaderManager.LoaderCallbacks<Cursor>, Callback<QUERY, ListResult> {
 
 	private static final int LOADER_ID = 1;
 
@@ -324,12 +322,8 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		}
 	}
 
-	public View createLoadingView(LayoutInflater layoutInflater, ViewGroup parent) {
-		return layoutInflater.inflate(R.layout.item_loading, parent, false);
-	}
-
 	public View createErrorView(LayoutInflater layoutInflater, ViewGroup parent) {
-		View view = layoutInflater.inflate(R.layout.item_retry, parent, false);
+		View view = super.createErrorView(layoutInflater, parent);
 		view.findViewById(R.id.button_retry).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

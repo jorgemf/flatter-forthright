@@ -3,12 +3,12 @@ package com.livae.ff.app.activity;
 import android.accounts.NetworkErrorException;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -304,8 +304,7 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
 		if (savedInstanceState == null) {
 			fragmentType = CommentType.FLATTER;
-			getApplication().setTheme(R.style.BaseTheme_Flatter);
-			FragmentManager fragmentManager = getSupportFragmentManager();
+			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction().add(R.id.fragment_container,
 												   getFragment(fragmentType)).commit();
 		} else {
@@ -319,11 +318,10 @@ public abstract class AbstractActivity extends AppCompatActivity {
 	}
 
 	public void toggleApp() {
-		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentManager fragmentManager = getFragmentManager();
 		switch (fragmentType) {
 			case FLATTER:
 				fragmentType = CommentType.FORTHRIGHT;
-				getApplication().setTheme(R.style.BaseTheme_ForthRight);
 				fragmentManager.beginTransaction()
 							   .setCustomAnimations(R.animator.card_flip_right_in,
 													R.animator.card_flip_right_out,
@@ -334,7 +332,6 @@ public abstract class AbstractActivity extends AppCompatActivity {
 				break;
 			case FORTHRIGHT:
 				fragmentType = CommentType.FLATTER;
-				getApplication().setTheme(R.style.BaseTheme_Flatter);
 				fragmentManager.beginTransaction().setCustomAnimations(R.animator.card_flip_left_in,
 																	   R.animator.card_flip_left_out,
 																	   R.animator.card_flip_right_in,

@@ -1,25 +1,54 @@
 package com.livae.ff.app.fragment;
 
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class ContactsFragment extends Fragment {
+import com.livae.ff.app.R;
+import com.livae.ff.app.activity.AbstractActivity;
+import com.livae.ff.app.adapter.UsersAdapter;
+import com.livae.ff.app.listener.UserClickListener;
 
-//	@Override
-//	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//							 Bundle savedInstanceState) {
-//		// TODO
-//
-//		// create ContextThemeWrapper from the original Activity Context with the custom theme
-//		final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(),
-//																	R.style.yourCustomTheme);
-//
-//		// clone the inflater using the ContextThemeWrapper
-//		LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-//
-//		// inflate the layout using the cloned inflater, not default inflater
-//		return localInflater.inflate(R.layout.yourLayout, container, false);
-//	}
-//
+public class ContactsFragment extends AbstractFragment implements UserClickListener {
+
+	private UsersAdapter usersAdapter;
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+							 @Nullable Bundle savedInstanceState) {
+		LayoutInflater localInflater = getLayoutInflater(inflater);
+		return localInflater.inflate(R.layout.fragment_list_items, container, false);
+	}
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+		usersAdapter = new UsersAdapter(getActivity(), this, this);
+		recyclerView.setAdapter(usersAdapter);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		view.findViewById(R.id.toggle_button).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				AbstractActivity activity = (AbstractActivity) getActivity();
+				activity.toggleApp();
+			}
+		});
+	}
+
+	@Override
+	public void userClicked(Long userId, TextView name, ImageView image) {
+		// TODO
+	}
+
+	//
 //	@Override
 //	public void onCreate(Bundle savedInstanceState) {
 //		super.onCreate(savedInstanceState);

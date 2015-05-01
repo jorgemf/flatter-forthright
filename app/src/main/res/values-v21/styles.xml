@@ -34,6 +34,7 @@
 
 	<style name="BaseTheme.Flatter">
 		<item name="colorPrimary">@color/primary_flatter</item>
+		<item name="colorAccent">@color/primary_flatter</item>
 		<item name="android:windowBackground">@color/primary_flatter_light</item>
 		<item name="android:alertDialogTheme">@style/BaseDialog.Flatter</item>
 		<item name="android:colorControlHighlight">@color/primary_flatter</item>
@@ -41,6 +42,7 @@
 
 	<style name="BaseTheme.ForthRight">
 		<item name="colorPrimary">@color/primary_forthright</item>
+		<item name="colorAccent">@color/primary_forthright</item>
 		<item name="android:windowBackground">@color/primary_forthright_light</item>
 		<item name="android:alertDialogTheme">@style/BaseDialog.ForthRight</item>
 		<item name="android:colorControlHighlight">@color/primary_forthright</item>

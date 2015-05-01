@@ -2,16 +2,14 @@ package com.livae.ff.app.activity;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.livae.ff.app.Analytics;
-import com.livae.ff.app.R;
+import com.livae.ff.app.fragment.ContactsFragment;
 import com.livae.ff.common.Constants;
 
 public class ContactsActivity extends AbstractActivity implements View.OnClickListener {
@@ -37,17 +35,19 @@ public class ContactsActivity extends AbstractActivity implements View.OnClickLi
 		super.onCreate(savedInstanceState);
 
 		// Set up the action bar.
-		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		ActionBar actionBar = getSupportActionBar();
+//		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//		setSupportActionBar(toolbar);
+//		ActionBar actionBar = getSupportActionBar();
 //		actionBar.setTitle(R.string.activity_contacts);
-		actionBar.setHomeButtonEnabled(true);
-		actionBar.setDisplayHomeAsUpEnabled(true);
+//		actionBar.setHomeButtonEnabled(true);
+//		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
 	protected Fragment getFragment(Constants.CommentType fragmentType) {
-		return null;
+		ContactsFragment contactsFragment = new ContactsFragment();
+		contactsFragment.setCommentType(fragmentType);
+		return contactsFragment;
 	}
 
 	@Override
