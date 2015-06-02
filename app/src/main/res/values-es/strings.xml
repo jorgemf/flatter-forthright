@@ -4,4 +4,6 @@
 	<string name="lorem_ipsum"/>
 
 	<string name="app_name">Thoughts</string>
+	<string name="button_continue">Continue</string>
+	<string name="welcome">Welcome</string>
 </resources>

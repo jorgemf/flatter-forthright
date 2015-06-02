@@ -42,9 +42,9 @@ public class CountryViewHolder {
 	public void highlightText(boolean isCurrentCountry, String searchString) {
 		Resources resources = countryText.getResources();
 		if (isCurrentCountry) {
-			countryText.setTextColor(resources.getColor(R.color.black));
+			countryText.setTextColor(resources.getColor(R.color.black_light));
 		} else {
-			countryText.setTextColor(resources.getColor(R.color.grey_dark));
+			countryText.setTextColor(resources.getColor(R.color.grey));
 		}
 
 		if (searchString != null && searchString.length() > 1) {

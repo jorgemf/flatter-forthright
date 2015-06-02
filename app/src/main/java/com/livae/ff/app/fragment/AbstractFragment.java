@@ -1,10 +1,8 @@
 package com.livae.ff.app.fragment;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.internal.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +16,6 @@ public class AbstractFragment extends Fragment implements EndlessCursorAdapter.V
 	private static final String SAVE_COMMENT_TYPE = "SAVE_COMMENT_TYPE";
 
 	private CommentType commentType;
-
-	protected LayoutInflater getLayoutInflater(LayoutInflater inflater) {
-		int theme = R.style.BaseTheme;
-		switch (commentType) {
-			case FLATTER:
-				theme = R.style.BaseTheme_Flatter;
-				break;
-			case FORTHRIGHT:
-				theme = R.style.BaseTheme_ForthRight;
-				break;
-		}
-		final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), theme);
-		return inflater.cloneInContext(contextThemeWrapper);
-	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {

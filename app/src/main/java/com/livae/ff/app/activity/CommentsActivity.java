@@ -46,11 +46,6 @@ public class CommentsActivity extends AbstractActivity implements View.OnClickLi
 	}
 
 	@Override
-	protected Fragment getFragment(Constants.CommentType fragmentType) {
-		return null;
-	}
-
-	@Override
 	public void onClick(View v) {
 
 	}

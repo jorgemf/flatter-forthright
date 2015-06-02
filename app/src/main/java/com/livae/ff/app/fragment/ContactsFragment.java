@@ -23,8 +23,7 @@ public class ContactsFragment extends AbstractFragment implements UserClickListe
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
 							 @Nullable Bundle savedInstanceState) {
-		LayoutInflater localInflater = getLayoutInflater(inflater);
-		return localInflater.inflate(R.layout.fragment_list_items, container, false);
+		return inflater.inflate(R.layout.fragment_list_items, container, false);
 	}
 
 	@Override
@@ -34,13 +33,13 @@ public class ContactsFragment extends AbstractFragment implements UserClickListe
 		usersAdapter = new UsersAdapter(getActivity(), this, this);
 		recyclerView.setAdapter(usersAdapter);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-		view.findViewById(R.id.toggle_button).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				AbstractActivity activity = (AbstractActivity) getActivity();
-				activity.toggleApp();
-			}
-		});
+//		view.findViewById(R.id.toggle_button).setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				AbstractActivity activity = (AbstractActivity) getActivity();
+//				activity.toggleApp();
+//			}
+//		});
 	}
 
 	@Override

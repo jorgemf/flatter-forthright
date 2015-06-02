@@ -1,19 +1,10 @@
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/list_container"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<include layout="@layout/toolbar"/>
-
-	<Button
-		android:id="@+id/toggle_button"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/toolbar"
-		android:layout_centerHorizontal="true"
-		android:text="Toggle"/>
-
-	<android.support.v4.widget.ContentLoadingProgressBar
+	<ProgressBar
 		android:id="@+id/center_progressbar"
 		style="?android:attr/progressBarStyleLarge"
 		android:layout_width="wrap_content"
@@ -24,11 +15,10 @@
 		android:id="@+id/empty_view"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:drawablePadding="@dimen/space_large"
 		android:layout_centerInParent="true"
 		android:layout_margin="@dimen/space_large"
 		android:paddingBottom="@dimen/space_huge"
-		android:text="Empty"
+		android:text="@string/empty_text"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:visibility="gone"/>
 

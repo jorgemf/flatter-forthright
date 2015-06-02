@@ -55,7 +55,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_about);
+//		setContentView(R.layout.activity_about);
 
 		// Set up the action bar.
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -65,31 +65,31 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		findViewById(R.id.button_share_this_app).setOnClickListener(this);
-		findViewById(R.id.button_details_rate_app).setOnClickListener(this);
-		findViewById(R.id.button_details_feedback).setOnClickListener(this);
+//		findViewById(R.id.button_share_this_app).setOnClickListener(this);
+//		findViewById(R.id.button_details_rate_app).setOnClickListener(this);
+//		findViewById(R.id.button_details_feedback).setOnClickListener(this);
 //		findViewById(R.id.button_details_terms_conditions).setOnClickListener(this);
 
-		TextView versionTextView = (TextView) findViewById(R.id.about_app_version);
-		versionTextView.setText(getString(R.string.app_version,
-										  DeviceUtils.getApplicationVersionString()));
+//		TextView versionTextView = (TextView) findViewById(R.id.about_app_version);
+//		versionTextView.setText(getString(R.string.app_version,
+//										  DeviceUtils.getApplicationVersionString()));
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.button_share_this_app:
-				Analytics.event(Analytics.Category.USER, Analytics.Action.SHARED_APP);
-				IntentUtils.shareApp(this, getPackageName());
-				break;
-			case R.id.button_details_rate_app:
-				Analytics.event(Analytics.Category.USER, Analytics.Action.REVIEW_APP);
-				IntentUtils.openMarket(this, getPackageName());
-				break;
-			case R.id.button_details_feedback:
-				Analytics.event(Analytics.Category.USER, Analytics.Action.SEND_FEEDBACK);
-				sendFeedback(this);
-				break;
+//			case R.id.button_share_this_app:
+//				Analytics.event(Analytics.Category.USER, Analytics.Action.SHARED_APP);
+//				IntentUtils.shareApp(this, getPackageName());
+//				break;
+//			case R.id.button_details_rate_app:
+//				Analytics.event(Analytics.Category.USER, Analytics.Action.REVIEW_APP);
+//				IntentUtils.openMarket(this, getPackageName());
+//				break;
+//			case R.id.button_details_feedback:
+//				Analytics.event(Analytics.Category.USER, Analytics.Action.SEND_FEEDBACK);
+//				sendFeedback(this);
+//				break;
 //			case R.id.button_details_terms_conditions:
 //				Analytics.event(Analytics.Category.USER, Analytics.Action.VISITED_TERMS);
 //				String urlTermsConditions = getString(R.string.url_terms_conditions);

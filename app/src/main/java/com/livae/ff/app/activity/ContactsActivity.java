@@ -44,13 +44,6 @@ public class ContactsActivity extends AbstractActivity implements View.OnClickLi
 	}
 
 	@Override
-	protected Fragment getFragment(Constants.CommentType fragmentType) {
-		ContactsFragment contactsFragment = new ContactsFragment();
-		contactsFragment.setCommentType(fragmentType);
-		return contactsFragment;
-	}
-
-	@Override
 	public void onClick(View v) {
 
 	}

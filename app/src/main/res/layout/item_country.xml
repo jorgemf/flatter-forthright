@@ -2,12 +2,10 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
+	android:layout_width="wrap_content"
 	android:layout_height="@dimen/space_press"
 	android:gravity="center_vertical"
-	android:orientation="horizontal"
-	android:paddingLeft="@dimen/space_normal"
-	android:paddingRight="@dimen/space_normal">
+	android:orientation="horizontal">
 
 	<ImageView
 		android:id="@+id/flag_icon"
@@ -21,13 +19,13 @@
 
 	<TextView
 		android:id="@+id/country_text"
-		android:layout_width="0dp"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:ellipsize="end"
 		android:layout_gravity="center_vertical"
-		android:layout_weight="1"
 		android:lines="1"
-		android:text="@string/lorem_ipsum"
-		android:textAppearance="?android:attr/textAppearanceMedium"/>
+		android:text="+34"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		tools:ignore="HardcodedText"/>
 
 </LinearLayout>

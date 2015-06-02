@@ -14,7 +14,7 @@
 		android:icon="@mipmap/ic_launcher"
 		android:label="@string/app_name"
 		android:name=".Application"
-		android:theme="@style/BaseTheme">
+		android:theme="@style/FFBase.Theme">
 
 		<activity
 			android:label="@string/app_name"

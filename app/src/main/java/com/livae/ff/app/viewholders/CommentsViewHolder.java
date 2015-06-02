@@ -30,12 +30,6 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder
 
 	private CommentActionListener commentActionListener;
 
-	private Button voteAgreeButton;
-
-	private Button voteDisagreeButton;
-
-	private CommentVoteType voteType;
-
 	public CommentsViewHolder(View itemView, CommentActionListener commentActionListener) {
 		super(itemView);
 		this.commentActionListener = commentActionListener;
@@ -43,15 +37,15 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder
 		title = (TextView) itemView.findViewById(R.id.title);
 		comment = (TextView) itemView.findViewById(R.id.comment);
 		date = (TextView) itemView.findViewById(R.id.comment_date);
-		voteAgreeButton = (Button) itemView.findViewById(R.id.vote_agree);
-		voteDisagreeButton = (Button) itemView.findViewById(R.id.vote_disagree);
-		voteAgreeButton.setOnClickListener(this);
-		voteDisagreeButton.setOnClickListener(this);
-		if (Application.getSeeAdmin()) {
-			Button buttonDelete = (Button) itemView.findViewById(R.id.button_delete);
-			buttonDelete.setOnClickListener(this);
-			buttonDelete.setVisibility(View.VISIBLE);
-		}
+//		voteAgreeButton = (Button) itemView.findViewById(R.id.vote_agree);
+//		voteDisagreeButton = (Button) itemView.findViewById(R.id.vote_disagree);
+//		voteAgreeButton.setOnClickListener(this);
+//		voteDisagreeButton.setOnClickListener(this);
+//		if (Application.getSeeAdmin()) {
+//			Button buttonDelete = (Button) itemView.findViewById(R.id.button_delete);
+//			buttonDelete.setOnClickListener(this);
+//			buttonDelete.setVisibility(View.VISIBLE);
+//		}
 	}
 
 	public void clear() {
@@ -59,7 +53,7 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder
 		title.setText(null);
 		comment.setText(null);
 		date.setText(null);
-		comment.setOnLongClickListener(null);
+//		comment.setOnLongClickListener(null);
 	}
 
 	public void setCommentId(Long commentId) {
@@ -90,35 +84,34 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder
 	}
 
 	public void setVotes(int upVotes, int downVotes) {
-		voteAgreeButton.setText(Integer.toString(upVotes));
-		voteDisagreeButton.setText(Integer.toString(downVotes));
-		// TODO make text lighter if the comment is bad, highlight it if it is good
+//		voteAgreeButton.setText(Integer.toString(upVotes));
+//		voteDisagreeButton.setText(Integer.toString(downVotes));
 	}
 
 	public void setCanVote(boolean canVote) {
-		voteAgreeButton.setEnabled(canVote);
-		voteDisagreeButton.setEnabled(canVote);
+//		voteAgreeButton.setEnabled(canVote);
+//		voteDisagreeButton.setEnabled(canVote);
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.vote_agree:
-				if (voteType == CommentVoteType.AGREE) {
-					commentActionListener.commentNoVoted(commentId, userId, getAdapterPosition());
-				} else {
-					commentActionListener.commentVotedAgree(commentId, userId,
-															getAdapterPosition());
-				}
-				break;
-			case R.id.vote_disagree:
-				if (voteType == CommentVoteType.DISAGREE) {
-					commentActionListener.commentNoVoted(commentId, userId, getAdapterPosition());
-				} else {
-					commentActionListener.commentVotedDisagree(commentId, userId,
-															   getAdapterPosition());
-				}
-				break;
+//			case R.id.vote_agree:
+//				if (voteType == CommentVoteType.AGREE) {
+//					commentActionListener.commentNoVoted(commentId, userId, getAdapterPosition());
+//				} else {
+//					commentActionListener.commentVotedAgree(commentId, userId,
+//															getAdapterPosition());
+//				}
+//				break;
+//			case R.id.vote_disagree:
+//				if (voteType == CommentVoteType.DISAGREE) {
+//					commentActionListener.commentNoVoted(commentId, userId, getAdapterPosition());
+//				} else {
+//					commentActionListener.commentVotedDisagree(commentId, userId,
+//															   getAdapterPosition());
+//				}
+//				break;
 //			case R.id.button_delete:
 //				if (Application.getSeeAdmin()) {
 //					commentActionListener.commentDelete(commentId, comment.getText().toString(),

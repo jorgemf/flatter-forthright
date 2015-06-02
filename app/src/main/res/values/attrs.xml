@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<attr format="reference|color" name="ff_primaryDark"/>
+	<attr format="reference|color" name="ff_primaryLight"/>
+	<attr format="reference|color" name="ff_primary"/>
+</resources>

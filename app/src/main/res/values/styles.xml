@@ -1,92 +1,63 @@
 <resources>
 
-	<style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
-		<item name="colorPrimary">@color/grey</item>
-		<item name="colorPrimaryDark">@color/darker</item>
-		<item name="colorAccent">@color/black</item>
+	<style name="FFBase" parent="Theme.AppCompat.Light.DarkActionBar">
+		<item name="colorAccent">@color/amber</item>
+		<item name="colorPrimary">@color/purple</item>
+		<item name="colorPrimaryDark">@color/purple_dark</item>
+		<item name="colorButtonNormal">@color/button_flat_accent</item>
 		<item name="android:textColorPrimary">@color/black_light</item>
 		<item name="android:textColorPrimaryInverse">@color/white</item>
-		<item name="android:textColorSecondary">@color/grey_dark</item>
+		<item name="android:textColorSecondary">@color/grey</item>
 		<item name="android:textColorSecondaryInverse">@color/grey_light</item>
-		<item name="android:textColorTertiary">@color/grey</item>
-		<item name="android:textColorTertiaryInverse">@color/grey</item>
-		<item name="android:dialogTheme">@style/Dialog</item>
-		<item name="android:alertDialogTheme">@style/Dialog</item>
+		<item name="android:textColorTertiary">@color/grey_light</item>
+		<item name="android:windowBackground">@color/white</item>
 		<item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
 		<item name="android:textAppearanceSmallInverse">@style/TextAppearance.Small.Inverse</item>
 		<item name="android:textAppearanceMedium">@style/TextAppearance.Medium</item>
 		<item name="android:textAppearanceMediumInverse">@style/TextAppearance.Medium.Inverse</item>
 		<item name="android:textAppearanceLarge">@style/TextAppearance.Large</item>
 		<item name="android:textAppearanceLargeInverse">@style/TextAppearance.Large.Inverse</item>
-		<item name="android:windowSoftInputMode">adjustResize</item>
 
-		<item name="android:buttonStyle">@style/ButtonWhite</item>
-
+		<item name="android:windowSoftInputMode">adjustResize|stateAlwaysHidden</item>
 	</style>
 
-	<style name="BaseTheme.Flatter">
-		<item name="colorPrimary">@color/primary_flatter</item>
-		<item name="android:windowBackground">@color/primary_flatter_light</item>
+	<style name="FFBase.Theme">
 	</style>
 
-	<style name="BaseTheme.ForthRight">
-		<item name="colorPrimary">@color/primary_forthright</item>
-		<item name="android:windowBackground">@color/primary_forthright_light</item>
+	<style name="FFBase.Theme.Flattered" >
+		<item name="ff_primary">@color/pink</item>
+		<item name="ff_primaryDark">@color/pink_dark</item>
+		<item name="ff_primaryLight">@color/pink_light</item>
+		<item name="colorPrimary">?ff_primary</item>
+		<item name="colorPrimaryDark">?ff_primaryDark</item>
 	</style>
 
-	<style name="ButtonWhite" parent="android:Widget.Holo.Button">
-		<item name="android:background">@drawable/apptheme_btn_default_holo_dark</item>
-		<item name="android:textColor">@color/black_light</item>
+	<style name="FFBase.Theme.Private" >
+		<item name="ff_primary">@color/purple</item>
+		<item name="ff_primaryDark">@color/purple_dark</item>
+		<item name="ff_primaryLight">@color/purple_light</item>
+		<item name="colorPrimary">?ff_primary</item>
+		<item name="colorPrimaryDark">?ff_primaryDark</item>
 	</style>
 
-	<style name="Toolbar" parent="Widget.AppCompat.Toolbar">
-		<item name="popupTheme">@style/ToolbarPopup</item>
-		<item name="theme">@style/ThemeOverlay.AppCompat.ActionBar</item>
-		<item name="titleTextAppearance">@style/ToolbarTitle</item>
+	<style name="FFBase.Theme.Forthright" >
+		<item name="ff_primary">@color/deep_purple</item>
+		<item name="ff_primaryDark">@color/deep_purple_dark</item>
+		<item name="ff_primaryLight">@color/deep_purple_light</item>
+		<item name="colorPrimary">?ff_primary</item>
+		<item name="colorPrimaryDark">?ff_primaryDark</item>
 	</style>
 
-	<style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
-		<item name="android:textSize">@dimen/text_size_large</item>
-	</style>
+	<!--<style name="Toolbar" parent="Widget.AppCompat.Toolbar">-->
+		<!--<item name="popupTheme">@style/ToolbarPopup</item>-->
+		<!--<item name="theme">@style/ThemeOverlay.AppCompat.ActionBar</item>-->
+		<!--<item name="titleTextAppearance">@style/ToolbarTitle</item>-->
+	<!--</style>-->
 
-	<style name="ToolbarPopup" parent="BaseTheme">
-		<item name="android:colorBackground">@color/white</item>
-	</style>
+	<!--<style name="Dialog" parent="Theme.AppCompat.Dialog">-->
+		<!--<item name="android:background">@color/white</item>-->
+	<!--</style>-->
 
-	<style name="Toolbar.Forthright">
-		<item name="android:background">@color/primary_forthright</item>
-	</style>
-
-	<style name="Toolbar.Flatter">
-		<item name="android:background">@color/primary_flatter</item>
-	</style>
-
-	<style name="Dialog" parent="android:Theme.Holo.Dialog">
-		<item name="android:background">@color/white</item>
-	</style>
-
-	<style name="EditText">
-		<item name="met_baseColor">@color/black</item>
-		<item name="met_errorColor">?colorAccent</item>
-		<item name="met_floatingLabel">normal</item>
-		<item name="met_helperTextAlwaysShown">true</item>
-		<item name="met_primaryColor">?colorPrimary</item>
-		<item name="android:ellipsize">end</item>
-		<item name="android:maxLines">1</item>
-	</style>
-
-	<style name="Button" parent="android:Widget.Holo.Button">
-		<item name="android:textColor">@color/button_flat</item>
-	</style>
-
-	<style name="Button.Borderless" parent="android:Widget.Holo.Button.Borderless">
-		<item name="android:textColor">@color/button_flat</item>
-	</style>
-
-	<style name="Button.Borderless.Colored"
-	       parent="android:Widget.Holo.Button.Borderless">
-		<item name="android:textColor">@color/button_flat_accent</item>
-	</style>
 
 	<style name="TextAppearance.Small" parent="TextAppearance.AppCompat.Small">
 		<item name="android:textSize">@dimen/text_size_small</item>
@@ -97,19 +68,20 @@
 	</style>
 
 	<style name="TextAppearance.Medium" parent="TextAppearance.AppCompat.Medium">
-		<item name="android:textSize">@dimen/text_size_medium</item>
+		<item name="android:textSize">@dimen/text_size_normal</item>
 	</style>
 
 	<style name="TextAppearance.Medium.Inverse" parent="TextAppearance.AppCompat.Inverse">
-		<item name="android:textSize">@dimen/text_size_medium</item>
+		<item name="android:textSize">@dimen/text_size_normal</item>
 	</style>
 
 	<style name="TextAppearance.Large" parent="TextAppearance.AppCompat.Large">
-		<item name="android:textSize">@dimen/text_size_large</item>
+		<item name="android:textSize">@dimen/text_size_medium</item>
 	</style>
 
 	<style name="TextAppearance.Large.Inverse" parent="TextAppearance.AppCompat.Inverse">
-		<item name="android:textSize">@dimen/text_size_large</item>
+		<item name="android:textSize">@dimen/text_size_medium</item>
 	</style>
+
 
 </resources>

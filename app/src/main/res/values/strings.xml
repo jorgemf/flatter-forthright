@@ -9,9 +9,10 @@
 	<string name="time_few_minutes_ago">few minutes ago</string>
 	<string name="time_yesterday">Yesterday</string>
 	<string name="app_version">Thoughts %s - livae</string>
-	<string name="app_description">Thoughts bla bla bla ...</string>
+	<string name="app_description">Thoughts bla bla bla …</string>
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
+	<string name="empty_text">Ops… there is nothing here.</string>
 
 	<string name="feedback_email">thoughts@livae.com</string>
 	<string name="feedback_email_subject">Thoughts Feedback</string>
@@ -26,6 +27,8 @@
 	<string name="button_got_it">Got it</string>
 	<string name="button_update">Update</string>
 	<string name="button_retry">Retry</string>
+	<string name="button_continue">Continue</string>
+	<string name="button_finish">Finish</string>
 
 	<string name="error_loading_elements">Error loading the elements</string>
 	<string name="error_network_no_api_connection">Connection with server failed.</string>
@@ -34,4 +37,29 @@
 	<string name="error_unknown">Unknown error: %s</string>
 	<string name="error_api">API error: %s</string>
 	<string name="error_unexpected">Unexpected error: %s</string>
+
+	<string name="on_boarding_welcome_title">Welcome to Pensamientos</string>
+	<string name="on_boarding_welcome">
+		Pensamientos is an anonymous, public, social network.\n\nYou can flatter openly your
+		friends, be forthright about something they should know but you don\'t want to say in
+		person, or even having a private anonymous chat if the other person wants.
+	</string>
+	<string name="on_boarding_validate_number_title">Validate your number</string>
+	<string name="on_boarding_validate_number">
+		Pensamientos needs to validate your phone number so you can reply to comments and receive
+		private chats. We will send you one SMS to validate it.\nBy validating you accept the terms
+		and conditions.
+	</string>
+	<string name="on_boarding_warning_title">Respect!</string>
+	<string name="on_boarding_warning">
+		Offensive and non constructive comments will be deleted from Pensamientos. Mind your words
+		before commenting and please alert us about abuses to keep a good community.
+	</string>
+	<string name="on_boarding_payments_title">Payments</string>
+	<string name="on_boarding_payments">
+		Pensamientos is in beta, it means the app has bugs but it is also completely free. In the
+		future we hope to fix all the bugs but we will probably move some features to only premium
+		users of the app.
+	</string>
+	<string name="phone_number">Phone number</string>
 </resources>

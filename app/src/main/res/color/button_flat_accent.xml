@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:color="?colorAccent"
+	<item android:color="@color/amber"
 	      android:state_enabled="true"/>
-	<item android:color="@color/grey"
+	<item android:color="@color/amberLight"
 	      android:state_enabled="false"/>
 </selector>

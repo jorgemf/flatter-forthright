@@ -1,7 +1,4 @@
 <resources>
-	<dimen name="system_bar_height">0dp</dimen>
-	<dimen name="action_bar_height">56dp</dimen>
-	<dimen name="action_bar_padding">55dp</dimen>
 
 	<dimen name="space_tiny">2dp</dimen>
 	<dimen name="space_small">4dp</dimen>
@@ -11,29 +8,18 @@
 	<dimen name="space_huge">32dp</dimen>
 	<dimen name="space_press">48dp</dimen>
 	<dimen name="space_press_small">36dp</dimen>
+	<dimen name="space_on_boarding">28dp</dimen>
 
-	<dimen name="text_size_tiny">12sp</dimen>
-	<dimen name="text_size_small">13sp</dimen>
+	<dimen name="text_size_small">12sp</dimen>
 	<dimen name="text_size_normal">14sp</dimen>
 	<dimen name="text_size_medium">16sp</dimen>
 	<dimen name="text_size_large">20sp</dimen>
 
-	<dimen name="snackbar_small">48dp</dimen>
-	<dimen name="snackbar_big">80dp</dimen>
+	<dimen name="item_max_width">400dp</dimen>
 
-	<dimen name="button_floating_action">56dp</dimen>
-	<dimen name="drawer_max_width">304dp</dimen>
-	<dimen name="drawer_top_box_height">170dp</dimen>
-	<dimen name="menu_tabs_selection_line">3dp</dimen>
-	<dimen name="button_rounded_corners">3dp</dimen>
-	<dimen name="button_stroke">3dp</dimen>
-	<dimen name="card_view_round_corner">4dp</dimen>
 	<dimen name="comment_card_radius">12dp</dimen>
-
-	<dimen name="item_comment_user_image_size">40dp</dimen>
+	<dimen name="item_comment_user_image_size">32dp</dimen>
 	<dimen name="item_user_image_size">40dp</dimen>
 	<dimen name="item_flag_size">28dp</dimen>
-
-	<dimen name="item_max_width">400dp</dimen>
 
 </resources>

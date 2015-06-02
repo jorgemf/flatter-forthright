@@ -3,79 +3,36 @@
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
+	android:padding="@dimen/space_normal"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:padding="@dimen/space_normal">
+	android:layout_height="wrap_content">
+
+	<ImageView
+		android:id="@+id/user_image"
+		android:layout_width="@dimen/item_comment_user_image_size"
+		android:layout_height="@dimen/item_comment_user_image_size"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"/>
 
 	<TextView
 		android:id="@+id/comment"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/space_normal"
 		android:text="@string/lorem_ipsum"
 		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:textColor="@color/black_light"/>
+		android:textColor="@color/black_light"
+		tools:ignore="RelativeOverlap"/>
 
 	<TextView
 		android:id="@+id/comment_date"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_alignBottom="@id/comment"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:layout_below="@id/comment"
-		android:layout_marginTop="@dimen/space_normal"
+		android:layout_marginTop="@dimen/space_small"
 		android:text="2 hours ago"
 		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textColor="@color/black_light_transparent"
 		tools:ignore="HardcodedText"/>
-
-	<Button
-		android:id="@+id/vote_agree"
-		style="?android:attr/buttonBarButtonStyle"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentStart="true"
-		android:layout_below="@id/comment"
-		android:minHeight="@dimen/space_press_small"
-		android:minWidth="@dimen/space_press_small"
-		android:paddingBottom="@dimen/space_small"
-		android:paddingLeft="@dimen/space_small"
-		android:paddingRight="@dimen/space_normal"
-		android:paddingTop="@dimen/space_small"
-		android:text="Agree"
-		android:textColor="@color/black"
-		tools:ignore="ContentDescription"/>
-
-	<Button
-		android:id="@+id/vote_disagree"
-		style="?android:attr/buttonBarButtonStyle"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/comment"
-		android:layout_marginLeft="@dimen/space_normal"
-		android:layout_marginStart="@dimen/space_normal"
-		android:layout_toEndOf="@id/vote_agree"
-		android:layout_toRightOf="@id/vote_agree"
-		android:minHeight="@dimen/space_press_small"
-		android:minWidth="@dimen/space_press_small"
-		android:paddingBottom="@dimen/space_small"
-		android:paddingLeft="@dimen/space_small"
-		android:paddingRight="@dimen/space_normal"
-		android:paddingTop="@dimen/space_small"
-		android:text="Disagree"
-		android:textColor="@color/black"
-		tools:ignore="ContentDescription"/>
-
-	<Button
-		android:id="@+id/button_delete"
-		style="?android:attr/buttonBarButtonStyle"
-		android:layout_width="wrap_content"
-		android:layout_height="@dimen/space_press_small"
-		android:layout_below="@id/comment"
-		android:layout_marginLeft="@dimen/space_normal"
-		android:layout_marginStart="@dimen/space_normal"
-		android:layout_toEndOf="@id/vote_disagree"
-		android:layout_toRightOf="@id/vote_disagree"
-		android:text="Delete"
-		android:visibility="gone"/>
 </RelativeLayout>
