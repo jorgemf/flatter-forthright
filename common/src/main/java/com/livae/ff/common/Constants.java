@@ -6,8 +6,8 @@ public class Constants {
 		AGREE, DISAGREE
 	}
 
-	public enum CommentType {
-		FLATTER, FORTHRIGHT
+	public enum ChatType {
+		FLATTER, FORTHRIGHT, PRIVATE
 	}
 
 	public enum Profile {

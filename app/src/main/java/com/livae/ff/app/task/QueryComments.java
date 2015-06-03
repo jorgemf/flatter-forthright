@@ -1,34 +1,34 @@
 package com.livae.ff.app.task;
 
-import com.livae.ff.common.Constants.CommentType;
+import com.livae.ff.common.Constants.ChatType;
 
 public class QueryComments extends QueryParam {
 
 	private Long id;
 
-	private CommentType commentType;
+	private ChatType chatType;
 
-	public QueryComments(Long id, CommentType commentType, Integer limit) {
+	public QueryComments(Long id, ChatType chatType, Integer limit) {
 		super(limit);
 		this.id = id;
-		this.commentType = commentType;
+		this.chatType = chatType;
 	}
 
-	public QueryComments(Long id, CommentType commentType) {
+	public QueryComments(Long id, ChatType chatType) {
 		this.id = id;
-		this.commentType = commentType;
+		this.chatType = chatType;
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public CommentType getCommentType() {
-		return commentType;
+	public ChatType getChatType() {
+		return chatType;
 	}
 
 	@Override
 	public String toString() {
-		return "[id: " + id + "] " + "[commentType: " + commentType + "] " + super.toString();
+		return "[id: " + id + "] " + "[commentType: " + chatType + "] " + super.toString();
 	}
 }

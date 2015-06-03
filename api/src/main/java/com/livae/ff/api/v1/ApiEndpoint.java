@@ -25,7 +25,7 @@ import com.livae.ff.api.model.Version;
 import com.livae.ff.api.util.InputUtil;
 import com.livae.ff.api.v1.model.Contacts;
 import com.livae.ff.api.v1.model.Text;
-import com.livae.ff.common.Constants.CommentType;
+import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 import com.livae.ff.common.Constants.Platform;
 
@@ -171,7 +171,7 @@ public class ApiEndpoint {
 	@ApiMethod(path = "user/{contactPhone}/{commentType}/comment",
 			   httpMethod = ApiMethod.HttpMethod.POST)
 	public Comment postComment(@Named("contactPhone") Long contactPhone,
-							   @Named("commentType") CommentType commentType, Text text, User gUser)
+							   @Named("commentType") ChatType chatType, Text text, User gUser)
 	  throws UnauthorizedException, BadRequestException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
@@ -199,7 +199,7 @@ public class ApiEndpoint {
 		} else {
 			userFakeId = previousComment.getUser();
 		}
-		Comment comment = new Comment(commentType, contactPhone, userFakeId, userId, commentText);
+		Comment comment = new Comment(chatType, contactPhone, userFakeId, userId, commentText);
 		ofy().save().entity(comment);
 		return comment;
 	}
@@ -207,7 +207,7 @@ public class ApiEndpoint {
 	@ApiMethod(path = "user/{contactPhone}/{commentType}/comments",
 			   httpMethod = ApiMethod.HttpMethod.GET)
 	public CollectionResponse<Comment> getComments(@Named("contactPhone") Long contactPhone,
-												   @Named("commentType") CommentType commentType,
+												   @Named("commentType") ChatType chatType,
 												   @Named("cursor") @Nullable String cursor,
 												   @Named("limit") @Nullable Integer limit,
 												   User gUser)

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.livae.ff.common.Constants.CommentType;
+import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.Profile;
 
 public class AppUser {
@@ -35,7 +35,7 @@ public class AppUser {
 
 	private Profile profile;
 
-	private CommentType commentType;
+	private ChatType chatType;
 
 	private SharedPreferences prefs;
 
@@ -135,25 +135,25 @@ public class AppUser {
 		}
 	}
 
-	public CommentType getCommentType() {
-		return commentType;
+	public ChatType getChatType() {
+		return chatType;
 	}
 
-	public void setCommentType(CommentType commentType) {
-		this.commentType = commentType;
-		if (commentType == null) {
+	public void setChatType(ChatType chatType) {
+		this.chatType = chatType;
+		if (chatType == null) {
 			prefs.edit().putString(USER_COMMENT_TYPE, null).apply();
 		} else {
-			prefs.edit().putString(USER_COMMENT_TYPE, commentType.name()).apply();
+			prefs.edit().putString(USER_COMMENT_TYPE, chatType.name()).apply();
 		}
 	}
 
 	public void setCommentType(String commentType) {
 		try {
 			if (commentType == null) {
-				this.commentType = null;
+				this.chatType = null;
 			} else {
-				this.commentType = CommentType.valueOf(commentType);
+				this.chatType = ChatType.valueOf(commentType);
 			}
 			prefs.edit().putString(USER_COMMENT_TYPE, commentType).apply();
 		} catch (Exception ignore) {

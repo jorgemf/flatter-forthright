@@ -20,7 +20,7 @@ import com.livae.ff.app.task.TaskNoVoteComment;
 import com.livae.ff.app.task.TaskVoteAgreeComment;
 import com.livae.ff.app.task.TaskVoteDisagreeComment;
 import com.livae.ff.app.viewholders.CommentsViewHolder;
-import com.livae.ff.common.Constants.CommentType;
+import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 
 public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder, QueryComments>
@@ -36,7 +36,7 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 
 	private Long userId;
 
-	private CommentType commentType;
+	private ChatType chatType;
 
 	private CommentsAdapter commentsAdapter;
 
@@ -83,7 +83,7 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 
 	@Override
 	protected QueryComments getBaseQueryParams() {
-		return new QueryComments(userId, commentType);
+		return new QueryComments(userId, chatType);
 	}
 
 	@Override

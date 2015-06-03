@@ -33,6 +33,5 @@
 		android:layout_marginTop="@dimen/space_small"
 		android:text="2 hours ago"
 		android:textAppearance="?android:attr/textAppearanceSmall"
-		android:textColor="@color/black_light_transparent"
 		tools:ignore="HardcodedText"/>
 </RelativeLayout>

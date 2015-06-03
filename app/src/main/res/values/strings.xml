@@ -13,11 +13,21 @@
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
 	<string name="empty_text">Ops… there is nothing here.</string>
+	<string name="phone_number">Phone number</string>
+	<string name="post_comment_hint">Type a message</string>
 
 	<string name="feedback_email">thoughts@livae.com</string>
 	<string name="feedback_email_subject">Thoughts Feedback</string>
 	<string name="feedback_email_body"/>
 	<string name="send_feedback">Send feedback</string>
+
+	<string name="tab_flatter">Flatter</string>
+	<string name="tab_private">Private</string>
+	<string name="tab_forthright">Forthright</string>
+
+	<string name="menu_settings">Settings</string>
+	<string name="menu_feedback">Send feedback</string>
+	<string name="menu_share">Share</string>
 
 	<string name="button_about_terms_conditions">Terms and conditions</string>
 	<string name="button_about_rate_app">Rate this App</string>
@@ -61,5 +71,4 @@
 		future we hope to fix all the bugs but we will probably move some features to only premium
 		users of the app.
 	</string>
-	<string name="phone_number">Phone number</string>
 </resources>

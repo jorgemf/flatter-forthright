@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.livae.ff.app.sql.Table;
-import com.livae.ff.common.Constants.CommentType;
+import com.livae.ff.common.Constants.ChatType;
 
 import java.util.List;
 
@@ -24,9 +24,9 @@ public class DataProvider extends AbstractProvider {
 		return Uri.parse(CONTENT_URI_BASE + getAuthority(DataProvider.class));
 	}
 
-	public static Uri getUriPhoneComments(Long phone, CommentType commentType) {
+	public static Uri getUriPhoneComments(Long phone, ChatType chatType) {
 		return Uri.withAppendedPath(getContentUri(),
-									Table.Comment.NAME + "/" + phone + "/" + commentType);
+									Table.Comment.NAME + "/" + phone + "/" + chatType);
 	}
 
 	public static Uri getUriComments() {

@@ -7,7 +7,7 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfTrue;
-import com.livae.ff.common.Constants.CommentType;
+import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 
 import java.io.Serializable;
@@ -36,7 +36,7 @@ public class Comment implements Serializable {
 
 	@Index
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	private CommentType commentType;
+	private ChatType chatType;
 
 	private String comment;
 
@@ -63,9 +63,9 @@ public class Comment implements Serializable {
 	public Comment() {
 	}
 
-	public Comment(@Nonnull CommentType commentType, @Nonnull Long phone, @Nonnull Long user,
+	public Comment(@Nonnull ChatType chatType, @Nonnull Long phone, @Nonnull Long user,
 				   @Nonnull Long userId, @Nonnull String comment) {
-		this.commentType = commentType;
+		this.chatType = chatType;
 		this.user = user;
 		this.userId = userId;
 		this.phone = phone;
@@ -173,12 +173,12 @@ public class Comment implements Serializable {
 		this.deleted = deleted;
 	}
 
-	public CommentType getCommentType() {
-		return commentType;
+	public ChatType getChatType() {
+		return chatType;
 	}
 
-	public void setCommentType(CommentType commentType) {
-		this.commentType = commentType;
+	public void setChatType(ChatType chatType) {
+		this.chatType = chatType;
 	}
 
 	public Boolean getIsMe() {

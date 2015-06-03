@@ -122,6 +122,8 @@ public class Analytics {
 
 		public static final String COMMENTS = "COMMENTS";
 
+		public static final String CHATS = "CHATS";
+
 	}
 
 	public static class Category {

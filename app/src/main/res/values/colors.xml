@@ -2,7 +2,8 @@
 <resources>
 	<!-- accent color -->
 	<color name="amber">#FFC107</color>
-	<color name="amberLight">#FFECB3</color>
+	<color name="amber_light">#FFECB3</color>
+	<color name="amber_dark">#FFA000</color>
 	<!-- flatter -->
 	<color name="pink">#E91E63</color>
 	<color name="pink_light">#F8BBD0</color>
@@ -18,14 +19,18 @@
 
 	<!-- text / icons -->
 	<color name="white">#FFFFFF</color>
+	<!-- background -->
+	<color name="white_dark">#EEEEEE</color>
 
 	<!-- primary text -->
-	<color name="black_light">#212121</color>
-	<color name="black_light_transparent">#88212121</color>
+	<!--<color name="black_light">#212121</color>-->
+	<color name="black_light">#DE000000</color>
 	<!-- secondary text -->
-	<color name="grey">#727272</color>
+	<!--<color name="grey">#727272</color>-->
+	<color name="grey">#8D000000</color>
 	<!-- dividers -->
-	<color name="grey_light">#B6B6B6</color>
+	<!--<color name="grey_light">#B6B6B6</color>-->
+	<color name="grey_light">#49000000</color>
 	<color name="divider">@color/grey_light</color>
 
 </resources>
