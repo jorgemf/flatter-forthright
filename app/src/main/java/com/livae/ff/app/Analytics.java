@@ -114,7 +114,9 @@ public class Analytics {
 
 	public static class Screen {
 
-		public static final String SETTINGS = "SETTINGS";
+		public static final String SETTINGS    = "SETTINGS";
+
+		public static final String ON_BOARDING = "ON_BOARDING";
 
 		public static final String ABOUT = "ABOUT";
 

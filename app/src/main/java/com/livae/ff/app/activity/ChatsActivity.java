@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.livae.ff.app.Analytics;
+import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.adapter.ChatsFragmentsAdapter;
 
@@ -60,13 +61,20 @@ public class ChatsActivity extends AbstractActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_chats);
+		if (Application.appUser().getUserPhone() == null) {
+			OnBoardingActivity.start(this);
+			finish();
+		} else {
+			setContentView(R.layout.activity_chats);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-		ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-		viewPager.setAdapter(new ChatsFragmentsAdapter(getSupportFragmentManager(),getResources()));
-		tabLayout.setupWithViewPager(viewPager);
+			Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+			setSupportActionBar(toolbar);
+			TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+//			tabLayout.addTab(tabLayout.newTab().setCustomView());
+			ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+			viewPager.setAdapter(new ChatsFragmentsAdapter(getSupportFragmentManager(),
+														   getResources()));
+			tabLayout.setupWithViewPager(viewPager);
+		}
 	}
 }

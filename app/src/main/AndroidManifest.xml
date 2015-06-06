@@ -28,6 +28,7 @@
 		</activity>
 		<activity android:name="com.livae.ff.app.activity.CommentsActivity"/>
 		<activity android:name="com.livae.ff.app.activity.AboutActivity"/>
+		<activity android:name="com.livae.ff.app.activity.OnBoardingActivity"/>
 
 		<service android:name=".service.GcmIntentService"/>
 
