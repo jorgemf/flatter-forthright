@@ -3,6 +3,8 @@ package com.livae.ff.app.async;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.livae.ff.app.Analytics;
+
 public abstract class CustomAsyncTask<Param, Result> {
 
 	public static final String LOG_TAG = "TASK";
@@ -45,14 +47,19 @@ public abstract class CustomAsyncTask<Param, Result> {
 	protected void executeCallback(Results result) {
 		asyncTask = null;
 		if (result.callback != null) {
-			if (result.error != null) {
-				Log.e(LOG_TAG, "Error executing the task: " + this.getClass().getSimpleName(),
-					  result.error);
-				result.callback.onError(this, result.param, result.error);
-			} else {
-				Log.i(LOG_TAG, CustomAsyncTask.this.getClass().getSimpleName() + " COMPLETED: " +
-							   result.result);
-				result.callback.onComplete(this, result.param, result.result);
+			try {
+				if (result.error != null) {
+					Log.e(LOG_TAG, "Error executing the task: " + this.getClass().getSimpleName(),
+						  result.error);
+					result.callback.onError(this, result.param, result.error);
+				} else {
+					Log.i(LOG_TAG,
+						  CustomAsyncTask.this.getClass().getSimpleName() + " COMPLETED: " +
+						  result.result);
+					result.callback.onComplete(this, result.param, result.result);
+				}
+			} catch (Exception e) {
+				Analytics.logAndReport(e);
 			}
 		}
 	}

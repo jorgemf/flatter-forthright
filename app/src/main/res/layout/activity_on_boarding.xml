@@ -4,6 +4,20 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="?actionBarSize"
+		android:background="?colorPrimary"
+		android:layout_alignParentTop="true"
+		android:layout_gravity="top"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/abc_action_button_min_height_material"
+		android:background="?colorAccent"
+		android:layout_alignParentBottom="true"
+		android:layout_gravity="bottom"/>
+
 	<FrameLayout
 		android:id="@+id/container"
 		android:layout_width="match_parent"

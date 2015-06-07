@@ -2,6 +2,7 @@
 
 	<style name="FFBase" parent="Theme.AppCompat.Light.NoActionBar">
 		<item name="colorAccent">@color/amber</item>
+		<item name="colorControlHighlight">@color/amber_dark</item>
 		<item name="colorPrimary">@color/purple</item>
 		<item name="colorPrimaryDark">@color/purple_dark</item>
 		<item name="colorButtonNormal">@color/button_flat_accent</item>
@@ -52,7 +53,8 @@
 	<style name="Toolbar" parent="Widget.AppCompat.Toolbar">
 		<item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
 		<item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-	</style>an
+	</style>
+	an
 
 	<style name="Dialog" parent="Theme.AppCompat.Dialog">
 		<item name="android:background">@color/white</item>

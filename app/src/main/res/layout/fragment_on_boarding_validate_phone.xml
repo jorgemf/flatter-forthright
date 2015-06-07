@@ -15,19 +15,14 @@
 
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/toolbar"
+			app:titleMarginStart="@dimen/space_huge"
+			app:titleMarginEnd="@dimen/space_huge"
 			android:layout_width="match_parent"
 			android:layout_height="?actionBarSize"
 			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 			app:title="@string/on_boarding_validate_number_title"/>
 
 	</android.support.design.widget.AppBarLayout>
-
-	<android.support.v7.widget.Toolbar
-		android:id="@+id/toolbar"
-		android:layout_width="match_parent"
-		android:layout_height="?actionBarSize"
-		android:layout_gravity="top"
-		app:title="@string/on_boarding_validate_number_title"/>
 
 	<TextView
 		android:id="@+id/text_content"
@@ -66,7 +61,7 @@
 
 	<Button
 		android:id="@+id/button"
-		style="@style/Widget.AppCompat.Button.Borderless"
+		android:background="@drawable/button_action"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.livae.ff.app.R;
+import com.livae.ff.app.activity.OnBoardingActivity;
 
 public class OnBoardingWarningFragment extends AbstractFragment implements View.OnClickListener {
 
@@ -27,6 +28,8 @@ public class OnBoardingWarningFragment extends AbstractFragment implements View.
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.button:
+				OnBoardingActivity onBoardingActivity = (OnBoardingActivity)getActivity();
+				onBoardingActivity.nextStep();
 				break;
 		}
 	}

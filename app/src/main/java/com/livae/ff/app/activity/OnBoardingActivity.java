@@ -70,9 +70,9 @@ public class OnBoardingActivity extends AbstractActivity {
 	}
 
 	private void setFragment(Fragment fragment) {
-		getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment)
-								   .setCustomAnimations(android.R.anim.slide_in_left,
-														android.R.anim.slide_out_right).commit();
+		getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right,
+																		   R.anim.slide_out_left)
+								   .replace(R.id.container, fragment).commit();
 	}
 
 	enum ON_BOARDING {WELCOME, PHONE, WARNING, PAYMENT}
