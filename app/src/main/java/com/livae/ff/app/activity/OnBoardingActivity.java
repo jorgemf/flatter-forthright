@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.R;
@@ -39,7 +40,10 @@ public class OnBoardingActivity extends AbstractActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_on_boarding);
 		if (savedInstanceState == null) {
-			nextStep();
+			final FragmentManager fragmentManager = getSupportFragmentManager();
+			final OnBoardingWelcomeFragment fragment = new OnBoardingWelcomeFragment();
+			fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+			currentStep = ON_BOARDING.WELCOME;
 		}
 	}
 

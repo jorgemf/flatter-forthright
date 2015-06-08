@@ -20,6 +20,6 @@
 	<dimen name="comment_card_radius">12dp</dimen>
 	<dimen name="item_comment_user_image_size">32dp</dimen>
 	<dimen name="item_user_image_size">40dp</dimen>
-	<dimen name="item_flag_size">28dp</dimen>
+	<dimen name="item_flag_size">24dp</dimen>
 
 </resources>

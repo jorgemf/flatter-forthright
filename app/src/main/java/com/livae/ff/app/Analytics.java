@@ -56,11 +56,22 @@ public class Analytics {
 		logAndReport(Application.getGoogleTracker(), throwable, fatal);
 	}
 
+	public static void logAndReport(String message) {
+		logAndReport(message, false);
+	}
+
+	public static void logAndReport(String message, boolean fatal) {
+		logAndReport(Application.getGoogleTracker(), message, fatal);
+	}
+
 	public static void logAndReport(Tracker tracker, Throwable throwable, boolean fatal) {
-		String description = getExceptionMessage(throwable);
-		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(description).setFatal(fatal)
+		logAndReport(tracker, getExceptionMessage(throwable), fatal);
+	}
+
+	public static void logAndReport(Tracker tracker, String message, boolean fatal) {
+		tracker.send(new HitBuilders.ExceptionBuilder().setDescription(message).setFatal(fatal)
 													   .build());
-		Log.i(LOG_TAG, "EXCEPTION  [" + description + "]");
+		Log.i(LOG_TAG, "EXCEPTION  [" + message + "]");
 	}
 
 	private static String getExceptionMessage(Throwable error) {
@@ -114,7 +125,7 @@ public class Analytics {
 
 	public static class Screen {
 
-		public static final String SETTINGS    = "SETTINGS";
+		public static final String SETTINGS = "SETTINGS";
 
 		public static final String ON_BOARDING = "ON_BOARDING";
 

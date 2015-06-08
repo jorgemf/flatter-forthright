@@ -1,10 +1,7 @@
 package com.livae.ff.app.viewholders;
 
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,31 +32,14 @@ public class CountryViewHolder {
 
 	public void setCountry(@NonNull Constants.COUNTRY country) {
 		this.country = country;
-		flag.setImageResource(country.getCountryFlagResId());
-		countryText.setText(country.getCountryStringResId());
-	}
-
-	public void highlightText(boolean isCurrentCountry, String searchString) {
-		Resources resources = countryText.getResources();
-		if (isCurrentCountry) {
-			countryText.setTextColor(resources.getColor(R.color.black_light));
+		int flagRes = country.getCountryFlagResId();
+		flag.setImageResource(flagRes);
+		if (flagRes == 0) {
+			flag.setVisibility(View.INVISIBLE);
 		} else {
-			countryText.setTextColor(resources.getColor(R.color.grey));
+			flag.setVisibility(View.VISIBLE);
 		}
-
-		if (searchString != null && searchString.length() > 1) {
-			String textCountry = countryText.getText().toString();
-			SpannableString span = new SpannableString(textCountry);
-			int queryLength = searchString.length();
-			searchString = searchString.toLowerCase();
-			String textCountryLoweCase = textCountry.toLowerCase();
-			int index = textCountryLoweCase.indexOf(searchString);
-			while (index >= 0) {
-				span.setSpan(boldSpan, index, index + queryLength,
-							 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				index = textCountryLoweCase.indexOf(searchString, index + queryLength);
-			}
-			countryText.setText(span);
-		}
+		countryText.setText(country.getPhonePrefix());
 	}
+
 }

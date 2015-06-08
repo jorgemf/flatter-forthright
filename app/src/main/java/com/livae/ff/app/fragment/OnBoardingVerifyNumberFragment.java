@@ -11,9 +11,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.support.annotation.Nullable;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +24,19 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.BuildConfig;
+import com.livae.ff.app.Constants;
 import com.livae.ff.app.R;
+import com.livae.ff.app.adapter.CountriesArrayAdapter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class OnBoardingVerifyNumberFragment extends AbstractFragment
   implements View.OnClickListener {
@@ -39,9 +51,11 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 
 	private View validateButton;
 
-	private EditText phoneNumber;
+	private EditText phoneNumberEditText;
 
-	private Spinner countryCode;
+	private Spinner countryCodeSpinner;
+
+	private CountriesArrayAdapter countriesAdapter;
 
 	@Nullable
 	@Override
@@ -55,7 +69,48 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		super.onViewCreated(view, savedInstanceState);
 		validateButton = view.findViewById(R.id.button);
 		validateButton.setOnClickListener(this);
-		getPhoneNumber();
+		phoneNumberEditText = (EditText) view.findViewById(R.id.edit_text_phone);
+		countryCodeSpinner = (Spinner) view.findViewById(R.id.spinner_country);
+		countriesAdapter = new CountriesArrayAdapter(getActivity());
+		countryCodeSpinner.setAdapter(countriesAdapter);
+
+		TelephonyManager tm;
+		tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+		String countryISO = tm.getSimCountryIso();
+		String phoneNumber = tm.getLine1Number();
+		Log.i(LOG_TAG, "Phone number: " + phoneNumber);
+		Log.i(LOG_TAG, "Sim country ISO: " + countryISO);
+		if (phoneNumber != null) {
+			phoneNumberEditText.setText(phoneNumber);
+		}
+		Constants.COUNTRY country = Constants.COUNTRY.US;
+		try {
+			country = Constants.COUNTRY.valueOf(countryISO.toUpperCase());
+		} catch (Exception e) {
+			Analytics.logAndReport("Unknown country ISO code: " + countryISO, false);
+		}
+		List<Constants.COUNTRY> list = new ArrayList<>();
+		list.addAll(Arrays.asList(Constants.COUNTRY.values()));
+		countriesAdapter.setCountries(list);
+		countryCodeSpinner.setSelection(countriesAdapter.getPosition(country));
+		phoneNumberEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+		phoneNumberEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				verifyNumber();
+			}
+		});
+		verifyNumber();
 	}
 
 	@Override
@@ -77,12 +132,6 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		getActivity().unregisterReceiver(smsReceiver);
 	}
 
-	private String getPhoneNumber() {
-		TelephonyManager tm;
-		tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-		return tm.getLine1Number();
-	}
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -91,6 +140,25 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 //				sendSMS();
 				break;
 		}
+	}
+
+	private void verifyNumber() {
+		String prefix = countriesAdapter.getItem(countryCodeSpinner.getSelectedItemPosition())
+										.getPhonePrefix();
+		String number = phoneNumberEditText.getText().toString();
+		boolean valid = false;
+		try {
+			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+			Phonenumber.PhoneNumber phoneNumber = null;
+			phoneNumber = phoneUtil.parseAndKeepRawInput(prefix + number, null);
+			PhoneNumberUtil.PhoneNumberType numberType = phoneUtil.getNumberType(phoneNumber);
+			valid = phoneUtil.isPossibleNumber(phoneNumber) &&
+					phoneUtil.isValidNumber(phoneNumber) &&
+					numberType == PhoneNumberUtil.PhoneNumberType.MOBILE;
+		} catch (NumberParseException e) {
+			Analytics.logAndReport(e);
+		}
+		validateButton.setEnabled(valid);
 	}
 
 	private void sendSMS(String phoneNumber, String message) {

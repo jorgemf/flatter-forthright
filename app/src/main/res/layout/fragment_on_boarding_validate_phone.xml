@@ -43,15 +43,17 @@
 		android:id="@+id/spinner_country"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:minWidth="80dp"
+		android:gravity="start"
 		android:layout_below="@id/text_content"
-		android:layout_marginLeft="@dimen/space_huge"
+		android:layout_marginLeft="24dp"
 		android:layout_marginRight="@dimen/space_normal"
 		tools:listitem="@layout/item_country"/>
 
 	<EditText
 		android:id="@+id/edit_text_phone"
 		android:layout_width="match_parent"
-		android:layout_height="@dimen/space_press"
+		android:layout_height="wrap_content"
 		android:hint="@string/phone_number"
 		android:inputType="phone"
 		android:layout_below="@id/text_content"

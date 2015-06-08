@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="country_ac">Ascensión</string>
 	<string name="country_ad">Andorra</string>
 	<string name="country_ae">Emiratos Árabes Unidos</string>
 	<string name="country_af">Afganistán</string>
@@ -7,6 +8,7 @@
 	<string name="country_ai">Anguila</string>
 	<string name="country_al">Albania</string>
 	<string name="country_am">Armenia</string>
+	<string name="country_an">Antillas Holandesas</string>
 	<string name="country_ao">Angola</string>
 	<string name="country_aq">Antártida</string>
 	<string name="country_ar">Argentina</string>

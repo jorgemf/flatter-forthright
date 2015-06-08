@@ -117,26 +117,29 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="okhttp-urlconnection-2.3.0" level="project" />
     <orderEntry type="library" exported="" name="google-http-client-android-1.20.0" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-22.2.0" level="project" />
-    <orderEntry type="library" exported="" name="google-api-client-1.20.0" level="project" />
     <orderEntry type="library" exported="" name="okhttp-2.3.0" level="project" />
-    <orderEntry type="library" exported="" name="google-http-client-jackson2-1.20.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.2.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-22.2.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-analytics-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="google-api-client-android-1.20.0" level="project" />
-    <orderEntry type="library" exported="" name="jackson-core-2.1.3" level="project" />
+    <orderEntry type="library" exported="" name="libphonenumber-7.0.5" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.2.0" level="project" />
     <orderEntry type="library" exported="" name="google-oauth-client-1.20.0" level="project" />
     <orderEntry type="library" exported="" name="jsr305-1.3.9" level="project" />
-    <orderEntry type="library" exported="" name="google-http-client-1.20.0" level="project" />
-    <orderEntry type="library" exported="" name="api-android-endpoints" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-7.5.0" level="project" />
-    <orderEntry type="library" exported="" name="guava-jdk5-13.0" level="project" />
+    <orderEntry type="library" exported="" name="geocoder-2.21" level="project" />
     <orderEntry type="library" exported="" name="play-services-gcm-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="okio-1.3.0" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-urlconnection-2.3.0" level="project" />
+    <orderEntry type="library" exported="" name="google-api-client-1.20.0" level="project" />
+    <orderEntry type="library" exported="" name="google-http-client-jackson2-1.20.0" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="jackson-core-2.1.3" level="project" />
+    <orderEntry type="library" exported="" name="google-http-client-1.20.0" level="project" />
+    <orderEntry type="library" exported="" name="api-android-endpoints" level="project" />
+    <orderEntry type="library" exported="" name="prefixmapper-2.21" level="project" />
+    <orderEntry type="library" exported="" name="guava-jdk5-13.0" level="project" />
     <orderEntry type="library" exported="" name="design-22.2.0" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-22.2.0" level="project" />
     <orderEntry type="module" module-name="common" exported="" />

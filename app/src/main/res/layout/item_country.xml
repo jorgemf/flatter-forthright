@@ -3,16 +3,18 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="wrap_content"
-	android:layout_height="@dimen/space_press"
+	android:layout_height="@dimen/space_press_small"
 	android:gravity="center_vertical"
-	android:orientation="horizontal">
+	android:orientation="horizontal"
+	android:paddingLeft="@dimen/space_normal"
+	android:paddingRight="@dimen/space_normal">
 
 	<ImageView
 		android:id="@+id/flag_icon"
 		android:layout_width="@dimen/item_flag_size"
 		android:layout_height="@dimen/item_flag_size"
-		android:layout_marginEnd="@dimen/space_normal"
-		android:layout_marginRight="@dimen/space_normal"
+		android:layout_marginEnd="@dimen/space_small"
+		android:layout_marginRight="@dimen/space_small"
 		android:scaleType="fitCenter"
 		android:src="@drawable/flag_es"
 		tools:ignore="ContentDescription"/>
@@ -22,10 +24,11 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:ellipsize="end"
+		android:minWidth="48dp"
 		android:layout_gravity="center_vertical"
 		android:lines="1"
 		android:text="+34"
-		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:textAppearance="?android:attr/textAppearanceMedium"
 		tools:ignore="HardcodedText"/>
 
 </LinearLayout>
