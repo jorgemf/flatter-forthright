@@ -21,6 +21,8 @@ public class Settings {
 
 	public static final long VERSION_CHECK_DELAY = TimeUnit.DAYS.toMillis(1);
 
+	public static final long PHONE_VERIFICATION_TRY_AGAIN_DELAY = TimeUnit.MINUTES.toMillis(3);
+
 	public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
 	public static class Google {

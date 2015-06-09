@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-	<string name="lorem_ipsum"/>
-
 	<string name="app_name">Thoughts</string>
-	<string name="button_continue">Continue</string>
-	<string name="welcome">Welcome</string>
+	<string name="feedback_email">thoughs@livae.com</string>
 </resources>

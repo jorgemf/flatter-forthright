@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -28,15 +29,20 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.livae.ff.app.Analytics;
-import com.livae.ff.app.Application;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.R;
+import com.livae.ff.app.Settings;
+import com.livae.ff.app.activity.OnBoardingActivity;
 import com.livae.ff.app.adapter.CountriesArrayAdapter;
+import com.livae.ff.app.dialog.CountdownDialogFragment;
+import com.livae.ff.app.utils.PhoneVerification;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class OnBoardingVerifyNumberFragment extends AbstractFragment
   implements View.OnClickListener {
@@ -47,8 +53,6 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 
 	private BroadcastReceiver smsReceiver;
 
-	private Long smsSent;
-
 	private View validateButton;
 
 	private EditText phoneNumberEditText;
@@ -56,6 +60,8 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	private Spinner countryCodeSpinner;
 
 	private CountriesArrayAdapter countriesAdapter;
+
+	private CountdownDialogFragment countdownDialogFragment;
 
 	@Nullable
 	@Override
@@ -80,20 +86,28 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		String phoneNumber = tm.getLine1Number();
 		Log.i(LOG_TAG, "Phone number: " + phoneNumber);
 		Log.i(LOG_TAG, "Sim country ISO: " + countryISO);
-		if (phoneNumber != null) {
-			phoneNumberEditText.setText(phoneNumber);
-		}
 		Constants.COUNTRY country = Constants.COUNTRY.US;
 		try {
 			country = Constants.COUNTRY.valueOf(countryISO.toUpperCase());
 		} catch (Exception e) {
 			Analytics.logAndReport("Unknown country ISO code: " + countryISO, false);
 		}
+		phoneNumberEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 		List<Constants.COUNTRY> list = new ArrayList<>();
 		list.addAll(Arrays.asList(Constants.COUNTRY.values()));
 		countriesAdapter.setCountries(list);
 		countryCodeSpinner.setSelection(countriesAdapter.getPosition(country));
-		phoneNumberEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+		countryCodeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				verifyNumber();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				verifyNumber();
+			}
+		});
 		phoneNumberEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -110,7 +124,13 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 				verifyNumber();
 			}
 		});
-		verifyNumber();
+		if (phoneNumber != null) {
+			String countryPrefix = country.getPhonePrefix().replace("+", "").replace("-", "");
+			if (phoneNumber.startsWith(countryPrefix)) {
+				phoneNumber = phoneNumber.substring(countryPrefix.length());
+			}
+			phoneNumberEditText.setText(phoneNumber);
+		}
 	}
 
 	@Override
@@ -124,6 +144,18 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 			intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
 		}
 		getActivity().registerReceiver(smsReceiver, intentFilter);
+		PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
+		final Long date = phoneVerification.getDate();
+		if (phoneVerification.getVerificationToken() != null &&
+			date != null &&
+			date > System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)) {
+			checkSmsConfirmation();
+		}
+		if (date != null &&
+			date > System.currentTimeMillis() - Settings.PHONE_VERIFICATION_TRY_AGAIN_DELAY) {
+			showCountDownDialog(System.currentTimeMillis() - date -
+								Settings.PHONE_VERIFICATION_TRY_AGAIN_DELAY);
+		}
 	}
 
 	@Override
@@ -136,8 +168,19 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.button:
-				smsSent = System.currentTimeMillis();
-//				sendSMS();
+				Phonenumber.PhoneNumber phoneNumber = getPhoneNumber();
+				PhoneVerification verification = PhoneVerification.instance(getActivity());
+				String phoneString =
+				  "+" + phoneNumber.getCountryCode() + phoneNumber.getNationalNumber();
+				Long phoneLong = Long.parseLong(phoneString);
+				verification.setUserPhone(phoneLong);
+				Random random = new Random();
+				int verificationCode = random.nextInt(999999) + 1; // 6 digits
+				verification.setVerificationToken(verificationCode);
+				verification.setDate(System.currentTimeMillis());
+				Log.d(LOG_TAG,
+					  "Phone number: " + phoneString + "  verification code: " + verificationCode);
+				sendVerificationSMS(phoneString, verificationCode);
 				break;
 		}
 	}
@@ -149,82 +192,167 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		boolean valid = false;
 		try {
 			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-			Phonenumber.PhoneNumber phoneNumber = null;
+			Phonenumber.PhoneNumber phoneNumber;
 			phoneNumber = phoneUtil.parseAndKeepRawInput(prefix + number, null);
 			PhoneNumberUtil.PhoneNumberType numberType = phoneUtil.getNumberType(phoneNumber);
+//			System.out.println("phoneUtil.isPossibleNumber(phoneNumber) " +
+//							   phoneUtil.isPossibleNumber(phoneNumber));
+//			System.out.println("phoneUtil.isValidNumber(phoneNumber) " +
+//							   phoneUtil.isValidNumber(phoneNumber));
+//			System.out.println("numberType " + numberType);
 			valid = phoneUtil.isPossibleNumber(phoneNumber) &&
 					phoneUtil.isValidNumber(phoneNumber) &&
-					numberType == PhoneNumberUtil.PhoneNumberType.MOBILE;
+					(numberType == PhoneNumberUtil.PhoneNumberType.MOBILE ||
+					 numberType == PhoneNumberUtil.PhoneNumberType.UNKNOWN);
+			//noinspection PointlessBooleanExpression,ConstantConditions
+			if (BuildConfig.DEV && prefix.equals("+1") &&
+				phoneNumber.getNationalNumber() == 5555215554L) { // emulator number
+				valid = true;
+			}
 		} catch (NumberParseException e) {
 			Analytics.logAndReport(e);
 		}
 		validateButton.setEnabled(valid);
 	}
 
-	private void sendSMS(String phoneNumber, String message) {
-		SmsManager sms = SmsManager.getDefault();
-		//noinspection ConstantConditions,PointlessBooleanExpression
-		if (BuildConfig.DEBUG || BuildConfig.DEV) {
-			phoneNumber = "5556"; // emulator number
+	private Phonenumber.PhoneNumber getPhoneNumber() {
+		String prefix = countriesAdapter.getItem(countryCodeSpinner.getSelectedItemPosition())
+										.getPhonePrefix();
+		String number = phoneNumberEditText.getText().toString();
+		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+		Phonenumber.PhoneNumber phoneNumber = null;
+		try {
+			phoneNumber = phoneUtil.parseAndKeepRawInput(prefix + number, null);
+		} catch (NumberParseException e) {
+			Analytics.logAndReport(e);
 		}
-		Log.i(LOG_TAG, "SENT num: " + phoneNumber + " body: " + message);
-		sms.sendTextMessage(phoneNumber, null, message, null, null);
+		return phoneNumber;
 	}
 
-	private boolean checkSmsContainsCode(Integer code) {
-		boolean contains = false;
-		if (code != null) {
-			Cursor cursor;
-			final ContentResolver contentResolver = getActivity().getContentResolver();
-			Uri uri;
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				uri = Telephony.Sms.CONTENT_URI;
-			} else {
-				uri = Uri.parse("content://sms");
-			}
-			cursor = contentResolver.query(uri, null, null, null, null);
-			if (cursor.moveToFirst()) {
-				int counter = 0;
-				String codeString = CODE_LIMIT + code.toString() + CODE_LIMIT;
-				do {
-					String column;
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-						column = Telephony.Sms.BODY;
-					} else {
-						column = "body";
-					}
-					String sms = cursor.getString(cursor.getColumnIndex(column));
-					contains = sms.contains(codeString);
-					counter++;
-				} while (cursor.moveToNext() && counter <= 3 && !contains);
-			}
-			cursor.close();
+	private void sendVerificationSMS(String phoneNumber, int code) {
+		SmsManager sms = SmsManager.getDefault();
+		//noinspection ConstantConditions,PointlessBooleanExpression
+		String message = getActivity().getString(R.string.verification_sms, code);
+		Log.i(LOG_TAG, "SENT num: " + phoneNumber + " body: " + message);
+		sms.sendTextMessage(phoneNumber, null, message, null, null);
+		showCountDownDialog(Settings.PHONE_VERIFICATION_TRY_AGAIN_DELAY);
+	}
+
+	private void showCountDownDialog(long countDown) {
+		countdownDialogFragment = new CountdownDialogFragment();
+		countdownDialogFragment.setMessage("message", countDown);
+		countdownDialogFragment.show(getFragmentManager(), "count_down_dialog");
+	}
+
+	private boolean checkSmsConfirmation() {
+		boolean validated = false;
+		Cursor cursor;
+		final ContentResolver contentResolver = getActivity().getContentResolver();
+		Uri uri;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			uri = Telephony.Sms.CONTENT_URI;
+		} else {
+			uri = Uri.parse("content://sms");
 		}
-		return contains;
+		String columnDate;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			columnDate = Telephony.Sms.DATE;
+		} else {
+			columnDate = "date";
+		}
+		String columnType;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			columnType = Telephony.Sms.TYPE;
+		} else {
+			columnType = "type";
+		}
+		String typeInbox;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			typeInbox = Integer.toString(Telephony.Sms.MESSAGE_TYPE_INBOX);
+		} else {
+			typeInbox = "1";
+		}
+		String oldestDate = Long.toString(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
+		cursor = contentResolver.query(uri, null, columnDate + ">? AND " + columnType + "=?",
+									   new String[]{oldestDate, typeInbox}, null);
+		if (cursor.moveToFirst()) {
+			int counter = 0;
+			do {
+				String columnBody;
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+					columnBody = Telephony.Sms.BODY;
+				} else {
+					columnBody = "body";
+				}
+				String columnPhone;
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+					columnPhone = Telephony.Sms.ADDRESS;
+				} else {
+					columnPhone = "address";
+				}
+				String message = cursor.getString(cursor.getColumnIndex(columnBody));
+				String phoneNumber = cursor.getString(cursor.getColumnIndex(columnPhone));
+				validated = checkSmsConfirmation(phoneNumber, message);
+				counter++;
+			} while (cursor.moveToNext() && counter <= 10 && !validated);
+		}
+		cursor.close();
+		return validated;
+	}
+
+	private boolean checkSmsConfirmation(String phoneNumber, String message) {
+		boolean valid;
+		PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
+		String codeString =
+		  CODE_LIMIT + phoneVerification.getVerificationToken().toString() + CODE_LIMIT;
+		String phoneToVerify = "+" + phoneVerification.getUserPhone();
+		valid = message != null && phoneNumber != null && message.contains(codeString) &&
+				phoneNumber.equals(phoneToVerify);
+		Log.i(LOG_TAG, "VERIFY SMS: " + phoneNumber + " body: " + message + " result: " + valid);
+		if (valid) {
+			phoneValidated();
+		}
+		return valid;
+	}
+
+	private void phoneValidated() {
+		if (countdownDialogFragment != null && countdownDialogFragment.isVisible()) {
+			countdownDialogFragment.dismiss();
+			countdownDialogFragment = null;
+		}
+		((OnBoardingActivity) getActivity()).nextStep();
 	}
 
 	class IncomingSms extends BroadcastReceiver {
 
-		final SmsManager sms = SmsManager.getDefault();
-
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			final Bundle bundle = intent.getExtras();
-			if (bundle != null) {
-				try {
-					final Object[] pdusObj = (Object[]) bundle.get("pdus");
-					for (int i = 0; i < pdusObj.length; i++) {
-						SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
-						String phoneNumber = currentMessage.getDisplayOriginatingAddress();
-						String message = currentMessage.getDisplayMessageBody();
-
-						Log.i(LOG_TAG, "RECEIVED num: " + phoneNumber + " body: " + message);
-						if (checkSmsContainsCode(Application.appUser().getVerificationToken())) {
-							// TODO
-						}
+			Log.i(LOG_TAG, "Received sms");
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				SmsMessage[] messages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
+				for (SmsMessage currentMessage : messages) {
+					String phoneNumber = currentMessage.getOriginatingAddress();
+					String message = currentMessage.getDisplayMessageBody();
+					if (checkSmsConfirmation(phoneNumber, message)) {
+						break;
 					}
-				} catch (Exception e) {
-					Analytics.logAndReport(e);
+				}
+			} else {
+				final Bundle bundle = intent.getExtras();
+				if (bundle != null) {
+					try {
+						final Object[] pdusObj = (Object[]) bundle.get("pdus");
+						boolean validated = false;
+						for (int i = 0; i < pdusObj.length && !validated; i++) {
+							SmsMessage currentMessage = SmsMessage
+														  .createFromPdu((byte[]) pdusObj[i]);
+							String phoneNumber = currentMessage.getOriginatingAddress();
+							String message = currentMessage.getDisplayMessageBody();
+							validated = checkSmsConfirmation(phoneNumber, message);
+						}
+					} catch (Exception e) {
+						Analytics.logAndReport(e);
+					}
 				}
 			}
 		}

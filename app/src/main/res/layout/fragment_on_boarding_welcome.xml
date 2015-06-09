@@ -14,12 +14,12 @@
 
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/toolbar"
-			app:titleMarginStart="@dimen/space_huge"
-			app:titleMarginEnd="@dimen/space_huge"
 			android:layout_width="match_parent"
 			android:layout_height="?actionBarSize"
 			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-			app:title="@string/on_boarding_welcome_title"/>
+			app:title="@string/on_boarding_welcome_title"
+			app:titleMarginEnd="@dimen/space_huge"
+			app:titleMarginStart="@dimen/space_huge"/>
 
 	</android.support.design.widget.AppBarLayout>
 
@@ -39,9 +39,9 @@
 
 	<Button
 		android:id="@+id/button"
-		android:background="@drawable/button_action"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:background="@drawable/button_action"
 		android:layout_alignParentBottom="true"
 		android:layout_gravity="bottom"
 		android:text="@string/button_continue"/>

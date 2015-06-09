@@ -5,6 +5,7 @@
 	android:layout_height="match_parent">
 
 	<View
+		android:id="@+id/top_view"
 		android:layout_width="match_parent"
 		android:layout_height="?actionBarSize"
 		android:background="?colorPrimary"
@@ -12,11 +13,20 @@
 		android:layout_gravity="top"/>
 
 	<View
+		android:id="@+id/bottom_view"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/abc_action_button_min_height_material"
 		android:background="?colorAccent"
 		android:layout_alignParentBottom="true"
 		android:layout_gravity="bottom"/>
+
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:src="@drawable/background"
+		android:scaleType="fitXY"
+		android:layout_below="@id/top_view"
+		android:layout_above="@id/bottom_view"/>
 
 	<FrameLayout
 		android:id="@+id/container"

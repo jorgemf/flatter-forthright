@@ -36,8 +36,6 @@ public class AppUser {
 
 	private SharedPreferences prefs;
 
-	private Integer verificationToken;
-
 	protected AppUser(Context context) {
 		load(context.getApplicationContext());
 	}
@@ -45,9 +43,6 @@ public class AppUser {
 	private void load(Context context) {
 		prefs = context.getSharedPreferences(Settings.PREFERENCES_USER_FILE, Context.MODE_PRIVATE);
 		appVersion = prefs.getInt(APP_VERSION, 0);
-		if (prefs.contains(VERIFICATION_TOKEN)) {
-			verificationToken = prefs.getInt(VERIFICATION_TOKEN, 0);
-		}
 		cloudMessagesId = prefs.getString(CLOUD_MESSAGES_ID, null);
 		countryCode = prefs.getString(USER_COUNTRY_CODE, null);
 		userPhone = prefs.getLong(USER_PHONE, 0L);
@@ -135,18 +130,8 @@ public class AppUser {
 		} catch (Exception ignore) {
 		}
 	}
-	
-	public Integer getVerificationToken() {
-		return verificationToken;
-	}
-
-	public void setVerificationToken(Integer verificationToken) {
-		this.verificationToken = verificationToken;
-		prefs.edit().putInt(VERIFICATION_TOKEN, verificationToken).apply();
-	}
 
 	public void clean(Context context) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		prefs.edit().clear().apply();
 		load(context);
 	}
