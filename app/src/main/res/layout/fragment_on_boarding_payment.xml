@@ -34,6 +34,8 @@
 		android:layout_marginRight="@dimen/space_huge"
 		android:layout_marginTop="@dimen/space_on_boarding"
 		android:lineSpacingMultiplier="1.2"
+		android:shadowColor="@color/white"
+		android:typeface="serif"
 		android:text="@string/on_boarding_payments"
 		android:textAppearance="?android:attr/textAppearanceLarge"/>
 

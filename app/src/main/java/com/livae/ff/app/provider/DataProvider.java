@@ -1,5 +1,6 @@
 package com.livae.ff.app.provider;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,7 +9,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.livae.ff.app.sql.Table;
-import com.livae.ff.common.Constants.ChatType;
 
 import java.util.List;
 
@@ -16,17 +16,16 @@ public class DataProvider extends AbstractProvider {
 
 	private static final int URI_CONTACTS = 1;
 
-	private static final int URI_PHONE_COMMENTS = 2;
+	private static final int URI_CONVERSATION = 2;
 
-	private static final int URI_COMMENTS = 3;
+	private static final int URI_CONVERSATIONS = 3;
+
+	private static final int URI_CONVERSATION_COMMENTS = 4;
+
+	private static final int URI_COMMENTS = 5;
 
 	private static Uri getContentUri() {
 		return Uri.parse(CONTENT_URI_BASE + getAuthority(DataProvider.class));
-	}
-
-	public static Uri getUriPhoneComments(Long phone, ChatType chatType) {
-		return Uri.withAppendedPath(getContentUri(),
-									Table.Comment.NAME + "/" + phone + "/" + chatType);
 	}
 
 	public static Uri getUriComments() {
@@ -37,13 +36,28 @@ public class DataProvider extends AbstractProvider {
 		return Uri.withAppendedPath(getContentUri(), Table.LocalUser.NAME);
 	}
 
+	public static Uri getUriConversations() {
+		return Uri.withAppendedPath(getContentUri(), Table.Conversation.NAME);
+	}
+
+	public static Uri getUriConversation(Long conversationId) {
+		return ContentUris.withAppendedId(getUriConversations(), conversationId);
+	}
+
+	public static Uri getUriConversationComments(Long conversationId) {
+		return Uri.withAppendedPath(getUriConversation(conversationId), Table.Comment.NAME);
+	}
+
 	@Override
 	public boolean onCreate() {
 		final boolean result = super.onCreate();
 		final String authority = getAuthority(this.getClass());
 		uriMatcher.addURI(authority, Table.LocalUser.NAME, URI_CONTACTS);
 		uriMatcher.addURI(authority, Table.Comment.NAME, URI_COMMENTS);
-		uriMatcher.addURI(authority, Table.Comment.NAME + "/#/*/", URI_PHONE_COMMENTS);
+		uriMatcher.addURI(authority, Table.Conversation.NAME, URI_CONVERSATIONS);
+		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/", URI_CONVERSATION);
+		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/" +
+									 Table.Comment.NAME, URI_CONVERSATION_COMMENTS);
 		return result;
 	}
 

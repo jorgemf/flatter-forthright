@@ -10,6 +10,7 @@ import android.provider.Settings.Secure;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.livae.ff.app.Analytics;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.Settings;
 
@@ -112,9 +113,15 @@ public class DeviceUtils {
 		return true;
 	}
 
-	public static String getCloudMessageId(Context context) throws IOException {
-		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
-		return gcm.register(Settings.Google.SENDER_ID);
+	public static String getCloudMessageId(Context context) {
+		try {
+			GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+			return gcm.register(Settings.Google.SENDER_ID);
+		} catch (IOException e) {
+			e.printStackTrace();
+			Analytics.logAndReport(e, false);
+		}
+		return null;
 	}
 
 	public static String getModel(Context context) {

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.2.0/trianglify.min.js"></script>
+<script>
+var h1 = 291.0;
+var s1 = 63.7;
+var l1 = 42.2;
+
+var h3 = 0.0;
+var s3 = 100.0;
+var l3 = 100.0;
+
+var h2 = 45.0;
+var s2 = 100.0;
+var l2 = 51.4;
+
+	var colorFunc = function(x, y) {
+//		return 'hsl('+Math.floor(Math.abs(y)*360)+',80%,60%)';
+		if(y<0.5){
+			a = y*2;
+			h = h1;
+			s = (1-a)*s1 + a*s3;
+			l = (1-a)*l1 + a*l3;
+		}else{
+			a = (1-y)*2;
+			h = h2;
+			s = (1-a)*s2 + a*s3;
+			l = (1-a)*l2 + a*l3;
+		}
+		l += Math.random()*10-5;
+		s += Math.random()*6-3;
+		h += Math.random()*6-3;
+		return 'hsl('+h+','+s+'%,'+l+'%)';
+	};
+
+	var pattern = Trianglify({
+		width: 600, 
+		height: 800,
+		cell_size: 28,
+		variance: 1,
+		x_colors: ['#9C27B0', '#CCCCCC', '#FFC107'],
+		y_colors: ['#FFFFFF', '#FFFFFF', '#FFFFFF'],
+		color_function: colorFunc
+	});
+	document.body.appendChild(pattern.canvas())
+</script>
+</body>
+</html>

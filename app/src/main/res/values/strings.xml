@@ -8,13 +8,17 @@
 	<string name="time_few_minutes_ago">few minutes ago</string>
 	<string name="time_yesterday">Yesterday</string>
 	<string name="app_version">Thoughts %s - livae</string>
-	<string name="app_description">Thoughts bla bla bla …</string>
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="signing_in">Signing in…</string>
 	<string name="empty_text">Ops… there is nothing here.</string>
 	<string name="phone_number">Phone number</string>
 	<string name="post_comment_hint">Type a message</string>
 	<string name="verification_sms">Pensamientos verification code #%d#</string>
+	<string name="verification_sms_dialog_confirmation">Are you sure %s is your number?</string>
+	<string name="verification_sms_dialog">We have sent a message, please be patient while it is delivered.</string>
 
 	<string name="feedback_email">pensamientos@livae.com</string>
 	<string name="feedback_email_subject">Pensamientos Feedback</string>
@@ -47,6 +51,7 @@
 	<string name="error_unknown">Unknown error: %s</string>
 	<string name="error_api">API error: %s</string>
 	<string name="error_unexpected">Unexpected error: %s</string>
+	<string name="error_signing_in_retry">Error signing in (%s).\nRetry?</string>
 
 	<string name="on_boarding_welcome_title">Welcome to Pensamientos</string>
 	<string name="on_boarding_welcome">
@@ -54,16 +59,17 @@
 		friends, be forthright about something they should know but you don\'t want to say in
 		person, or even having a private anonymous chat if the other person wants.
 	</string>
-	<string name="on_boarding_validate_number_title">Validate your number</string>
+	<string name="on_boarding_validate_number_title">Verify your number</string>
 	<string name="on_boarding_validate_number">
-		Pensamientos needs to validate your phone number so you can reply to comments and receive
-		private chats. We will send you SMS to validate it.\nBy validating you accept the terms and
-		conditions.
+		Pensamientos needs to verify your phone number so you can reply to comments and receive
+		private chats. We will send a one time SMS in order to verify it. Carrier SMS charges may
+		apply. By validating you accept the terms and conditions.
 	</string>
-	<string name="on_boarding_warning_title">Respect!</string>
+	<string name="on_boarding_warning_title">Phone verified</string>
 	<string name="on_boarding_warning">
-		Offensive and non constructive comments will be deleted from Pensamientos. Mind your words
-		before commenting and please alert us about abuses to keep a good community.
+		Phone number verified!\n\nBe aware offensive and non constructive comments will be deleted
+		from Pensamientos. Mind your words before commenting and please alert us about abuses to
+		keep a good community.
 	</string>
 	<string name="on_boarding_payments_title">Payments</string>
 	<string name="on_boarding_payments">

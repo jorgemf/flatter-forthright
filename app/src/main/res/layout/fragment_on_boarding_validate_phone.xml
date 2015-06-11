@@ -32,10 +32,12 @@
 		android:layout_alignParentStart="true"
 		android:layout_below="@id/bar_layout"
 		android:layout_marginBottom="@dimen/space_large"
+		android:typeface="serif"
 		android:layout_marginLeft="@dimen/space_huge"
 		android:layout_marginRight="@dimen/space_huge"
 		android:layout_marginTop="@dimen/space_on_boarding"
 		android:lineSpacingMultiplier="1.2"
+		android:shadowColor="@color/white"
 		android:text="@string/on_boarding_validate_number"
 		android:textAppearance="?android:attr/textAppearanceLarge"/>
 

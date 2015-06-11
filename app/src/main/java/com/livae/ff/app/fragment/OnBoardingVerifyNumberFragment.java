@@ -3,6 +3,7 @@ package com.livae.ff.app.fragment;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -11,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
@@ -35,12 +37,17 @@ import com.livae.ff.app.R;
 import com.livae.ff.app.Settings;
 import com.livae.ff.app.activity.OnBoardingActivity;
 import com.livae.ff.app.adapter.CountriesArrayAdapter;
+import com.livae.ff.app.async.Callback;
+import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.dialog.CountdownDialogFragment;
+import com.livae.ff.app.dialog.ProgressDialogFragment;
+import com.livae.ff.app.task.TaskRegisterUser;
 import com.livae.ff.app.utils.PhoneVerification;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -62,6 +69,8 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	private CountriesArrayAdapter countriesAdapter;
 
 	private CountdownDialogFragment countdownDialogFragment;
+
+	private ProgressDialogFragment progressDialogFragment;
 
 	@Nullable
 	@Override
@@ -137,11 +146,11 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	public void onResume() {
 		super.onResume();
 		smsReceiver = new IncomingSms();
-		IntentFilter intentFilter = new IntentFilter();
+		IntentFilter intentFilter;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			intentFilter.addAction(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
+			intentFilter = new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
 		} else {
-			intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+			intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 		}
 		getActivity().registerReceiver(smsReceiver, intentFilter);
 		PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
@@ -168,21 +177,34 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.button:
-				Phonenumber.PhoneNumber phoneNumber = getPhoneNumber();
-				PhoneVerification verification = PhoneVerification.instance(getActivity());
-				String phoneString =
-				  "+" + phoneNumber.getCountryCode() + phoneNumber.getNationalNumber();
-				Long phoneLong = Long.parseLong(phoneString);
-				verification.setUserPhone(phoneLong);
-				Random random = new Random();
-				int verificationCode = random.nextInt(999999) + 1; // 6 digits
-				verification.setVerificationToken(verificationCode);
-				verification.setDate(System.currentTimeMillis());
-				Log.d(LOG_TAG,
-					  "Phone number: " + phoneString + "  verification code: " + verificationCode);
-				sendVerificationSMS(phoneString, verificationCode);
+				pressedContinue();
 				break;
 		}
+	}
+
+	private void pressedContinue() {
+		final Phonenumber.PhoneNumber phoneNumber = getPhoneNumber();
+		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+		final String country = Locale.getDefault().getCountry();
+		String number = "+" + phoneUtil.formatOutOfCountryCallingNumber(phoneNumber, country);
+		new AlertDialog.Builder(getActivity())
+		  .setMessage(getString(R.string.verification_sms_dialog_confirmation, number))
+		  .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+			  public void onClick(DialogInterface dialog, int id) {
+				  String phoneString =
+					"+" + phoneNumber.getCountryCode() + phoneNumber.getNationalNumber();
+				  Long phoneLong = Long.parseLong(phoneString);
+				  PhoneVerification verification = PhoneVerification.instance(getActivity());
+				  verification.setUserPhone(phoneLong);
+				  Random random = new Random();
+				  int verificationCode = random.nextInt(999999) + 1; // 6 digits
+				  verification.setVerificationToken(verificationCode);
+				  verification.setDate(System.currentTimeMillis());
+				  Log.d(LOG_TAG, "Phone number: " + phoneString + "  verification code: " +
+								 verificationCode);
+				  sendVerificationSMS(phoneString, verificationCode);
+			  }
+		  }).setNegativeButton(R.string.no, null).setCancelable(false).show();
 	}
 
 	private void verifyNumber() {
@@ -240,7 +262,7 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 
 	private void showCountDownDialog(long countDown) {
 		countdownDialogFragment = new CountdownDialogFragment();
-		countdownDialogFragment.setMessage("message", countDown);
+		countdownDialogFragment.setMessage(getString(R.string.verification_sms_dialog), countDown);
 		countdownDialogFragment.show(getFragmentManager(), "count_down_dialog");
 	}
 
@@ -316,11 +338,40 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	}
 
 	private void phoneValidated() {
-		if (countdownDialogFragment != null && countdownDialogFragment.isVisible()) {
+		if (countdownDialogFragment != null) {
 			countdownDialogFragment.dismiss();
 			countdownDialogFragment = null;
 		}
-		((OnBoardingActivity) getActivity()).nextStep();
+		if (progressDialogFragment == null) {
+			progressDialogFragment = new ProgressDialogFragment();
+			progressDialogFragment.setMessage(getString(R.string.signing_in));
+		}
+		progressDialogFragment.show(getFragmentManager(), "progress_dialog");
+		TaskRegisterUser task = new TaskRegisterUser();
+		PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
+		task.execute(phoneVerification.getUserPhone(), new Callback<Long, Void>() {
+			@Override
+			public void onComplete(CustomAsyncTask<Long, Void> task, Long aLong, Void aVoid) {
+				progressDialogFragment.dismiss();
+				if (isResumed() && getActivity() != null) {
+					((OnBoardingActivity) getActivity()).nextStep();
+				}
+			}
+
+			@Override
+			public void onError(CustomAsyncTask<Long, Void> task, Long aLong, Exception e) {
+				progressDialogFragment.dismiss();
+				if (isResumed() && getActivity() != null) {
+					new AlertDialog.Builder(getActivity())
+					  .setMessage(getString(R.string.error_signing_in_retry, e.getMessage()))
+					  .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+						  public void onClick(DialogInterface dialog, int id) {
+							  phoneValidated();
+						  }
+					  }).setNegativeButton(R.string.cancel, null).setCancelable(false).show();
+				}
+			}
+		});
 	}
 
 	class IncomingSms extends BroadcastReceiver {
