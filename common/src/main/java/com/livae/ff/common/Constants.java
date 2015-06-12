@@ -7,7 +7,11 @@ public class Constants {
 	}
 
 	public enum ChatType {
-		FLATTER, FORTHRIGHT, PRIVATE
+		FLATTER, // Only positive comments about the person
+		FORTHRIGHT, // Real things about the person
+		PRIVATE_ANONYMOUS, // Private and anonymous chat
+		PRIVATE, // Private chat between 2
+		SECRET // Secret chat, comments are deleted after reading them
 	}
 
 	public enum Profile {

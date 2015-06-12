@@ -14,7 +14,8 @@ public class Table {
 
 		public static final String IMAGE = NAME + "_" + "image";
 
-		public static final String FAVORITE = NAME + "_" + "favorite";
+		public static final String ACCEPTS_PRIVATE_ANONYMOUS =
+		  NAME + "_" + "accepts_private_anonymous";
 
 		public static final String ID = BaseColumns._ID;
 
@@ -25,7 +26,7 @@ public class Table {
 												PHONE + " INTEGER NOT NULL, " +
 												CONTACT + " TEXT, " +
 												IMAGE + " TEXT, " +
-												FAVORITE + " INTEGER " +
+												ACCEPTS_PRIVATE_ANONYMOUS + " INTEGER " +
 												" );";
 	}
 
@@ -43,7 +44,6 @@ public class Table {
 												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 												TYPE + " TEXT NOT NULL, " +
 												" );";
-
 	}
 
 	public static class Comment {
@@ -54,7 +54,9 @@ public class Table {
 
 		public static final String CONVERSATION_ID = NAME + "_" + "conversation_id";
 
-		public static final String USER_ID = NAME + "_" + "user_id";
+		public static final String USER_ANONYMOUS_ID = NAME + "_" + "user_anonymous_id";
+
+		public static final String USER_ALIAS = NAME + "_" + "user_alias";
 
 		public static final String PHONE = NAME + "_" + "phone";
 
@@ -75,9 +77,10 @@ public class Table {
 		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
 												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 												CONVERSATION_ID + " INTEGER NOT NULL, " +
-												USER_ID + " INTEGER NOT NULL, " +
+												USER_ANONYMOUS_ID + " INTEGER, " +
 												PHONE + " INTEGER, " +
 												COMMENT + " TEXT NOT NULL, " +
+												USER_ALIAS + " TEXT, " +
 												DATE + " INTEGER NOT NULL, " +
 												AGREE_VOTES + " INTEGER, " +
 												DISAGREE_VOTES + " INTEGER, " +

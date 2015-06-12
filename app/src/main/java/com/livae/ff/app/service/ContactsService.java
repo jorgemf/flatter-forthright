@@ -44,12 +44,12 @@ public class ContactsService extends IntentService {
 				String currentName = appContacts.getString(iName);
 				Long currentNumber = appContacts.getLong(iNumber);
 				if (indexPhoneContacts >= phoneContacts.size()) {
-					phonesToAdd.add(new Pair<String, Long>(currentName, currentNumber));
+					phonesToAdd.add(new Pair<>(currentName, currentNumber));
 				} else {
-
+					Pair<String, Long> phoneContact = phoneContacts.get(indexPhoneContacts);
+					// TODO
 				}
 			} while (appContacts.moveToNext());
-			// TODO
 			while (indexPhoneContacts < phoneContacts.size()) {
 				phonesToDelete.add(phoneContacts.get(indexPhoneContacts).second);
 				indexPhoneContacts++;
