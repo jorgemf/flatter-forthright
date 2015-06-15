@@ -2,17 +2,23 @@ package com.livae.ff.app.service;
 
 import android.app.IntentService;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
 import android.support.v4.util.Pair;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.livae.ff.app.Analytics;
+import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.provider.DataProvider;
+import com.livae.ff.app.sql.DBHelper;
 import com.livae.ff.app.sql.Table;
 
 import java.util.ArrayList;
@@ -21,6 +27,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ContactsService extends IntentService {
+
+	private static final String LOG_TAG = "CONTACTS_SERVICE";
 
 	public ContactsService() {
 		super("ContactsService");
@@ -42,12 +50,25 @@ public class ContactsService extends IntentService {
 			int iName = appContacts.getColumnIndex(Table.LocalUser.CONTACT);
 			do {
 				String currentName = appContacts.getString(iName);
-				Long currentNumber = appContacts.getLong(iNumber);
+				long currentNumber = appContacts.getLong(iNumber);
 				if (indexPhoneContacts >= phoneContacts.size()) {
-					phonesToAdd.add(new Pair<>(currentName, currentNumber));
-				} else {
+					// deleted a phone that is not in the mobile anymore
+					phonesToDelete.add(currentNumber);
+				} else if (indexPhoneContacts < phoneContacts.size()) {
+					// add or update the phones
 					Pair<String, Long> phoneContact = phoneContacts.get(indexPhoneContacts);
-					// TODO
+					do {
+						if (phoneContact.second == currentNumber) {
+							if (!currentName.equals(phoneContact.first)) {
+								phonesToUpdate.add(new Pair<>(phoneContact.first, currentNumber));
+							}
+							indexPhoneContacts++;
+						} else if (phoneContact.second < currentNumber) {
+							phonesToAdd.add(phoneContact);
+							indexPhoneContacts++;
+						}
+					} while (phoneContact.second <= currentNumber &&
+							 indexPhoneContacts < phoneContacts.size());
 				}
 			} while (appContacts.moveToNext());
 			while (indexPhoneContacts < phoneContacts.size()) {
@@ -59,6 +80,68 @@ public class ContactsService extends IntentService {
 		deletePhones(phonesToDelete);
 		addPhones(phonesToAdd);
 		updatePhones(phonesToUpdate);
+	}
+
+	private void deletePhones(List<Long> phonesToDelete) {
+		final DBHelper dbHelper = DBHelper.instance(this);
+		final SQLiteDatabase database = dbHelper.getWritableDatabase();
+		database.beginTransaction();
+		String[] args = new String[1];
+		for (Long phone : phonesToDelete) {
+			args[0] = phone.toString();
+			int deleted = database.delete(Table.LocalUser.NAME, Table.LocalUser.PHONE + "=?", args);
+			if (deleted != 1) {
+				Analytics.logAndReport("Should delete 1 but it deleted " + deleted +
+									   "  (Phone number: " + args[0] + ")");
+			} else
+				//noinspection ConstantConditions,PointlessBooleanExpression
+				if (BuildConfig.DEV && BuildConfig.DEBUG) {
+					Log.d(LOG_TAG, "Deleted: " + args[0]);
+				}
+		}
+		database.endTransaction();
+	}
+
+	private void addPhones(List<Pair<String, Long>> phonesToAdd) {
+		final DBHelper dbHelper = DBHelper.instance(this);
+		final SQLiteDatabase database = dbHelper.getWritableDatabase();
+		database.beginTransaction();
+		ContentValues contentValues = new ContentValues();
+		for (Pair<String, Long> pair : phonesToAdd) {
+			contentValues.put(Table.LocalUser.PHONE, pair.second);
+			contentValues.put(Table.LocalUser.CONTACT, pair.first);
+			database.insert(Table.LocalUser.NAME, null, contentValues);
+			//noinspection ConstantConditions,PointlessBooleanExpression
+			if (BuildConfig.DEV && BuildConfig.DEBUG) {
+				Log.d(LOG_TAG, "Added: " + pair.first + " - " + pair.second);
+			}
+		}
+		database.endTransaction();
+	}
+
+	private void updatePhones(List<Pair<String, Long>> phonesToUpdate) {
+		final DBHelper dbHelper = DBHelper.instance(this);
+		final SQLiteDatabase database = dbHelper.getWritableDatabase();
+		database.beginTransaction();
+		ContentValues contentValues = new ContentValues();
+		String[] args = new String[1];
+		for (Pair<String, Long> pair : phonesToUpdate) {
+			contentValues.put(Table.LocalUser.PHONE, pair.second);
+			contentValues.put(Table.LocalUser.CONTACT, pair.first);
+			args[0] = pair.second.toString();
+			int updated = database.update(Table.LocalUser.NAME, contentValues,
+										  Table.LocalUser.PHONE + "=?", args);
+			if (updated != 1) {
+				Analytics.logAndReport("Should updated 1 but it updated " + updated +
+									   "  (Phone number: " + args[0] + ")");
+			} else
+				//noinspection ConstantConditions,PointlessBooleanExpression
+				if (BuildConfig.DEV && BuildConfig.DEBUG) {
+					Log.d(LOG_TAG, "Updated: " + pair.first + " - " + pair.second);
+				}
+		}
+		database.endTransaction();
+
 	}
 
 	private List<Pair<String, Long>> getPhoneContacts() {

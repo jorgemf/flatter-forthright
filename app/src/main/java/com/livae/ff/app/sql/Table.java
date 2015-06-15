@@ -8,8 +8,6 @@ public class Table {
 
 		public static final String NAME = "local_user";
 
-		public static final String PHONE = NAME + "_" + "phone";
-
 		public static final String CONTACT = NAME + "_" + "contact";
 
 		public static final String IMAGE = NAME + "_" + "image";
@@ -17,16 +15,18 @@ public class Table {
 		public static final String ACCEPTS_PRIVATE_ANONYMOUS =
 		  NAME + "_" + "accepts_private_anonymous";
 
-		public static final String ID = BaseColumns._ID;
+		public static final String BLOCKED = NAME + "_" + "blocked";
 
-		public static final String T_ID = NAME + "." + ID;
+		public static final String PHONE = BaseColumns._ID;
+
+		public static final String T_ID = NAME + "." + PHONE;
 
 		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
-												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 												PHONE + " INTEGER NOT NULL, " +
 												CONTACT + " TEXT, " +
 												IMAGE + " TEXT, " +
-												ACCEPTS_PRIVATE_ANONYMOUS + " INTEGER " +
+												ACCEPTS_PRIVATE_ANONYMOUS + " INTEGER, " +
+												BLOCKED + " INTEGER " +
 												" );";
 	}
 
@@ -40,8 +40,14 @@ public class Table {
 
 		public static final String TYPE = NAME + "_" + "type";
 
+		public static final String PHONE = NAME + "_" + "phone";
+
+		public static final String CONVERSATION_ALIAS = NAME + "_" + "conversation_alias";
+
 		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
 												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+												CONVERSATION_ALIAS + " TEXT, " +
+												PHONE + " INTEGER, " +
 												TYPE + " TEXT NOT NULL, " +
 												" );";
 	}
@@ -78,9 +84,9 @@ public class Table {
 												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 												CONVERSATION_ID + " INTEGER NOT NULL, " +
 												USER_ANONYMOUS_ID + " INTEGER, " +
+												USER_ALIAS + " TEXT, " +
 												PHONE + " INTEGER, " +
 												COMMENT + " TEXT NOT NULL, " +
-												USER_ALIAS + " TEXT, " +
 												DATE + " INTEGER NOT NULL, " +
 												AGREE_VOTES + " INTEGER, " +
 												DISAGREE_VOTES + " INTEGER, " +
