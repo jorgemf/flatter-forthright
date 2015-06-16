@@ -6,8 +6,8 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfNotNull;
 import com.googlecode.objectify.condition.IfTrue;
-import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 
 import java.io.Serializable;
@@ -23,20 +23,17 @@ public class Comment implements Serializable {
 	@Id
 	private Long id;
 
-	private Long user;
+	private Long conversationId;
+
+	private Long aliasId;
+
+	private String alias;
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Long userId;
 
 	@Index
-	private Long phone;
-
-	@Index
 	private Date date;
-
-	@Index
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	private ChatType chatType;
 
 	private String comment;
 
@@ -51,6 +48,7 @@ public class Comment implements Serializable {
 	@Ignore
 	private CommentVoteType voteType;
 
+	@Ignore
 	private CommentVoteType userVoteType;
 
 	@Ignore
@@ -60,15 +58,18 @@ public class Comment implements Serializable {
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Boolean deleted;
 
+	@Index(IfNotNull.class)
+	private Integer timesFlagged;
+
+	@Index(IfNotNull.class)
+	private Date lastTimeFlagged;
+
 	public Comment() {
 	}
 
-	public Comment(@Nonnull ChatType chatType, @Nonnull Long phone, @Nonnull Long user,
-				   @Nonnull Long userId, @Nonnull String comment) {
-		this.chatType = chatType;
-		this.user = user;
+	public Comment(@Nonnull Long conversationId, @Nonnull Long userId, @Nonnull String comment) {
+		this.conversationId = conversationId;
 		this.userId = userId;
-		this.phone = phone;
 		this.comment = comment;
 		date = new Date();
 		agreeVotes = 0;
@@ -76,7 +77,13 @@ public class Comment implements Serializable {
 		votes = 0;
 		userVoteType = null;
 		deleted = false;
-		isMe = false;
+	}
+
+	public Comment(@Nonnull Long conversationId, @Nonnull Long userId, @Nonnull String comment,
+				   @Nonnull Long aliasId, @Nonnull String alias) {
+		this(conversationId, userId, comment);
+		this.aliasId = aliasId;
+		this.alias = alias;
 	}
 
 	public static Comment get(Long id) {
@@ -91,12 +98,28 @@ public class Comment implements Serializable {
 		this.id = id;
 	}
 
-	public Long getUser() {
-		return user;
+	public Long getConversationId() {
+		return conversationId;
 	}
 
-	public void setUser(Long user) {
-		this.user = user;
+	public void setConversationId(Long conversationId) {
+		this.conversationId = conversationId;
+	}
+
+	public Long getAliasId() {
+		return aliasId;
+	}
+
+	public void setAliasId(Long aliasId) {
+		this.aliasId = aliasId;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	public Long getUserId() {
@@ -105,14 +128,6 @@ public class Comment implements Serializable {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
-	}
-
-	public Long getPhone() {
-		return phone;
-	}
-
-	public void setPhone(Long phone) {
-		this.phone = phone;
 	}
 
 	public Date getDate() {
@@ -173,14 +188,6 @@ public class Comment implements Serializable {
 		this.deleted = deleted;
 	}
 
-	public ChatType getChatType() {
-		return chatType;
-	}
-
-	public void setChatType(ChatType chatType) {
-		this.chatType = chatType;
-	}
-
 	public Boolean getIsMe() {
 		return isMe;
 	}
@@ -195,5 +202,30 @@ public class Comment implements Serializable {
 
 	public void setUserVoteType(CommentVoteType userVoteType) {
 		this.userVoteType = userVoteType;
+	}
+
+	public Integer getTimesFlagged() {
+		return timesFlagged;
+	}
+
+	public void setTimesFlagged(Integer timesFlagged) {
+		this.timesFlagged = timesFlagged;
+	}
+
+	public Date getLastTimeFlagged() {
+		return lastTimeFlagged;
+	}
+
+	public void setLastTimeFlagged(Date lastTimeFlagged) {
+		this.lastTimeFlagged = lastTimeFlagged;
+	}
+
+	public void flagged() {
+		lastTimeFlagged = new Date();
+		if (timesFlagged == null) {
+			timesFlagged = 1;
+		} else {
+			timesFlagged++;
+		}
 	}
 }

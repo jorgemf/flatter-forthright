@@ -7,6 +7,7 @@ import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.config.Nullable;
 import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.CollectionResponse;
+import com.google.api.server.spi.response.ForbiddenException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.datastore.Cursor;
@@ -19,11 +20,13 @@ import com.livae.ff.api.auth.AppAuthenticator;
 import com.livae.ff.api.auth.AuthUtil;
 import com.livae.ff.api.model.Comment;
 import com.livae.ff.api.model.CommentVote;
-import com.livae.ff.api.model.Contact;
+import com.livae.ff.api.model.Conversation;
+import com.livae.ff.api.model.FlagComment;
+import com.livae.ff.api.model.Numbers;
 import com.livae.ff.api.model.PhoneUser;
 import com.livae.ff.api.model.Version;
 import com.livae.ff.api.util.InputUtil;
-import com.livae.ff.api.v1.model.Contacts;
+import com.livae.ff.api.v1.model.FlagText;
 import com.livae.ff.api.v1.model.Text;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
@@ -32,8 +35,6 @@ import com.livae.ff.common.Constants.Platform;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -103,16 +104,14 @@ public class ApiEndpoint {
 		ofy().save().entity(phoneUser);
 	}
 
-	@ApiMethod(path = "phone/{countryCode}/{number}",
-			   httpMethod = ApiMethod.HttpMethod.GET)
-	public PhoneUser register(@Named("number") String numberString,
-							  @Named("countryCode") String countryCode, User gUser)
+	@ApiMethod(path = "phone/{number}",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public PhoneUser register(@Named("number") Long number, User gUser)
 	  throws UnauthorizedException, BadRequestException {
 		if (gUser != null) {
 			throw new UnauthorizedException("Cannot register more devices from the same one");
 		}
-		Long number = InputUtil.getValidNumber(numberString, countryCode);
-		if (number == null) {
+		if (!InputUtil.isValidNumber(number)) {
 			throw new BadRequestException("Phone number not valid");
 		}
 
@@ -127,124 +126,199 @@ public class ApiEndpoint {
 		return user;
 	}
 
-	@ApiMethod(path = "contacts",
-			   httpMethod = ApiMethod.HttpMethod.POST)
-	public void updateContacts(Contacts contacts, User gUser)
-	  throws UnauthorizedException, BadRequestException {
+	@ApiMethod(path = "me",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public PhoneUser getUserInfo(User gUser) throws UnauthorizedException, BadRequestException {
+		if (gUser == null) {
+			throw new UnauthorizedException("User not authorized");
+		}
+		return AuthUtil.getPhoneUser(gUser);
+	}
+
+	@ApiMethod(path = "me/chats/forthright/block",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public PhoneUser blockForthright(User gUser) throws UnauthorizedException, {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
 		}
 		PhoneUser user = AuthUtil.getPhoneUser(gUser);
-		if (user == null) {
+		user.setForthrightChatsDateBlocked(new Date());
+		ofy().save().entity(user);
+		return user;
+	}
+
+	@ApiMethod(path = "me/chats/forthright/unblock",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public PhoneUser unblockForthright(User gUser) throws UnauthorizedException {
+		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
 		}
-		Long userPhone = user.getPhone();
-		List<Contact> contactsList;
-		contactsList = ofy().load().type(Contact.class).filter("userPhone", userPhone).list();
-		// to hash set
-		HashMap<Long, Contact> contactsNumbers = new HashMap<>();
-		for (Contact contact : contactsList) {
-			contactsNumbers.put(contact.getContactPhone(), contact);
-		}
+		PhoneUser user = AuthUtil.getPhoneUser(gUser);
+		user.setForthrightChatsDateBlocked(null);
+		ofy().save().entity(user);
+		return user;
+	}
 
-		String defaultCountry = contacts.getCountryCode();
-		HashSet<Long> newContacts = new HashSet<>();
-		for (String numberString : contacts.getNumbers()) {
-			Long number = InputUtil.getValidNumber(numberString, defaultCountry);
-			if (number != null) {
-				newContacts.add(number);
-				if (!contactsNumbers.containsKey(number)) {
-					// add new contact
-					Contact newContact = new Contact(userPhone, number);
-					ofy().save().entity(newContact);
+	@ApiMethod(path = "conversation/{conversationId}",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public Conversation getConversation(@Named("conversationId") Long conversationId, User gUser)
+	  throws UnauthorizedException, NotFoundException {
+		if (gUser == null) {
+			throw new UnauthorizedException("User not authorized");
+		}
+		Conversation conversation = Conversation.get(conversationId);
+		if (conversation != null) {
+			ChatType chatType = conversation.getType();
+			switch (chatType) {
+				case PRIVATE:
+				case PRIVATE_ANONYMOUS:
+				case SECRET:
+					PhoneUser user = AuthUtil.getPhoneUser(gUser);
+					if (!conversation.getUsers().contains(user.getPhone())) {
+						conversation = null;
+					}
+					break;
+				case FLATTER:
+				case FORTHRIGHT:
+					// nothing
+			}
+		}
+		if (conversation == null) {
+			throw new NotFoundException("Conversation not found");
+		}
+		return conversation;
+	}
+
+	@ApiMethod(path = "conversation/phone/{phoneNumber}/{type}",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public Conversation getPhoneConversation(@Named("phoneNumber") Long phoneNumber,
+											 @Named("type") ChatType type,
+											 @Named("roomName") String roomName, User gUser)
+	  throws UnauthorizedException, NotFoundException, BadRequestException {
+		if (gUser == null) {
+			throw new UnauthorizedException("User not authorized");
+		}
+		PhoneUser userConversation = PhoneUser.get(phoneNumber);
+		PhoneUser user = AuthUtil.getPhoneUser(gUser);
+		Conversation conversation = null;
+		switch (type) {
+			case PRIVATE_ANONYMOUS:
+				if (userConversation == null) {
+					throw new NotFoundException("User not in the platform");
 				}
-			}
+				if (roomName == null) {
+					throw new BadRequestException("roomName required");
+				}
+				conversation = new Conversation(type);
+				conversation.setAlias(roomName);
+				conversation.addUser(userConversation.getPhone());
+				conversation.addUser(user.getPhone());
+				ofy().save().entity(conversation).now();
+				break;
+			case PRIVATE:
+			case SECRET:
+				if (userConversation == null) {
+					throw new NotFoundException("User not in the platform");
+				}
+				// find previous conversation
+				String mixPhones = Conversation.mixPhones(phoneNumber, user.getPhone());
+				conversation = ofy().load().type(Conversation.class).filter("phones", mixPhones)
+									.filter("type", type).first().now();
+				// create a new one
+				if (conversation == null) {
+					conversation = new Conversation(type);
+					conversation.setPhone(userConversation.getPhone());
+					conversation.addUser(userConversation.getPhone());
+					conversation.addUser(user.getPhone());
+					ofy().save().entity(conversation).now();
+				}
+				break;
+			case FLATTER:
+			case FORTHRIGHT:
+				if (!InputUtil.isValidNumber(phoneNumber)) {
+					throw new BadRequestException("Number not valid");
+				}
+				// find previous conversation
+				conversation = ofy().load().type(Conversation.class).filter("phone", phoneNumber)
+									.filter("type", type).first().now();
+				// create a new one
+				if (conversation == null) {
+					conversation = new Conversation(type);
+					conversation.setPhone(phoneNumber);
+					ofy().save().entity(conversation).now();
+				}
+				break;
 		}
-		for (Contact contact : contactsList) {
-			if (!newContacts.contains(contact.getContactPhone())) {
-				// delete old contact
-				ofy().delete().entity(contact);
-			}
-		}
+		return conversation;
 	}
 
-	@ApiMethod(path = "user/{contactPhone}/{commentType}/comment",
-			   httpMethod = ApiMethod.HttpMethod.POST)
-	public Comment postComment(@Named("contactPhone") Long contactPhone,
-							   @Named("commentType") ChatType chatType, Text text, User gUser)
+	@ApiMethod(path = "conversation/{conversationId}/comment",
+				httpMethod = ApiMethod.HttpMethod.POST)
+	public Comment postComment(@Named("conversationId") Long conversationId,
+							   @Named("alias") String alias, Text text, User gUser)
 	  throws UnauthorizedException, BadRequestException {
-		if (gUser == null) {
-			throw new UnauthorizedException("User not authorized");
-		}
-		PhoneUser user = AuthUtil.getPhoneUser(gUser);
-		if (user == null) {
-			throw new UnauthorizedException("User not authorized");
-		}
-		if (!InputUtil.isValidNumber(contactPhone)) {
-			throw new BadRequestException("Invalid phone number");
-		}
-		String commentText = text.getText();
-		if (InputUtil.isEmpty(commentText)) {
-			throw new BadRequestException("Empty comment");
-		}
-		Long userId = user.getPhone();
-		// get previous comments for previous fake id
-		Comment previousComment = ofy().load().type(Comment.class).filter("phone", contactPhone)
-									   .filter("userId", userId).order("-date").first().now();
-		Long userFakeId;
-		if (previousComment == null || previousComment.getDate().getTime() <
-									   System.currentTimeMillis() -
-									   Settings.TIME_BETWEEN_ANONYMOUS_COMMENTS) {
-			userFakeId = obfuscatePhone(userId);
-		} else {
-			userFakeId = previousComment.getUser();
-		}
-		Comment comment = new Comment(chatType, contactPhone, userFakeId, userId, commentText);
-		ofy().save().entity(comment);
-		return comment;
+		// TODO
+		return null;
 	}
 
-	@ApiMethod(path = "user/{contactPhone}/{commentType}/comments",
-			   httpMethod = ApiMethod.HttpMethod.GET)
-	public CollectionResponse<Comment> getComments(@Named("contactPhone") Long contactPhone,
-												   @Named("commentType") ChatType chatType,
+	@ApiMethod(path = "conversation/{conversationId}/comments",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public CollectionResponse<Comment> getComments(@Named("conversationId") Long conversationId,
 												   @Named("cursor") @Nullable String cursor,
 												   @Named("limit") @Nullable Integer limit,
-												   User gUser)
-	  throws UnauthorizedException, BadRequestException {
+												   @Named("date") @Nullable Long date, User gUser)
+	  throws UnauthorizedException, BadRequestException, NotFoundException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
 		}
-		PhoneUser user = AuthUtil.getPhoneUser(gUser);
-		if (user == null) {
-			throw new UnauthorizedException("User not authorized");
-		}
-		if (!InputUtil.isValidNumber(contactPhone)) {
-			throw new BadRequestException("Invalid phone number");
-		}
+		// verify the user can access to the conversation
+		Conversation conversation = getConversation(conversationId, gUser);
+		// get comments
 		limit = InputUtil.getLimit(limit);
 		Query<Comment> query;
-		query = ofy().load().type(Comment.class).filter("phone", contactPhone).order("-date")
-					 .orderKey(true).limit(limit);
+		query = ofy().load().type(Comment.class).filter("conversation", conversationId)
+					 .filter("deleted", false).order("-date").limit(limit);
+		if (date != null) {
+			query.filter("date<", new Date(date));
+		}
+		final boolean isPublicChat = conversation.getType() == ChatType.FORTHRIGHT ||
+									 conversation.getType() == ChatType.FLATTER;
+		if (isPublicChat) {
+			// anonymous messages are forgotten after 100 days
+			query.filter("date>", new Date(System.currentTimeMillis() - Settings.MAX_COMMENT_DATE));
+		}
 		if (cursor != null) {
 			query = query.startAt(Cursor.fromWebSafeString(cursor));
 		}
+		Long dateBlocked = null;
+		if (conversation.getType() == ChatType.FORTHRIGHT) {
+			PhoneUser conversationUser = PhoneUser.get(conversation.getPhone());
+			if (conversationUser != null &&
+				conversationUser.getForthrightChatsDateBlocked() != null) {
+				dateBlocked = conversationUser.getForthrightChatsDateBlocked().getTime();
+			}
+		}
+
 		QueryResultIterator<Comment> queryIterator = query.iterator();
 		List<Comment> commentList = new ArrayList<>(limit);
-		Long userId = user.getPhone();
+		Long userPhone = AuthUtil.getPhoneUser(gUser).getPhone();
 		while (queryIterator.hasNext()) {
 			Comment comment = queryIterator.next();
-			// create user
-			comment.getUser();
-
-			// set comment vote type
-			CommentVote commentVote;
-			commentVote = ofy().load().type(CommentVote.class).filter("userId", userId)
-							   .filter("commentId", comment.getId()).first().now();
-			if (commentVote != null) {
-				comment.setVoteType(commentVote.getType());
+			final boolean isMe = comment.getUserId().equals(userPhone);
+			comment.setIsMe(isMe);
+			if (isPublicChat) {
+				// set comment vote type
+				CommentVote commentVote;
+				commentVote = ofy().load().type(CommentVote.class).filter("userId", userPhone)
+								   .filter("commentId", comment.getId()).first().now();
+				if (commentVote != null) {
+					comment.setVoteType(commentVote.getType());
+				}
+				if (!isMe && dateBlocked != null && dateBlocked > comment.getDate().getTime()) {
+					// hide comments since the user blocked the list
+					comment.setComment(null);
+				}
 			}
-			comment.setIsMe(comment.getUserId().equals(userId));
 			commentList.add(comment);
 		}
 		return CollectionResponse.<Comment>builder().setItems(commentList)
@@ -253,7 +327,7 @@ public class ApiEndpoint {
 	}
 
 	@ApiMethod(path = "comment/{commentId}/agree",
-			   httpMethod = ApiMethod.HttpMethod.GET)
+				httpMethod = ApiMethod.HttpMethod.GET)
 	public Comment agreeComment(@Named("commentId") Long commentId, User gUser)
 	  throws UnauthorizedException, NotFoundException, BadRequestException {
 		if (gUser == null) {
@@ -266,6 +340,12 @@ public class ApiEndpoint {
 		Comment comment = Comment.get(commentId);
 		if (comment == null) {
 			throw new NotFoundException("Comment does not exists");
+		}
+		Conversation conversation = Conversation.get(comment.getConversationId());
+		if (conversation.getType() != ChatType.FORTHRIGHT &&
+			conversation.getType() != ChatType.FLATTER) {
+			throw new BadRequestException("This comment cannot be voted");
+
 		}
 		CommentVote commentVote;
 		commentVote = ofy().load().type(CommentVote.class).filter("commentId", commentId)
@@ -282,7 +362,7 @@ public class ApiEndpoint {
 			commentVote = new CommentVote(comment.getId(), user.getPhone(), CommentVoteType.AGREE);
 			comment.setAgreeVotes(comment.getAgreeVotes() + 1);
 		}
-		if (user.getPhone().equals(comment.getPhone())) {
+		if (user.getPhone().equals(comment.getUserId())) {
 			comment.setUserVoteType(CommentVoteType.AGREE);
 		}
 		ofy().save().entity(commentVote);
@@ -291,7 +371,7 @@ public class ApiEndpoint {
 	}
 
 	@ApiMethod(path = "comment/{commentId}/disagree",
-			   httpMethod = ApiMethod.HttpMethod.GET)
+				httpMethod = ApiMethod.HttpMethod.GET)
 	public Comment disagreeComment(@Named("commentId") Long commentId, User gUser)
 	  throws UnauthorizedException, NotFoundException, BadRequestException {
 		if (gUser == null) {
@@ -304,6 +384,12 @@ public class ApiEndpoint {
 		Comment comment = Comment.get(commentId);
 		if (comment == null) {
 			throw new NotFoundException("Comment does not exists");
+		}
+		Conversation conversation = Conversation.get(comment.getConversationId());
+		if (conversation.getType() != ChatType.FORTHRIGHT &&
+			conversation.getType() != ChatType.FLATTER) {
+			throw new BadRequestException("This comment cannot be voted");
+
 		}
 		CommentVote commentVote;
 		commentVote = ofy().load().type(CommentVote.class).filter("commentId", commentId)
@@ -321,7 +407,7 @@ public class ApiEndpoint {
 										  CommentVoteType.DISAGREE);
 			comment.setDisagreeVotes(comment.getDisagreeVotes() + 1);
 		}
-		if (user.getPhone().equals(comment.getPhone())) {
+		if (user.getPhone().equals(comment.getUserId())) {
 			comment.setUserVoteType(CommentVoteType.DISAGREE);
 		}
 		ofy().save().entity(commentVote);
@@ -330,9 +416,9 @@ public class ApiEndpoint {
 	}
 
 	@ApiMethod(path = "comment/{commentId}/novote",
-			   httpMethod = ApiMethod.HttpMethod.DELETE)
+				httpMethod = ApiMethod.HttpMethod.DELETE)
 	public Comment noVoteComment(@Named("commentId") Long commentId, User gUser)
-	  throws UnauthorizedException, NotFoundException {
+	  throws UnauthorizedException, NotFoundException, BadRequestException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
 		}
@@ -343,6 +429,12 @@ public class ApiEndpoint {
 		Comment comment = Comment.get(commentId);
 		if (comment == null) {
 			throw new NotFoundException("Comment does not exists");
+		}
+		Conversation conversation = Conversation.get(comment.getConversationId());
+		if (conversation.getType() != ChatType.FORTHRIGHT &&
+			conversation.getType() != ChatType.FLATTER) {
+			throw new BadRequestException("This comment cannot be voted");
+
 		}
 		CommentVote commentVote;
 		commentVote = ofy().load().type(CommentVote.class).filter("commentId", commentId)
@@ -359,12 +451,83 @@ public class ApiEndpoint {
 		} else {
 			throw new NotFoundException("Comment was never voted");
 		}
-		if (user.getPhone().equals(comment.getPhone())) {
+		if (user.getPhone().equals(comment.getUserId())) {
 			comment.setUserVoteType(null);
 		}
 		ofy().delete().entity(commentVote);
 		ofy().save().entity(comment);
 		return comment;
+	}
+
+	@ApiMethod(path = "comment/{commentId}/flag",
+				httpMethod = ApiMethod.HttpMethod.POST)
+	public void flagComment(@Named("commentId") Long commentId, FlagText reason, User gUser)
+	  throws UnauthorizedException, NotFoundException, ForbiddenException {
+		if (gUser == null) {
+			throw new UnauthorizedException("User not authorized");
+		}
+		Comment comment = Comment.get(commentId);
+		if (comment == null) {
+			throw new NotFoundException("Comment does not exists");
+		}
+		PhoneUser user = AuthUtil.getPhoneUser(gUser);
+		FlagComment flag = ofy().load().type(FlagComment.class).filter("userId", user.getPhone())
+								.filter("commentId", commentId).first().now();
+		if (flag != null) {
+			throw new ForbiddenException("Comment already flagged");
+		}
+		comment.flagged();
+		ofy().save().entity(comment);
+		ofy().save().entity(new FlagComment(commentId, user.getPhone(), reason.getReason(),
+											reason.getText()));
+		ApiEndpoint.logger.info("Comment flagged [" + comment.getComment() + "] [" +
+								reason.getReason() + ":" + reason.getText() + "]");
+	}
+
+	@ApiMethod(path = "conversation/{conversationId}/blockUser",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public void conversationBlockUser(@Named("conversationId") Long conversationId,
+									  @Named("time") Long time, User gUser)
+	  throws UnauthorizedException, NotFoundException {
+		// TODO
+	}
+
+	@ApiMethod(path = "user/{phone}/blockUser",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public void blockUser(@Named("phone") Long phoneNumber, User gUser)
+	  throws UnauthorizedException, NotFoundException {
+		// TODO
+	}
+
+	@ApiMethod(path = "user/{phone}/unblockUser",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public void unblockUser(@Named("phone") Long phoneNumber, User gUser)
+	  throws UnauthorizedException, NotFoundException {
+		// TODO
+	}
+
+	@ApiMethod(path = "user/blocked",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public Numbers getBlockedUsers(User gUser) throws UnauthorizedException, NotFoundException {
+		// TODO
+		return null;
+	}
+
+	@ApiMethod(path = "contacts",
+				httpMethod = ApiMethod.HttpMethod.POST)
+	public Numbers getContacts(Numbers phones, User gUser) throws UnauthorizedException {
+		if (gUser == null) {
+			throw new UnauthorizedException("User not authorized");
+		}
+		Numbers appPhones = new Numbers();
+		for (Long phone : phones.getCollection()) {
+			// send all the contacts and return the ones that have or had the app installed
+			PhoneUser user = PhoneUser.get(phone);
+			if (user != null) {
+				appPhones.addNumber(phone);
+			}
+		}
+		return appPhones;
 	}
 
 }

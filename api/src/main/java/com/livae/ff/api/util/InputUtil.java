@@ -20,40 +20,32 @@ public class InputUtil {
 	}
 
 	public static int getLimit(Integer limit) {
-		if (limit == null || limit < Settings.MIN_LIST_LIMIT || limit > Settings.MAX_LIST_LIMIT) {
+		if (limit != null) {
+			limit = (int) Math.round((double) limit / Settings.LIST_STEP) * Settings.LIST_STEP;
+		}
+		if (limit == null) {
 			limit = Settings.DEFAULT_LIST_LIMIT;
+		} else if (limit < Settings.MIN_LIST_LIMIT) {
+			limit = Settings.MIN_LIST_LIMIT;
+		} else if (limit > Settings.MAX_LIST_LIMIT) {
+			limit = Settings.MAX_LIST_LIMIT;
 		}
 		return limit;
-	}
-
-	public static Long getValidNumber(String number, String countryCode) {
-		try {
-			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-			Phonenumber.PhoneNumber phoneNumber = null;
-			phoneNumber = phoneUtil.parseAndKeepRawInput(number, countryCode);
-			PhoneNumberUtil.PhoneNumberType numberType = phoneUtil.getNumberType(phoneNumber);
-			if (phoneUtil.isValidNumber(phoneNumber) &&
-				numberType == PhoneNumberUtil.PhoneNumberType.MOBILE) {
-				return Long.parseLong(Integer.toString(phoneNumber.getCountryCode()) +
-									  Long.toString(phoneNumber.getNationalNumber()));
-			} else {
-				return null;
-			}
-		} catch (NumberParseException e) {
-			return null;
-		}
 	}
 
 	public static boolean isValidNumber(Long number) {
 		try {
 			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 			Phonenumber.PhoneNumber phoneNumber = null;
-			phoneNumber = phoneUtil.parseAndKeepRawInput("+" + Long.toString(number), null);
+			phoneNumber = phoneUtil.parse("+" + number.toString(), null);
 			PhoneNumberUtil.PhoneNumberType numberType = phoneUtil.getNumberType(phoneNumber);
-			return phoneUtil.isValidNumber(phoneNumber) &&
-				   numberType == PhoneNumberUtil.PhoneNumberType.MOBILE;
+			return phoneUtil.isPossibleNumber(phoneNumber) &&
+				   phoneUtil.isValidNumber(phoneNumber) &&
+				   (numberType == PhoneNumberUtil.PhoneNumberType.MOBILE ||
+					numberType == PhoneNumberUtil.PhoneNumberType.UNKNOWN);
 		} catch (NumberParseException e) {
 			return false;
 		}
 	}
+
 }

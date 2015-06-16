@@ -9,10 +9,7 @@ import com.googlecode.objectify.annotation.Index;
 import com.livae.ff.common.Constants.Profile;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 
@@ -36,16 +33,21 @@ public class PhoneUser implements Serializable {
 	@Index
 	private String authToken;
 
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Profile profile;
 
-	private Boolean privateChats;
+	private Date forthrightChatsDateBlocked;
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	private Collection<Long> blockedChats;
+	private Numbers blockedChats;
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	private Collection<UserDate> blockedAnonymousChats;
+	private NumbersDate blockedAnonymousChats;
+
+	// TODO some statistics
+	// times flagged
+	// times flagged each type
+	// times agreed with comment
+	// times disagreed with comments
 
 	public PhoneUser() {
 
@@ -53,11 +55,11 @@ public class PhoneUser implements Serializable {
 
 	public PhoneUser(@Nonnull Long phone) {
 		this.phone = phone;
-		privateChats = true;
+		forthrightChatsDateBlocked = null;
 		lastAccess = new Date();
 		created = new Date();
-		blockedChats = new ArrayList<>();
-		blockedAnonymousChats = new ArrayList<>();
+		blockedChats = new Numbers();
+		blockedAnonymousChats = new NumbersDate();
 	}
 
 	public static PhoneUser get(Long phone) {
@@ -65,47 +67,31 @@ public class PhoneUser implements Serializable {
 	}
 
 	public void addBlockedPhone(Long phone) {
-		if (!blockedChats.contains(phone)) {
-			blockedChats.add(phone);
-		}
+		blockedChats.addNumber(phone);
 	}
 
 	public void removeBlockedPhone(Long phone) {
-		blockedChats.remove(phone);
+		blockedChats.removeNumber(phone);
 	}
 
 	public void addBlockedAnonymousPhone(Long phone, Date date) {
-		blockedAnonymousChats.add(new UserDate(phone, date));
+		blockedAnonymousChats.addNumber(phone, date);
 	}
 
 	public boolean isBlockedPhone(Long phone) {
-		for (UserDate userDate : blockedAnonymousChats) {
-			if (userDate.getPhone().equals(phone)) {
-				return true;
-			}
-		}
-		return false;
+		return blockedChats.containsNumber(phone);
 	}
 
 	public boolean isBlockedAnonymousPhone(Long phone) {
-		pruneBlockedAnonymous();
-		for (UserDate userDate : blockedAnonymousChats) {
-			if (userDate.getPhone().equals(phone)) {
-				return true;
+		Date date = blockedAnonymousChats.containsNumber(phone);
+		if (date != null) {
+			if (date.getTime() < System.currentTimeMillis()) {
+				blockedAnonymousChats.removeNumber(phone);
+				date = null;
+				ofy().save().entity(this);
 			}
 		}
-		return false;
-	}
-
-	private void pruneBlockedAnonymous() {
-		Iterator<UserDate> it = blockedAnonymousChats.iterator();
-		long now = System.currentTimeMillis();
-		while (it.hasNext()) {
-			UserDate next = it.next();
-			if (next.getDate().getTime() < now) {
-				it.remove();
-			}
-		}
+		return date != null;
 	}
 
 	public Long getPhone() {
@@ -114,14 +100,6 @@ public class PhoneUser implements Serializable {
 
 	public void setPhone(Long phone) {
 		this.phone = phone;
-	}
-
-	public Boolean getPrivateChats() {
-		return privateChats;
-	}
-
-	public void setPrivateChats(Boolean privateChats) {
-		this.privateChats = privateChats;
 	}
 
 	public Date getCreated() {
@@ -154,5 +132,13 @@ public class PhoneUser implements Serializable {
 
 	public void setProfile(Profile profile) {
 		this.profile = profile;
+	}
+
+	public Date getForthrightChatsDateBlocked() {
+		return forthrightChatsDateBlocked;
+	}
+
+	public void setForthrightChatsDateBlocked(Date forthrightChatsDateBlocked) {
+		this.forthrightChatsDateBlocked = forthrightChatsDateBlocked;
 	}
 }

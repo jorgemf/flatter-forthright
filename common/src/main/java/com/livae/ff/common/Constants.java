@@ -22,4 +22,8 @@ public class Constants {
 		ANDROID
 	}
 
+
+	public enum FlagReason {
+		ABUSE, INSULT, LIE, OTHER
+	}
 }

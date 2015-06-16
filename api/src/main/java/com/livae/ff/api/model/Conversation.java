@@ -10,17 +10,23 @@ import com.livae.ff.common.Constants.ChatType;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.livae.ff.api.OfyService.ofy;
+
 public class Conversation {
 
 	@Id
 	private Long id;
 
+	@Index
 	private ChatType type;
 
 	private String alias;
 
 	@Index(IfNotNull.class)
 	private Long phone;
+
+	@Index(IfNotNull.class)
+	private String phones;
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Collection<Long> users;
@@ -31,6 +37,19 @@ public class Conversation {
 	public Conversation(ChatType type) {
 		this.type = type;
 		users = new ArrayList<>();
+	}
+
+	public static Conversation get(Long id) {
+		return ofy().load().type(Conversation.class).id(id).now();
+	}
+
+	public static String mixPhones(Long p1, Long p2) {
+		char separator = ' ';
+		if (p1 > p2) {
+			return p1.toString() + separator + p2.toString();
+		} else {
+			return p2.toString() + separator + p1.toString();
+		}
 	}
 
 	public Long getId() {
@@ -77,5 +96,17 @@ public class Conversation {
 
 	public void removeUser(Long phone) {
 		users.remove(phone);
+	}
+
+	public String getPhones() {
+		return phones;
+	}
+
+	public void setPhones(Long p1, Long p2) {
+		setPhones(mixPhones(p1, p2));
+	}
+
+	public void setPhones(String phones) {
+		this.phones = phones;
 	}
 }
