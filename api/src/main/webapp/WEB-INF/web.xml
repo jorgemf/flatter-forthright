@@ -24,10 +24,44 @@
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- web pages -->
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
+	<!-- cron jobs -->
+	<servlet>
+		<servlet-name>SendStatsEmailServlet</servlet-name>
+		<servlet-class>com.livae.ff.api.servlet.SendStatsEmailServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SendStatsEmailServlet</servlet-name>
+		<url-pattern>/sendstatsemail</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>ForgetFlaggedUsersServlet</servlet-name>
+		<servlet-class>com.livae.ff.api.servlet.ForgetFlaggedUsersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ForgetFlaggedUsersServlet</servlet-name>
+		<url-pattern>/fogetflaggedusers</url-pattern>
+	</servlet-mapping>
+
+	<!-- queues -->
+	<servlet>
+		<servlet-name>CreateCommentNotificationWorkerServlet</servlet-name>
+		<servlet-class>com.livae.apphunt.api.servlet.worker.CreateCommentNotificationWorkerServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>SendPushNotificationWorkerServlet</servlet-name>
+		<servlet-class>com.livae.apphunt.api.servlet.worker.SendPushNotificationWorkerServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ForgetFlaggedUsersWorkerServlet</servlet-name>
+		<servlet-class>com.livae.apphunt.api.servlet.worker.ForgetFlaggedUsersWorkerServlet</servlet-class>
+	</servlet>
+
+	<!-- other configuration -->
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Entire Application</web-resource-name>

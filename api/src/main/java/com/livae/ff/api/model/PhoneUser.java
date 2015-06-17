@@ -6,6 +6,7 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.livae.ff.common.Constants.FlagReason;
 import com.livae.ff.common.Constants.Profile;
 
 import java.io.Serializable;
@@ -43,11 +44,13 @@ public class PhoneUser implements Serializable {
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private NumbersDate blockedAnonymousChats;
 
-	// TODO some statistics
-	// times flagged
-	// times flagged each type
-	// times agreed with comment
-	// times disagreed with comments
+	private Integer timesFlagged;
+
+	private Integer[] timesFlaggedType;
+
+	private Integer timesAgreed;
+
+	private Integer timesDisagreed;
 
 	public PhoneUser() {
 
@@ -140,5 +143,57 @@ public class PhoneUser implements Serializable {
 
 	public void setForthrightChatsDateBlocked(Date forthrightChatsDateBlocked) {
 		this.forthrightChatsDateBlocked = forthrightChatsDateBlocked;
+	}
+
+	public Numbers getBlockedChats() {
+		return blockedChats;
+	}
+
+	public void setBlockedChats(Numbers blockedChats) {
+		this.blockedChats = blockedChats;
+	}
+
+	public NumbersDate getBlockedAnonymousChats() {
+		return blockedAnonymousChats;
+	}
+
+	public void setBlockedAnonymousChats(NumbersDate blockedAnonymousChats) {
+		this.blockedAnonymousChats = blockedAnonymousChats;
+	}
+
+	public void flag(FlagReason flagReason) {
+		if (timesFlagged == null) {
+			timesFlagged = 0;
+			timesFlaggedType = new Integer[FlagReason.values().length];
+			for (int i = 0; i < timesFlaggedType.length; i++) {
+				timesFlaggedType[i] = 0;
+			}
+		}
+		timesFlagged++;
+		timesFlaggedType[flagReason.ordinal()]++;
+	}
+
+	public Integer[] getTimesFlaggedType() {
+		return timesFlaggedType;
+	}
+
+	public Integer getTimesFlagged() {
+		return timesFlagged;
+	}
+
+	public Integer getTimesAgreed() {
+		return timesAgreed;
+	}
+
+	public void setTimesAgreed(Integer timesAgreed) {
+		this.timesAgreed = timesAgreed;
+	}
+
+	public Integer getTimesDisagreed() {
+		return timesDisagreed;
+	}
+
+	public void setTimesDisagreed(Integer timesDisagreed) {
+		this.timesDisagreed = timesDisagreed;
 	}
 }

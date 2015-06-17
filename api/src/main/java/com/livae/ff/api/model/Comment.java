@@ -9,6 +9,8 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfNotNull;
 import com.googlecode.objectify.condition.IfTrue;
 import com.livae.ff.common.Constants.CommentVoteType;
+import com.livae.ff.common.Constants.FlagReason;
+import com.livae.ff.common.Constants.UserMark;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -63,6 +65,10 @@ public class Comment implements Serializable {
 
 	@Index(IfNotNull.class)
 	private Date lastTimeFlagged;
+
+	private Integer[] timesFlaggedType;
+
+	private UserMark userMark;
 
 	public Comment() {
 	}
@@ -220,12 +226,28 @@ public class Comment implements Serializable {
 		this.lastTimeFlagged = lastTimeFlagged;
 	}
 
-	public void flagged() {
+	public void flag(FlagReason flagReason) {
 		lastTimeFlagged = new Date();
 		if (timesFlagged == null) {
-			timesFlagged = 1;
-		} else {
-			timesFlagged++;
+			timesFlagged = 0;
+			timesFlaggedType = new Integer[FlagReason.values().length];
+			for (int i = 0; i < timesFlaggedType.length; i++) {
+				timesFlaggedType[i] = 0;
+			}
 		}
+		timesFlagged++;
+		timesFlaggedType[flagReason.ordinal()]++;
+	}
+
+	public Integer[] getTimesFlaggedType() {
+		return timesFlaggedType;
+	}
+
+	public UserMark getUserMark() {
+		return userMark;
+	}
+
+	public void setUserMark(UserMark userMark) {
+		this.userMark = userMark;
 	}
 }

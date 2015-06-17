@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+	<cron>
+		<url>/fogetflaggedusers</url>
+		<description>Forget data of flagged users</description>
+		<schedule>every 20 hours</schedule>
+	</cron>
+	<cron>
+		<url>/sendstatsemail</url>
+		<description>Send stats by email</description>
+		<schedule>every day 00:00</schedule>
+		<timezone>Europe/Madrid</timezone>
+	</cron>
+</cronentries>

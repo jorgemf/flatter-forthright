@@ -22,6 +22,8 @@ public class Settings {
 
 	public static final long MAX_COMMENT_DATE = TimeUnit.DAYS.toMillis(100);
 
+	public static final long MAX_TIME_BLOCK_ANONYMOUS_USER = TimeUnit.DAYS.toMillis(150);
+
 	public static class Google {
 
 		public static final String API_KEY = System.getProperty("google.api.key");

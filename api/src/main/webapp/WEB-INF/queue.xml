@@ -1,0 +1,33 @@
+<queue-entries>
+	<total-storage-limit>100M</total-storage-limit>
+	<queue>
+		<name>forget-flagged-users</name>
+		<rate>1/s</rate>
+		<bucket-size>100</bucket-size>
+		<max-concurrent-requests>5</max-concurrent-requests>
+		<retry-parameters>
+			<task-retry-limit>3</task-retry-limit>
+			<min-backoff-seconds>10</min-backoff-seconds>
+		</retry-parameters>
+	</queue>
+	<queue>
+		<name>create-comments-notifications-queue</name>
+		<rate>1/s</rate>
+		<bucket-size>20</bucket-size>
+		<max-concurrent-requests>1</max-concurrent-requests>
+		<retry-parameters>
+			<task-retry-limit>3</task-retry-limit>
+			<min-backoff-seconds>5</min-backoff-seconds>
+		</retry-parameters>
+	</queue>
+	<queue>
+		<name>send-push-notifications-queue</name>
+		<rate>1/s</rate>
+		<bucket-size>50</bucket-size>
+		<max-concurrent-requests>5</max-concurrent-requests>
+		<retry-parameters>
+			<task-retry-limit>3</task-retry-limit>
+			<min-backoff-seconds>60</min-backoff-seconds>
+		</retry-parameters>
+	</queue>
+</queue-entries>

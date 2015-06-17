@@ -3,6 +3,7 @@ package com.livae.ff.api.model;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfFalse;
 import com.livae.ff.common.Constants.FlagReason;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ public class FlagComment implements Serializable {
 	@Id
 	private Long id;
 
+	@Index
 	private Date date;
 
 	@Index
@@ -28,6 +30,9 @@ public class FlagComment implements Serializable {
 
 	private String comment;
 
+	@Index(IfFalse.class)
+	private Boolean forgot;
+
 	public FlagComment() {
 	}
 
@@ -38,6 +43,7 @@ public class FlagComment implements Serializable {
 		this.reason = reason;
 		this.date = new Date();
 		this.comment = comment;
+		this.forgot = false;
 	}
 
 	public Long getId() {
@@ -86,5 +92,13 @@ public class FlagComment implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Boolean getForgot() {
+		return forgot;
+	}
+
+	public void setForgot(Boolean forgot) {
+		this.forgot = forgot;
 	}
 }

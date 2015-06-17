@@ -28,12 +28,14 @@ import com.livae.ff.api.model.Version;
 import com.livae.ff.api.util.InputUtil;
 import com.livae.ff.api.v1.model.FlagText;
 import com.livae.ff.api.v1.model.Text;
+import com.livae.ff.common.Constants;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 import com.livae.ff.common.Constants.Platform;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -137,7 +139,7 @@ public class ApiEndpoint {
 
 	@ApiMethod(path = "me/chats/forthright/block",
 				httpMethod = ApiMethod.HttpMethod.GET)
-	public PhoneUser blockForthright(User gUser) throws UnauthorizedException, {
+	public PhoneUser blockForthright(User gUser) throws UnauthorizedException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
 		}
@@ -256,8 +258,15 @@ public class ApiEndpoint {
 				httpMethod = ApiMethod.HttpMethod.POST)
 	public Comment postComment(@Named("conversationId") Long conversationId,
 							   @Named("alias") String alias, Text text, User gUser)
-	  throws UnauthorizedException, BadRequestException {
+	  throws UnauthorizedException, BadRequestException, NotFoundException {
+		Conversation conversation = getConversation(conversationId, gUser);
+		PhoneUser user = AuthUtil.getPhoneUser(gUser);
+		// NOTIFY
 		// TODO
+
+		// TODO blocked users here
+
+		// TODO add mark to the comments here
 		return null;
 	}
 
@@ -350,23 +359,29 @@ public class ApiEndpoint {
 		CommentVote commentVote;
 		commentVote = ofy().load().type(CommentVote.class).filter("commentId", commentId)
 						   .filter("userId", user.getPhone()).first().now();
+		PhoneUser commentUser = PhoneUser.get(comment.getUserId());
 		if (commentVote != null) {
 			if (commentVote.getType() == CommentVoteType.DISAGREE) {
 				commentVote.setType(CommentVoteType.AGREE);
 				comment.setAgreeVotes(comment.getAgreeVotes() + 1);
 				comment.setDisagreeVotes(comment.getDisagreeVotes() - 1);
+				commentUser.setTimesAgreed(commentUser.getTimesAgreed() + 1);
+				commentUser.setTimesDisagreed(commentUser.getTimesDisagreed() - 1);
+
 			} else {
 				throw new BadRequestException("Comment already agreed");
 			}
 		} else {
 			commentVote = new CommentVote(comment.getId(), user.getPhone(), CommentVoteType.AGREE);
 			comment.setAgreeVotes(comment.getAgreeVotes() + 1);
+			commentUser.setTimesAgreed(commentUser.getTimesAgreed() + 1);
 		}
 		if (user.getPhone().equals(comment.getUserId())) {
 			comment.setUserVoteType(CommentVoteType.AGREE);
 		}
 		ofy().save().entity(commentVote);
 		ofy().save().entity(comment);
+		ofy().save().entity(commentUser);
 		return comment;
 	}
 
@@ -394,11 +409,14 @@ public class ApiEndpoint {
 		CommentVote commentVote;
 		commentVote = ofy().load().type(CommentVote.class).filter("commentId", commentId)
 						   .filter("userId", user.getPhone()).first().now();
+		PhoneUser commentUser = PhoneUser.get(comment.getUserId());
 		if (commentVote != null) {
 			if (commentVote.getType() == CommentVoteType.AGREE) {
 				commentVote.setType(CommentVoteType.DISAGREE);
 				comment.setAgreeVotes(comment.getAgreeVotes() - 1);
 				comment.setDisagreeVotes(comment.getDisagreeVotes() + 1);
+				commentUser.setTimesAgreed(commentUser.getTimesAgreed() - 1);
+				commentUser.setTimesDisagreed(commentUser.getTimesDisagreed() + 1);
 			} else {
 				throw new BadRequestException("Comment already disagreed");
 			}
@@ -406,12 +424,14 @@ public class ApiEndpoint {
 			commentVote = new CommentVote(comment.getId(), user.getPhone(),
 										  CommentVoteType.DISAGREE);
 			comment.setDisagreeVotes(comment.getDisagreeVotes() + 1);
+			commentUser.setTimesDisagreed(commentUser.getTimesDisagreed() + 1);
 		}
 		if (user.getPhone().equals(comment.getUserId())) {
 			comment.setUserVoteType(CommentVoteType.DISAGREE);
 		}
 		ofy().save().entity(commentVote);
 		ofy().save().entity(comment);
+		ofy().save().entity(commentUser);
 		return comment;
 	}
 
@@ -439,13 +459,16 @@ public class ApiEndpoint {
 		CommentVote commentVote;
 		commentVote = ofy().load().type(CommentVote.class).filter("commentId", commentId)
 						   .filter("userId", user.getPhone()).first().now();
+		PhoneUser commentUser = PhoneUser.get(comment.getUserId());
 		if (commentVote != null) {
 			switch (commentVote.getType()) {
 				case DISAGREE:
 					comment.setDisagreeVotes(comment.getDisagreeVotes() - 1);
+					commentUser.setTimesDisagreed(commentUser.getTimesDisagreed() - 1);
 					break;
 				case AGREE:
 					comment.setAgreeVotes(comment.getAgreeVotes() - 1);
+					commentUser.setTimesAgreed(commentUser.getTimesAgreed() - 1);
 					break;
 			}
 		} else {
@@ -456,6 +479,7 @@ public class ApiEndpoint {
 		}
 		ofy().delete().entity(commentVote);
 		ofy().save().entity(comment);
+		ofy().save().entity(commentUser);
 		return comment;
 	}
 
@@ -476,41 +500,85 @@ public class ApiEndpoint {
 		if (flag != null) {
 			throw new ForbiddenException("Comment already flagged");
 		}
-		comment.flagged();
+		final Constants.FlagReason flagReason = reason.getReason();
+		comment.flag(flagReason);
+		PhoneUser flaggedUser = PhoneUser.get(comment.getUserId());
+		flaggedUser.flag(flagReason);
 		ofy().save().entity(comment);
-		ofy().save().entity(new FlagComment(commentId, user.getPhone(), reason.getReason(),
+		ofy().save().entity(flaggedUser);
+		ofy().save().entity(new FlagComment(commentId, user.getPhone(), flagReason,
 											reason.getText()));
 		ApiEndpoint.logger.info("Comment flagged [" + comment.getComment() + "] [" +
-								reason.getReason() + ":" + reason.getText() + "]");
+								flagReason + ":" + reason.getText() + "]");
 	}
 
 	@ApiMethod(path = "conversation/{conversationId}/blockUser",
 				httpMethod = ApiMethod.HttpMethod.GET)
 	public void conversationBlockUser(@Named("conversationId") Long conversationId,
 									  @Named("time") Long time, User gUser)
-	  throws UnauthorizedException, NotFoundException {
-		// TODO
+	  throws UnauthorizedException, NotFoundException, BadRequestException {
+		if (gUser == null) {
+			throw new UnauthorizedException("User not authorized");
+		}
+		if (time == null || time < 0) {
+			throw new BadRequestException("Positive time required");
+		}
+		if (time > Settings.MAX_TIME_BLOCK_ANONYMOUS_USER) {
+			time = Settings.MAX_TIME_BLOCK_ANONYMOUS_USER;
+		}
+		Conversation conversation = Conversation.get(conversationId);
+		if (conversation == null || conversation.getType() != ChatType.PRIVATE_ANONYMOUS) {
+			throw new NotFoundException("Conversation not found");
+		}
+		Collection<Long> phones = conversation.getUsers();
+		PhoneUser user = AuthUtil.getPhoneUser(gUser);
+		final Long userPhone = user.getPhone();
+		if (!phones.contains(userPhone)) {
+			throw new NotFoundException("Conversation not found");
+		}
+		if (phones.size() != 2) {
+			throw new BadRequestException("Conversation has more than 2 users");
+		}
+		for (Long phone : phones) {
+			if (!userPhone.equals(phone)) {
+				user.addBlockedAnonymousPhone(phone, new Date(System.currentTimeMillis() + time));
+			}
+		}
+		ofy().save().entity(user);
 	}
 
 	@ApiMethod(path = "user/{phone}/blockUser",
 				httpMethod = ApiMethod.HttpMethod.GET)
 	public void blockUser(@Named("phone") Long phoneNumber, User gUser)
 	  throws UnauthorizedException, NotFoundException {
-		// TODO
+		if (gUser == null) {
+			throw new UnauthorizedException("User not authorized");
+		}
+		PhoneUser user = AuthUtil.getPhoneUser(gUser);
+		user.addBlockedPhone(phoneNumber);
+		ofy().save().entity(user);
 	}
 
 	@ApiMethod(path = "user/{phone}/unblockUser",
 				httpMethod = ApiMethod.HttpMethod.GET)
 	public void unblockUser(@Named("phone") Long phoneNumber, User gUser)
 	  throws UnauthorizedException, NotFoundException {
-		// TODO
+		if (gUser == null) {
+			throw new UnauthorizedException("User not authorized");
+		}
+		PhoneUser user = AuthUtil.getPhoneUser(gUser);
+		user.removeBlockedPhone(phoneNumber);
+		ofy().save().entity(user);
 	}
 
 	@ApiMethod(path = "user/blocked",
 				httpMethod = ApiMethod.HttpMethod.GET)
 	public Numbers getBlockedUsers(User gUser) throws UnauthorizedException, NotFoundException {
-		// TODO
-		return null;
+		if (gUser == null) {
+			throw new UnauthorizedException("User not authorized");
+		}
+		PhoneUser user = AuthUtil.getPhoneUser(gUser);
+		return user.getBlockedChats();
 	}
 
 	@ApiMethod(path = "contacts",
