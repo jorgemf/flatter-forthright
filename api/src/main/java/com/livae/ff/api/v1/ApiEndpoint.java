@@ -12,6 +12,9 @@ import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.cmd.Query;
@@ -21,6 +24,7 @@ import com.livae.ff.api.auth.AuthUtil;
 import com.livae.ff.api.model.Comment;
 import com.livae.ff.api.model.CommentVote;
 import com.livae.ff.api.model.Conversation;
+import com.livae.ff.api.model.CounterStats;
 import com.livae.ff.api.model.FlagComment;
 import com.livae.ff.api.model.Numbers;
 import com.livae.ff.api.model.PhoneUser;
@@ -32,6 +36,7 @@ import com.livae.ff.common.Constants;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 import com.livae.ff.common.Constants.Platform;
+import com.livae.ff.common.Constants.UserMark;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -68,9 +73,9 @@ public class ApiEndpoint {
 
 		String fromEmail = String.format("noreply@%s.appspotmail.com",
 										 SystemProperty.applicationId.get());
-		InternetAddress fromAddress = new InternetAddress(fromEmail, "AppHunt");
+		InternetAddress fromAddress = new InternetAddress(fromEmail, "Thoughts");
 		Address[] replyToAddress = new Address[1];
-		replyToAddress[0] = new InternetAddress("ff@livae.com", "AppHunt");
+		replyToAddress[0] = new InternetAddress("thoughts@livae.com", "Thoughts");
 		javax.mail.Message msg = new MimeMessage(session);
 		msg.setFrom(fromAddress);
 		msg.setReplyTo(replyToAddress);
@@ -96,20 +101,24 @@ public class ApiEndpoint {
 	}
 
 	@ApiMethod(path = "wakeup", httpMethod = ApiMethod.HttpMethod.GET)
-	public void wakeup(User gUser) throws UnauthorizedException {
+	public void wakeup(@Named("deviceId") String deviceId, User gUser)
+	  throws UnauthorizedException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
 		}
 		Date now = new Date();
 		PhoneUser phoneUser = AuthUtil.getPhoneUser(gUser);
 		phoneUser.setLastAccess(now);
+		if (deviceId != null) {
+			phoneUser.setDeviceId(deviceId);
+		}
 		ofy().save().entity(phoneUser);
 	}
 
 	@ApiMethod(path = "phone/{number}",
 				httpMethod = ApiMethod.HttpMethod.GET)
-	public PhoneUser register(@Named("number") Long number, User gUser)
-	  throws UnauthorizedException, BadRequestException {
+	public PhoneUser register(@Named("number") Long number, @Named("deviceId") String deviceId,
+							  User gUser) throws UnauthorizedException, BadRequestException {
 		if (gUser != null) {
 			throw new UnauthorizedException("Cannot register more devices from the same one");
 		}
@@ -120,11 +129,12 @@ public class ApiEndpoint {
 		PhoneUser user = PhoneUser.get(number);
 		if (user == null) {
 			user = new PhoneUser(number);
-			ofy().save().entity(user).now();
 			ApiEndpoint.logger.info("Created user [id:" + number + "]");
 		}
+		user.setDeviceId(deviceId);
 		String authToken = AuthUtil.createAuthToken(number);
 		user.setAuthToken(authToken);
+		ofy().save().entity(user).now();
 		return user;
 	}
 
@@ -139,26 +149,24 @@ public class ApiEndpoint {
 
 	@ApiMethod(path = "me/chats/forthright/block",
 				httpMethod = ApiMethod.HttpMethod.GET)
-	public PhoneUser blockForthright(User gUser) throws UnauthorizedException {
+	public void blockForthright(User gUser) throws UnauthorizedException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
 		}
 		PhoneUser user = AuthUtil.getPhoneUser(gUser);
 		user.setForthrightChatsDateBlocked(new Date());
 		ofy().save().entity(user);
-		return user;
 	}
 
 	@ApiMethod(path = "me/chats/forthright/unblock",
 				httpMethod = ApiMethod.HttpMethod.GET)
-	public PhoneUser unblockForthright(User gUser) throws UnauthorizedException {
+	public void unblockForthright(User gUser) throws UnauthorizedException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
 		}
 		PhoneUser user = AuthUtil.getPhoneUser(gUser);
 		user.setForthrightChatsDateBlocked(null);
 		ofy().save().entity(user);
-		return user;
 	}
 
 	@ApiMethod(path = "conversation/{conversationId}",
@@ -189,6 +197,46 @@ public class ApiEndpoint {
 			throw new NotFoundException("Conversation not found");
 		}
 		return conversation;
+	}
+
+	@ApiMethod(path = "conversation/{conversationId}/join",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public void joinConversation(@Named("conversationId") Long conversationId, User gUser)
+	  throws UnauthorizedException, NotFoundException {
+		Conversation conversation = getConversation(conversationId, gUser);
+		PhoneUser user = AuthUtil.getPhoneUser(gUser);
+		if (user.getLastConversationId() != null) {
+			Conversation lastConversation = Conversation.get(user.getLastConversationId());
+			if (lastConversation != null) {
+				lastConversation.removeUser(user.getPhone());
+				ofy().save().entity(lastConversation);
+			}
+		}
+		final ChatType conversationType = conversation.getType();
+		if (conversationType == ChatType.FLATTER || conversationType == ChatType.FORTHRIGHT) {
+			Date timeout = new Date(System.currentTimeMillis() + Settings.CONVERSATION_TIME_OUT);
+			conversation.addUserNotification(user.getPhone(), timeout);
+			ofy().save().entity(conversation);
+			user.setLastConversationId(conversationId);
+		} else {
+			user.setLastConversationId(null);
+		}
+		ofy().save().entity(user);
+	}
+
+	@ApiMethod(path = "conversation/{conversationId}/leave",
+				httpMethod = ApiMethod.HttpMethod.GET)
+	public void leaveConversation(@Named("conversationId") Long conversationId, User gUser)
+	  throws UnauthorizedException, NotFoundException {
+		Conversation conversation = getConversation(conversationId, gUser);
+		PhoneUser user = AuthUtil.getPhoneUser(gUser);
+		final Long lastConversationId = user.getLastConversationId();
+		if (lastConversationId != null && lastConversationId.equals(conversationId)) {
+			user.setLastConversationId(null);
+			ofy().save().entity(user);
+		}
+		conversation.removeUserNotification(user.getPhone());
+		ofy().save().entity(conversation);
 	}
 
 	@ApiMethod(path = "conversation/phone/{phoneNumber}/{type}",
@@ -259,15 +307,85 @@ public class ApiEndpoint {
 	public Comment postComment(@Named("conversationId") Long conversationId,
 							   @Named("alias") String alias, Text text, User gUser)
 	  throws UnauthorizedException, BadRequestException, NotFoundException {
+		if (gUser == null) {
+			throw new UnauthorizedException("User not authorized");
+		}
+		if (text == null || InputUtil.isEmpty(text.getText())) {
+			throw new BadRequestException("Comment cannot be empty");
+		}
 		Conversation conversation = getConversation(conversationId, gUser);
+		if (conversation == null) {
+			throw new NotFoundException("Conversation does not exists");
+		}
 		PhoneUser user = AuthUtil.getPhoneUser(gUser);
-		// NOTIFY
-		// TODO
-
-		// TODO blocked users here
-
-		// TODO add mark to the comments here
-		return null;
+		final Long userPhone = user.getPhone();
+		Comment comment = new Comment(conversationId, userPhone, text.getText());
+		switch (conversation.getType()) {
+			case FORTHRIGHT:
+			case FLATTER:
+				if (alias == null) {
+					throw new BadRequestException("Alias cannot be empty");
+				}
+				Comment previousComment;
+				previousComment = ofy().load().type(Comment.class).filter("userId", userPhone)
+									   .filter("conversationId", conversationId).order("-date")
+									   .first().now();
+				long aliasId;
+				if (previousComment != null && previousComment.getAlias().equals(alias)) {
+					aliasId = previousComment.getAliasId();
+				} else {
+					aliasId = obfuscatePhone(userPhone);
+				}
+				comment.setAlias(alias);
+				comment.setAliasId(aliasId);
+				if (user.getTimesFlagged() != null &&
+					user.getTimesFlagged() >= Settings.MIN_FLAG_TO_MARK_USER) {
+					Integer[] flaggedType = user.getTimesFlaggedType();
+					int maxPos = 0;
+					int maxValue = flaggedType[0];
+					for (int i = 1; i < flaggedType.length; i++) {
+						if (maxValue < flaggedType[i]) {
+							maxPos = i;
+							maxValue = flaggedType[i];
+						}
+					}
+					comment.setUserMark(UserMark.values()[maxPos]);
+				}
+				break;
+			case SECRET:
+			case PRIVATE:
+			case PRIVATE_ANONYMOUS:
+				break;
+		}
+		CounterStats counterStats = ofy().load().type(CounterStats.class).first().now();
+		if (counterStats == null) {
+			counterStats = new CounterStats();
+		}
+		switch (conversation.getType()) {
+			case SECRET:
+				counterStats.setSecretMessages(counterStats.getSecretMessages() + 1);
+				break;
+			case PRIVATE:
+				counterStats.setPrivateMessages(counterStats.getPrivateMessages() + 1);
+				break;
+			case PRIVATE_ANONYMOUS:
+				counterStats.setAnonymousMessages(counterStats.getAnonymousMessages() + 1);
+				break;
+			case FLATTER:
+				counterStats.setFlatteredMessages(counterStats.getFlatteredMessages() + 1);
+				break;
+			case FORTHRIGHT:
+				counterStats.setForthrightMessages(counterStats.getForthrightMessages() + 1);
+				break;
+		}
+		ofy().save().entity(counterStats).now();
+		ofy().save().entity(comment).now();
+		// create notifications
+		Queue queue = QueueFactory.getQueue("create-comments-queue");
+		String idString = Long.toString(comment.getId());
+		queue.add(TaskOptions.Builder.withUrl("/createcommentworker?id=" + idString)
+									 .method(TaskOptions.Method.GET));
+		return comment;
 	}
 
 	@ApiMethod(path = "conversation/{conversationId}/comments",
@@ -550,21 +668,29 @@ public class ApiEndpoint {
 	@ApiMethod(path = "user/{phone}/blockUser",
 				httpMethod = ApiMethod.HttpMethod.GET)
 	public void blockUser(@Named("phone") Long phoneNumber, User gUser)
-	  throws UnauthorizedException, NotFoundException {
+	  throws UnauthorizedException, BadRequestException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
 		}
+		if (!InputUtil.isValidNumber(phoneNumber)) {
+			throw new BadRequestException("Invalid phone number");
+		}
 		PhoneUser user = AuthUtil.getPhoneUser(gUser);
-		user.addBlockedPhone(phoneNumber);
-		ofy().save().entity(user);
+		if (!user.getPhone().equals(phoneNumber)) {
+			user.addBlockedPhone(phoneNumber);
+			ofy().save().entity(user);
+		}
 	}
 
 	@ApiMethod(path = "user/{phone}/unblockUser",
 				httpMethod = ApiMethod.HttpMethod.GET)
 	public void unblockUser(@Named("phone") Long phoneNumber, User gUser)
-	  throws UnauthorizedException, NotFoundException {
+	  throws UnauthorizedException, BadRequestException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
+		}
+		if (!InputUtil.isValidNumber(phoneNumber)) {
+			throw new BadRequestException("Invalid phone number");
 		}
 		PhoneUser user = AuthUtil.getPhoneUser(gUser);
 		user.removeBlockedPhone(phoneNumber);

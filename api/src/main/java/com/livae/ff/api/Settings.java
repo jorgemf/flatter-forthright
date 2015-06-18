@@ -24,6 +24,14 @@ public class Settings {
 
 	public static final long MAX_TIME_BLOCK_ANONYMOUS_USER = TimeUnit.DAYS.toMillis(150);
 
+	public static final long CONVERSATION_TIME_OUT = TimeUnit.DAYS.toMillis(1);
+
+	public static final long FLAG_FORGET_TIME = TimeUnit.DAYS.toMillis(30);
+
+	public static final long MIN_FLAG_TO_MARK_USER = 3;
+
+	public static final int NOTIFY_PUBLIC_COMMENTS_LAST_COMMENTERS = 20;
+
 	public static class Google {
 
 		public static final String API_KEY = System.getProperty("google.api.key");

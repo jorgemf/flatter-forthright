@@ -49,17 +49,32 @@
 
 	<!-- queues -->
 	<servlet>
-		<servlet-name>CreateCommentNotificationWorkerServlet</servlet-name>
-		<servlet-class>com.livae.apphunt.api.servlet.worker.CreateCommentNotificationWorkerServlet</servlet-class>
+		<servlet-name>CreateCommentWorkerServlet</servlet-name>
+		<servlet-class>com.livae.apphunt.api.servlet.worker.CreateCommentNotificationWorkerServlet
+		</servlet-class>
 	</servlet>
+	<servlet-mapping>
+		<servlet-name>CreateCommentWorkerServlet</servlet-name>
+		<url-pattern>/createcommentworker</url-pattern>
+	</servlet-mapping>
 	<servlet>
-		<servlet-name>SendPushNotificationWorkerServlet</servlet-name>
-		<servlet-class>com.livae.apphunt.api.servlet.worker.SendPushNotificationWorkerServlet</servlet-class>
+		<servlet-name>SendPushCommentNotificationWorkerServlet</servlet-name>
+		<servlet-class>com.livae.apphunt.api.servlet.worker.SendPushNotificationWorkerServlet
+		</servlet-class>
 	</servlet>
+	<servlet-mapping>
+		<servlet-name>SendPushCommentNotificationWorkerServlet</servlet-name>
+		<url-pattern>/sendpushcommentnotificationworker</url-pattern>
+	</servlet-mapping>
 	<servlet>
 		<servlet-name>ForgetFlaggedUsersWorkerServlet</servlet-name>
-		<servlet-class>com.livae.apphunt.api.servlet.worker.ForgetFlaggedUsersWorkerServlet</servlet-class>
+		<servlet-class>com.livae.apphunt.api.servlet.worker.ForgetFlaggedUsersWorkerServlet
+		</servlet-class>
 	</servlet>
+	<servlet-mapping>
+		<servlet-name>ForgetFlaggedUsersWorkerServlet</servlet-name>
+		<url-pattern>/forgetflaggedusersworker</url-pattern>
+	</servlet-mapping>
 
 	<!-- other configuration -->
 	<security-constraint>

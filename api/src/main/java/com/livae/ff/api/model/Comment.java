@@ -25,12 +25,14 @@ public class Comment implements Serializable {
 	@Id
 	private Long id;
 
+	@Index
 	private Long conversationId;
 
 	private Long aliasId;
 
 	private String alias;
 
+	@Index
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Long userId;
 
@@ -42,10 +44,6 @@ public class Comment implements Serializable {
 	private Integer agreeVotes;
 
 	private Integer disagreeVotes;
-
-	@Index
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	private Integer votes;
 
 	@Ignore
 	private CommentVoteType voteType;
@@ -80,7 +78,6 @@ public class Comment implements Serializable {
 		date = new Date();
 		agreeVotes = 0;
 		disagreeVotes = 0;
-		votes = 0;
 		userVoteType = null;
 		deleted = false;
 	}
@@ -158,7 +155,6 @@ public class Comment implements Serializable {
 
 	public void setAgreeVotes(Integer agreeVotes) {
 		this.agreeVotes = agreeVotes;
-		this.votes = this.agreeVotes - this.disagreeVotes;
 	}
 
 	public Integer getDisagreeVotes() {
@@ -167,15 +163,6 @@ public class Comment implements Serializable {
 
 	public void setDisagreeVotes(Integer disagreeVotes) {
 		this.disagreeVotes = disagreeVotes;
-		this.votes = this.agreeVotes - this.disagreeVotes;
-	}
-
-	public Integer getVotes() {
-		return votes;
-	}
-
-	public void setVotes(Integer votes) {
-		this.votes = votes;
 	}
 
 	public CommentVoteType getVoteType() {

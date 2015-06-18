@@ -6,6 +6,10 @@ public class Constants {
 		AGREE, DISAGREE
 	}
 
+	public enum PushNotificationType {
+		COMMENT
+	}
+
 	public enum ChatType {
 		FLATTER, // Only positive comments about the person
 		FORTHRIGHT, // Real things about the person

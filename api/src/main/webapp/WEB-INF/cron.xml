@@ -3,7 +3,7 @@
 	<cron>
 		<url>/fogetflaggedusers</url>
 		<description>Forget data of flagged users</description>
-		<schedule>every 20 hours</schedule>
+		<schedule>every 6 hours</schedule>
 	</cron>
 	<cron>
 		<url>/sendstatsemail</url>

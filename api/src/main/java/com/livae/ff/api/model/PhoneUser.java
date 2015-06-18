@@ -34,6 +34,9 @@ public class PhoneUser implements Serializable {
 	@Index
 	private String authToken;
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+	private String deviceId;
+
 	private Profile profile;
 
 	private Date forthrightChatsDateBlocked;
@@ -51,6 +54,9 @@ public class PhoneUser implements Serializable {
 	private Integer timesAgreed;
 
 	private Integer timesDisagreed;
+
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+	private Long lastConversationId;
 
 	public PhoneUser() {
 
@@ -103,6 +109,14 @@ public class PhoneUser implements Serializable {
 
 	public void setPhone(Long phone) {
 		this.phone = phone;
+	}
+
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 	public Date getCreated() {
@@ -173,6 +187,22 @@ public class PhoneUser implements Serializable {
 		timesFlaggedType[flagReason.ordinal()]++;
 	}
 
+	public void unflag(FlagReason flagReason) {
+		if (timesFlagged != null) {
+			final int pos = flagReason.ordinal();
+			timesFlaggedType[pos]--;
+			if (timesFlaggedType[pos] < 0) {
+				timesFlaggedType[pos] = 0;
+			} else {
+				timesFlagged--;
+				if (timesFlagged <= 0) {
+					timesFlagged = null;
+					timesFlaggedType = null;
+				}
+			}
+		}
+	}
+
 	public Integer[] getTimesFlaggedType() {
 		return timesFlaggedType;
 	}
@@ -195,5 +225,13 @@ public class PhoneUser implements Serializable {
 
 	public void setTimesDisagreed(Integer timesDisagreed) {
 		this.timesDisagreed = timesDisagreed;
+	}
+
+	public Long getLastConversationId() {
+		return lastConversationId;
+	}
+
+	public void setLastConversationId(Long lastConversationId) {
+		this.lastConversationId = lastConversationId;
 	}
 }

@@ -9,6 +9,10 @@ import com.livae.ff.common.Constants.ChatType;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.livae.ff.api.OfyService.ofy;
 
@@ -31,12 +35,16 @@ public class Conversation {
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Collection<Long> users;
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+	private Map<Long, Date> usersNotification;
+
 	public Conversation() {
 	}
 
 	public Conversation(ChatType type) {
 		this.type = type;
 		users = new ArrayList<>();
+		usersNotification = new HashMap<>();
 	}
 
 	public static Conversation get(Long id) {
@@ -108,5 +116,32 @@ public class Conversation {
 
 	public void setPhones(String phones) {
 		this.phones = phones;
+	}
+
+	public void addUserNotification(Long user, Date timeout) {
+		if (timeout.getTime() > System.currentTimeMillis()) {
+			usersNotification.put(user, timeout);
+		}
+	}
+
+	public void removeUserNotification(Long user) {
+		usersNotification.remove(user);
+	}
+
+	public Collection<Long> getUsersNotification() {
+		List<Long> numbers = new ArrayList<>(usersNotification.size());
+		List<Long> numbersToRemove = new ArrayList<>();
+		long now = System.currentTimeMillis();
+		for (Map.Entry<Long, Date> entry : usersNotification.entrySet()) {
+			if (entry.getValue().getTime() > now) {
+				numbers.add(entry.getKey());
+			} else {
+				numbersToRemove.add(entry.getKey());
+			}
+		}
+		for (Long number : numbersToRemove) {
+			usersNotification.remove(number);
+		}
+		return numbers;
 	}
 }

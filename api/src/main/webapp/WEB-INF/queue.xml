@@ -11,7 +11,7 @@
 		</retry-parameters>
 	</queue>
 	<queue>
-		<name>create-comments-notifications-queue</name>
+		<name>create-comments-queue</name>
 		<rate>1/s</rate>
 		<bucket-size>20</bucket-size>
 		<max-concurrent-requests>1</max-concurrent-requests>
