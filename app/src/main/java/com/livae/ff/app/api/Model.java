@@ -7,9 +7,12 @@ import android.util.Log;
 
 import com.livae.ff.api.ff.model.CollectionResponseComment;
 import com.livae.ff.api.ff.model.Comment;
+import com.livae.ff.api.ff.model.Conversation;
+import com.livae.ff.api.ff.model.Numbers;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.provider.DataProvider;
 import com.livae.ff.app.sql.Table;
+import com.livae.ff.common.Constants.FlagReason;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +58,7 @@ public class Model {
 		ContentResolver contentResolver = context.getContentResolver();
 		if (phonesList.size() > 0) {
 			ContentValues contentValues = new ContentValues();
-			contentValues.put(Table.LocalUser.ACCEPTS_PRIVATE_ANONYMOUS, false);
+			contentValues.put(Table.LocalUser.ACCEPTS_PRIVATE, false);
 			contentResolver.update(DataProvider.getUriContacts(), contentValues, null, null);
 			contentResolver.bulkInsert(DataProvider.getUriComments(),
 									   phonesList.toArray(new ContentValues[phonesList.size()]));
@@ -80,16 +83,28 @@ public class Model {
 
 		val.put(Table.Comment.ID, comment.getId());
 		val.put(Table.Comment.CONVERSATION_ID, comment.getConversationId());
-		val.put(Table.Comment.USER_ANONYMOUS_ID, comment.getUserAnonymousId());
-		val.put(Table.Comment.USER_ALIAS, comment.getUserAlias());
+		val.put(Table.Comment.USER_ANONYMOUS_ID, comment.getAliasId());
+		val.put(Table.Comment.USER_ALIAS, comment.getAlias());
 		val.put(Table.Comment.AGREE_VOTES, comment.getAgreeVotes());
 		val.put(Table.Comment.DISAGREE_VOTES, comment.getDisagreeVotes());
 		val.put(Table.Comment.DATE, comment.getDate().getValue());
-		val.put(Table.Comment.PHONE, comment.getPhone());
+		val.put(Table.Comment.IS_ME, comment.getIsMe());
 		val.put(Table.Comment.VOTE_TYPE, comment.getVoteType());
 		val.put(Table.Comment.USER_VOTE_TYPE, comment.getUserVoteType());
 		val.put(Table.Comment.COMMENT, comment.getComment());
-
+		val.put(Table.Comment.USER_MARK, comment.getUserMark());
+		val.put(Table.Comment.TIMES_FLAGGED, comment.getTimesFlagged());
+		final List<Integer> flaggedTypeList = comment.getTimesFlaggedType();
+		int[] flaggedType = new int[FlagReason.values().length];
+		if (flaggedTypeList != null && flaggedTypeList.size() >= flaggedType.length) {
+			for (int i = 0; i < flaggedType.length; i++) {
+				flaggedType[i] = flaggedTypeList.get(i);
+			}
+		}
+		val.put(Table.Comment.TIMES_FLAGGED_ABUSE, flaggedType[FlagReason.ABUSE.ordinal()]);
+		val.put(Table.Comment.TIMES_FLAGGED_INSULT, flaggedType[FlagReason.INSULT.ordinal()]);
+		val.put(Table.Comment.TIMES_FLAGGED_LIE, flaggedType[FlagReason.LIE.ordinal()]);
+		val.put(Table.Comment.TIMES_FLAGGED_OTHER, flaggedType[FlagReason.OTHER.ordinal()]);
 		commentsList.add(val);
 	}
 
@@ -107,34 +122,32 @@ public class Model {
 		val.put(Table.Conversation.ID, conversation.getId());
 		val.put(Table.Conversation.TYPE, conversation.getType());
 		val.put(Table.Conversation.PHONE, conversation.getPhone());
-		val.put(Table.Conversation.CONVERSATION_ALIAS, conversation.getConversationAlias());
+		val.put(Table.Conversation.ROOM_NAME, conversation.getAlias());
 
-		commentsList.add(val);
-	}
-
-	public synchronized void parse(CollectionResponseConversations conversations) {
-		if (conversations != null && conversations.getItems() != null) {
-			for (Conversation conversation : conversations.getItems()) {
-				parse(conversation);
-			}
-		}
+		conversationsList.add(val);
 	}
 
 	public synchronized void parse(Long phone) {
 		ContentValues val = new ContentValues();
 
 		val.put(Table.LocalUser.PHONE, phone);
-		val.put(Table.LocalUser.ACCEPTS_PRIVATE_ANONYMOUS, true);
+		val.put(Table.LocalUser.ACCEPTS_PRIVATE, true);
 
-		commentsList.add(val);
+		phonesList.add(val);
 	}
 
-	public synchronized void parse(CollectionResponsePhones phones) {
-		if (phones != null && phones.getItems() != null) {
-			for (Long phone : phones.getItems()) {
-				parse(phone);
-			}
+	public void parseBlocked(Numbers blockedNumbers) {
+		for (Long phone : blockedNumbers.getCollection()) {
+			parseBlocked(phone, true);
 		}
 	}
 
+	public void parseBlocked(Long phone, boolean blocked) {
+		ContentValues val = new ContentValues();
+
+		val.put(Table.LocalUser.PHONE, phone);
+		val.put(Table.LocalUser.BLOCKED, blocked);
+
+		phonesList.add(val);
+	}
 }

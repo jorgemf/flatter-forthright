@@ -8,11 +8,11 @@ import com.livae.ff.app.api.API;
 import com.livae.ff.app.api.Model;
 import com.livae.ff.app.async.NetworkAsyncTask;
 
-public class TaskVoteDisagreeComment extends NetworkAsyncTask<Pair<Long, Integer>, Comment> {
+public class TaskCommentVoteAgree extends NetworkAsyncTask<Pair<Long, Integer>, Comment> {
 
 	@Override
 	protected Comment doInBackground(Pair<Long, Integer> param) throws Exception {
-		Comment comment = API.endpoint().disagreeComment(param.first).execute();
+		Comment comment = API.endpoint().agreeComment(param.first).execute();
 		Model model = Application.model();
 		model.parse(comment);
 		model.save();

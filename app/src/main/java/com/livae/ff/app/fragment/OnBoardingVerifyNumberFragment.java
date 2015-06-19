@@ -41,7 +41,7 @@ import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.dialog.CountdownDialogFragment;
 import com.livae.ff.app.dialog.ProgressDialogFragment;
-import com.livae.ff.app.task.TaskRegisterUser;
+import com.livae.ff.app.task.TaskRegister;
 import com.livae.ff.app.utils.PhoneVerification;
 
 import java.util.ArrayList;
@@ -347,7 +347,7 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 			progressDialogFragment.setMessage(getString(R.string.signing_in));
 		}
 		progressDialogFragment.show(getFragmentManager(), "progress_dialog");
-		TaskRegisterUser task = new TaskRegisterUser();
+		TaskRegister task = new TaskRegister();
 		PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
 		task.execute(phoneVerification.getUserPhone(), new Callback<Long, Void>() {
 			@Override

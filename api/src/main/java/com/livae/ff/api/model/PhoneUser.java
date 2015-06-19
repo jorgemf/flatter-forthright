@@ -47,12 +47,16 @@ public class PhoneUser implements Serializable {
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private NumbersDate blockedAnonymousChats;
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Integer timesFlagged;
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Integer[] timesFlaggedType;
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Integer timesAgreed;
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Integer timesDisagreed;
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
@@ -69,6 +73,10 @@ public class PhoneUser implements Serializable {
 		created = new Date();
 		blockedChats = new Numbers();
 		blockedAnonymousChats = new NumbersDate();
+		timesAgreed = 0;
+		timesDisagreed = 0;
+		timesFlagged = null;
+		timesFlaggedType = null;
 	}
 
 	public static PhoneUser get(Long phone) {

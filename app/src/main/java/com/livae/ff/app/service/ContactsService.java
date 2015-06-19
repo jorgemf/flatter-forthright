@@ -48,12 +48,15 @@ public class ContactsService extends IntentService {
 			int indexPhoneContacts = 0;
 			int iNumber = appContacts.getColumnIndex(Table.LocalUser.PHONE);
 			int iName = appContacts.getColumnIndex(Table.LocalUser.CONTACT);
+			int iBlocked = appContacts.getColumnIndex(Table.LocalUser.BLOCKED);
 			do {
 				String currentName = appContacts.getString(iName);
 				long currentNumber = appContacts.getLong(iNumber);
 				if (indexPhoneContacts >= phoneContacts.size()) {
-					// deleted a phone that is not in the mobile anymore
-					phonesToDelete.add(currentNumber);
+					// deleted a phone that is not in the mobile anymore, but not blocked users
+					if (appContacts.isNull(iBlocked) || appContacts.getInt(iBlocked) == 0) {
+						phonesToDelete.add(currentNumber);
+					}
 				} else if (indexPhoneContacts < phoneContacts.size()) {
 					// add or update the phones
 					Pair<String, Long> phoneContact = phoneContacts.get(indexPhoneContacts);

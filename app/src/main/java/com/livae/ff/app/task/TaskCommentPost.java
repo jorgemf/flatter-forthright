@@ -9,7 +9,7 @@ import com.livae.ff.app.api.Model;
 import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.common.Constants.ChatType;
 
-public class TaskPostComment extends NetworkAsyncTask<Pair<TextId, ChatType>, Comment> {
+public class TaskCommentPost extends NetworkAsyncTask<Pair<TextId, ChatType>, Comment> {
 
 	@Override
 	protected Comment doInBackground(Pair<TextId, ChatType> params) throws Exception {

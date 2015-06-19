@@ -15,10 +15,10 @@ import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.task.ListResult;
 import com.livae.ff.app.task.QueryComments;
-import com.livae.ff.app.task.TaskGetUserComments;
-import com.livae.ff.app.task.TaskNoVoteComment;
-import com.livae.ff.app.task.TaskVoteAgreeComment;
-import com.livae.ff.app.task.TaskVoteDisagreeComment;
+import com.livae.ff.app.task.TaskCommentsGet;
+import com.livae.ff.app.task.TaskCommentVoteDelete;
+import com.livae.ff.app.task.TaskCommentVoteAgree;
+import com.livae.ff.app.task.TaskCommentVoteDisagree;
 import com.livae.ff.app.viewholders.CommentsViewHolder;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
@@ -26,11 +26,11 @@ import com.livae.ff.common.Constants.CommentVoteType;
 public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder, QueryComments>
   implements CommentActionListener {
 
-	private TaskVoteAgreeComment taskVoteAgreeComment;
+	private TaskCommentVoteAgree taskVoteAgreeComment;
 
-	private TaskVoteDisagreeComment taskVoteDisagreeComment;
+	private TaskCommentVoteDisagree taskVoteDisagreeComment;
 
-	private TaskNoVoteComment taskNoVoteComment;
+	private TaskCommentVoteDelete taskNoVoteComment;
 
 //	private TaskDeleteComment taskDeleteComment;
 
@@ -62,7 +62,7 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 
 	@Override
 	protected NetworkAsyncTask<QueryComments, ListResult> getLoaderTask() {
-		return new TaskGetUserComments();
+		return new TaskCommentsGet();
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 	@Override
 	public void commentVotedAgree(Long commentId, Long userCommentId, int adapterPosition) {
 		if (taskVoteAgreeComment == null) {
-			taskVoteAgreeComment = new TaskVoteAgreeComment();
+			taskVoteAgreeComment = new TaskCommentVoteAgree();
 		}
 		Pair<Long, Integer> param = new Pair<>(commentId, adapterPosition);
 		taskVoteAgreeComment.execute(param, new Callback<Pair<Long, Integer>, Comment>() {
@@ -122,7 +122,7 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 	@Override
 	public void commentVotedDisagree(Long commentId, Long userCommentId, int adapterPosition) {
 		if (taskVoteDisagreeComment == null) {
-			taskVoteDisagreeComment = new TaskVoteDisagreeComment();
+			taskVoteDisagreeComment = new TaskCommentVoteDisagree();
 		}
 		Pair<Long, Integer> param = new Pair<>(commentId, adapterPosition);
 		taskVoteDisagreeComment.execute(param, new Callback<Pair<Long, Integer>, Comment>() {
@@ -151,7 +151,7 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 	@Override
 	public void commentNoVoted(Long commentId, Long userCommentId, int adapterPosition) {
 		if (taskNoVoteComment == null) {
-			taskNoVoteComment = new TaskNoVoteComment();
+			taskNoVoteComment = new TaskCommentVoteDelete();
 		}
 		Pair<Long, Integer> param = new Pair<>(commentId, adapterPosition);
 		taskNoVoteComment.execute(param, new Callback<Pair<Long, Integer>, Comment>() {

@@ -10,10 +10,12 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.livae.ff.api.ff.Ff;
 import com.livae.ff.api.ff.FfRequest;
 import com.livae.ff.api.ff.FfRequestInitializer;
+import com.livae.ff.api.ff.model.Version;
 import com.livae.ff.app.AppUser;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.Settings;
+import com.livae.ff.common.Constants;
 
 import java.io.IOException;
 
@@ -37,7 +39,7 @@ public class API {
 				}
 			}
 		};
-		FfRequestInitializer apphuntRequestInitializer = (new FfRequestInitializer() {
+		FfRequestInitializer ffRequestInitializer = (new FfRequestInitializer() {
 			@Override
 			protected void initializeFfRequest(FfRequest<?> request) throws IOException {
 				super.initializeFfRequest(request);
@@ -53,7 +55,7 @@ public class API {
 		JacksonFactory jacksonFactory = new JacksonFactory();
 		Ff.Builder builder = new Ff.Builder(okHttpTransport, jacksonFactory, null);
 		endpoint = builder.setRootUrl(url).setGoogleClientRequestInitializer(initializer)
-						  .setFfRequestInitializer(apphuntRequestInitializer).build();
+						  .setFfRequestInitializer(ffRequestInitializer).build();
 //		if (Application.isAdmin()) {
 //			AdminRequestInitializer adminRequestInitializer = (new AdminRequestInitializer() {
 //				@Override
@@ -82,12 +84,8 @@ public class API {
 		instance = new API(url);
 	}
 
-//	public static Version version() throws IOException {
-//		return instance.endpoint.apiEndpoint().version(Settings.PLATFORM.name()).execute();
-//	}
-
-	public static void wakeup() throws IOException {
-		instance.endpoint.apiEndpoint().wakeup().execute();
+	public static Version version() throws IOException {
+		return instance.endpoint.apiEndpoint().version(Constants.Platform.ANDROID.name()).execute();
 	}
 
 	public static Ff.ApiEndpoint endpoint() {

@@ -84,8 +84,8 @@
 			<url-pattern>/_ah/*</url-pattern>
 		</web-resource-collection>
 
-		<user-data-constraint>
+		<commentId-data-constraint>
 			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
-		</user-data-constraint>
+		</commentId-data-constraint>
 	</security-constraint>
 </web-app>

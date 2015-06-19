@@ -8,7 +8,7 @@ import com.livae.ff.app.api.Model;
 import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.common.Constants.ChatType;
 
-public class TaskGetUserComments extends NetworkAsyncTask<QueryComments, ListResult> {
+public class TaskCommentsGet extends NetworkAsyncTask<QueryComments, ListResult> {
 
 	@Override
 	protected ListResult doInBackground(QueryComments queryParams) throws Exception {

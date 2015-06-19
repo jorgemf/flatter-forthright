@@ -2,7 +2,6 @@ package com.livae.ff.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.livae.ff.common.Constants.Profile;
 
@@ -18,9 +17,11 @@ public class AppUser {
 
 	private static final String USER_PROFILE = "ff.user.profile";
 
-	private static final String USER_COUNTRY_CODE = "ff.user.country_code";
+	private static final String USER_BLOCKED_FORTHRIGHT_CHATS = "ff.user.blocked_forthright_chats";
 
 	private static final String VERIFICATION_TOKEN = "ff.app.verification_token";
+
+	private Long blockedForthRightChats;
 
 	private Integer appVersion;
 
@@ -29,8 +30,6 @@ public class AppUser {
 	private String accessToken;
 
 	private Long userPhone;
-
-	private String countryCode;
 
 	private Profile profile;
 
@@ -44,7 +43,10 @@ public class AppUser {
 		prefs = context.getSharedPreferences(Settings.PREFERENCES_USER_FILE, Context.MODE_PRIVATE);
 		appVersion = prefs.getInt(APP_VERSION, 0);
 		cloudMessagesId = prefs.getString(CLOUD_MESSAGES_ID, null);
-		countryCode = prefs.getString(USER_COUNTRY_CODE, null);
+		blockedForthRightChats = prefs.getLong(USER_BLOCKED_FORTHRIGHT_CHATS, 0L);
+		if (blockedForthRightChats == 0) {
+			blockedForthRightChats = null;
+		}
 		userPhone = prefs.getLong(USER_PHONE, 0L);
 		if (userPhone == 0) {
 			userPhone = null;
@@ -62,15 +64,6 @@ public class AppUser {
 		prefs.edit().putInt(APP_VERSION, appVersion).apply();
 	}
 
-	public String getCloudMessagesId() {
-		return cloudMessagesId;
-	}
-
-	public void setCloudMessagesId(String cloudMessagesId) {
-		this.cloudMessagesId = cloudMessagesId;
-		prefs.edit().putString(CLOUD_MESSAGES_ID, cloudMessagesId).apply();
-	}
-
 	public String getAccessToken() {
 		return accessToken;
 	}
@@ -78,6 +71,19 @@ public class AppUser {
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
 		prefs.edit().putString(ACCESS_TOKEN, accessToken).apply();
+	}
+
+	public Long getBlockedForthRightChats() {
+		return userPhone;
+	}
+
+	public void setBlockedForthRightChats(Long blockDate) {
+		this.blockedForthRightChats = blockDate;
+		if (blockDate == null) {
+			prefs.edit().remove(USER_BLOCKED_FORTHRIGHT_CHATS).apply();
+		} else {
+			prefs.edit().putLong(USER_BLOCKED_FORTHRIGHT_CHATS, blockDate).apply();
+		}
 	}
 
 	public Long getUserPhone() {
@@ -93,30 +99,12 @@ public class AppUser {
 		}
 	}
 
-	public String getCountryCode() {
-		return countryCode;
-	}
-
-	public void setCountryCode(String countryCode) {
-		this.countryCode = countryCode;
-		prefs.edit().putString(USER_COUNTRY_CODE, countryCode).apply();
-	}
-
 	public boolean isDeviceConnected() {
 		return accessToken != null;
 	}
 
 	public Profile getProfile() {
 		return profile;
-	}
-
-	public void setProfile(Profile profile) {
-		this.profile = profile;
-		if (profile == null) {
-			prefs.edit().putString(USER_PROFILE, null).apply();
-		} else {
-			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
-		}
 	}
 
 	public void setProfile(String profile) {
@@ -131,9 +119,22 @@ public class AppUser {
 		}
 	}
 
-	public void clean(Context context) {
-		prefs.edit().clear().apply();
-		load(context);
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+		if (profile == null) {
+			prefs.edit().putString(USER_PROFILE, null).apply();
+		} else {
+			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
+		}
+	}
+
+	public String getCloudMessagesId() {
+		return cloudMessagesId;
+	}
+
+	public void setCloudMessagesId(String cloudMessagesId) {
+		this.cloudMessagesId = cloudMessagesId;
+		prefs.edit().putString(CLOUD_MESSAGES_ID, cloudMessagesId).apply();
 	}
 
 }

@@ -101,7 +101,7 @@ public class ApiEndpoint {
 	}
 
 	@ApiMethod(path = "wakeup", httpMethod = ApiMethod.HttpMethod.GET)
-	public void wakeup(@Named("deviceId") String deviceId, User gUser)
+	public void wakeup(@Nullable @Named("deviceId") String deviceId, User gUser)
 	  throws UnauthorizedException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
@@ -117,8 +117,9 @@ public class ApiEndpoint {
 
 	@ApiMethod(path = "phone/{number}",
 				httpMethod = ApiMethod.HttpMethod.GET)
-	public PhoneUser register(@Named("number") Long number, @Named("deviceId") String deviceId,
-							  User gUser) throws UnauthorizedException, BadRequestException {
+	public PhoneUser register(@Named("number") Long number,
+							  @Nullable @Named("deviceId") String deviceId, User gUser)
+	  throws UnauthorizedException, BadRequestException {
 		if (gUser != null) {
 			throw new UnauthorizedException("Cannot register more devices from the same one");
 		}
@@ -126,11 +127,8 @@ public class ApiEndpoint {
 			throw new BadRequestException("Phone number not valid");
 		}
 
-		PhoneUser user = PhoneUser.get(number);
-		if (user == null) {
-			user = new PhoneUser(number);
-			ApiEndpoint.logger.info("Created user [id:" + number + "]");
-		}
+		PhoneUser user = new PhoneUser(number);
+		ApiEndpoint.logger.info("Created user [id:" + number + "]");
 		user.setDeviceId(deviceId);
 		String authToken = AuthUtil.createAuthToken(number);
 		user.setAuthToken(authToken);
@@ -243,7 +241,8 @@ public class ApiEndpoint {
 				httpMethod = ApiMethod.HttpMethod.GET)
 	public Conversation getPhoneConversation(@Named("phoneNumber") Long phoneNumber,
 											 @Named("type") ChatType type,
-											 @Named("roomName") String roomName, User gUser)
+											 @Nullable @Named("roomName") String roomName,
+											 User gUser)
 	  throws UnauthorizedException, NotFoundException, BadRequestException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
@@ -305,7 +304,7 @@ public class ApiEndpoint {
 	@ApiMethod(path = "conversation/{conversationId}/comment",
 				httpMethod = ApiMethod.HttpMethod.POST)
 	public Comment postComment(@Named("conversationId") Long conversationId,
-							   @Named("alias") String alias, Text text, User gUser)
+							   @Nullable @Named("alias") String alias, Text text, User gUser)
 	  throws UnauthorizedException, BadRequestException, NotFoundException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
@@ -603,7 +602,7 @@ public class ApiEndpoint {
 
 	@ApiMethod(path = "comment/{commentId}/flag",
 				httpMethod = ApiMethod.HttpMethod.POST)
-	public void flagComment(@Named("commentId") Long commentId, FlagText reason, User gUser)
+	public Comment flagComment(@Named("commentId") Long commentId, FlagText reason, User gUser)
 	  throws UnauthorizedException, NotFoundException, ForbiddenException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
@@ -628,6 +627,7 @@ public class ApiEndpoint {
 											reason.getText()));
 		ApiEndpoint.logger.info("Comment flagged [" + comment.getComment() + "] [" +
 								flagReason + ":" + reason.getText() + "]");
+		return comment;
 	}
 
 	@ApiMethod(path = "conversation/{conversationId}/blockUser",
