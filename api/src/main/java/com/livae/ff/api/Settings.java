@@ -32,6 +32,8 @@ public class Settings {
 
 	public static final int NOTIFY_PUBLIC_COMMENTS_LAST_COMMENTERS = 20;
 
+	public static final int NOTIFICATIONS_TIME_TO_LIFE = (int) TimeUnit.DAYS.toSeconds(31);
+
 	public static class Google {
 
 		public static final String API_KEY = System.getProperty("google.api.key");

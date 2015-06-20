@@ -6,14 +6,12 @@ import com.livae.ff.app.Application;
 import com.livae.ff.app.api.API;
 import com.livae.ff.app.api.Model;
 import com.livae.ff.app.async.NetworkAsyncTask;
-import com.livae.ff.common.Constants.ChatType;
 
-public class TaskCommentsGet extends NetworkAsyncTask<QueryComments, ListResult> {
+public class TaskCommentsGet extends NetworkAsyncTask<QueryId, ListResult> {
 
 	@Override
-	protected ListResult doInBackground(QueryComments queryParams) throws Exception {
-		ChatType chatType = queryParams.getChatType();
-		GetComments request = API.endpoint().getComments(queryParams.getId(), chatType.name());
+	protected ListResult doInBackground(QueryId queryParams) throws Exception {
+		GetComments request = API.endpoint().getComments(queryParams.getId());
 		if (queryParams.getLimit() != null) {
 			request.setLimit(queryParams.getLimit());
 		}

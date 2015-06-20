@@ -18,10 +18,12 @@ import javax.annotation.Nonnull;
 
 public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 
-	public static final String[] PROJECTION = {Table.Comment.T_ID, Table.Comment.USER_ID,
-											   Table.Comment.PHONE, Table.Comment.DATE,
-											   Table.Comment.AGREE_VOTES, Table.Comment.VOTE_TYPE,
-											   Table.Comment.DISAGREE_VOTES, Table.Comment.COMMENT};
+	public static final String[] PROJECTION = {Table.Comment.T_ID, Table.Comment.USER_ALIAS,
+											   Table.Comment.IS_ME, Table.Comment.USER_ANONYMOUS_ID,
+											   Table.Comment.DATE, Table.Comment.AGREE_VOTES,
+											   Table.Comment.DISAGREE_VOTES,
+											   Table.Comment.TIMES_FLAGGED, Table.Comment.VOTE_TYPE,
+											   Table.Comment.COMMENT};
 
 	private int iId;
 

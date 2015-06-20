@@ -15,17 +15,13 @@ import javax.annotation.Nonnull;
 public class UsersAdapter extends EndlessCursorAdapter<UserViewHolder> {
 
 	public static final String[] PROJECTION = {Table.LocalUser.CONTACT, Table.LocalUser.PHONE,
-											   Table.LocalUser.IMAGE, Table.LocalUser.FAVORITE};
-
-	private int iId;
+											   Table.LocalUser.IMAGE};
 
 	private int iContact;
 
 	private int iPhone;
 
 	private int iImage;
-
-	private int iFavorite;
 
 	private UserClickListener userClickListener;
 
@@ -37,11 +33,9 @@ public class UsersAdapter extends EndlessCursorAdapter<UserViewHolder> {
 
 	@Override
 	protected void findIndexes(Cursor cursor) {
-		iId = cursor.getColumnIndex(Table.LocalUser.ID);
 		iContact = cursor.getColumnIndex(Table.LocalUser.CONTACT);
 		iPhone = cursor.getColumnIndex(Table.LocalUser.PHONE);
 		iImage = cursor.getColumnIndex(Table.LocalUser.IMAGE);
-		iFavorite = cursor.getColumnIndex(Table.LocalUser.FAVORITE);
 	}
 
 	@Override
@@ -55,12 +49,10 @@ public class UsersAdapter extends EndlessCursorAdapter<UserViewHolder> {
 		holder.clear();
 		String name = cursor.getString(iContact);
 		long phone = cursor.getLong(iPhone);
-		boolean favorite = cursor.getInt(iFavorite) != 0;
 		String image = cursor.getString(iImage);
 		holder.setUserName(name);
 		holder.setUserPhone(phone);
 //		holder.setUserImageView(image); // TODO fix this
-		holder.setFavorite(favorite);
 	}
 
 }

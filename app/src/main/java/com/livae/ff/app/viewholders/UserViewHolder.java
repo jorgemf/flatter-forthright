@@ -17,7 +17,6 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
 	private TextView userPhoneTextView;
 
-	private ImageView favoriteImageView;
 
 	private ImageView userImageView;
 
@@ -30,7 +29,6 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 		userNameTextView = (TextView) itemView.findViewById(R.id.user_name);
 		userPhoneTextView = (TextView) itemView.findViewById(R.id.user_phone);
 		userImageView = (ImageView) itemView.findViewById(R.id.user_image);
-		favoriteImageView = (ImageView) itemView.findViewById(R.id.user_favorite);
 	}
 
 	public void clear() {
@@ -67,12 +65,4 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 		this.userImageView.setImageDrawable(drawable);
 	}
 
-	public void setFavorite(boolean favorite) {
-		// TODO
-		if (favorite) {
-
-		} else {
-
-		}
-	}
 }

@@ -399,6 +399,11 @@ public class ApiEndpoint {
 		}
 		// verify the user can access to the conversation
 		Conversation conversation = getConversation(conversationId, gUser);
+		final boolean isPublicChat = conversation.getType() == ChatType.FORTHRIGHT ||
+									 conversation.getType() == ChatType.FLATTER;
+		if (!isPublicChat) {
+			throw new BadRequestException("Cannot get comments from private conversations");
+		}
 		// get comments
 		limit = InputUtil.getLimit(limit);
 		Query<Comment> query;
@@ -407,12 +412,8 @@ public class ApiEndpoint {
 		if (date != null) {
 			query.filter("date<", new Date(date));
 		}
-		final boolean isPublicChat = conversation.getType() == ChatType.FORTHRIGHT ||
-									 conversation.getType() == ChatType.FLATTER;
-		if (isPublicChat) {
-			// anonymous messages are forgotten after 100 days
-			query.filter("date>", new Date(System.currentTimeMillis() - Settings.MAX_COMMENT_DATE));
-		}
+		// anonymous messages are forgotten after 100 days
+		query.filter("date>", new Date(System.currentTimeMillis() - Settings.MAX_COMMENT_DATE));
 		if (cursor != null) {
 			query = query.startAt(Cursor.fromWebSafeString(cursor));
 		}
@@ -432,19 +433,19 @@ public class ApiEndpoint {
 			Comment comment = queryIterator.next();
 			final boolean isMe = comment.getUserId().equals(userPhone);
 			comment.setIsMe(isMe);
-			if (isPublicChat) {
-				// set comment vote type
-				CommentVote commentVote;
-				commentVote = ofy().load().type(CommentVote.class).filter("userId", userPhone)
-								   .filter("commentId", comment.getId()).first().now();
-				if (commentVote != null) {
-					comment.setVoteType(commentVote.getType());
-				}
-				if (!isMe && dateBlocked != null && dateBlocked > comment.getDate().getTime()) {
-					// hide comments since the user blocked the list
-					comment.setComment(null);
-				}
+//			if (isPublicChat) {
+			// set comment vote type
+			CommentVote commentVote;
+			commentVote = ofy().load().type(CommentVote.class).filter("userId", userPhone)
+							   .filter("commentId", comment.getId()).first().now();
+			if (commentVote != null) {
+				comment.setVoteType(commentVote.getType());
 			}
+			if (!isMe && dateBlocked != null && dateBlocked > comment.getDate().getTime()) {
+				// hide comments since the user blocked the list
+				comment.setComment(null);
+			}
+//			}
 			commentList.add(comment);
 		}
 		return CollectionResponse.<Comment>builder().setItems(commentList)

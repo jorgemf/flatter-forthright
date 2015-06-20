@@ -8,6 +8,8 @@ public class TextId {
 
 	private long id;
 
+	private String alias;
+
 	public TextId(String text, long id) {
 		this.text = text;
 		this.id = id;
@@ -21,5 +23,13 @@ public class TextId {
 
 	public long getId() {
 		return id;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 }
