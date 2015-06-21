@@ -14,16 +14,16 @@ import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.task.ListResult;
-import com.livae.ff.app.task.QueryComments;
-import com.livae.ff.app.task.TaskCommentsGet;
-import com.livae.ff.app.task.TaskCommentVoteDelete;
+import com.livae.ff.app.task.QueryId;
 import com.livae.ff.app.task.TaskCommentVoteAgree;
+import com.livae.ff.app.task.TaskCommentVoteDelete;
 import com.livae.ff.app.task.TaskCommentVoteDisagree;
+import com.livae.ff.app.task.TaskCommentsGet;
 import com.livae.ff.app.viewholders.CommentsViewHolder;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 
-public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder, QueryComments>
+public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder, QueryId>
   implements CommentActionListener {
 
 	private TaskCommentVoteAgree taskVoteAgreeComment;
@@ -34,9 +34,9 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 
 //	private TaskDeleteComment taskDeleteComment;
 
-	private Long userId;
+	private Long conversationId;
 
-	private ChatType chatType;
+	private ChatType conversationType;
 
 	private CommentsAdapter commentsAdapter;
 
@@ -61,7 +61,7 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 	}
 
 	@Override
-	protected NetworkAsyncTask<QueryComments, ListResult> getLoaderTask() {
+	protected NetworkAsyncTask<QueryId, ListResult> getLoaderTask() {
 		return new TaskCommentsGet();
 	}
 
@@ -72,7 +72,7 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 
 	@Override
 	protected EndlessCursorAdapter<CommentsViewHolder> getAdapter() {
-		commentsAdapter = new CommentsAdapter(this, this);
+		commentsAdapter = new CommentsAdapter(this, this, conversationType);
 		return commentsAdapter;
 	}
 
@@ -82,8 +82,8 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 	}
 
 	@Override
-	protected QueryComments getBaseQueryParams() {
-		return new QueryComments(userId, chatType);
+	protected QueryId getBaseQueryParams() {
+		return new QueryId(conversationId);
 	}
 
 	@Override

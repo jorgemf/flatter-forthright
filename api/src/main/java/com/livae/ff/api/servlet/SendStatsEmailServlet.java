@@ -44,35 +44,35 @@ public class SendStatsEmailServlet extends HttpServlet {
 		// total users
 		query = new Query("__Stat_Kind__");
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
-												  PhoneUser.class.getName()));
+												  PhoneUser.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
 		stats.setTotalUsers((Long) entityStat.getProperty("count"));
 
 		// total comments
 		query = new Query("__Stat_Kind__");
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
-												  Comment.class.getName()));
+												  Comment.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
 		stats.setTotalComments((Long) entityStat.getProperty("count"));
 
 		// total conversations
 		query = new Query("__Stat_Kind__");
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
-												  Conversation.class.getName()));
+												  Conversation.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
 		stats.setTotalConversations((Long) entityStat.getProperty("count"));
 
 		// total comment votes
 		query = new Query("__Stat_Kind__");
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
-												  CommentVote.class.getName()));
+												  CommentVote.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
 		stats.setTotalCommentVotes((Long) entityStat.getProperty("count"));
 
 		// total flags
 		query = new Query("__Stat_Kind__");
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
-												  FlagComment.class.getName()));
+												  FlagComment.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
 		stats.setTotalFlags((Long) entityStat.getProperty("count"));
 

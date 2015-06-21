@@ -9,67 +9,91 @@
 
 	<android.support.design.widget.AppBarLayout
 		android:id="@+id/bar_layout"
-		android:layout_gravity="top"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+		android:layout_gravity="top">
 
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/toolbar"
-			app:titleMarginStart="@dimen/space_huge"
-			app:titleMarginEnd="@dimen/space_huge"
 			android:layout_width="match_parent"
 			android:layout_height="?actionBarSize"
 			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-			app:title="@string/on_boarding_validate_number_title"/>
+			app:title="@string/on_boarding_validate_number_title"
+			app:titleMarginEnd="@dimen/space_huge"
+			app:titleMarginStart="@dimen/space_huge"/>
 
 	</android.support.design.widget.AppBarLayout>
 
-	<TextView
-		android:id="@+id/text_content"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentStart="true"
-		android:layout_below="@id/bar_layout"
-		android:layout_marginBottom="@dimen/space_large"
-		android:typeface="serif"
-		android:layout_marginLeft="@dimen/space_huge"
-		android:layout_marginRight="@dimen/space_huge"
-		android:layout_marginTop="@dimen/space_on_boarding"
-		android:lineSpacingMultiplier="1.2"
-		android:shadowColor="@color/white"
-		android:text="@string/on_boarding_validate_number"
-		android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-	<Spinner
-		android:id="@+id/spinner_country"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:minWidth="80dp"
-		android:gravity="start"
-		android:layout_below="@id/text_content"
-		android:layout_marginLeft="24dp"
-		android:layout_marginRight="@dimen/space_normal"
-		tools:listitem="@layout/item_country"/>
-
-	<EditText
-		android:id="@+id/edit_text_phone"
+	<ScrollView
+		android:id="@+id/scroll_view"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/phone_number"
-		android:inputType="phone"
-		android:layout_below="@id/text_content"
-		android:layout_marginRight="@dimen/space_huge"
-		android:layout_toRightOf="@id/spinner_country"
-		android:textAppearance="?android:attr/textAppearanceLarge"/>
+		android:layout_height="match_parent"
+		android:layout_above="@id/button"
+		android:layout_below="@id/bar_layout">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/text_content"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/space_large"
+				android:layout_marginLeft="@dimen/space_huge"
+				android:layout_marginRight="@dimen/space_huge"
+				android:layout_marginTop="@dimen/space_on_boarding"
+				android:lineSpacingMultiplier="1.2"
+				android:shadowColor="@color/white"
+				android:text="@string/on_boarding_validate_number"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:typeface="serif"/>
+
+			<Spinner
+				android:id="@+id/spinner_country"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="start"
+				android:layout_marginLeft="@dimen/space_huge"
+				android:layout_marginRight="@dimen/space_huge"
+				tools:listitem="@layout/item_country_selected"/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/space_huge"
+				android:layout_marginLeft="@dimen/space_huge"
+				android:layout_marginRight="@dimen/space_huge"
+				android:layout_marginTop="@dimen/space_small">
+
+				<TextView
+					android:id="@+id/edit_text_prefix"
+					android:layout_width="70dp"
+					android:layout_height="wrap_content"
+					android:enabled="true"
+					android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+				<EditText
+					android:id="@+id/edit_text_phone"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/phone_number"
+					android:inputType="phone"
+					android:textAppearance="?android:attr/textAppearanceLarge"/>
+			</LinearLayout>
+
+		</LinearLayout>
+
+	</ScrollView>
 
 	<Button
 		android:id="@+id/button"
-		android:background="@drawable/button_action"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:background="@drawable/button_action"
+		android:enabled="false"
 		android:layout_alignParentBottom="true"
 		android:layout_gravity="bottom"
-		android:enabled="false"
 		android:text="@string/button_continue"/>
 </RelativeLayout>

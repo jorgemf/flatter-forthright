@@ -10,6 +10,7 @@ import com.livae.ff.app.fragment.AbstractLoaderFragment;
 import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.viewholders.CommentsViewHolder;
+import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 
 import java.util.HashMap;
@@ -18,47 +19,68 @@ import javax.annotation.Nonnull;
 
 public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 
-	public static final String[] PROJECTION = {Table.Comment.T_ID, Table.Comment.USER_ALIAS,
-											   Table.Comment.IS_ME, Table.Comment.USER_ANONYMOUS_ID,
-											   Table.Comment.DATE, Table.Comment.AGREE_VOTES,
+	public static final String[] PROJECTION = {Table.Comment.T_ID, Table.Comment.DATE,
+											   Table.Comment.CONVERSATION_ID,
+											   Table.Comment.USER_ANONYMOUS_ID,
+											   Table.Comment.USER_ALIAS, Table.Comment.IS_ME,
+											   Table.Comment.COMMENT, Table.Comment.AGREE_VOTES,
 											   Table.Comment.DISAGREE_VOTES,
-											   Table.Comment.TIMES_FLAGGED, Table.Comment.VOTE_TYPE,
-											   Table.Comment.COMMENT};
+											   Table.Comment.USER_VOTE_TYPE,
+											   Table.Comment.VOTE_TYPE, Table.Comment.USER_MARK,
+											   Table.Comment.TIMES_FLAGGED,
+											   Table.Comment.TIMES_FLAGGED_ABUSE,
+											   Table.Comment.TIMES_FLAGGED_INSULT,
+											   Table.Comment.TIMES_FLAGGED_LIE,
+											   Table.Comment.TIMES_FLAGGED_OTHER};
 
 	private int iId;
 
-	private int iUserId;
-
-	private int iPhone;
-
 	private int iDate;
+
+	private int iUserAnonymousId;
+
+	private int iUserAlias;
+
+	private int iIsMe;
+
+	private int iComment;
 
 	private int iAgreeVotes;
 
 	private int iDisagreeVotes;
 
-	private int iComment;
-
 	private int iVoteType;
+
+	private int iUserVoteType;
+
+	private int iUserMark;
+
+	private int iTimesFlagged;
+
+	private int iTimesFlaggedAbuse;
+
+	private int iTimesFlaggedInsult;
+
+	private int iTimesFlaggedLie;
+
+	private int iTimesFlaggedOther;
 
 	private CommentActionListener commentActionListener;
 
 	private LayoutInflater layoutInflater;
 
-	private Long userId;
+	private ChatType conversationType;
 
 	private HashMap<Long, CommentVoteType> commentVoteTypeHashMap;
 
 	public CommentsAdapter(@Nonnull AbstractLoaderFragment fragment,
-						   @Nonnull CommentActionListener commentActionListener) {
+						   @Nonnull CommentActionListener commentActionListener,
+						   ChatType conversationType) {
 		super(fragment.getActivity(), fragment);
 		layoutInflater = fragment.getActivity().getLayoutInflater();
 		this.commentActionListener = commentActionListener;
 		commentVoteTypeHashMap = new HashMap<>();
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
+		this.conversationType = conversationType;
 	}
 
 	public void votedComment(Long commentId, CommentVoteType voteType) {
@@ -74,13 +96,21 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 	@Override
 	public void findIndexes(Cursor cursor) {
 		iId = cursor.getColumnIndex(Table.Comment.ID);
-		iUserId = cursor.getColumnIndex(Table.Comment.USER_ID);
 		iDate = cursor.getColumnIndex(Table.Comment.DATE);
+		iUserAnonymousId = cursor.getColumnIndex(Table.Comment.USER_ANONYMOUS_ID);
+		iUserAlias = cursor.getColumnIndex(Table.Comment.USER_ALIAS);
+		iIsMe = cursor.getColumnIndex(Table.Comment.IS_ME);
+		iComment = cursor.getColumnIndex(Table.Comment.COMMENT);
 		iAgreeVotes = cursor.getColumnIndex(Table.Comment.AGREE_VOTES);
 		iDisagreeVotes = cursor.getColumnIndex(Table.Comment.DISAGREE_VOTES);
-		iComment = cursor.getColumnIndex(Table.Comment.COMMENT);
 		iVoteType = cursor.getColumnIndex(Table.Comment.VOTE_TYPE);
-		iPhone = cursor.getColumnIndex(Table.Comment.PHONE);
+		iUserVoteType = cursor.getColumnIndex(Table.Comment.USER_VOTE_TYPE);
+		iUserMark = cursor.getColumnIndex(Table.Comment.USER_MARK);
+		iTimesFlagged = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED);
+		iTimesFlaggedAbuse = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED_ABUSE);
+		iTimesFlaggedInsult = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED_INSULT);
+		iTimesFlaggedLie = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED_LIE);
+		iTimesFlaggedOther = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED_OTHER);
 	}
 
 	@Override
@@ -94,8 +124,6 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 		holder.clear();
 		long commentId = cursor.getLong(iId);
 		holder.setCommentId(commentId);
-		long userId = cursor.getLong(iUserId);
-		holder.setUserId(userId);
 		long date = cursor.getLong(iDate);
 		holder.setDate(date);
 		holder.setComment(cursor.getString(iComment));

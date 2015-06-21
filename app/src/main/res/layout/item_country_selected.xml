@@ -5,9 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="@dimen/space_press_small"
 	android:gravity="center_vertical"
-	android:orientation="horizontal"
-	android:paddingLeft="@dimen/space_normal"
-	android:paddingRight="@dimen/space_normal">
+	android:orientation="horizontal">
 
 	<ImageView
 		android:id="@+id/flag_icon"

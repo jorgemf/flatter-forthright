@@ -1,6 +1,7 @@
 package com.livae.ff.app.adapter;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,6 @@ import com.livae.ff.app.Constants;
 import com.livae.ff.app.R;
 import com.livae.ff.app.viewholders.CountryViewHolder;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class CountriesArrayAdapter extends ArrayAdapter<Constants.COUNTRY> {
@@ -32,25 +31,30 @@ public class CountriesArrayAdapter extends ArrayAdapter<Constants.COUNTRY> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		return getView(position, convertView, parent, R.layout.item_country_selected, false);
+	}
+
+	@Override
+	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+		return getView(position, convertView, parent, R.layout.item_country, true);
+	}
+
+	public View getView(int position, View convertView, ViewGroup parent, @LayoutRes int layout,
+						boolean prefix) {
 		View view;
 
 		CountryViewHolder viewHolder;
 		if (convertView == null) {
-			view = inflater.inflate(R.layout.item_country, parent, false);
+			view = inflater.inflate(layout, parent, false);
 			viewHolder = new CountryViewHolder(view);
 			view.setTag(viewHolder);
 		} else {
 			view = convertView;
 			viewHolder = (CountryViewHolder) view.getTag();
 		}
-		viewHolder.setCountry(getItem(position));
+		viewHolder.setCountry(getItem(position), prefix);
 
 		return view;
-	}
-
-	@Override
-	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		return getView(position, convertView, parent);
 	}
 
 	@Override
@@ -60,12 +64,12 @@ public class CountriesArrayAdapter extends ArrayAdapter<Constants.COUNTRY> {
 
 	public void setCountries(List<Constants.COUNTRY> countries) {
 		// sort countries by phone prefix
-		Collections.sort(countries, new Comparator<Constants.COUNTRY>() {
-			@Override
-			public int compare(Constants.COUNTRY lhs, Constants.COUNTRY rhs) {
-				return lhs.getPhonePrefix().compareTo(rhs.getPhonePrefix());
-			}
-		});
+//		Collections.sort(countries, new Comparator<Constants.COUNTRY>() {
+//			@Override
+//			public int compare(Constants.COUNTRY lhs, Constants.COUNTRY rhs) {
+//				return lhs.getPhonePrefix().compareTo(rhs.getPhonePrefix());
+//			}
+//		});
 		// add countries
 		clear();
 		this.countries = countries;

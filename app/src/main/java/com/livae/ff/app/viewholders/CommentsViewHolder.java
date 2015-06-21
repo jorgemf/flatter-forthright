@@ -3,11 +3,9 @@ package com.livae.ff.app.viewholders;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.utils.UnitUtils;
@@ -17,8 +15,6 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder
   implements View.OnClickListener, View.OnLongClickListener {
 
 	private Long commentId;
-
-	private Long userId;
 
 	private ImageView userImage;
 
@@ -58,10 +54,6 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder
 
 	public void setCommentId(Long commentId) {
 		this.commentId = commentId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 
 	public void setUserImageUrl(String userImageUrl) {

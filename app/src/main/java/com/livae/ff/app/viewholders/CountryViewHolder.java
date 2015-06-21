@@ -1,8 +1,6 @@
 package com.livae.ff.app.viewholders;
 
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,25 +10,22 @@ import com.livae.ff.app.R;
 
 public class CountryViewHolder {
 
-	private final StyleSpan boldSpan;
-
 	private ImageView flag;
 
-	private TextView countryText;
+	private TextView countryName;
 
 	private Constants.COUNTRY country;
 
 	public CountryViewHolder(@NonNull View view) {
 		flag = (ImageView) view.findViewById(R.id.flag_icon);
-		countryText = (TextView) view.findViewById(R.id.country_text);
-		boldSpan = new StyleSpan(Typeface.BOLD);
+		countryName = (TextView) view.findViewById(R.id.country_name);
 	}
 
 	public Constants.COUNTRY getCountry() {
 		return country;
 	}
 
-	public void setCountry(@NonNull Constants.COUNTRY country) {
+	public void setCountry(@NonNull Constants.COUNTRY country, boolean prefix) {
 		this.country = country;
 		int flagRes = country.getCountryFlagResId();
 		flag.setImageResource(flagRes);
@@ -39,7 +34,12 @@ public class CountryViewHolder {
 		} else {
 			flag.setVisibility(View.VISIBLE);
 		}
-		countryText.setText(country.getPhonePrefix());
+		if (prefix) {
+			String name = countryName.getContext().getString(country.getCountryStringResId());
+			countryName.setText(name + " (" + country.getPhonePrefix() + ")");
+		} else {
+			countryName.setText(country.getCountryStringResId());
+		}
 	}
 
 }

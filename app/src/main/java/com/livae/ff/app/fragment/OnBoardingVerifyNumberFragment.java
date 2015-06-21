@@ -23,9 +23,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -46,8 +48,10 @@ import com.livae.ff.app.utils.PhoneVerification;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -63,6 +67,8 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	private View validateButton;
 
 	private EditText phoneNumberEditText;
+
+	private TextView phonePrefixEditText;
 
 	private Spinner countryCodeSpinner;
 
@@ -85,6 +91,7 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		validateButton = view.findViewById(R.id.button);
 		validateButton.setOnClickListener(this);
 		phoneNumberEditText = (EditText) view.findViewById(R.id.edit_text_phone);
+		phonePrefixEditText = (TextView) view.findViewById(R.id.edit_text_prefix);
 		countryCodeSpinner = (Spinner) view.findViewById(R.id.spinner_country);
 		countriesAdapter = new CountriesArrayAdapter(getActivity());
 		countryCodeSpinner.setAdapter(countriesAdapter);
@@ -104,11 +111,25 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		phoneNumberEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 		List<Constants.COUNTRY> list = new ArrayList<>();
 		list.addAll(Arrays.asList(Constants.COUNTRY.values()));
+		// sort countries by name
+		final HashMap<Constants.COUNTRY, String> countryNames = new HashMap<>();
+		for (Constants.COUNTRY c : list) {
+			countryNames.put(c, getString(c.getCountryStringResId()));
+		}
+		Collections.sort(list, new Comparator<Constants.COUNTRY>() {
+			@Override
+			public int compare(Constants.COUNTRY lhs, Constants.COUNTRY rhs) {
+				return countryNames.get(lhs).compareTo(countryNames.get(rhs));
+			}
+		});
 		countriesAdapter.setCountries(list);
 		countryCodeSpinner.setSelection(countriesAdapter.getPosition(country));
+		phonePrefixEditText.setText(country.getPhonePrefix());
 		countryCodeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				Constants.COUNTRY country = countriesAdapter.getItem(position);
+				phonePrefixEditText.setText(country.getPhonePrefix());
 				verifyNumber();
 			}
 
@@ -183,10 +204,21 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	}
 
 	private void pressedContinue() {
+		// hide keyboard
+		View view = getActivity().getCurrentFocus();
+		if (view != null) {
+			InputMethodManager inputManager;
+			inputManager = (InputMethodManager) getActivity()
+												  .getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputManager.hideSoftInputFromWindow(view.getWindowToken(),
+												 InputMethodManager.HIDE_NOT_ALWAYS);
+		}
+		// get phone number
 		final Phonenumber.PhoneNumber phoneNumber = getPhoneNumber();
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		final String country = Locale.getDefault().getCountry();
-		String number = "+" + phoneUtil.formatOutOfCountryCallingNumber(phoneNumber, country);
+		final int selectedItemPosition = countryCodeSpinner.getSelectedItemPosition();
+		final String country = countriesAdapter.getItem(selectedItemPosition).name().toLowerCase();
+		String number = phoneUtil.formatOutOfCountryCallingNumber(phoneNumber, country);
 		new AlertDialog.Builder(getActivity())
 		  .setMessage(getString(R.string.verification_sms_dialog_confirmation, number))
 		  .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -256,7 +288,10 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		//noinspection ConstantConditions,PointlessBooleanExpression
 		String message = getActivity().getString(R.string.verification_sms, code);
 		Log.i(LOG_TAG, "SENT num: " + phoneNumber + " body: " + message);
-		sms.sendTextMessage(phoneNumber, null, message, null, null);
+		//noinspection PointlessBooleanExpression,PointlessBooleanExpression,ConstantConditions
+		if (!BuildConfig.DEV && !BuildConfig.DEBUG) {
+			sms.sendTextMessage(phoneNumber, null, message, null, null);
+		}
 		showCountDownDialog(Settings.PHONE_VERIFICATION_TRY_AGAIN_DELAY);
 	}
 
