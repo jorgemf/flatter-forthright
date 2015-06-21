@@ -63,11 +63,8 @@ dependencies {
 	compile 'com.google.android.gms:play-services-base:7.5.0'
 	compile 'com.google.android.gms:play-services-analytics:7.5.0'
 	compile 'com.google.android.gms:play-services-gcm:7.5.0'
-	compile 'com.squareup.okhttp:okhttp:2.3.0'
-	compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
-	compile 'com.googlecode.libphonenumber:libphonenumber:7.0.5'
-	compile 'com.googlecode.libphonenumber:prefixmapper:2.21'
-	compile 'com.googlecode.libphonenumber:geocoder:2.21'
+	compile 'com.squareup.okhttp:okhttp:2.4.0'
+	compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
 }
 
 buildscript {
