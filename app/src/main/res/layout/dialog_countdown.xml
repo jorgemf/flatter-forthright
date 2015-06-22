@@ -10,8 +10,8 @@
 		android:id="@+id/text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/lorem_ipsum"
-		android:textAppearance="?android:attr/textAppearanceMedium"/>
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		tools:text="@string/lorem_ipsum"/>
 
 	<TextView
 		android:id="@+id/count_down"
@@ -19,7 +19,6 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_horizontal"
 		android:layout_marginTop="@dimen/space_normal"
-		android:text="00:00"
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		tools:ignore="HardcodedText"/>
+		tools:text="00:00"/>
 </LinearLayout>

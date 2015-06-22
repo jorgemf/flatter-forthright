@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/clickable_container"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
@@ -15,15 +16,8 @@
 		android:layout_alignParentStart="true"
 		android:layout_alignParentTop="true"
 		android:layout_marginEnd="@dimen/space_normal"
-		android:layout_marginRight="@dimen/space_normal"/>
-
-	<ImageView
-		android:id="@+id/user_favorite"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentEnd="true"
-		android:layout_alignParentRight="true"
-		android:layout_alignParentTop="true"/>
+		android:layout_marginRight="@dimen/space_normal"
+		tools:src="@drawable/button_floating_action"/>
 
 	<TextView
 		android:id="@+id/user_name"
@@ -31,11 +25,9 @@
 		android:layout_height="wrap_content"
 		android:ellipsize="end"
 		android:layout_toEndOf="@id/user_image"
-		android:layout_toLeftOf="@id/user_favorite"
 		android:layout_toRightOf="@id/user_image"
-		android:layout_toStartOf="@id/user_favorite"
 		android:maxLines="1"
-		android:text="@string/lorem_ipsum"
+		tools:text="@string/lorem_ipsum"
 		android:textAppearance="?android:attr/textAppearanceLarge"/>
 
 	<TextView
@@ -48,7 +40,7 @@
 		android:layout_below="@id/user_name"
 		android:layout_marginTop="@dimen/space_small"
 		android:lines="1"
-		android:text="@string/lorem_ipsum"
+		tools:text="@string/lorem_ipsum"
 		android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </RelativeLayout>

@@ -14,8 +14,8 @@
 		android:layout_marginEnd="@dimen/space_small"
 		android:layout_marginRight="@dimen/space_small"
 		android:scaleType="fitCenter"
-		android:src="@drawable/flag_es"
-		tools:ignore="ContentDescription"/>
+		tools:ignore="ContentDescription"
+		tools:src="@drawable/flag_es"/>
 
 	<TextView
 		android:id="@+id/country_name"
@@ -24,8 +24,7 @@
 		android:layout_gravity="center_vertical"
 		android:layout_marginLeft="@dimen/space_normal"
 		android:layout_marginRight="@dimen/space_normal"
-		android:text="Spain"
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		tools:ignore="HardcodedText"/>
+		tools:text="Spain"/>
 
 </LinearLayout>
