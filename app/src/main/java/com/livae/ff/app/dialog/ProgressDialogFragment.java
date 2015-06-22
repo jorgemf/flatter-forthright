@@ -26,6 +26,7 @@ public class ProgressDialogFragment extends DialogFragment {
 			progressDialog.setMessage(message);
 		}
 		progressDialog.setCancelable(false);
+		setCancelable(false);
 		return progressDialog;
 	}
 

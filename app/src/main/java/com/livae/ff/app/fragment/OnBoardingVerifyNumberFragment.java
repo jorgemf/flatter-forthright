@@ -1,5 +1,6 @@
 package com.livae.ff.app.fragment;
 
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Telephony;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -283,14 +285,23 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		return phoneNumber;
 	}
 
-	private void sendVerificationSMS(String phoneNumber, int code) {
+	private void sendVerificationSMS(final String phoneNumber, int code) {
 		SmsManager sms = SmsManager.getDefault();
 		//noinspection ConstantConditions,PointlessBooleanExpression
-		String message = getActivity().getString(R.string.verification_sms, code);
+		final String message = getActivity().getString(R.string.verification_sms, code);
 		Log.i(LOG_TAG, "SENT num: " + phoneNumber + " body: " + message);
 		//noinspection PointlessBooleanExpression,PointlessBooleanExpression,ConstantConditions
 		if (!BuildConfig.DEV && !BuildConfig.DEBUG) {
 			sms.sendTextMessage(phoneNumber, null, message, null, null);
+		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			final Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+				@TargetApi(Build.VERSION_CODES.KITKAT)
+				@Override
+				public void run() {
+					checkSmsConfirmation(phoneNumber, message);
+				}
+			}, 3000);
 		}
 		showCountDownDialog(Settings.PHONE_VERIFICATION_TRY_AGAIN_DELAY);
 	}

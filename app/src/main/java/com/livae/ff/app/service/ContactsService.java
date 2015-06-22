@@ -159,17 +159,18 @@ public class ContactsService extends IntentService {
 		if (phoneContacts.moveToFirst()) {
 			TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			String countryISO = tm.getSimCountryIso();
+			final String[] projectionPhoneUser = {ContactsContract.CommonDataKinds.Phone.NUMBER};
 			do {
 				String id = phoneContacts.getString(iId);
 				String name = phoneContacts.getString(iDisplayName);
 				Cursor phonesCursor = contentResolver
 										.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-											   null,
+											   projectionPhoneUser,
 											   ContactsContract.CommonDataKinds.Phone.CONTACT_ID +
 											   " = ?", new String[]{id}, null);
 				int iNumber = phonesCursor
 								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-				if (phonesCursor.isBeforeFirst()) {
+				if (phonesCursor.moveToFirst()) {
 					do {
 						String phone = phonesCursor.getString(iNumber);
 						Long mobile = getMobileNumber(phone, countryISO);
