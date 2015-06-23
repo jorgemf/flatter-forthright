@@ -34,8 +34,8 @@ public class OnBoardingActivity extends AbstractActivity {
 	protected void onResume() {
 		super.onResume();
 		Analytics.screen(Analytics.Screen.ON_BOARDING);
-		Intent intent = new Intent(this, ContactsService.class);
-		startService(intent);
+		// update contacts database
+		startService(new Intent(this, ContactsService.class));
 	}
 
 	@Override

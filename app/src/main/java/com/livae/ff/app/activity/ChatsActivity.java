@@ -15,6 +15,7 @@ import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.adapter.ChatsFragmentsAdapter;
+import com.livae.ff.app.service.ContactsService;
 
 public class ChatsActivity extends AbstractActivity {
 
@@ -32,6 +33,8 @@ public class ChatsActivity extends AbstractActivity {
 	protected void onResume() {
 		super.onResume();
 		Analytics.screen(Analytics.Screen.CHATS);
+		// update contacts database
+		startService(new Intent(this, ContactsService.class));
 	}
 
 	@Override

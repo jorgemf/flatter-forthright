@@ -50,7 +50,7 @@
 	<!-- queues -->
 	<servlet>
 		<servlet-name>CreateCommentWorkerServlet</servlet-name>
-		<servlet-class>com.livae.apphunt.api.servlet.worker.CreateCommentNotificationWorkerServlet
+		<servlet-class>com.livae.ff.api.servlet.worker.CreateCommentWorkerServlet
 		</servlet-class>
 	</servlet>
 	<servlet-mapping>
@@ -59,7 +59,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>SendPushCommentNotificationWorkerServlet</servlet-name>
-		<servlet-class>com.livae.apphunt.api.servlet.worker.SendPushNotificationWorkerServlet
+		<servlet-class>com.livae.ff.api.servlet.worker.SendPushCommentNotificationWorkerServlet
 		</servlet-class>
 	</servlet>
 	<servlet-mapping>
@@ -68,7 +68,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>ForgetFlaggedUsersWorkerServlet</servlet-name>
-		<servlet-class>com.livae.apphunt.api.servlet.worker.ForgetFlaggedUsersWorkerServlet
+		<servlet-class>com.livae.ff.api.servlet.worker.ForgetFlaggedUsersWorkerServlet
 		</servlet-class>
 	</servlet>
 	<servlet-mapping>
@@ -84,8 +84,8 @@
 			<url-pattern>/_ah/*</url-pattern>
 		</web-resource-collection>
 
-		<commentId-data-constraint>
+		<user-data-constraint>
 			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
-		</commentId-data-constraint>
+		</user-data-constraint>
 	</security-constraint>
 </web-app>

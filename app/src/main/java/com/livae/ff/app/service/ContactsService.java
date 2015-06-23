@@ -1,12 +1,13 @@
 package com.livae.ff.app.service;
 
 import android.app.IntentService;
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.support.v4.util.Pair;
 import android.telephony.TelephonyManager;
@@ -16,9 +17,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.livae.ff.app.Analytics;
-import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.provider.DataProvider;
-import com.livae.ff.app.sql.DBHelper;
 import com.livae.ff.app.sql.Table;
 
 import java.util.ArrayList;
@@ -78,35 +77,65 @@ public class ContactsService extends IntentService {
 				phonesToDelete.add(phoneContacts.get(indexPhoneContacts).second);
 				indexPhoneContacts++;
 			}
+		} else {
+			// data base empty
+			for (Pair<String, Long> userPhone : phoneContacts) {
+				phonesToAdd.add(userPhone);
+			}
 		}
 		appContacts.close();
-		deletePhones(phonesToDelete);
-		addPhones(phonesToAdd);
-		updatePhones(phonesToUpdate);
-	}
-
-	private void deletePhones(List<Long> phonesToDelete) {
-		final DBHelper dbHelper = DBHelper.instance(this);
-		final SQLiteDatabase database = dbHelper.getWritableDatabase();
-		database.beginTransaction();
-		String[] args = new String[1];
-		for (Long phone : phonesToDelete) {
-			args[0] = phone.toString();
-			int deleted = database.delete(Table.LocalUser.NAME, Table.LocalUser.PHONE + "=?", args);
-			if (deleted != 1) {
-				Analytics.logAndReport("Should delete 1 but it deleted " + deleted +
-									   "  (Phone number: " + args[0] + ")");
-			} else
-				//noinspection ConstantConditions,PointlessBooleanExpression
-				if (BuildConfig.DEV && BuildConfig.DEBUG) {
-					Log.d(LOG_TAG, "Deleted: " + args[0]);
-				}
+		ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+		deletePhones(operations, phonesToDelete);
+		addPhones(operations, phonesToAdd);
+		updatePhones(operations, phonesToUpdate);
+		try {
+			getContentResolver().applyBatch(DataProvider.getAuthority(DataProvider.class),
+											operations);
+		} catch (RemoteException e) {
+			Analytics.logAndReport(e, false);
+		} catch (OperationApplicationException e) {
+			Analytics.logAndReport(e, false);
 		}
-		database.endTransaction();
 	}
 
-	private void addPhones(List<Pair<String, Long>> phonesToAdd) {
-		final DBHelper dbHelper = DBHelper.instance(this);
+	private void deletePhones(ArrayList<ContentProviderOperation> operations,
+							  List<Long> phonesToDelete) {
+		ContentProviderOperation operation;
+		for (Long phone : phonesToDelete) {
+			operation = ContentProviderOperation.newDelete(DataProvider.getUriContact(phone))
+												.withExpectedCount(1).build();
+			operations.add(operation);
+		}
+//		final DBHelper dbHelper = DBHelper.instance(this);
+//		final SQLiteDatabase database = dbHelper.getWritableDatabase();
+//		database.beginTransaction();
+//		String[] args = new String[1];
+//		for (Long phone : phonesToDelete) {
+//			args[0] = phone.toString();
+//			int deleted = database.delete(Table.LocalUser.NAME, Table.LocalUser.PHONE + "=?", args);
+//			if (deleted != 1) {
+//				Analytics.logAndReport("Should delete 1 but it deleted " + deleted +
+//									   "  (Phone number: " + args[0] + ")");
+//			} else
+//				//noinspection ConstantConditions,PointlessBooleanExpression
+//				if (BuildConfig.DEV && BuildConfig.DEBUG) {
+//					Log.d(LOG_TAG, "Deleted: " + args[0]);
+//				}
+//		}
+//		database.endTransaction();
+	}
+
+	private void addPhones(ArrayList<ContentProviderOperation> operations,
+						   List<Pair<String, Long>> phonesToAdd) {
+		ContentProviderOperation operation;
+		for (Pair<String, Long> pair : phonesToAdd) {
+			operation = ContentProviderOperation.newInsert(DataProvider.getUriContacts())
+												.withValue(Table.LocalUser.PHONE, pair.second)
+												.withValue(Table.LocalUser.CONTACT, pair.first)
+												.build();
+			operations.add(operation);
+		}
+		/*final DBHelper dbHelper = DBHelper.instance(this);
 		final SQLiteDatabase database = dbHelper.getWritableDatabase();
 		database.beginTransaction();
 		ContentValues contentValues = new ContentValues();
@@ -119,11 +148,21 @@ public class ContactsService extends IntentService {
 				Log.d(LOG_TAG, "Added: " + pair.first + " - " + pair.second);
 			}
 		}
-		database.endTransaction();
+		database.endTransaction();*/
 	}
 
-	private void updatePhones(List<Pair<String, Long>> phonesToUpdate) {
-		final DBHelper dbHelper = DBHelper.instance(this);
+	private void updatePhones(ArrayList<ContentProviderOperation> operations,
+							  List<Pair<String, Long>> phonesToUpdate) {
+		ContentProviderOperation operation;
+		String[] args = new String[1];
+		for (Pair<String, Long> pair : phonesToUpdate) {
+			args[0] = pair.second.toString();
+			operation = ContentProviderOperation.newUpdate(DataProvider.getUriContact(pair.second))
+												.withValue(Table.LocalUser.CONTACT, pair.first)
+												.withExpectedCount(1).build();
+			operations.add(operation);
+		}
+		/*final DBHelper dbHelper = DBHelper.instance(this);
 		final SQLiteDatabase database = dbHelper.getWritableDatabase();
 		database.beginTransaction();
 		ContentValues contentValues = new ContentValues();
@@ -143,8 +182,7 @@ public class ContactsService extends IntentService {
 					Log.d(LOG_TAG, "Updated: " + pair.first + " - " + pair.second);
 				}
 		}
-		database.endTransaction();
-
+		database.endTransaction();*/
 	}
 
 	private List<Pair<String, Long>> getPhoneContacts() {
@@ -155,14 +193,19 @@ public class ContactsService extends IntentService {
 											  ContactsContract.Contacts.HAS_PHONE_NUMBER, null,
 											  null);
 		int iId = phoneContacts.getColumnIndex(ContactsContract.Contacts._ID);
+		int iContactLastUpdate = phoneContacts
+								   .getColumnIndex(ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP);
 		int iDisplayName = phoneContacts.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
 		if (phoneContacts.moveToFirst()) {
 			TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-			String countryISO = tm.getSimCountryIso();
-			final String[] projectionPhoneUser = {ContactsContract.CommonDataKinds.Phone.NUMBER};
+			String countryISO = tm.getSimCountryIso().toUpperCase();
+			final String[] projectionPhoneUser = {ContactsContract.CommonDataKinds.Phone.NUMBER,
+												  ContactsContract.CommonDataKinds.Phone.CONTACT_LAST_UPDATED_TIMESTAMP};
 			do {
 				String id = phoneContacts.getString(iId);
 				String name = phoneContacts.getString(iDisplayName);
+				Long contactLastUpdate = phoneContacts.getLong(iContactLastUpdate);
+				// TODO
 				Cursor phonesCursor = contentResolver
 										.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
 											   projectionPhoneUser,
@@ -170,9 +213,13 @@ public class ContactsService extends IntentService {
 											   " = ?", new String[]{id}, null);
 				int iNumber = phonesCursor
 								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+				int iNumberLastUpdate = phonesCursor
+										  .getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_LAST_UPDATED_TIMESTAMP);
 				if (phonesCursor.moveToFirst()) {
 					do {
 						String phone = phonesCursor.getString(iNumber);
+						Long numberLastUpdate = phonesCursor.getLong(iNumberLastUpdate);
+						// TODO
 						Long mobile = getMobileNumber(phone, countryISO);
 						if (mobile != null) {
 							contactsList.add(new Pair<>(name, mobile));
@@ -196,10 +243,21 @@ public class ContactsService extends IntentService {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		Phonenumber.PhoneNumber phoneNumber;
 		try {
-			phoneNumber = phoneUtil.parseAndKeepRawInput(phone, countryISO);
+			phoneNumber = phoneUtil.parse(phone, "");
 		} catch (NumberParseException e) {
-			e.printStackTrace();
-			return null;
+			if (e.getErrorType() == NumberParseException.ErrorType.INVALID_COUNTRY_CODE) {
+				try {
+					phoneNumber = phoneUtil.parse(phone, countryISO);
+				} catch (NumberParseException error) {
+					Log.e(LOG_TAG, "Number: " + phone + "  Region: " + countryISO);
+					error.printStackTrace();
+					return null;
+				}
+			} else {
+				Log.e(LOG_TAG, "Number: " + phone);
+				e.printStackTrace();
+				return null;
+			}
 		}
 		PhoneNumberUtil.PhoneNumberType numberType = phoneUtil.getNumberType(phoneNumber);
 		if (phoneUtil.isPossibleNumber(phoneNumber) &&
@@ -212,6 +270,17 @@ public class ContactsService extends IntentService {
 		} else {
 			return null;
 		}
+	}
+
+	class Contact {
+
+		public String displayName;
+
+		public String imageUri;
+
+		public Long lastUpdateTime;
+
+		public Long number;
 	}
 
 }

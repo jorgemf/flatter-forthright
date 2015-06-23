@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/settings"/>
+	<PreferenceScreen android:key="account_settings"
+	                  android:title="Account Settings"
+	                  android:summary="">
+		<intent android:action="com.livae.ff.app.OPEN_ACCOUNT"
+		        android:targetPackage="com.livae.ff.app"
+		        android:targetClass="com.livae.ff.app.activity.ChatsActivity"/>
+	</PreferenceScreen>
+</PreferenceScreen>

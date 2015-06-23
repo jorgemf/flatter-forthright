@@ -10,7 +10,7 @@ public class Table {
 
 		public static final String CONTACT = NAME + "_" + "contact";
 
-		public static final String IMAGE = NAME + "_" + "image";
+		public static final String IMAGE_URI = NAME + "_" + "image_uri";
 
 		public static final String ACCEPTS_PRIVATE = NAME + "_" + "accepts_private";
 
@@ -18,12 +18,16 @@ public class Table {
 
 		public static final String PHONE = BaseColumns._ID;
 
+		public static final String ANDROID_CONTACT_ID = "";
+
+		public static final String ANDROID_LAST_TIME_UPDATED = "";
+
 		public static final String T_ID = NAME + "." + PHONE;
 
 		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
 												PHONE + " INTEGER NOT NULL, " +
 												CONTACT + " TEXT, " +
-												IMAGE + " TEXT, " +
+												IMAGE_URI + " TEXT, " +
 												ACCEPTS_PRIVATE + " INTEGER, " +
 												BLOCKED + " INTEGER " +
 												" );";
@@ -47,7 +51,7 @@ public class Table {
 												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 												ROOM_NAME + " TEXT, " +
 												PHONE + " INTEGER, " +
-												TYPE + " TEXT NOT NULL, " +
+												TYPE + " TEXT NOT NULL " +
 												" );";
 	}
 

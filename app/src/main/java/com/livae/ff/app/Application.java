@@ -94,7 +94,7 @@ public class Application extends android.app.Application {
 		super.onCreate();
 		trackers = new HashMap<>();
 		getGoogleTracker(); // maybe fix the problem caught exceptions
-		if(!BuildConfig.DEBUG) {
+		if (!BuildConfig.DEBUG) {
 			CustomUncaughtExceptionHandler.configure();
 		}
 		DBHelper.clearData(this);
@@ -131,6 +131,12 @@ public class Application extends android.app.Application {
 				}
 			}
 		});
+
+		// TODO register contacts observer to update contacts when there is a modification there
+//		getApplicationContext().getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contentobserver);
+// or
+//		Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+//		getContentResolver().registerContentObserver(lookupUri, false, myObserver);
 	}
 
 	public enum TrackerName {

@@ -219,7 +219,7 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		final Phonenumber.PhoneNumber phoneNumber = getPhoneNumber();
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		final int selectedItemPosition = countryCodeSpinner.getSelectedItemPosition();
-		final String country = countriesAdapter.getItem(selectedItemPosition).name().toLowerCase();
+		final String country = countriesAdapter.getItem(selectedItemPosition).name().toUpperCase();
 		String number = phoneUtil.formatOutOfCountryCallingNumber(phoneNumber, country);
 		new AlertDialog.Builder(getActivity())
 		  .setMessage(getString(R.string.verification_sms_dialog_confirmation, number))

@@ -38,6 +38,10 @@ public class DataProvider extends AbstractProvider {
 		return Uri.withAppendedPath(getContentUri(), Table.LocalUser.NAME);
 	}
 
+	public static Uri getUriContact(Long contact) {
+		return ContentUris.withAppendedId(getUriContacts(), contact);
+	}
+
 	public static Uri getUriConversations() {
 		return Uri.withAppendedPath(getContentUri(), Table.Conversation.NAME);
 	}
