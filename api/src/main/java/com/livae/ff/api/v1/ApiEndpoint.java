@@ -698,15 +698,15 @@ public class ApiEndpoint {
 		ofy().save().entity(user);
 	}
 
-	@ApiMethod(path = "user/blocked",
-				httpMethod = ApiMethod.HttpMethod.GET)
-	public Numbers getBlockedUsers(User gUser) throws UnauthorizedException, NotFoundException {
-		if (gUser == null) {
-			throw new UnauthorizedException("User not authorized");
-		}
-		PhoneUser user = AuthUtil.getPhoneUser(gUser);
-		return user.getBlockedChats();
-	}
+//	@ApiMethod(path = "user/blocked",
+//				httpMethod = ApiMethod.HttpMethod.GET)
+//	public Numbers getBlockedUsers(User gUser) throws UnauthorizedException, NotFoundException {
+//		if (gUser == null) {
+//			throw new UnauthorizedException("User not authorized");
+//		}
+//		PhoneUser user = AuthUtil.getPhoneUser(gUser);
+//		return user.getBlockedChats();
+//	}
 
 	@ApiMethod(path = "contacts",
 				httpMethod = ApiMethod.HttpMethod.POST)

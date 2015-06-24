@@ -154,28 +154,6 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		} catch (IOException e) {
 			Analytics.logAndReport(e, false);
 		}
-
-		// add blocked users
-		try {
-			Numbers blockedNumbers = API.endpoint().getBlockedUsers().execute();
-			for (Long phone : blockedNumbers.getCollection()) {
-				// TODO create a new one if it does not exist in the database
-				ContentValues contentValues = new ContentValues();
-				contentValues.put(Table.LocalUser.BLOCKED, true);
-				operation = ContentProviderOperation.newUpdate(uriContacts)
-													.withSelection(Table.LocalUser.PHONE + "=?",
-																   new String[]{phone.toString()})
-													.withValues(contentValues).build();
-				operations.add(operation);
-			}
-		} catch (IOException e) {
-			Analytics.logAndReport(e, false);
-		}
-		try {
-			contentResolver.applyBatch(DataProvider.getAuthority(DataProvider.class), operations);
-		} catch (RemoteException | OperationApplicationException e) {
-			Analytics.logAndReport(e, false);
-		}
 	}
 
 	private Map<Long, PhoneContact> getPhoneContacts(ContentResolver contentResolver) {
