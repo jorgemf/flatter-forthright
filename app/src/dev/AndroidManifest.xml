@@ -14,7 +14,8 @@
 		<provider
 			android:authorities="com.livae.ff.app.dev.provider.DataProvider"
 			android:exported="false"
-			android:name=".provider.DataProvider"/>
+			android:name=".provider.DataProvider"
+			android:syncable="true"/>
 
 		<receiver
 			android:name=".receiver.GcmBroadcastReceiver"

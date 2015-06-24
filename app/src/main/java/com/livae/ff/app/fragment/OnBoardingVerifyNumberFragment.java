@@ -46,6 +46,7 @@ import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.dialog.CountdownDialogFragment;
 import com.livae.ff.app.dialog.ProgressDialogFragment;
 import com.livae.ff.app.task.TaskRegister;
+import com.livae.ff.app.utils.PhoneUtils;
 import com.livae.ff.app.utils.PhoneVerification;
 
 import java.util.ArrayList;
@@ -245,30 +246,7 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		String prefix = countriesAdapter.getItem(countryCodeSpinner.getSelectedItemPosition())
 										.getPhonePrefix();
 		String number = phoneNumberEditText.getText().toString();
-		boolean valid = false;
-		try {
-			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-			Phonenumber.PhoneNumber phoneNumber;
-			phoneNumber = phoneUtil.parseAndKeepRawInput(prefix + number, null);
-			PhoneNumberUtil.PhoneNumberType numberType = phoneUtil.getNumberType(phoneNumber);
-//			System.out.println("phoneUtil.isPossibleNumber(phoneNumber) " +
-//							   phoneUtil.isPossibleNumber(phoneNumber));
-//			System.out.println("phoneUtil.isValidNumber(phoneNumber) " +
-//							   phoneUtil.isValidNumber(phoneNumber));
-//			System.out.println("numberType " + numberType);
-			valid = phoneUtil.isPossibleNumber(phoneNumber) &&
-					phoneUtil.isValidNumber(phoneNumber) &&
-					(numberType == PhoneNumberUtil.PhoneNumberType.MOBILE ||
-					 numberType == PhoneNumberUtil.PhoneNumberType.UNKNOWN);
-			//noinspection PointlessBooleanExpression,ConstantConditions
-			if (BuildConfig.DEV && prefix.equals("+1") &&
-				phoneNumber.getNationalNumber() == 5555215554L) { // emulator number
-				valid = true;
-			}
-		} catch (NumberParseException e) {
-			Analytics.logAndReport(e);
-		}
-		validateButton.setEnabled(valid);
+		validateButton.setEnabled(PhoneUtils.getMobileNumber(prefix + number, null) != null);
 	}
 
 	private Phonenumber.PhoneNumber getPhoneNumber() {
@@ -278,7 +256,7 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		Phonenumber.PhoneNumber phoneNumber = null;
 		try {
-			phoneNumber = phoneUtil.parseAndKeepRawInput(prefix + number, null);
+			phoneNumber = phoneUtil.parse(prefix + number, "");
 		} catch (NumberParseException e) {
 			Analytics.logAndReport(e);
 		}
@@ -397,7 +375,7 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
 		task.execute(phoneVerification.getUserPhone(), new Callback<Long, Void>() {
 			@Override
-			public void onComplete(CustomAsyncTask<Long, Void> task, Long aLong, Void aVoid) {
+			public void onComplete(CustomAsyncTask<Long, Void> task, Long phone, Void aVoid) {
 				progressDialogFragment.dismiss();
 				if (isResumed() && getActivity() != null) {
 					((OnBoardingActivity) getActivity()).nextStep();
@@ -405,7 +383,7 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 			}
 
 			@Override
-			public void onError(CustomAsyncTask<Long, Void> task, Long aLong, Exception e) {
+			public void onError(CustomAsyncTask<Long, Void> task, Long phone, Exception e) {
 				progressDialogFragment.dismiss();
 				if (isResumed() && getActivity() != null) {
 					new AlertDialog.Builder(getActivity())

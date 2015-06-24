@@ -10,6 +10,7 @@ import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.api.API;
 import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.app.utils.DeviceUtils;
+import com.livae.ff.app.utils.SyncUtils;
 import com.livae.ff.common.Constants;
 
 public class TaskRegister extends NetworkAsyncTask<Long, Void> {
@@ -37,6 +38,7 @@ public class TaskRegister extends NetworkAsyncTask<Long, Void> {
 			} catch (Exception ignore) {
 			}
 			appUser.setProfile(profile);
+			SyncUtils.createAccount(Application.getContext(), phoneNumber);
 		}
 		return null;
 	}

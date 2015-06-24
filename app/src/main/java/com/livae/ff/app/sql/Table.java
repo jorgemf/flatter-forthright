@@ -8,28 +8,37 @@ public class Table {
 
 		public static final String NAME = "local_user";
 
-		public static final String CONTACT = NAME + "_" + "contact";
+		public static final String CONTACT_NAME = NAME + "_" + "contact_name";
 
 		public static final String IMAGE_URI = NAME + "_" + "image_uri";
 
 		public static final String ACCEPTS_PRIVATE = NAME + "_" + "accepts_private";
 
+		public static final String IS_MOBILE_NUMBER = NAME + "_" + "is_mobile_number";
+
 		public static final String BLOCKED = NAME + "_" + "blocked";
 
-		public static final String PHONE = BaseColumns._ID;
+		public static final String PHONE = NAME + "_" + "phone";
 
-		public static final String ANDROID_CONTACT_ID = "";
+		public static final String ANDROID_RAW_CONTACT_ID = NAME + "_" + "android_raw_contact_id";
 
-		public static final String ANDROID_LAST_TIME_UPDATED = "";
+		public static final String ANDROID_RAW_CONTACT_LAST_VERSION =
+		  NAME + "_" + "android_raw_contact_last_version";
 
-		public static final String T_ID = NAME + "." + PHONE;
+		public static final String ID = BaseColumns._ID;
+
+		public static final String T_ID = NAME + "." + ID;
 
 		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
-												PHONE + " INTEGER NOT NULL, " +
-												CONTACT + " TEXT, " +
+												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+												PHONE + " INTEGER, " +
+												CONTACT_NAME + " TEXT, " +
 												IMAGE_URI + " TEXT, " +
 												ACCEPTS_PRIVATE + " INTEGER, " +
-												BLOCKED + " INTEGER " +
+												IS_MOBILE_NUMBER + " INTEGER, " +
+												BLOCKED + " INTEGER, " +
+												ANDROID_RAW_CONTACT_ID + " INTEGER, " +
+												ANDROID_RAW_CONTACT_LAST_VERSION + " INTEGER " +
 												" );";
 	}
 

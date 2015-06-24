@@ -38,8 +38,8 @@ public class DataProvider extends AbstractProvider {
 		return Uri.withAppendedPath(getContentUri(), Table.LocalUser.NAME);
 	}
 
-	public static Uri getUriContact(Long contact) {
-		return ContentUris.withAppendedId(getUriContacts(), contact);
+	public static Uri getUriContact(Long id) {
+		return ContentUris.withAppendedId(getUriContacts(), id);
 	}
 
 	public static Uri getUriConversations() {
@@ -146,7 +146,7 @@ public class DataProvider extends AbstractProvider {
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
 			case URI_CONTACT:
-				where = Table.LocalUser.PHONE + "=?";
+				where = Table.LocalUser.T_ID + "=?";
 				args = new String[1];
 				args[0] = uri.getLastPathSegment();
 				qb.setTables(Table.LocalUser.NAME);
@@ -230,7 +230,7 @@ public class DataProvider extends AbstractProvider {
 				deleted = getWritableDatabase().delete(Table.Comment.NAME, query, args);
 				break;
 			case URI_CONTACT:
-				query = Table.LocalUser.PHONE + "=?";
+				query = Table.LocalUser.T_ID + "=?";
 				args = new String[1];
 				args[0] = uri.getLastPathSegment();
 				// no break
@@ -256,7 +256,7 @@ public class DataProvider extends AbstractProvider {
 													   args);
 				break;
 			case URI_CONTACT:
-				query = Table.LocalUser.PHONE + "=?";
+				query = Table.LocalUser.T_ID + "=?";
 				args = new String[1];
 				args[0] = uri.getLastPathSegment();
 				updated = getWritableDatabase().update(Table.LocalUser.NAME, values, query, args);

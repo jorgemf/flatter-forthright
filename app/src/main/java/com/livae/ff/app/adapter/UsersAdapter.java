@@ -14,14 +14,14 @@ import javax.annotation.Nonnull;
 
 public class UsersAdapter extends EndlessCursorAdapter<UserViewHolder> {
 
-	public static final String[] PROJECTION = {Table.LocalUser.CONTACT, Table.LocalUser.PHONE,
-											   Table.LocalUser.IMAGE};
+	public static final String[] PROJECTION = {Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
+											   Table.LocalUser.IMAGE_URI};
 
 	private int iContact;
 
 	private int iPhone;
 
-	private int iImage;
+	private int iImageUri;
 
 	private UserClickListener userClickListener;
 
@@ -33,9 +33,9 @@ public class UsersAdapter extends EndlessCursorAdapter<UserViewHolder> {
 
 	@Override
 	protected void findIndexes(Cursor cursor) {
-		iContact = cursor.getColumnIndex(Table.LocalUser.CONTACT);
+		iContact = cursor.getColumnIndex(Table.LocalUser.CONTACT_NAME);
 		iPhone = cursor.getColumnIndex(Table.LocalUser.PHONE);
-		iImage = cursor.getColumnIndex(Table.LocalUser.IMAGE);
+		iImageUri = cursor.getColumnIndex(Table.LocalUser.IMAGE_URI);
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class UsersAdapter extends EndlessCursorAdapter<UserViewHolder> {
 		holder.clear();
 		String name = cursor.getString(iContact);
 		long phone = cursor.getLong(iPhone);
-		String image = cursor.getString(iImage);
+		String image = cursor.getString(iImageUri);
 		holder.setUserName(name);
 		holder.setUserPhone(phone);
 //		holder.setUserImageView(image); // TODO fix this

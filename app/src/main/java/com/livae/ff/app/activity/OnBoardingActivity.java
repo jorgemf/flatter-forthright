@@ -14,7 +14,6 @@ import com.livae.ff.app.fragment.OnBoardingPaymentFragment;
 import com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment;
 import com.livae.ff.app.fragment.OnBoardingWarningFragment;
 import com.livae.ff.app.fragment.OnBoardingWelcomeFragment;
-import com.livae.ff.app.service.ContactsService;
 
 public class OnBoardingActivity extends AbstractActivity {
 
@@ -34,8 +33,6 @@ public class OnBoardingActivity extends AbstractActivity {
 	protected void onResume() {
 		super.onResume();
 		Analytics.screen(Analytics.Screen.ON_BOARDING);
-		// update contacts database
-		startService(new Intent(this, ContactsService.class));
 	}
 
 	@Override

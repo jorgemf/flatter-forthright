@@ -7,6 +7,12 @@ public class Constants {
 
 	public static final String MARKET_PACKAGE_ID = "com.android.vending";
 
+	public static final String ACCOUNT_TYPE = "com.livae.pensamientos";
+
+	private static final String DEV_SUFFIX = (BuildConfig.DEV ? "-dev" : "");
+
+	public static final String ACCOUNT_SUFFIX = DEV_SUFFIX + "@pensamientos.livae.com";
+
 	public enum COUNTRY {
 		AC(R.string.country_ac, "+247"/*, R.drawable.flag_ac*/),
 		AD(R.string.country_ad, "+376", R.drawable.flag_ad),

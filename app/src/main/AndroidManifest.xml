@@ -2,22 +2,31 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.livae.ff.app">
 
-	<!-- no tablets support or really small phones -->	<supports-screens
-	android:largeScreens="true"
-	android:normalScreens="true"
-	android:smallScreens="false"
-	android:xlargeScreens="false"/>
+	<!-- no tablets support or really small phones -->
+	<supports-screens
+		android:largeScreens="true"
+		android:normalScreens="true"
+		android:smallScreens="false"
+		android:xlargeScreens="false"/>
 
+	<!-- Internet -->
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<!-- Notifications -->
+	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 	<uses-permission android:name="android.permission.WAKE_LOCK"/>
+	<!-- Sms for verification -->
 	<uses-permission android:name="android.permission.SEND_SMS"/>
 	<uses-permission android:name="android.permission.READ_SMS"/>
 	<uses-permission android:name="android.permission.RECEIVE_SMS"/>
+	<!-- Contacts -->
 	<uses-permission android:name="android.permission.READ_CONTACTS"/>
 	<uses-permission android:name="android.permission.WRITE_CONTACTS"/>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+	<!-- Account synchronization -->
+	<uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+	<uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+	<uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
 
 	<uses-feature android:name="android.hardware.telephony"/>
 
@@ -42,22 +51,24 @@
 		<activity android:name="com.livae.ff.app.activity.AboutActivity"/>
 		<activity android:name="com.livae.ff.app.activity.OnBoardingActivity"/>
 
-		<service android:name=".service.AuthenticatorService" android:exported="true">
+		<service android:name=".service.AuthenticatorService">
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator"/>
 			</intent-filter>
-			<meta-data android:name="android.accounts.AccountAuthenticator"
-			           android:resource="@xml/auth"/>
+			<meta-data
+				android:name="android.accounts.AccountAuthenticator"
+				android:resource="@xml/authenticator"/>
 		</service>
 
-		<service android:name="service.ContactsSyncService" android:exported="true">
+		<service android:name="service.ContactsSyncService"
+		         android:exported="true"
+		         android:process=":sync">
 			<intent-filter>
-				<action android:name="android.content.SyncAdapter" />
+				<action android:name="android.content.SyncAdapter"/>
 			</intent-filter>
-			<meta-data android:name="android.content.SyncAdapter"
-			           android:resource="@xml/sync_contacts" />
-			<meta-data android:name="android.provider.CONTACTS_STRUCTURE"
-			           android:resource="@xml/contacts" />
+			<meta-data
+				android:name="android.content.SyncAdapter"
+				android:resource="@xml/syncadapter"/>
 		</service>
 
 		<service android:name=".service.ContactsService"/>

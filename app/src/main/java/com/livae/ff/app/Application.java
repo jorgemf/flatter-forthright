@@ -13,6 +13,7 @@ import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.sql.DBHelper;
 import com.livae.ff.app.task.TaskWakeup;
+import com.livae.ff.app.utils.SyncUtils;
 import com.livae.ff.common.Constants;
 
 import java.net.HttpURLConnection;
@@ -131,12 +132,9 @@ public class Application extends android.app.Application {
 				}
 			}
 		});
-
-		// TODO register contacts observer to update contacts when there is a modification there
-//		getApplicationContext().getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contentobserver);
-// or
-//		Uri lookupUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
-//		getContentResolver().registerContentObserver(lookupUri, false, myObserver);
+//		SyncUtils.syncContactsEveryDay();
+		SyncUtils.syncContactsWhenChange();
+		SyncUtils.syncContactsNow();
 	}
 
 	public enum TrackerName {
