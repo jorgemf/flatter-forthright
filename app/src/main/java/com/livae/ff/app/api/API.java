@@ -6,6 +6,7 @@ import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.okhttp.OkHttpTransport;
+import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.livae.ff.api.ff.Ff;
 import com.livae.ff.api.ff.FfRequest;
@@ -90,6 +91,10 @@ public class API {
 
 	public static Ff.ApiEndpoint endpoint() {
 		return instance.endpoint.apiEndpoint();
+	}
+
+	public static JsonParser getJsonParser(String jsonString) throws IOException {
+		return instance.endpoint.getJsonFactory().createJsonParser(jsonString);
 	}
 
 }

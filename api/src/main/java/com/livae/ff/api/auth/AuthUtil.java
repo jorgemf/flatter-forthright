@@ -70,10 +70,11 @@ public class AuthUtil {
 	}
 
 	public static PhoneUser getPhoneUser(com.google.appengine.api.users.User gUser) {
-		return getPhoneUser(gUser.getEmail());
+//		return PhoneUser.get(Long.parseLong(gUser.getUserId()));
+		return PhoneUser.get(Long.parseLong(gUser.getEmail()));
 	}
 
 	public static PhoneUser getPhoneUser(String token) {
-		return ofy().load().type(PhoneUser.class).filter("token", token).first().now();
+		return ofy().load().type(PhoneUser.class).filter("authToken", token).first().now();
 	}
 }

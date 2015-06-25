@@ -7,7 +7,7 @@
 	<system-properties>
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
 
-		<property name="app.developers.email" value="ff@livae.com"/>
+		<property name="app.developers.email" value="pensamientos@livae.com"/>
 
 		<property name="google.api.key" value="AIzaSyAnvfve2LB0jlxlFa1Cz1LZ-hCbNNcTdtE"/>
 		<property name="google.client.id"

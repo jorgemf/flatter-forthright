@@ -2,8 +2,11 @@ package com.livae.ff.api.model;
 
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
+import com.googlecode.objectify.annotation.Cache;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Stringify;
 import com.googlecode.objectify.condition.IfNotNull;
 import com.livae.ff.common.Constants.ChatType;
 
@@ -16,6 +19,8 @@ import java.util.Map;
 
 import static com.livae.ff.api.OfyService.ofy;
 
+@Entity
+@Cache
 public class Conversation {
 
 	@Id
@@ -36,6 +41,7 @@ public class Conversation {
 	private Collection<Long> users;
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+	@Stringify(com.livae.ff.api.model.LongStringifier.class)
 	private Map<Long, Date> usersNotification;
 
 	public Conversation() {

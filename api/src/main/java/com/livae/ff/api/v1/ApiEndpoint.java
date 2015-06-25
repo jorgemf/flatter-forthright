@@ -26,7 +26,7 @@ import com.livae.ff.api.model.CommentVote;
 import com.livae.ff.api.model.Conversation;
 import com.livae.ff.api.model.CounterStats;
 import com.livae.ff.api.model.FlagComment;
-import com.livae.ff.api.model.Numbers;
+import com.livae.ff.api.v1.model.Numbers;
 import com.livae.ff.api.model.PhoneUser;
 import com.livae.ff.api.model.Version;
 import com.livae.ff.api.util.InputUtil;
@@ -715,7 +715,7 @@ public class ApiEndpoint {
 			throw new UnauthorizedException("User not authorized");
 		}
 		Numbers appPhones = new Numbers();
-		for (Long phone : phones.getCollection()) {
+		for (Long phone : phones.getNumbers()) {
 			// send all the contacts and return the ones that have or had the app installed
 			PhoneUser user = PhoneUser.get(phone);
 			if (user != null) {

@@ -17,7 +17,9 @@ public class AppAuthenticator implements Authenticator {
 		if (token != null) {
 			PhoneUser phoneUser = AuthUtil.getPhoneUser(token);
 			if (phoneUser != null) {
-				return new User(token);
+				return new User(phoneUser.getPhone().toString());
+//				return new User(phoneUser.getPhone().toString(),
+//								phoneUser.getPhone() + "@pensamientos.livae.com");
 			}
 		}
 		return null;

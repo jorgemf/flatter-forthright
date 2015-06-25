@@ -140,9 +140,9 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 			Numbers numbers = new Numbers();
 			List<Long> list = new ArrayList<Long>();
 			list.addAll(contacts);
-			numbers.setCollection(list);
+			numbers.setNumbers(list);
 			Numbers validNumbers = API.endpoint().getContacts(numbers).execute();
-			for (Long phone : validNumbers.getCollection()) {
+			for (Long phone : validNumbers.getNumbers()) {
 				ContentValues contentValues = new ContentValues();
 				contentValues.put(Table.LocalUser.ACCEPTS_PRIVATE, true);
 				operation = ContentProviderOperation.newUpdate(uriContacts)

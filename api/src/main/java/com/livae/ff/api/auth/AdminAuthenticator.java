@@ -16,7 +16,7 @@ import static com.livae.ff.api.OfyService.ofy;
 
 public class AdminAuthenticator implements Authenticator {
 
-	public static final Long[] VALID_PHONES = {34657139626L};
+	public static final Long[] VALID_PHONES = {34657139626L, 15555215554L};// mine and emulator
 
 	public static final Set<Long> ALLOWED_PHONES = new HashSet<>(Arrays.asList(VALID_PHONES));
 
@@ -37,14 +37,18 @@ public class AdminAuthenticator implements Authenticator {
 				PhoneUser phoneUser = ofy().load().type(PhoneUser.class).filter("token", token)
 										   .first().safe();
 				if (isAdminUser(phoneUser)) {
-					return new User(token);
+					return new User(phoneUser.getPhone().toString());
+//					return new User(phoneUser.getPhone().toString(),
+//									phoneUser.getPhone() + "@pensamientos.livae.com");
 				} else if ("127.0.0.1".equals(request.getRemoteHost())) {
 					AdminUser admin = ofy().load().type(AdminUser.class).id(0).now();
 					if (admin == null) {
 						admin = new AdminUser(0L);
 						ofy().save().entity(admin);
 					}
-					return new User(token);
+					return new User(phoneUser.getPhone().toString());
+//					return new User(phoneUser.getPhone().toString(),
+//									phoneUser.getPhone() + "@pensamientos.livae.com");
 				}
 			} catch (NotFoundException e) {
 				// return null

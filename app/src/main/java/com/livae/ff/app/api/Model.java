@@ -137,7 +137,7 @@ public class Model {
 	}
 
 	public void parseBlocked(Numbers blockedNumbers) {
-		for (Long phone : blockedNumbers.getCollection()) {
+		for (Long phone : blockedNumbers.getNumbers()) {
 			parseBlocked(phone, true);
 		}
 	}

@@ -24,11 +24,6 @@
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
-	<!-- web pages -->
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
-
 	<!-- cron jobs -->
 	<servlet>
 		<servlet-name>SendStatsEmailServlet</servlet-name>
@@ -75,6 +70,11 @@
 		<servlet-name>ForgetFlaggedUsersWorkerServlet</servlet-name>
 		<url-pattern>/forgetflaggedusersworker</url-pattern>
 	</servlet-mapping>
+
+	<!-- web pages -->
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
 
 	<!-- other configuration -->
 	<security-constraint>

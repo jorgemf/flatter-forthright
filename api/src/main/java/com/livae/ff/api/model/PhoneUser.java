@@ -6,11 +6,17 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Stringify;
 import com.livae.ff.common.Constants.FlagReason;
 import com.livae.ff.common.Constants.Profile;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -42,10 +48,11 @@ public class PhoneUser implements Serializable {
 	private Date forthrightChatsDateBlocked;
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	private Numbers blockedChats;
+	private Collection<Long> blockedChats;
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	private NumbersDate blockedAnonymousChats;
+	@Stringify(com.livae.ff.api.model.LongStringifier.class)
+	private HashMap<Long, Date> blockedAnonymousChats;
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Integer timesFlagged;
@@ -71,8 +78,8 @@ public class PhoneUser implements Serializable {
 		forthrightChatsDateBlocked = null;
 		lastAccess = new Date();
 		created = new Date();
-		blockedChats = new Numbers();
-		blockedAnonymousChats = new NumbersDate();
+		blockedChats = new ArrayList<>();
+		blockedAnonymousChats = new HashMap<>();
 		timesAgreed = 0;
 		timesDisagreed = 0;
 		timesFlagged = null;
@@ -84,26 +91,41 @@ public class PhoneUser implements Serializable {
 	}
 
 	public void addBlockedPhone(Long phone) {
-		blockedChats.addNumber(phone);
+		if (!blockedChats.contains(phone)) {
+			blockedChats.add(phone);
+		}
 	}
 
 	public void removeBlockedPhone(Long phone) {
-		blockedChats.removeNumber(phone);
+		blockedChats.remove(phone);
 	}
 
 	public void addBlockedAnonymousPhone(Long phone, Date date) {
-		blockedAnonymousChats.addNumber(phone, date);
+		blockedAnonymousChats.put(phone, date);
+		long now = System.currentTimeMillis();
+		List<Long> numbers = new ArrayList<>();
+		for (Map.Entry<Long, Date> entry : blockedAnonymousChats.entrySet()) {
+			if (date.getTime() < now) {
+				numbers.add(entry.getKey());
+			}
+		}
+		if (numbers.size() > 0) {
+			for (Long number : numbers) {
+				blockedAnonymousChats.remove(number);
+			}
+			ofy().save().entity(this);
+		}
 	}
 
 	public boolean isBlockedPhone(Long phone) {
-		return blockedChats.containsNumber(phone);
+		return blockedChats.contains(phone);
 	}
 
 	public boolean isBlockedAnonymousPhone(Long phone) {
-		Date date = blockedAnonymousChats.containsNumber(phone);
+		Date date = blockedAnonymousChats.get(phone);
 		if (date != null) {
 			if (date.getTime() < System.currentTimeMillis()) {
-				blockedAnonymousChats.removeNumber(phone);
+				blockedAnonymousChats.remove(phone);
 				date = null;
 				ofy().save().entity(this);
 			}
@@ -165,22 +187,6 @@ public class PhoneUser implements Serializable {
 
 	public void setForthrightChatsDateBlocked(Date forthrightChatsDateBlocked) {
 		this.forthrightChatsDateBlocked = forthrightChatsDateBlocked;
-	}
-
-	public Numbers getBlockedChats() {
-		return blockedChats;
-	}
-
-	public void setBlockedChats(Numbers blockedChats) {
-		this.blockedChats = blockedChats;
-	}
-
-	public NumbersDate getBlockedAnonymousChats() {
-		return blockedAnonymousChats;
-	}
-
-	public void setBlockedAnonymousChats(NumbersDate blockedAnonymousChats) {
-		this.blockedAnonymousChats = blockedAnonymousChats;
 	}
 
 	public void flag(FlagReason flagReason) {

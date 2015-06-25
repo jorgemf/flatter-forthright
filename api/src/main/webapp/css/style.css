@@ -35,8 +35,8 @@ footer p{
 }
 
 header {
-	color: #EDF7FA;
-	background-color: #29B1CC;
+	color: #EEEEEE;
+	background-color: #9C27B0;
 	padding-top: 1.5em;
 	padding-bottom: 1.5em;
 	width: 100%;
@@ -74,7 +74,7 @@ header a:hover{
 
 footer {
 	color: #FFFFFF;
-	background-color: #29B1CC;
+	background-color: #9C27B0;
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
 	margin-top: 4.0em;
@@ -127,16 +127,16 @@ header a {
 h2 {
 	margin-top: 1.5em;
 	font-size: 1.5em;
-	color: #29B1CC;
+	color: #9C27B0;
 }
 
 h3 {
 	font-size: 1.1em;
-	color: #29B1CC;
+	color: #9C27B0;
 }
 
 a {
-	color: #29B1CC;
+	color: #9C27B0;
 	text-decoration: none;
 }
 
@@ -149,13 +149,13 @@ ul.navigation_menu {
 	margin-left: 2.8em;
 	list-style: none;
 	padding: 0;
-	border: solid 1px #EDF7FA;
+	border: solid 1px #EEEEEE;
 }
 
 ul.navigation_menu li {
-	color: #29B1CC;
+	color: #9C27B0;
 	padding: 0.5em 1em 0.5em 1em;
-	border: solid 1px #EDF7FA;
+	border: solid 1px #EEEEEE;
 	display: block;
 }
 

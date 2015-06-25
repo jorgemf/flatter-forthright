@@ -9,8 +9,6 @@ import com.livae.ff.api.model.CommentVote;
 import com.livae.ff.api.model.Conversation;
 import com.livae.ff.api.model.CounterStats;
 import com.livae.ff.api.model.FlagComment;
-import com.livae.ff.api.model.Numbers;
-import com.livae.ff.api.model.NumbersDate;
 import com.livae.ff.api.model.PhoneUser;
 import com.livae.ff.api.model.Stats;
 import com.livae.ff.api.model.Version;
@@ -24,8 +22,6 @@ public class OfyService {
 		factory().register(Conversation.class);
 		factory().register(CounterStats.class);
 		factory().register(FlagComment.class);
-		factory().register(Numbers.class);
-		factory().register(NumbersDate.class);
 		factory().register(PhoneUser.class);
 		factory().register(Stats.class);
 		factory().register(Version.class);

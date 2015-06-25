@@ -2,9 +2,11 @@
 <resources
 	xmlns:tools="http://schemas.android.com/tools"
 	tools:ignore="MissingTranslation">
-	<string name="api.url.development">http://10.0.2.2:8080/_ah/api/</string>
+	<!--<string name="api.url.development">http://10.0.2.2:8080/_ah/api/</string>-->
+	<string name="api.url.development">http://192.168.1.128:8080/_ah/api/</string>
 	<string name="api.url">https://flatter-forthright.appspot.com/_ah/api/</string>
-	<string name="server.url.development">http://10.0.2.2:8080</string>
+	<!--<string name="server.url.development">http://10.0.2.2:8080</string>-->
+	<string name="server.url.development">http://192.168.1.128:8080</string>
 	<string name="server.url">https://flatter-forthright.appspot.com</string>
 	<string name="google.sender_id">912982181540</string>
 	<string name="google.client_id">912982181540-n4jhed6tvtcf9p7prl2svefbu7vkkot9.apps.googleusercontent.com</string>
@@ -12,6 +14,6 @@
 	<string name="rate_app_market_url">market://details?id=%s</string>
 	<string name="rate_app_web_url">https://play.google.com/store/apps/details?id=%s</string>
 
-	<string name="url_terms_conditions">http://flatter-forthright.livae.com/terms.html</string>
+	<string name="url_terms_conditions">http://pensamientos.livae.com/terms.html</string>
 
 </resources>
