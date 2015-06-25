@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sync-adapter
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:contentAuthority="com.example.android.datasync.provider"
 	android:accountType="com.livae.pensamientos"
-	android:userVisible="false"
-	android:supportsUploading="true"
 	android:allowParallelSyncs="false"
-	android:isAlwaysSyncable="true"/>
+	android:contentAuthority="com.livae.ff.app.provider.DataProvider"
+	android:isAlwaysSyncable="true"
+	android:supportsUploading="true"
+	android:userVisible="true"/>

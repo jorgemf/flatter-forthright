@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.livae.ff.api.ff.model.Numbers;
@@ -66,6 +67,9 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		List<LocalContact> appContacts = getAppContacts(contentResolver);
 		ArrayList<ContentProviderOperation> operations = new ArrayList<>();
 		ContentProviderOperation operation;
+		TelephonyManager tm;
+		tm = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+		String countryISO = tm.getSimCountryIso().toUpperCase();
 		for (LocalContact localContact : appContacts) {
 			PhoneContact phoneContact = phoneContacts.get(localContact.rawId);
 			if (phoneContact == null && !localContact.blocked) {
@@ -82,7 +86,8 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 				if (phoneContact.version > localContact.lastVersion) {
 					// update
 					Uri uriUpdate = DataProvider.getUriContact(localContact.id);
-					ContentValues contentValues = phoneContact.getContentValues(localContact);
+					ContentValues contentValues;
+					contentValues = phoneContact.getContentValues(localContact, countryISO);
 					operation = ContentProviderOperation.newUpdate(uriUpdate)
 														.withValues(contentValues).build();
 					operations.add(operation);
@@ -96,7 +101,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		for (PhoneContact phoneContact : phoneContacts.values()) {
 			if (!phoneContact.flag) {
 				// add
-				final ContentValues contentValues = phoneContact.getContentValues();
+				final ContentValues contentValues = phoneContact.getContentValues(countryISO);
 				contentValues.put(Table.LocalUser.ACCEPTS_PRIVATE, false);
 				contentValues.put(Table.LocalUser.BLOCKED, false);
 				operation = ContentProviderOperation.newInsert(uriContacts)
@@ -110,6 +115,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			contentResolver.applyBatch(DataProvider.getAuthority(DataProvider.class), operations);
 		} catch (RemoteException | OperationApplicationException e) {
+			e.printStackTrace();
 			Analytics.logAndReport(e, false);
 		}
 	}
@@ -142,14 +148,23 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 			list.addAll(contacts);
 			numbers.setNumbers(list);
 			Numbers validNumbers = API.endpoint().getContacts(numbers).execute();
-			for (Long phone : validNumbers.getNumbers()) {
-				ContentValues contentValues = new ContentValues();
-				contentValues.put(Table.LocalUser.ACCEPTS_PRIVATE, true);
-				operation = ContentProviderOperation.newUpdate(uriContacts)
-													.withSelection(Table.LocalUser.PHONE + "=?",
-																   new String[]{phone.toString()})
-													.withValues(contentValues).build();
-				operations.add(operation);
+			if (validNumbers != null && validNumbers.size() > 0) {
+				for (Long phone : validNumbers.getNumbers()) {
+					ContentValues contentValues = new ContentValues();
+					contentValues.put(Table.LocalUser.ACCEPTS_PRIVATE, true);
+					final String selection = Table.LocalUser.PHONE + "=?";
+					final String[] selectionArgs = {phone.toString()};
+					operation = ContentProviderOperation.newUpdate(uriContacts)
+														.withSelection(selection, selectionArgs)
+														.withValues(contentValues).build();
+					operations.add(operation);
+				}
+			}
+			try {
+				contentResolver.applyBatch(DataProvider.getAuthority(DataProvider.class),
+										   operations);
+			} catch (RemoteException | OperationApplicationException e) {
+				Analytics.logAndReport(e, false);
 			}
 		} catch (IOException e) {
 			Analytics.logAndReport(e, false);
@@ -261,12 +276,12 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 
 		public Long phone;
 
-		public ContentValues getContentValues() {
-			return getContentValues(null);
+		public ContentValues getContentValues(String countryISO) {
+			return getContentValues(null, countryISO);
 		}
 
-		public ContentValues getContentValues(LocalContact localContact) {
-			phone = getPhone();
+		public ContentValues getContentValues(LocalContact localContact, String countryISO) {
+			phone = getPhone(countryISO);
 			ContentValues contentValues = new ContentValues();
 			if (phone != null) {
 				contentValues.put(Table.LocalUser.PHONE, phone);
@@ -285,13 +300,13 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 			return contentValues;
 		}
 
-		private Long getPhone() {
+		private Long getPhone(String countryISO) {
 			Long number = null;
 			if (normalizedNumber != null) {
-				number = PhoneUtils.getMobileNumber(this.normalizedNumber);
+				number = PhoneUtils.getMobileNumber(this.normalizedNumber, countryISO);
 			}
 			if (number == null) {
-				number = PhoneUtils.getMobileNumber(this.number);
+				number = PhoneUtils.getMobileNumber(this.number, countryISO);
 			}
 			return number;
 		}

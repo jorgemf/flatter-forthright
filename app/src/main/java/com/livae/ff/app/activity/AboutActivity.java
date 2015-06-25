@@ -20,7 +20,7 @@ import com.livae.ff.app.R;
 import com.livae.ff.app.utils.DeviceUtils;
 import com.livae.ff.app.utils.IntentUtils;
 
-public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
+public class AboutActivity extends AbstractActivity implements View.OnClickListener {
 
 	public static void start(Activity activity) {
 		Intent intent = new Intent(activity, AboutActivity.class);

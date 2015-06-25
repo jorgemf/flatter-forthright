@@ -132,9 +132,11 @@ public class Application extends android.app.Application {
 				}
 			}
 		});
-//		SyncUtils.syncContactsEveryDay();
-		SyncUtils.syncContactsWhenChange();
-		SyncUtils.syncContactsNow();
+		if (SyncUtils.isAccountRegistered(this)) {
+//			SyncUtils.syncContactsEveryDay();
+			SyncUtils.syncContactsWhenChange();
+			SyncUtils.syncContactsNow();
+		}
 	}
 
 	public enum TrackerName {

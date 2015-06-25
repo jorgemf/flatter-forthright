@@ -1,5 +1,6 @@
 package com.livae.ff.api.v1.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Numbers {
@@ -7,6 +8,7 @@ public class Numbers {
 	private Collection<Long> numbers;
 
 	public Numbers() {
+		numbers = new ArrayList<>();
 	}
 
 	public Collection<Long> getNumbers() {

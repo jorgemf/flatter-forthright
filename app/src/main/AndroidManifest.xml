@@ -60,7 +60,7 @@
 				android:resource="@xml/authenticator"/>
 		</service>
 
-		<service android:name="service.ContactsSyncService"
+		<service android:name=".service.ContactsSyncService"
 		         android:exported="true"
 		         android:process=":sync">
 			<intent-filter>
@@ -71,7 +71,6 @@
 				android:resource="@xml/syncadapter"/>
 		</service>
 
-		<service android:name=".service.ContactsService"/>
 		<service android:name=".service.GcmIntentService"/>
 
 		<meta-data

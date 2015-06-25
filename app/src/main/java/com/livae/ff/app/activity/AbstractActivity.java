@@ -11,7 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
+import com.livae.ff.app.utils.SyncUtils;
 
 import java.net.ConnectException;
 
@@ -79,6 +81,15 @@ public abstract class AbstractActivity extends AppCompatActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		if (!(this instanceof OnBoardingActivity) && !SyncUtils.isAccountRegistered(this)) {
+			OnBoardingActivity.start(this);
+			finish();
+		}
+	}
+
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 	}
@@ -92,5 +103,4 @@ public abstract class AbstractActivity extends AppCompatActivity {
 		this.toolbar = toolbar;
 		super.setSupportActionBar(toolbar);
 	}
-
 }

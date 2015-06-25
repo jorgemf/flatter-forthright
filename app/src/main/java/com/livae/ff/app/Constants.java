@@ -9,9 +9,7 @@ public class Constants {
 
 	public static final String ACCOUNT_TYPE = "com.livae.pensamientos";
 
-	private static final String DEV_SUFFIX = (BuildConfig.DEV ? "-dev" : "");
-
-	public static final String ACCOUNT_SUFFIX = DEV_SUFFIX + "@pensamientos.livae.com";
+	public static final String ACCOUNT_SUFFIX = (BuildConfig.DEV ? "-dev" : "");
 
 	public enum COUNTRY {
 		AC(R.string.country_ac, "+247"/*, R.drawable.flag_ac*/),

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.livae.ff.app.AppUser;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.provider.DataProvider;
@@ -19,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 public class SyncUtils {
 
 	private static final String LOG_TAG = "SYNC_UTILS";
+
+	private static final String USER_DATA_PHONE = "user.phone";
 
 	public static void createAccount(Context context, Long phone) {
 		final String name = phone.toString() + Constants.ACCOUNT_SUFFIX;
@@ -30,6 +33,7 @@ public class SyncUtils {
 			syncContactsWhenChange();
 //			syncContactsEveryDay();
 			syncContactsNow();
+			accountManager.setUserData(account, USER_DATA_PHONE, phone.toString());
 		} else {
 			Log.w(LOG_TAG, "Could not create the account, maybe it exists before.");
 		}
@@ -82,6 +86,24 @@ public class SyncUtils {
 			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 			ContentResolver.requestSync(account, authority, settingsBundle);
 		}
+	}
+
+	public static boolean isAccountRegistered(Context context) {
+		final AppUser appUser = Application.appUser();
+		final Long phone = appUser.getUserPhone();
+		boolean registered = false;
+		if (phone != null) {
+			final String name = phone.toString() + Constants.ACCOUNT_SUFFIX;
+			final Account account = new Account(name, Constants.ACCOUNT_TYPE);
+			AccountManager accountManager;
+			accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
+			registered = accountManager.getUserData(account, USER_DATA_PHONE) != null;
+		}
+		if (!registered) {
+			appUser.setUserPhone(null);
+			appUser.setAccessToken(null);
+		}
+		return registered;
 	}
 
 }

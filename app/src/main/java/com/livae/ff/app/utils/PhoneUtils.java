@@ -11,15 +11,15 @@ public class PhoneUtils {
 
 	private static final String LOG_TAG = "PHONE_UTILS";
 
-	public static Long getMobileNumber(String phone) {
-		return getMobileNumber(phone, null);
-	}
-
 	public static Long getMobileNumber(String phone, String countryISO) {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		Phonenumber.PhoneNumber phoneNumber;
 		try {
-			phoneNumber = phoneUtil.parse(phone, "");
+			if (phone.startsWith("+")) {
+				phoneNumber = phoneUtil.parse(phone, null);
+			} else {
+				phoneNumber = phoneUtil.parse(phone, "");
+			}
 		} catch (NumberParseException e) {
 			if (e.getErrorType() == NumberParseException.ErrorType.INVALID_COUNTRY_CODE &&
 				countryISO != null) {

@@ -206,6 +206,9 @@ public class DataProvider extends AbstractProvider {
 					getWritableDatabase().insert(Table.LocalUser.NAME, null, values);
 				}
 				break;
+			case URI_CONTACTS:
+				long id = getWritableDatabase().insert(Table.LocalUser.NAME, null, values);
+				return getUriContact(id);
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
