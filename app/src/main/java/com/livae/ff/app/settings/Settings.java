@@ -1,5 +1,10 @@
-package com.livae.ff.app;
+package com.livae.ff.app.settings;
 
+import com.livae.ff.app.Application;
+import com.livae.ff.app.BuildConfig;
+import com.livae.ff.app.R;
+
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("ConstantConditions")
@@ -35,6 +40,14 @@ public class Settings {
 	public static class Pref {
 
 		public static final String VERSION_CHECK_TIME = "ff.version.time_check";
+	}
+
+	public static class Notifications {
+
+		public static final int ID_CHAT = 1;
+
+		public static final int ID_MESSAGE = 2;
+
 	}
 
 }

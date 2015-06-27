@@ -4,7 +4,7 @@ import com.livae.ff.common.Constants;
 
 import java.util.Date;
 
-public class PushComment {
+public class NotificationComment implements Notification {
 
 	private Long id;
 
@@ -20,7 +20,9 @@ public class PushComment {
 
 	private Boolean isMe;
 
-	private Constants.UserMark userMark;
+	private String userMark;
+
+	private String conversationType;
 
 	public Long getId() {
 		return id;
@@ -78,11 +80,23 @@ public class PushComment {
 		this.isMe = isMe;
 	}
 
-	public Constants.UserMark getUserMark() {
+	public String getUserMark() {
 		return userMark;
 	}
 
-	public void setUserMark(Constants.UserMark userMark) {
+	public void setUserMark(String userMark) {
 		this.userMark = userMark;
+	}
+
+	public String getConversationType() {
+		return conversationType;
+	}
+
+	public void setConversationType(String conversationType) {
+		this.conversationType = conversationType;
+	}
+
+	public Constants.PushNotificationType getType() {
+		return Constants.PushNotificationType.COMMENT;
 	}
 }

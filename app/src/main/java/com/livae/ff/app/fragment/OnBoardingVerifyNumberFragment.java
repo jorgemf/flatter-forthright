@@ -38,7 +38,7 @@ import com.livae.ff.app.Analytics;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.R;
-import com.livae.ff.app.Settings;
+import com.livae.ff.app.settings.Settings;
 import com.livae.ff.app.activity.OnBoardingActivity;
 import com.livae.ff.app.adapter.CountriesArrayAdapter;
 import com.livae.ff.app.async.Callback;

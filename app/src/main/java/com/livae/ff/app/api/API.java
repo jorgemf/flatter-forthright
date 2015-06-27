@@ -15,7 +15,7 @@ import com.livae.ff.api.ff.model.Version;
 import com.livae.ff.app.AppUser;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.BuildConfig;
-import com.livae.ff.app.Settings;
+import com.livae.ff.app.settings.Settings;
 import com.livae.ff.common.Constants;
 
 import java.io.IOException;

@@ -15,8 +15,13 @@ import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.adapter.ChatsFragmentsAdapter;
+import com.livae.ff.app.receiver.NotificationDisabledReceiver;
+import com.livae.ff.common.model.Notification;
 
-public class ChatsActivity extends AbstractActivity {
+public class ChatsActivity extends AbstractActivity implements
+													NotificationDisabledReceiver.CloudMessagesDisabledListener {
+
+	private NotificationDisabledReceiver notificationDisabledReceiver;
 
 	public static void start(Activity activity) {
 		Intent intent = new Intent(activity, ChatsActivity.class);
@@ -29,15 +34,28 @@ public class ChatsActivity extends AbstractActivity {
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+		notificationDisabledReceiver.unregister(this);
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		Analytics.screen(Analytics.Screen.CHATS);
+		notificationDisabledReceiver.register(this);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.chats_menu, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onNotificationReceived(Notification notification) {
+		// TODO
+		return false;
 	}
 
 	@Override
@@ -65,6 +83,9 @@ public class ChatsActivity extends AbstractActivity {
 			OnBoardingActivity.start(this);
 			finish();
 		} else {
+			notificationDisabledReceiver = new NotificationDisabledReceiver();
+			notificationDisabledReceiver.setListener(this);
+
 			setContentView(R.layout.activity_chats);
 
 			Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

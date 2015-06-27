@@ -3,6 +3,8 @@ package com.livae.ff.app;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.livae.ff.app.settings.Notifications;
+import com.livae.ff.app.settings.Settings;
 import com.livae.ff.common.Constants.Profile;
 
 public class AppUser {
@@ -19,8 +21,6 @@ public class AppUser {
 
 	private static final String USER_BLOCKED_FORTHRIGHT_CHATS = "ff.user.blocked_forthright_chats";
 
-	private static final String VERIFICATION_TOKEN = "ff.app.verification_token";
-
 	private Long blockedForthRightChats;
 
 	private Integer appVersion;
@@ -35,8 +35,11 @@ public class AppUser {
 
 	private SharedPreferences prefs;
 
+	private Notifications notifications;
+
 	protected AppUser(Context context) {
 		load(context.getApplicationContext());
+		notifications = new Notifications(prefs);
 	}
 
 	private void load(Context context) {
@@ -107,6 +110,15 @@ public class AppUser {
 		return profile;
 	}
 
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+		if (profile == null) {
+			prefs.edit().putString(USER_PROFILE, null).apply();
+		} else {
+			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
+		}
+	}
+
 	public void setProfile(String profile) {
 		try {
 			if (profile == null) {
@@ -119,15 +131,6 @@ public class AppUser {
 		}
 	}
 
-	public void setProfile(Profile profile) {
-		this.profile = profile;
-		if (profile == null) {
-			prefs.edit().putString(USER_PROFILE, null).apply();
-		} else {
-			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
-		}
-	}
-
 	public String getCloudMessagesId() {
 		return cloudMessagesId;
 	}
@@ -135,6 +138,19 @@ public class AppUser {
 	public void setCloudMessagesId(String cloudMessagesId) {
 		this.cloudMessagesId = cloudMessagesId;
 		prefs.edit().putString(CLOUD_MESSAGES_ID, cloudMessagesId).apply();
+	}
+
+	public Notifications getNotifications() {
+		return notifications;
+	}
+
+	public String toString() {
+		return "[userPhone = " + userPhone + "] " +
+			   "[accessToken = " + accessToken + "] " +
+			   "[cloudMessagesId = " + cloudMessagesId + "] " +
+			   "[appVersion = " + appVersion + "] " +
+			   "[profile = " + profile + "] " +
+			   "[blockedForthRightChats = " + blockedForthRightChats + "] ";
 	}
 
 }

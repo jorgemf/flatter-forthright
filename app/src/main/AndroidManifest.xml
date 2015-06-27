@@ -51,7 +51,7 @@
 		<activity android:name="com.livae.ff.app.activity.AboutActivity"/>
 		<activity android:name="com.livae.ff.app.activity.OnBoardingActivity"/>
 
-		<service android:name=".service.AuthenticatorService">
+		<service android:name="com.livae.ff.app.service.AuthenticatorService">
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator"/>
 			</intent-filter>
@@ -60,7 +60,7 @@
 				android:resource="@xml/authenticator"/>
 		</service>
 
-		<service android:name=".service.ContactsSyncService"
+		<service android:name="com.livae.ff.app.service.ContactsSyncService"
 		         android:exported="true"
 		         android:process=":sync">
 			<intent-filter>
@@ -71,7 +71,7 @@
 				android:resource="@xml/syncadapter"/>
 		</service>
 
-		<service android:name=".service.GcmIntentService"/>
+		<service android:name="com.livae.ff.app.service.CloudMessagesService"/>
 
 		<meta-data
 			android:name="com.google.android.gms.version"

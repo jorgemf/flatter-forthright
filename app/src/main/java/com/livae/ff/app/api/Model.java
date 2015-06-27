@@ -13,6 +13,7 @@ import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.provider.DataProvider;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.common.Constants.FlagReason;
+import com.livae.ff.common.model.Notification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,5 +150,9 @@ public class Model {
 		val.put(Table.LocalUser.BLOCKED, blocked);
 
 		phonesList.add(val);
+	}
+
+	public void parse(Notification notification) {
+		// TODO
 	}
 }

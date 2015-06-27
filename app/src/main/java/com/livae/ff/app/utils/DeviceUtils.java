@@ -12,7 +12,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.BuildConfig;
-import com.livae.ff.app.Settings;
+import com.livae.ff.app.settings.Settings;
 
 import java.io.IOException;
 import java.security.MessageDigest;

@@ -3,10 +3,11 @@ package com.livae.ff.api.servlet.worker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.livae.ff.api.model.Comment;
+import com.livae.ff.api.model.Conversation;
 import com.livae.ff.api.model.PhoneUser;
 import com.livae.ff.api.util.NotificationsUtil;
 import com.livae.ff.common.Constants.PushNotificationType;
-import com.livae.ff.common.model.PushComment;
+import com.livae.ff.common.model.NotificationComment;
 
 import java.io.IOException;
 
@@ -32,7 +33,8 @@ public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 		}
 		try {
 			comment.setIsMe(user.getPhone().equals(comment.getUserId()));
-			NotificationsUtil.sendPushNotification(user, createNotification(comment),
+			Conversation conversation = Conversation.get(comment.getConversationId());
+			NotificationsUtil.sendPushNotification(user, createNotification(comment, conversation),
 												   PushNotificationType.COMMENT);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,16 +43,17 @@ public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 
 	}
 
-	private String createNotification(Comment comment) {
-		PushComment pushComment = new PushComment();
-		pushComment.setId(comment.getId());
-		pushComment.setIsMe(comment.getIsMe());
-		pushComment.setComment(comment.getComment());
-		pushComment.setDate(comment.getDate());
-		pushComment.setAlias(comment.getAlias());
-		pushComment.setAliasId(comment.getAliasId());
-		pushComment.setUserMark(comment.getUserMark());
+	private String createNotification(Comment comment, Conversation conversation) {
+		NotificationComment notificationComment = new NotificationComment();
+		notificationComment.setId(comment.getId());
+		notificationComment.setIsMe(comment.getIsMe());
+		notificationComment.setComment(comment.getComment());
+		notificationComment.setDate(comment.getDate());
+		notificationComment.setAlias(comment.getAlias());
+		notificationComment.setAliasId(comment.getAliasId());
+		notificationComment.setUserMark(comment.getUserMark().name());
+		notificationComment.setConversationType(conversation.getType().name());
 		Gson gson = new GsonBuilder().create();
-		return gson.toJson(pushComment);
+		return gson.toJson(notificationComment);
 	}
 }
