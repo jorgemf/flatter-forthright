@@ -15,9 +15,9 @@
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
 		android:layout_alignParentTop="true"
-		android:layout_marginEnd="@dimen/space_normal"
-		android:layout_marginRight="@dimen/space_normal"
-		tools:src="@drawable/button_floating_action"/>
+		android:layout_marginEnd="@dimen/space_large"
+		android:layout_marginRight="@dimen/space_large"
+		tools:src="@drawable/anom_user"/>
 
 	<TextView
 		android:id="@+id/user_name"
@@ -27,8 +27,8 @@
 		android:layout_toEndOf="@id/user_image"
 		android:layout_toRightOf="@id/user_image"
 		android:maxLines="1"
-		tools:text="@string/lorem_ipsum"
-		android:textAppearance="?android:attr/textAppearanceLarge"/>
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		tools:text="@string/lorem_ipsum"/>
 
 	<TextView
 		android:id="@+id/user_phone"
@@ -40,7 +40,7 @@
 		android:layout_below="@id/user_name"
 		android:layout_marginTop="@dimen/space_small"
 		android:lines="1"
-		tools:text="@string/lorem_ipsum"
-		android:textAppearance="?android:attr/textAppearanceMedium"/>
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		tools:text="@string/lorem_ipsum"/>
 
 </RelativeLayout>
