@@ -16,9 +16,9 @@ public class ChatsFragmentsAdapter extends FragmentPagerAdapter {
 
 	public static final int CHAT_FLATTERED = 0;
 
-	public static final int CHAT_FORTHRIGHT = 1;
+	public static final int CHAT_PRIVATE = 1;
 
-	public static final int CHAT_PRIVATE = 2;
+	public static final int CHAT_FORTHRIGHT = 2;
 
 	private SparseArray<Fragment> registeredFragments;
 

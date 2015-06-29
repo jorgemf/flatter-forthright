@@ -1,8 +1,10 @@
 package com.livae.ff.app.activity;
 
+import android.animation.ArgbEvaluator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,8 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
@@ -36,7 +36,23 @@ public class ChatsActivity extends AbstractActivity
 
 	private FloatingActionButton floatingActionButton;
 
-	private int floatingActionButtonTranslation;
+	private ArgbEvaluator argbEvaluator;
+
+	private int colorFlatterer;
+
+	private int colorForthright;
+
+	private int colorPrivate;
+
+	private int colorFlattererDarker;
+
+	private int colorForthrightDarker;
+
+	private int colorPrivateDarker;
+
+	private TabLayout tabLayout;
+
+	private Toolbar toolbar;
 
 	public static void start(Activity activity) {
 		Intent intent = new Intent(activity, ChatsActivity.class);
@@ -136,45 +152,69 @@ public class ChatsActivity extends AbstractActivity
 
 			setContentView(R.layout.activity_chats);
 			floatingActionButton = (FloatingActionButton) findViewById(R.id.create_chat_button);
-			floatingActionButton.post(new Runnable() {
-				@Override
-				public void run() {
-					ViewGroup.MarginLayoutParams mlp;
-					mlp = (ViewGroup.MarginLayoutParams) floatingActionButton.getLayoutParams();
-					floatingActionButtonTranslation =
-					  floatingActionButton.getWidth() + mlp.rightMargin;
-				}
-			});
+			argbEvaluator = new ArgbEvaluator();
+			Resources res = getResources();
+			colorFlatterer = res.getColor(R.color.pink);
+			colorPrivate = res.getColor(R.color.purple);
+			colorForthright = res.getColor(R.color.deep_purple);
+			colorFlattererDarker = res.getColor(R.color.pink_dark);
+			colorPrivateDarker = res.getColor(R.color.purple_dark);
+			colorForthrightDarker = res.getColor(R.color.deep_purple_dark);
 
-			Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+			toolbar = (Toolbar) findViewById(R.id.toolbar);
 			setSupportActionBar(toolbar);
-			TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+			tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 //			tabLayout.addTab(tabLayout.newTab().setCustomView());
 			ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
 			viewPager.addOnPageChangeListener(this);
+			viewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.space_normal));
+			viewPager.setPageMarginDrawable(R.color.black_light);
 			chatsFragmentsAdapter = new ChatsFragmentsAdapter(getSupportFragmentManager(),
 															  getResources());
 			viewPager.setAdapter(chatsFragmentsAdapter);
 			tabLayout.setupWithViewPager(viewPager);
+			viewPager.setCurrentItem(ChatsFragmentsAdapter.CHAT_PRIVATE);
 		}
 	}
 
 	@Override
 	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-		if (position == ChatsFragmentsAdapter.CHAT_PRIVATE - 1) {
-			floatingActionButton.setTranslationX(floatingActionButtonTranslation *
-												 (1 - positionOffset));
+		int color = colorPrivate;
+		int statusBarColor = colorPrivate;
+		switch (position) {
+			case ChatsFragmentsAdapter.CHAT_FLATTERED:
+				color = (Integer) argbEvaluator.evaluate(positionOffset, colorFlatterer,
+														 colorPrivate);
+				statusBarColor = (Integer) argbEvaluator.evaluate(positionOffset,
+																  colorFlattererDarker,
+																  colorPrivateDarker);
+				if (positionOffsetPixels > 0) {
+					int totalPixels = (int) (positionOffsetPixels / positionOffset);
+					floatingActionButton.setTranslationX(totalPixels - positionOffsetPixels);
+				}
+				break;
+			case ChatsFragmentsAdapter.CHAT_PRIVATE:
+				color = (Integer) argbEvaluator.evaluate(positionOffset, colorPrivate,
+														 colorForthright);
+				statusBarColor = (Integer) argbEvaluator.evaluate(positionOffset,
+																  colorPrivateDarker,
+																  colorForthrightDarker);
+				floatingActionButton.setTranslationX(-positionOffsetPixels);
+				break;
+			case ChatsFragmentsAdapter.CHAT_FORTHRIGHT:
+				color = colorForthright;
+				statusBarColor = colorForthrightDarker;
+				break;
+		}
+		toolbar.setBackgroundColor(color);
+		tabLayout.setBackgroundColor(color);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().setStatusBarColor(statusBarColor);
 		}
 	}
 
 	@Override
 	public void onPageSelected(int position) {
-		if (position != ChatsFragmentsAdapter.CHAT_PRIVATE) {
-			floatingActionButton.setVisibility(View.GONE);
-			floatingActionButton.setTranslationX(0);
-		} else {
-			floatingActionButton.setVisibility(View.VISIBLE);
-		}
 	}
 
 	@Override
