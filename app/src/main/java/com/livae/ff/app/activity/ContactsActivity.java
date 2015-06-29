@@ -2,15 +2,12 @@ package com.livae.ff.app.activity;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
 import com.livae.ff.app.Analytics;
-import com.livae.ff.app.fragment.ContactsFragment;
-import com.livae.ff.common.Constants;
 
 public class ContactsActivity extends AbstractActivity implements View.OnClickListener {
 

@@ -9,6 +9,12 @@ public class FlagConversation {
 	public FlagConversation() {
 	}
 
+	public FlagConversation(Long conversationId, Long time) {
+
+		this.conversationId = conversationId;
+		this.time = time;
+	}
+
 	public Long getConversationId() {
 		return conversationId;
 	}
@@ -22,12 +28,6 @@ public class FlagConversation {
 	}
 
 	public void setTime(Long time) {
-		this.time = time;
-	}
-
-	public FlagConversation(Long conversationId, Long time) {
-
-		this.conversationId = conversationId;
 		this.time = time;
 	}
 }

@@ -19,9 +19,17 @@ public class PublicChatsFragment extends AbstractFragment implements UserClickLi
 
 	private static final String SAVE_COMMENT_TYPE = "SAVE_COMMENT_TYPE";
 
+	protected PublicChatsAdapter publicChatsAdapter;
+
 	private Constants.ChatType chatType;
 
-	protected PublicChatsAdapter publicChatsAdapter;
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			chatType = (Constants.ChatType) savedInstanceState.getSerializable(SAVE_COMMENT_TYPE);
+		}
+	}
 
 	@Nullable
 	@Override
@@ -37,14 +45,6 @@ public class PublicChatsFragment extends AbstractFragment implements UserClickLi
 		publicChatsAdapter = new PublicChatsAdapter(getActivity(), this);
 		recyclerView.setAdapter(publicChatsAdapter);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-	}
-
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (savedInstanceState != null) {
-			chatType = (Constants.ChatType) savedInstanceState.getSerializable(SAVE_COMMENT_TYPE);
-		}
 	}
 
 	@Override

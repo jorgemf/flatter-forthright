@@ -26,11 +26,11 @@ public class ChatsFragmentsAdapter extends FragmentPagerAdapter {
 	public Fragment getItem(int position) {
 		switch (position) {
 			case 0:
-				PublicChatsFragment flatterer= new PublicChatsFragment();
+				PublicChatsFragment flatterer = new PublicChatsFragment();
 				flatterer.setChatType(Constants.ChatType.FLATTER);
 				return flatterer;
 			case 1:
-				PublicChatsFragment forthright= new PublicChatsFragment();
+				PublicChatsFragment forthright = new PublicChatsFragment();
 				forthright.setChatType(Constants.ChatType.FORTHRIGHT);
 				return forthright;
 			case 2:

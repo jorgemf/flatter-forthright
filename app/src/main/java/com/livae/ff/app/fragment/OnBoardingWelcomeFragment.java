@@ -28,7 +28,7 @@ public class OnBoardingWelcomeFragment extends AbstractFragment implements View.
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.button:
-				OnBoardingActivity onBoardingActivity = (OnBoardingActivity)getActivity();
+				OnBoardingActivity onBoardingActivity = (OnBoardingActivity) getActivity();
 				onBoardingActivity.nextStep();
 				break;
 		}

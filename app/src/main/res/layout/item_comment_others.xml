@@ -35,9 +35,9 @@
 		android:translationZ="@dimen/space_normal"/>
 
 	<View
-		android:layout_below="@id/card_view"
 		android:id="@+id/extra_padding"
 		android:layout_width="wrap_content"
-		android:layout_height="@dimen/space_normal"/>
+		android:layout_height="@dimen/space_normal"
+		android:layout_below="@id/card_view"/>
 
 </RelativeLayout>

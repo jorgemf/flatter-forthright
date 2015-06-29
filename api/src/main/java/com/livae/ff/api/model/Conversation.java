@@ -117,12 +117,12 @@ public class Conversation {
 		return phones;
 	}
 
-	public void setPhones(Long p1, Long p2) {
-		setPhones(mixPhones(p1, p2));
-	}
-
 	public void setPhones(String phones) {
 		this.phones = phones;
+	}
+
+	public void setPhones(Long p1, Long p2) {
+		setPhones(mixPhones(p1, p2));
 	}
 
 	public void addUserNotification(Long user, Date timeout) {

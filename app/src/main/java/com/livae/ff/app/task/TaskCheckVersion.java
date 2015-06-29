@@ -6,9 +6,9 @@ import android.preference.PreferenceManager;
 
 import com.livae.ff.api.ff.model.Version;
 import com.livae.ff.app.BuildConfig;
-import com.livae.ff.app.settings.Settings;
 import com.livae.ff.app.api.API;
 import com.livae.ff.app.async.NetworkAsyncTask;
+import com.livae.ff.app.settings.Settings;
 
 public class TaskCheckVersion extends NetworkAsyncTask<Void, Version> {
 

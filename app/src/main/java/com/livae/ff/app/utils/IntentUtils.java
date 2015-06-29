@@ -7,7 +7,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 
-import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.R;
 

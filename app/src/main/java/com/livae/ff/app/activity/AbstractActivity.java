@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.utils.SyncUtils;
 

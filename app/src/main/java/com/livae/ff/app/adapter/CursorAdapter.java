@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
 
 import javax.annotation.Nonnull;
 
@@ -41,11 +40,9 @@ public abstract class CursorAdapter<k extends RecyclerView.ViewHolder>
 		int size = getItemCount();
 		if (position >= 0 && position < size) {
 			cursor.moveToPosition(position);
-			bindCustomViewHolder( viewHolder, position, cursor);
+			bindCustomViewHolder(viewHolder, position, cursor);
 		}
 	}
-
-	protected abstract void bindCustomViewHolder(k viewHolder, int position, Cursor cursor);
 
 	@Override
 	public long getItemId(int position) {
@@ -62,5 +59,7 @@ public abstract class CursorAdapter<k extends RecyclerView.ViewHolder>
 	public int getItemCount() {
 		return cursor == null ? 0 : cursor.getCount();
 	}
+
+	protected abstract void bindCustomViewHolder(k viewHolder, int position, Cursor cursor);
 
 }

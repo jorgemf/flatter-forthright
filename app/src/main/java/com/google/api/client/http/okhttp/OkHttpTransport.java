@@ -43,10 +43,11 @@ import javax.net.ssl.SSLSocketFactory;
  * socket should be returned to a pool of connected sockets. More information is available <a
  * href='http://docs.oracle.com/javase/7/docs/technotes/guides/net/http-keepalive.html'>here</a>.
  * </p> <p/> <p> We honor the default global caching behavior. To change the default behavior use
- * {@link java.net.HttpURLConnection#setDefaultUseCaches(boolean)}. </p> <p/> <p> Upgrade warning: in prior
- * version 1.14 caching was always disabled, but starting with version 1.15 we honor the default
- * global caching behavior. </p> <p/> <p> Implementation is thread-safe. For maximum efficiency,
- * applications should use a single globally-shared instance of the HTTP transport. </p>
+ * {@link java.net.HttpURLConnection#setDefaultUseCaches(boolean)}. </p> <p/> <p> Upgrade warning:
+ * in prior version 1.14 caching was always disabled, but starting with version 1.15 we honor the
+ * default global caching behavior. </p> <p/> <p> Implementation is thread-safe. For maximum
+ * efficiency, applications should use a single globally-shared instance of the HTTP transport.
+ * </p>
  *
  * @author Yaniv Inbar
  * @since 1.0
@@ -54,8 +55,8 @@ import javax.net.ssl.SSLSocketFactory;
 public final class OkHttpTransport extends HttpTransport {
 
 	/**
-	 * All valid request methods as specified in {@link java.net.HttpURLConnection#setRequestMethod}, sorted
-	 * in ascending alphabetical order.
+	 * All valid request methods as specified in {@link java.net.HttpURLConnection#setRequestMethod},
+	 * sorted in ascending alphabetical order.
 	 */
 	private static final String[] SUPPORTED_METHODS = {HttpMethods.DELETE, HttpMethods.GET,
 													   HttpMethods.HEAD, HttpMethods.OPTIONS,
@@ -205,8 +206,8 @@ public final class OkHttpTransport extends HttpTransport {
 
 		/**
 		 * Sets the SSL socket factory based root certificates generated from the specified stream
-		 * using {@link java.security.cert.CertificateFactory#generateCertificates(java.io.InputStream)}. <p/> <p> Example
-		 * usage: </p>
+		 * using {@link java.security.cert.CertificateFactory#generateCertificates(java.io.InputStream)}.
+		 * <p/> <p> Example usage: </p>
 		 * <p/>
 		 * <pre>
 		 * trustCertificatesFromStream(new FileInputStream("certs.pem"));
@@ -230,8 +231,8 @@ public final class OkHttpTransport extends HttpTransport {
 		 * Sets the SSL socket factory based on a root certificate trust store.
 		 *
 		 * @param trustStore
-		 *   certificate trust store (use for example {@link com.google.api.client.util.SecurityUtils#loadKeyStore} or {@link
-		 *   com.google.api.client.util.SecurityUtils#loadKeyStoreFromCertificates})
+		 *   certificate trust store (use for example {@link com.google.api.client.util.SecurityUtils#loadKeyStore}
+		 *   or {@link com.google.api.client.util.SecurityUtils#loadKeyStoreFromCertificates})
 		 * @since 1.14
 		 */
 		public Builder trustCertificates(KeyStore trustStore) throws GeneralSecurityException {
@@ -241,11 +242,11 @@ public final class OkHttpTransport extends HttpTransport {
 		}
 
 		/**
-		 * {@link com.google.api.client.util.Beta} <br/> Disables validating server SSL certificates by setting the SSL socket
-		 * factory using {@link com.google.api.client.util.SslUtils#trustAllSSLContext()} for the SSL context and {@link
-		 * com.google.api.client.util.SslUtils#trustAllHostnameVerifier()} for the host name verifier. <p/> <p> Be careful!
-		 * Disabling certificate validation is dangerous and should only be done in testing
-		 * environments. </p>
+		 * {@link com.google.api.client.util.Beta} <br/> Disables validating server SSL certificates
+		 * by setting the SSL socket factory using {@link com.google.api.client.util.SslUtils#trustAllSSLContext()}
+		 * for the SSL context and {@link com.google.api.client.util.SslUtils#trustAllHostnameVerifier()}
+		 * for the host name verifier. <p/> <p> Be careful! Disabling certificate validation is
+		 * dangerous and should only be done in testing environments. </p>
 		 */
 		@Beta
 		public Builder doNotValidateCertificate() throws GeneralSecurityException {

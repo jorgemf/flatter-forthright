@@ -11,10 +11,10 @@ import javax.annotation.Nonnull;
 
 public class PublicChatsAdapter extends UsersAdapter {
 
-	private int iConversationId;
-
 	public static final String[] PROJECTION = {Table.Conversation.ID, Table.LocalUser.CONTACT_NAME,
 											   Table.LocalUser.PHONE, Table.LocalUser.IMAGE_URI};
+
+	private int iConversationId;
 
 	public PublicChatsAdapter(@Nonnull Context context,
 							  @Nonnull UserClickListener userClickListener) {

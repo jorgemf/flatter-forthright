@@ -23,11 +23,11 @@
 	<ImageView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:src="@drawable/background"
 		android:alpha="0.7"
-		android:scaleType="centerCrop"
+		android:layout_above="@id/bottom_view"
 		android:layout_below="@id/top_view"
-		android:layout_above="@id/bottom_view"/>
+		android:scaleType="centerCrop"
+		android:src="@drawable/background"/>
 
 	<FrameLayout
 		android:id="@+id/container"

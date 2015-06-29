@@ -5,7 +5,6 @@ import android.content.Context;
 import com.livae.ff.app.R;
 
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;

@@ -27,12 +27,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
 	}
 
 	@Override
-	public String getAuthTokenLabel(String s) {
-		// Getting a label for the auth token is not supported
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public Bundle confirmCredentials(AccountAuthenticatorResponse r, Account account, Bundle bundle)
 	  throws NetworkErrorException {
 		// Ignore attempts to confirm credentials
@@ -43,6 +37,12 @@ public class Authenticator extends AbstractAccountAuthenticator {
 	public Bundle getAuthToken(AccountAuthenticatorResponse r, Account account, String s,
 							   Bundle bundle) throws NetworkErrorException {
 		// Getting an authentication token is not supported
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String getAuthTokenLabel(String s) {
+		// Getting a label for the auth token is not supported
 		throw new UnsupportedOperationException();
 	}
 

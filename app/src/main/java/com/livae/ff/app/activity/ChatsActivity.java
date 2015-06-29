@@ -18,8 +18,8 @@ import com.livae.ff.app.adapter.ChatsFragmentsAdapter;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.common.model.Notification;
 
-public class ChatsActivity extends AbstractActivity implements
-													NotificationDisabledReceiver.CloudMessagesDisabledListener {
+public class ChatsActivity extends AbstractActivity
+  implements NotificationDisabledReceiver.CloudMessagesDisabledListener {
 
 	private NotificationDisabledReceiver notificationDisabledReceiver;
 
@@ -37,13 +37,6 @@ public class ChatsActivity extends AbstractActivity implements
 	protected void onPause() {
 		super.onPause();
 		notificationDisabledReceiver.unregister(this);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Analytics.screen(Analytics.Screen.CHATS);
-		notificationDisabledReceiver.register(this);
 	}
 
 	@Override
@@ -74,6 +67,13 @@ public class ChatsActivity extends AbstractActivity implements
 				return super.onOptionsItemSelected(menuItem);
 		}
 		return true;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Analytics.screen(Analytics.Screen.CHATS);
+		notificationDisabledReceiver.register(this);
 	}
 
 	@Override

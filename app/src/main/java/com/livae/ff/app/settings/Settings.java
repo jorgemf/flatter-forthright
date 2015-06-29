@@ -4,7 +4,6 @@ import com.livae.ff.app.Application;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.R;
 
-import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("ConstantConditions")

@@ -7,18 +7,18 @@
 
 	<android.support.design.widget.AppBarLayout
 		android:id="@+id/bar_layout"
-		android:layout_gravity="top"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+		android:layout_gravity="top">
 
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/toolbar"
-			app:titleMarginStart="@dimen/space_huge"
-			app:titleMarginEnd="@dimen/space_huge"
 			android:layout_width="match_parent"
 			android:layout_height="?actionBarSize"
 			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-			app:title="@string/on_boarding_warning_title"/>
+			app:title="@string/on_boarding_warning_title"
+			app:titleMarginEnd="@dimen/space_huge"
+			app:titleMarginStart="@dimen/space_huge"/>
 
 	</android.support.design.widget.AppBarLayout>
 
@@ -33,16 +33,16 @@
 		android:layout_marginRight="@dimen/space_huge"
 		android:layout_marginTop="@dimen/space_on_boarding"
 		android:lineSpacingMultiplier="1.2"
-		android:typeface="serif"
 		android:shadowColor="@color/white"
 		android:text="@string/on_boarding_warning"
-		android:textAppearance="?android:attr/textAppearanceLarge"/>
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:typeface="serif"/>
 
 	<Button
 		android:id="@+id/button"
-		android:background="@drawable/button_action"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:background="@drawable/button_action"
 		android:layout_alignParentBottom="true"
 		android:layout_gravity="bottom"
 		android:text="@string/button_continue"/>

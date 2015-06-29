@@ -13,8 +13,7 @@ public class NotificationReceiver extends WakefulBroadcastReceiver {
 
 	@SuppressWarnings("ConstantConditions")
 	public static final String INTENT_ACTION =
-	  BuildConfig.DEV ? "com.livae.ff.app.dev.intent.RECEIVE"
-					  : "com.livae.ff.app.intent.RECEIVE";
+	  BuildConfig.DEV ? "com.livae.ff.app.dev.intent.RECEIVE" : "com.livae.ff.app.intent.RECEIVE";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
