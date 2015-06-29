@@ -13,9 +13,12 @@ import android.widget.TextView;
 import com.livae.ff.app.R;
 import com.livae.ff.app.adapter.PublicChatsAdapter;
 import com.livae.ff.app.listener.UserClickListener;
+import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.common.Constants;
+import com.livae.ff.common.model.Notification;
 
-public class PublicChatsFragment extends AbstractFragment implements UserClickListener {
+public class PublicChatsFragment extends AbstractFragment
+  implements UserClickListener, NotificationDisabledReceiver.CloudMessagesDisabledListener {
 
 	private static final String SAVE_COMMENT_TYPE = "SAVE_COMMENT_TYPE";
 
@@ -64,5 +67,16 @@ public class PublicChatsFragment extends AbstractFragment implements UserClickLi
 	@Override
 	public void userClicked(Long userId, Long conversationId, TextView name, ImageView image) {
 		// TODO
+	}
+
+	@Override
+	public boolean onNotificationReceived(Notification notification) {
+		// TODO
+		return true;
+	}
+
+	public int getUnreadChats() {
+		// TODO
+		return 1;
 	}
 }

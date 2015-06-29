@@ -12,9 +12,12 @@ import android.widget.TextView;
 import com.livae.ff.app.R;
 import com.livae.ff.app.adapter.ConversationsAdapter;
 import com.livae.ff.app.listener.ConversationClickListener;
+import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.common.Constants;
+import com.livae.ff.common.model.Notification;
 
-public class ChatsFragment extends AbstractFragment implements ConversationClickListener {
+public class ChatsFragment extends AbstractFragment
+  implements ConversationClickListener, NotificationDisabledReceiver.CloudMessagesDisabledListener {
 
 	private ConversationsAdapter conversationsAdapter;
 
@@ -39,5 +42,16 @@ public class ChatsFragment extends AbstractFragment implements ConversationClick
 									Constants.ChatType chatType, TextView name, View image,
 									String imageUri) {
 		// TODO
+	}
+
+	@Override
+	public boolean onNotificationReceived(Notification notification) {
+		// TODO
+		return true;
+	}
+
+	public int getUnreadChats() {
+		// TODO
+		return 1;
 	}
 }

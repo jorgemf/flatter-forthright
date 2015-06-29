@@ -4,6 +4,8 @@ import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.SparseArray;
+import android.view.ViewGroup;
 
 import com.livae.ff.app.R;
 import com.livae.ff.app.fragment.ChatsFragment;
@@ -12,31 +14,53 @@ import com.livae.ff.common.Constants;
 
 public class ChatsFragmentsAdapter extends FragmentPagerAdapter {
 
+	public static final int CHAT_FLATTERED = 0;
+
+	public static final int CHAT_FORTHRIGHT = 1;
+
+	public static final int CHAT_PRIVATE = 2;
+
+	private SparseArray<Fragment> registeredFragments;
+
 	private String[] titles;
 
 	public ChatsFragmentsAdapter(FragmentManager fm, Resources res) {
 		super(fm);
 		titles = new String[3];
-		titles[0] = res.getString(R.string.tab_flatter);
-		titles[1] = res.getString(R.string.tab_forthright);
-		titles[2] = res.getString(R.string.tab_private);
+		titles[CHAT_FLATTERED] = res.getString(R.string.tab_flatter);
+		titles[CHAT_FORTHRIGHT] = res.getString(R.string.tab_forthright);
+		titles[CHAT_PRIVATE] = res.getString(R.string.tab_private);
+		registeredFragments = new SparseArray<>();
 	}
 
 	@Override
 	public Fragment getItem(int position) {
 		switch (position) {
-			case 0:
+			case CHAT_FLATTERED:
 				PublicChatsFragment flatterer = new PublicChatsFragment();
 				flatterer.setChatType(Constants.ChatType.FLATTER);
 				return flatterer;
-			case 1:
+			case CHAT_FORTHRIGHT:
 				PublicChatsFragment forthright = new PublicChatsFragment();
 				forthright.setChatType(Constants.ChatType.FORTHRIGHT);
 				return forthright;
-			case 2:
+			case CHAT_PRIVATE:
 				return new ChatsFragment();
 		}
 		return null;
+	}
+
+	@Override
+	public Object instantiateItem(ViewGroup container, int position) {
+		Fragment fragment = (Fragment) super.instantiateItem(container, position);
+		registeredFragments.put(position, fragment);
+		return fragment;
+	}
+
+	@Override
+	public void destroyItem(ViewGroup container, int position, Object object) {
+		registeredFragments.remove(position);
+		super.destroyItem(container, position, object);
 	}
 
 	@Override
@@ -46,5 +70,9 @@ public class ChatsFragmentsAdapter extends FragmentPagerAdapter {
 
 	public CharSequence getPageTitle(int position) {
 		return titles[position];
+	}
+
+	public Fragment getRegisteredFragment(int position) {
+		return registeredFragments.get(position);
 	}
 }
