@@ -15,7 +15,7 @@ public class UnitUtils {
 
 	private static final DateFormat DATE_FORMAT_THIS_YEAR = new SimpleDateFormat("MMM d");
 
-	private static final DateFormat DATE_FORMAT = DateFormat.getDateInstance(DateFormat.MEDIUM);
+	private static final DateFormat DATE_FORMAT = DateFormat.getDateInstance(DateFormat.SHORT);
 
 	private static final DateFormat TIME_FORMAT = DateFormat.getTimeInstance(DateFormat.SHORT);
 
@@ -63,27 +63,4 @@ public class UnitUtils {
 		return timeText;
 	}
 
-	public static String getVotes(int votes) {
-		if (votes > 1000000) {
-			votes = votes / 1000000;
-			return votes + "M";
-		} else if (votes > 1000) {
-			votes = votes / 1000;
-			return votes + "K";
-		} else {
-			return Integer.toString(votes);
-		}
-	}
-
-	public static CharSequence getMonthYear(Integer month, Integer year) {
-		String text = getMonth(month);
-		if (year != Calendar.getInstance().get(Calendar.YEAR)) {
-			text += " " + year % 100;
-		}
-		return text;
-	}
-
-	public static String getMonth(int month) {
-		return new DateFormatSymbols().getMonths()[month];
-	}
 }

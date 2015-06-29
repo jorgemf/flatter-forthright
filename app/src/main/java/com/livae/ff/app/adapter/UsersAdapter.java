@@ -2,6 +2,7 @@ package com.livae.ff.app.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,7 +13,7 @@ import com.livae.ff.app.viewholders.UserViewHolder;
 
 import javax.annotation.Nonnull;
 
-public class UsersAdapter extends EndlessCursorAdapter<UserViewHolder> {
+public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 
 	public static final String[] PROJECTION = {Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
 											   Table.LocalUser.IMAGE_URI};
@@ -25,23 +26,21 @@ public class UsersAdapter extends EndlessCursorAdapter<UserViewHolder> {
 
 	private UserClickListener userClickListener;
 
-	public UsersAdapter(@Nonnull Context context, @Nonnull ViewCreator viewCreator,
-						@Nonnull UserClickListener userClickListener) {
-		super(context, viewCreator);
+	private String countryISO;
+
+	public UsersAdapter(@Nonnull Context context, @Nonnull UserClickListener userClickListener) {
+		super(context);
 		this.userClickListener = userClickListener;
+		TelephonyManager tm;
+		tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		countryISO = tm.getSimCountryIso().toUpperCase();
 	}
 
 	@Override
-	protected void findIndexes(Cursor cursor) {
+	protected void findIndexes(@Nonnull Cursor cursor) {
 		iContact = cursor.getColumnIndex(Table.LocalUser.CONTACT_NAME);
 		iPhone = cursor.getColumnIndex(Table.LocalUser.PHONE);
 		iImageUri = cursor.getColumnIndex(Table.LocalUser.IMAGE_URI);
-	}
-
-	@Override
-	protected UserViewHolder createCustomViewHolder(final ViewGroup viewGroup, final int type) {
-		View view = layoutInflater.inflate(R.layout.item_user, viewGroup, false);
-		return new UserViewHolder(view, userClickListener);
 	}
 
 	@Override
@@ -49,10 +48,16 @@ public class UsersAdapter extends EndlessCursorAdapter<UserViewHolder> {
 		holder.clear();
 		String name = cursor.getString(iContact);
 		long phone = cursor.getLong(iPhone);
-		String image = cursor.getString(iImageUri);
+		String imageUri = cursor.getString(iImageUri);
 		holder.setUserName(name);
-		holder.setUserPhone(phone);
-//		holder.setUserImageView(image); // TODO fix this
+		holder.setUserPhone(phone, countryISO);
+		holder.setUserImage(imageUri);
+	}
+
+	@Override
+	public UserViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
+		View view = layoutInflater.inflate(R.layout.item_user, viewGroup, false);
+		return new UserViewHolder(view, userClickListener);
 	}
 
 }

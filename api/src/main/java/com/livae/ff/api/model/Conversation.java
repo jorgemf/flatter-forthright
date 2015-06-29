@@ -35,6 +35,7 @@ public class Conversation {
 	private Long phone;
 
 	@Index(IfNotNull.class)
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private String phones;
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)

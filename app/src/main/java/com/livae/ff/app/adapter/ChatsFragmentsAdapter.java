@@ -6,7 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.livae.ff.app.R;
-import com.livae.ff.app.fragment.ContactsFragment;
+import com.livae.ff.app.fragment.ChatsFragment;
+import com.livae.ff.app.fragment.PublicChatsFragment;
+import com.livae.ff.common.Constants;
 
 public class ChatsFragmentsAdapter extends FragmentPagerAdapter {
 
@@ -24,11 +26,15 @@ public class ChatsFragmentsAdapter extends FragmentPagerAdapter {
 	public Fragment getItem(int position) {
 		switch (position) {
 			case 0:
-				return new ContactsFragment();
+				PublicChatsFragment flatterer= new PublicChatsFragment();
+				flatterer.setChatType(Constants.ChatType.FLATTER);
+				return flatterer;
 			case 1:
-				return new ContactsFragment();
+				PublicChatsFragment forthright= new PublicChatsFragment();
+				forthright.setChatType(Constants.ChatType.FORTHRIGHT);
+				return forthright;
 			case 2:
-				return new ContactsFragment();
+				return new ChatsFragment();
 		}
 		return null;
 	}

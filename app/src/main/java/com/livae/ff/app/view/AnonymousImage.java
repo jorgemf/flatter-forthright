@@ -64,6 +64,10 @@ public class AnonymousImage extends View {
 		this.seed = seed;
 	}
 
+	public void setSeed(String text) {
+		setSeed(text.hashCode());
+	}
+
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);

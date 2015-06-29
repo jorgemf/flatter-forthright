@@ -8,15 +8,18 @@ import android.widget.TextView;
 
 import com.livae.ff.app.R;
 import com.livae.ff.app.listener.UserClickListener;
+import com.livae.ff.app.utils.ImageUtils;
+import com.livae.ff.app.utils.PhoneUtils;
 
 public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 	private Long userPhone;
 
+	private Long conversationId;
+
 	private TextView userNameTextView;
 
 	private TextView userPhoneTextView;
-
 
 	private ImageView userImageView;
 
@@ -35,22 +38,23 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 		userImageView.setImageBitmap(null);
 		userNameTextView.setText(null);
 		userPhoneTextView.setText(null);
+		userImageView.setImageResource(R.drawable.anom_user);
 		userPhone = null;
-		// TODO user favorite image view
+		conversationId = null;
 	}
 
 	@Override
 	public void onClick(View v) {
-		userClickListener.userClicked(userPhone, userNameTextView, userImageView);
+		userClickListener.userClicked(userPhone, conversationId, userNameTextView, userImageView);
 	}
 
 	public Long getUserPhone() {
 		return userPhone;
 	}
 
-	public void setUserPhone(Long userPhone) {
+	public void setUserPhone(Long userPhone, String countryISO) {
 		this.userPhone = userPhone;
-		this.userPhoneTextView.setText(Long.toString(userPhone));// TODO parse text
+		this.userPhoneTextView.setText(PhoneUtils.getPrettyPrint(userPhone, countryISO));
 	}
 
 	public void setUserName(CharSequence name) {
@@ -65,4 +69,11 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 		this.userImageView.setImageDrawable(drawable);
 	}
 
+	public void setUserImage(String imageUri) {
+		ImageUtils.loadUserImage(userImageView, imageUri);
+	}
+
+	public void setConversationId(Long conversationId) {
+		this.conversationId = conversationId;
+	}
 }

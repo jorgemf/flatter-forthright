@@ -26,11 +26,11 @@ import com.livae.ff.api.model.CommentVote;
 import com.livae.ff.api.model.Conversation;
 import com.livae.ff.api.model.CounterStats;
 import com.livae.ff.api.model.FlagComment;
-import com.livae.ff.api.v1.model.Numbers;
 import com.livae.ff.api.model.PhoneUser;
 import com.livae.ff.api.model.Version;
 import com.livae.ff.api.util.InputUtil;
 import com.livae.ff.api.v1.model.FlagText;
+import com.livae.ff.api.v1.model.Numbers;
 import com.livae.ff.api.v1.model.Text;
 import com.livae.ff.common.Constants;
 import com.livae.ff.common.Constants.ChatType;
@@ -177,12 +177,19 @@ public class ApiEndpoint {
 		Conversation conversation = Conversation.get(conversationId);
 		if (conversation != null) {
 			ChatType chatType = conversation.getType();
+			PhoneUser user = AuthUtil.getPhoneUser(gUser);
+			Long userPhone = user.getPhone();
 			switch (chatType) {
 				case PRIVATE:
-				case PRIVATE_ANONYMOUS:
 				case SECRET:
-					PhoneUser user = AuthUtil.getPhoneUser(gUser);
-					if (!conversation.getUsers().contains(user.getPhone())) {
+					for (Long otherPhone : conversation.getUsers()) {
+						if (!otherPhone.equals(userPhone)) {
+							conversation.setPhone(otherPhone);
+						}
+					}
+					// no break
+				case PRIVATE_ANONYMOUS:
+					if (!conversation.getUsers().contains(userPhone)) {
 						conversation = null;
 					}
 					break;
@@ -276,7 +283,7 @@ public class ApiEndpoint {
 				// create a new one
 				if (conversation == null) {
 					conversation = new Conversation(type);
-					conversation.setPhone(userConversation.getPhone());
+					conversation.setPhones(mixPhones);
 					conversation.addUser(userConversation.getPhone());
 					conversation.addUser(user.getPhone());
 					ofy().save().entity(conversation).now();
@@ -305,7 +312,7 @@ public class ApiEndpoint {
 				httpMethod = ApiMethod.HttpMethod.POST)
 	public Comment postComment(@Named("conversationId") Long conversationId,
 							   @Nullable @Named("alias") String alias, Text text, User gUser)
-	  throws UnauthorizedException, BadRequestException, NotFoundException {
+	  throws UnauthorizedException, BadRequestException, NotFoundException, ForbiddenException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
 		}
@@ -322,6 +329,9 @@ public class ApiEndpoint {
 		switch (conversation.getType()) {
 			case FORTHRIGHT:
 			case FLATTER:
+				if (conversation.getPhone().equals(user.getPhone())) {
+					throw new ForbiddenException("User cannot write in himself/herself");
+				}
 				if (alias == null) {
 					throw new BadRequestException("Alias cannot be empty");
 				}

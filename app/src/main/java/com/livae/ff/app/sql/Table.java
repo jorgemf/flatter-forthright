@@ -54,15 +54,21 @@ public class Table {
 
 		public static final String PHONE = NAME + "_" + "phone";
 
-		public static final String ROOM_NAME   = NAME + "_" + "room_name";
+		public static final String ROOM_NAME = NAME + "_" + "room_name";
 
 		public static final String LAST_ACCESS = NAME + "_" + "last_access";
+
+		public static final String LAST_MESSAGE_DATE = NAME + "_" + "last_message_date";
+
+		public static final String LAST_MESSAGE = NAME + "_" + "last_message";
 
 		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
 												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 												ROOM_NAME + " TEXT, " +
 												PHONE + " INTEGER, " +
 												LAST_ACCESS + " INTEGER, " +
+												LAST_MESSAGE + " TEXT, " +
+												LAST_MESSAGE_DATE + " INTEGER, " +
 												TYPE + " TEXT NOT NULL " +
 												" );";
 	}

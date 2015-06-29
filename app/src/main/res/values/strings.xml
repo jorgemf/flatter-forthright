@@ -5,7 +5,7 @@
 	<string name="activity_about">About Pensamientos</string>
 
 	<string name="time_now">Now</string>
-	<string name="time_few_minutes_ago">few minutes ago</string>
+	<string name="time_few_minutes_ago">%d m</string>
 	<string name="time_yesterday">Yesterday</string>
 	<string name="app_version">Thoughts %s - livae</string>
 	<string name="ok">OK</string>
