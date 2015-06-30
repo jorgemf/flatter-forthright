@@ -15,7 +15,8 @@ import javax.annotation.Nonnull;
 
 public class ConversationsAdapter extends CursorAdapter<ConversationViewHolder> {
 
-	public static final String[] PROJECTION = {Table.Conversation.ID, Table.Conversation.ROOM_NAME,
+	public static final String[] PROJECTION = {Table.Conversation.T_ID,
+											   Table.Conversation.ROOM_NAME,
 											   Table.Conversation.TYPE,
 											   Table.Conversation.LAST_MESSAGE,
 											   Table.Conversation.LAST_MESSAGE_DATE,
@@ -39,6 +40,8 @@ public class ConversationsAdapter extends CursorAdapter<ConversationViewHolder> 
 	private int iContactImageUri;
 
 	private ConversationClickListener conversationClickListener;
+
+	private String search;
 
 	public ConversationsAdapter(@Nonnull Context context,
 								@Nonnull ConversationClickListener conversationClickListener) {
@@ -66,11 +69,11 @@ public class ConversationsAdapter extends CursorAdapter<ConversationViewHolder> 
 		final Constants.ChatType chatType = Constants.ChatType.valueOf(cursor.getString(iType));
 		viewHolder.setConversationType(chatType);
 		final String roomName = cursor.getString(iRoomName);
-		viewHolder.setConversationTitle(roomName);
+		viewHolder.setConversationTitle(roomName, search);
 		viewHolder.setAnonymous(chatType == Constants.ChatType.PRIVATE_ANONYMOUS);
 		viewHolder.setSecret(chatType == Constants.ChatType.SECRET);
 		if (!cursor.isNull(iPhone)) {
-			viewHolder.setContactName(cursor.getString(iContactName));
+			viewHolder.setContactName(cursor.getString(iContactName), search);
 			viewHolder.setUserImage(cursor.getString(iContactImageUri));
 		} else {
 			viewHolder.setImageAnonymous(roomName);
@@ -85,5 +88,9 @@ public class ConversationsAdapter extends CursorAdapter<ConversationViewHolder> 
 	public ConversationViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 		View view = layoutInflater.inflate(R.layout.item_user, viewGroup, false);
 		return new ConversationViewHolder(view, conversationClickListener);
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
 	}
 }

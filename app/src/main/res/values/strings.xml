@@ -17,6 +17,11 @@
 	<string name="empty_text">Ops… there is nothing here.</string>
 	<string name="phone_number">Phone number</string>
 	<string name="post_comment_hint">Type a message</string>
+	<string name="no_contacts">You don\'t have any mobile contact.</string>
+	<string name="nothing_found">We haven\'t find anything</string>
+	<string name="start_first_conversation">TODO</string>
+	<string name="no_conversations">There are no conversation with the current search terms.</string>
+
 	<string name="verification_sms">Pensamientos verification code #%d#</string>
 	<string name="verification_sms_dialog_confirmation">Are you sure %s is your number?</string>
 	<string name="verification_sms_dialog">We have sent a message, please be patient while it is delivered.</string>

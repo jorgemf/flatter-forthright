@@ -26,6 +26,10 @@ public class DataProvider extends AbstractProvider {
 
 	private static final int URI_COMMENTS = 6;
 
+	private static final int URI_CONTACTS_CONVERSATIONS = 7;
+
+	private static final int URI_CONVERSATIONS_CONTACTS = 8;
+
 	private static Uri getContentUri() {
 		return Uri.parse(CONTENT_URI_BASE + getAuthority(DataProvider.class));
 	}
@@ -54,6 +58,14 @@ public class DataProvider extends AbstractProvider {
 		return Uri.withAppendedPath(getUriConversation(conversationId), Table.Comment.NAME);
 	}
 
+	public static Uri getUriContactsConversations() {
+		return Uri.withAppendedPath(getUriContacts(), Table.Conversation.NAME);
+	}
+
+	public static Uri getUriConversationsContacts() {
+		return Uri.withAppendedPath(getUriConversations(), Table.LocalUser.NAME);
+	}
+
 	@Override
 	public boolean onCreate() {
 		final boolean result = super.onCreate();
@@ -65,6 +77,10 @@ public class DataProvider extends AbstractProvider {
 		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/", URI_CONVERSATION);
 		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/" +
 									 Table.Comment.NAME, URI_CONVERSATION_COMMENTS);
+		uriMatcher.addURI(authority, Table.LocalUser.NAME + "/" + Table.Conversation.NAME,
+						  URI_CONTACTS_CONVERSATIONS);
+		uriMatcher.addURI(authority, Table.Conversation.NAME + "/" + Table.LocalUser.NAME,
+						  URI_CONVERSATIONS_CONTACTS);
 		return result;
 	}
 
@@ -161,6 +177,25 @@ public class DataProvider extends AbstractProvider {
 				args = new String[1];
 				args[0] = uri.getPathSegments().get(1);
 				qb.setTables(Table.Comment.NAME);
+				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
+				break;
+			case URI_CONTACTS_CONVERSATIONS:
+				qb.setTables(Table.LocalUser.NAME + " LEFT JOIN " + Table.Conversation.NAME +
+							 " ON " + Table.LocalUser.PHONE + "=" + Table.Conversation.PHONE);
+				String selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND ( " +
+								   Table.Conversation.TYPE + " IS NULL OR " +
+								   Table.Conversation.TYPE +
+								   "=? )";
+//				String[] selectionArgs = new String[]{Constants.ChatType.FLATTER.name()};
+//				c = qb.query(getReadableDatabase(), select, selection, selectionArgs, null, null,
+//							 order + " LIMIT 10");
+//				Debug.print(c);
+				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
+//				Debug.print(c);
+				break;
+			case URI_CONVERSATIONS_CONTACTS:
+				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +
+							 " ON " + Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
 			default:

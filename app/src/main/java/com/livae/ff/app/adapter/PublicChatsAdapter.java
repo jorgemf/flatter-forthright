@@ -11,8 +11,10 @@ import javax.annotation.Nonnull;
 
 public class PublicChatsAdapter extends UsersAdapter {
 
-	public static final String[] PROJECTION = {Table.Conversation.ID, Table.LocalUser.CONTACT_NAME,
-											   Table.LocalUser.PHONE, Table.LocalUser.IMAGE_URI};
+	public static final String[] PROJECTION = {Table.LocalUser.T_ID,
+											   Table.Conversation.T_ID + " AS CID",
+											   Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
+											   Table.LocalUser.IMAGE_URI};
 
 	private int iConversationId;
 
@@ -24,7 +26,7 @@ public class PublicChatsAdapter extends UsersAdapter {
 	@Override
 	protected void findIndexes(@Nonnull Cursor cursor) {
 		super.findIndexes(cursor);
-		iConversationId = cursor.getColumnIndex(Table.Conversation.ID);
+		iConversationId = cursor.getColumnIndex("CID");
 	}
 
 	@Override

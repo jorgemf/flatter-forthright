@@ -10,9 +10,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.livae.ff.app.Analytics;
@@ -21,6 +24,7 @@ import com.livae.ff.app.R;
 import com.livae.ff.app.adapter.ChatsFragmentsAdapter;
 import com.livae.ff.app.fragment.ChatsFragment;
 import com.livae.ff.app.fragment.PublicChatsFragment;
+import com.livae.ff.app.listener.SearchListener;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.common.Constants;
 import com.livae.ff.common.model.Notification;
@@ -28,7 +32,7 @@ import com.livae.ff.common.model.NotificationComment;
 
 public class ChatsActivity extends AbstractActivity
   implements NotificationDisabledReceiver.CloudMessagesDisabledListener,
-			 ViewPager.OnPageChangeListener {
+			 ViewPager.OnPageChangeListener, SearchView.OnQueryTextListener {
 
 	private NotificationDisabledReceiver notificationDisabledReceiver;
 
@@ -54,6 +58,8 @@ public class ChatsActivity extends AbstractActivity
 
 	private Toolbar toolbar;
 
+	private MenuItem searchMenuItem;
+
 	public static void start(Activity activity) {
 		Intent intent = new Intent(activity, ChatsActivity.class);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -68,12 +74,21 @@ public class ChatsActivity extends AbstractActivity
 	protected void onPause() {
 		super.onPause();
 		notificationDisabledReceiver.unregister(this);
+		if (searchMenuItem != null) {
+			MenuItemCompat.collapseActionView(searchMenuItem);
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.chats_menu, menu);
-		getMenuInflater().inflate(R.menu.search_menu, menu);
+		final MenuInflater menuInflater = getMenuInflater();
+		menuInflater.inflate(R.menu.chats_menu, menu);
+		menuInflater.inflate(R.menu.search_menu, menu);
+
+		searchMenuItem = menu.findItem(R.id.action_search);
+		SearchView searchView = (SearchView) searchMenuItem.getActionView();
+		searchView.setOnQueryTextListener(this);
+
 		return true;
 	}
 
@@ -220,5 +235,22 @@ public class ChatsActivity extends AbstractActivity
 	@Override
 	public void onPageScrollStateChanged(int state) {
 
+	}
+
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		return false;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String newText) {
+		for (int i = 0; i < chatsFragmentsAdapter.getCount(); i++) {
+			Fragment fragment = chatsFragmentsAdapter.getRegisteredFragment(i);
+			if (fragment != null && fragment instanceof SearchListener) {
+				SearchListener searchListener = (SearchListener) fragment;
+				searchListener.search(newText);
+			}
+		}
+		return true;
 	}
 }

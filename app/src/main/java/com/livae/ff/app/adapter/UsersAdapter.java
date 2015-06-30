@@ -15,8 +15,10 @@ import javax.annotation.Nonnull;
 
 public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 
-	public static final String[] PROJECTION = {Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
-											   Table.LocalUser.IMAGE_URI};
+	public static final String[] PROJECTION = {Table.LocalUser.T_ID, Table.LocalUser.CONTACT_NAME,
+											   Table.LocalUser.PHONE, Table.LocalUser.IMAGE_URI};
+
+	private String search;
 
 	private int iContact;
 
@@ -49,7 +51,7 @@ public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 		String name = cursor.getString(iContact);
 		long phone = cursor.getLong(iPhone);
 		String imageUri = cursor.getString(iImageUri);
-		holder.setUserName(name);
+		holder.setUserName(name, search);
 		holder.setUserPhone(phone, countryISO);
 		holder.setUserImage(imageUri);
 	}
@@ -58,6 +60,10 @@ public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 	public UserViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
 		View view = layoutInflater.inflate(R.layout.item_user, viewGroup, false);
 		return new UserViewHolder(view, userClickListener);
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
 	}
 
 }

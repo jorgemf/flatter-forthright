@@ -48,7 +48,6 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 		switch (oldVersion) {
 			case 1: // current version
-			case 2: // next version
 		}
 	}
 

@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.livae.ff.app.R;
 import com.livae.ff.app.listener.ConversationClickListener;
 import com.livae.ff.app.utils.ImageUtils;
+import com.livae.ff.app.utils.TextUtils;
 import com.livae.ff.app.utils.UnitUtils;
 import com.livae.ff.app.view.AnonymousImage;
 import com.livae.ff.common.Constants;
@@ -100,9 +101,13 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder
 		this.conversationType = conversationType;
 	}
 
-	public void setConversationTitle(String conversationTitle) {
+	public void setConversationTitle(String conversationTitle, String boldText) {
 		this.conversationTitle = conversationTitle;
-		titleTextView.setText(conversationTitle);
+		if (boldText == null) {
+			titleTextView.setText(conversationTitle);
+		} else {
+			titleTextView.setText(TextUtils.setBoldText(conversationTitle, boldText));
+		}
 	}
 
 	public void setAnonymous(boolean anonymous) {
@@ -113,10 +118,18 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder
 		secretChatMark.setVisibility(secret ? View.VISIBLE : View.GONE);
 	}
 
-	public void setContactName(String contactName) {
+	public void setContactName(String contactName, String boldText) {
 		this.contactName = contactName;
 		userNameTextView.setVisibility(contactName != null ? View.VISIBLE : View.GONE);
-		userNameTextView.setText(contactName);
+		if (contactName != null) {
+			if (boldText == null) {
+				userNameTextView.setText(contactName);
+			} else {
+				userNameTextView.setText(TextUtils.setBoldText(contactName, boldText));
+			}
+		} else {
+			userNameTextView.setText(null);
+		}
 	}
 
 	public void setImageAnonymous(String imageAnonymous) {

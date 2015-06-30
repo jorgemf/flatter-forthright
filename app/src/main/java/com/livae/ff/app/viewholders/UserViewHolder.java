@@ -10,6 +10,7 @@ import com.livae.ff.app.R;
 import com.livae.ff.app.listener.UserClickListener;
 import com.livae.ff.app.utils.ImageUtils;
 import com.livae.ff.app.utils.PhoneUtils;
+import com.livae.ff.app.utils.TextUtils;
 
 public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -57,8 +58,12 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 		this.userPhoneTextView.setText(PhoneUtils.getPrettyPrint(userPhone, countryISO));
 	}
 
-	public void setUserName(CharSequence name) {
-		this.userNameTextView.setText(name);
+	public void setUserName(CharSequence name, String boldText) {
+		if (boldText != null) {
+			this.userNameTextView.setText(TextUtils.setBoldText(name, boldText));
+		} else {
+			this.userNameTextView.setText(name);
+		}
 	}
 
 	public void setUser(CharSequence name) {
