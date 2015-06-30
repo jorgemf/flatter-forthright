@@ -1,5 +1,6 @@
 package com.livae.ff.app.fragment;
 
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -36,6 +37,14 @@ public class ChatsFragment extends AbstractFragment
 
 	private TextView emptyView;
 
+	private ContentObserver contentObserver = new ContentObserver(null) {
+
+		@Override
+		public void onChange(boolean selfChange) {
+			getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, ChatsFragment.this);
+		}
+	};
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,9 +69,18 @@ public class ChatsFragment extends AbstractFragment
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, this);
+		getActivity().getContentResolver().registerContentObserver(DataProvider.getUriContacts(),
+																   true, contentObserver);
+	}
+
+	@Override
 	public void onPause() {
 		super.onPause();
 		search(null);
+		getActivity().getContentResolver().unregisterContentObserver(contentObserver);
 	}
 
 	@Override
@@ -103,7 +121,7 @@ public class ChatsFragment extends AbstractFragment
 				String[] selectionArgs;
 				String order;
 				order = Table.Conversation.LAST_MESSAGE_DATE;
-				if (searchText == null) {
+				if (TextUtils.isEmpty(searchText)) {
 					selection = Table.Conversation.TYPE + "=? OR " +
 								Table.Conversation.TYPE + "=? OR " +
 								Table.Conversation.TYPE + "=?";
@@ -116,7 +134,7 @@ public class ChatsFragment extends AbstractFragment
 								Table.Conversation.TYPE + "=? OR " +
 								Table.Conversation.TYPE + "=? OR " +
 								Table.Conversation.TYPE + "=? )";
-					selectionArgs = new String[]{searchText, searchText,
+					selectionArgs = new String[]{"%" + searchText + "%", "%" + searchText + "%",
 												 Constants.ChatType.PRIVATE_ANONYMOUS.name(),
 												 Constants.ChatType.PRIVATE.name(),
 												 Constants.ChatType.SECRET.name()};

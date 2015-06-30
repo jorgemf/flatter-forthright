@@ -29,5 +29,8 @@
 	<!-- dividers -->    <!--<color name="grey_light">#B6B6B6</color>-->
 	<color name="grey_light">#49000000</color>
 	<color name="divider">@color/grey_light</color>
+	<!-- others -->
+	<color name="black">#000000</color>
+	<color name="black_shadow">#88000000</color>
 
 </resources>

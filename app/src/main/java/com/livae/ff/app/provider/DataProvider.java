@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.livae.ff.app.sql.Table;
+import com.livae.ff.app.utils.Debug;
 
 import java.util.List;
 
@@ -182,16 +183,10 @@ public class DataProvider extends AbstractProvider {
 			case URI_CONTACTS_CONVERSATIONS:
 				qb.setTables(Table.LocalUser.NAME + " LEFT JOIN " + Table.Conversation.NAME +
 							 " ON " + Table.LocalUser.PHONE + "=" + Table.Conversation.PHONE);
-				String selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND ( " +
-								   Table.Conversation.TYPE + " IS NULL OR " +
-								   Table.Conversation.TYPE +
-								   "=? )";
-//				String[] selectionArgs = new String[]{Constants.ChatType.FLATTER.name()};
-//				c = qb.query(getReadableDatabase(), select, selection, selectionArgs, null, null,
-//							 order + " LIMIT 10");
-//				Debug.print(c);
-				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
-//				Debug.print(c);
+				qb.setDistinct(true);
+				c = qb.query(getReadableDatabase(), select, where, args, Table.LocalUser.PHONE,
+							 null, order);
+				Debug.print(c, 5);
 				break;
 			case URI_CONVERSATIONS_CONTACTS:
 				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +

@@ -10,6 +10,10 @@ public class Debug {
 	private static final String LOG_TAG = "DEBUG_SOP";
 
 	public static void print(Cursor c) {
+		print(c, 0);
+	}
+
+	public static void print(Cursor c, int limit) {
 		if (!c.isClosed()) {
 			int position = c.getPosition();
 			String[] columns = c.getColumnNames();
@@ -27,7 +31,8 @@ public class Debug {
 						aux += getCursorData(c, i) + " \t";
 					}
 					Log.d(LOG_TAG, aux);
-				} while (c.moveToNext());
+					limit--;
+				} while (c.moveToNext() && limit != 0);
 			}
 			c.moveToPosition(position);
 		}
@@ -64,7 +69,11 @@ public class Debug {
 	}
 
 	public static void print(String text) {
-		Log.d(LOG_TAG, text);
+		if (text != null) {
+			Log.d(LOG_TAG, text);
+		} else {
+			Log.d(LOG_TAG, "null");
+		}
 	}
 
 	public static void print(SQLiteDatabase ddbb) {

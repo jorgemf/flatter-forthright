@@ -68,6 +68,6 @@ public class PhoneUtils {
 		}
 		Phonenumber.PhoneNumber phoneNumber = getPhoneNumber("+" + phone.toString(), null);
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		return phoneUtil.formatOutOfCountryCallingNumber(phoneNumber, countryISO);
+		return phoneUtil.formatOutOfCountryKeepingAlphaChars(phoneNumber, countryISO);
 	}
 }

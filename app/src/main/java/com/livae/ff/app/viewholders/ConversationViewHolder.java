@@ -68,7 +68,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder
 		titleTextView.setText(null);
 		subtitleTextView.setText(null);
 		dateTextView.setText(null);
-		userImageView.setImageResource(R.drawable.anom_user);
+		userImageView.setImageResource(R.drawable.ic_account_circle_white_48dp);
 		conversationTitle = null;
 		conversationId = null;
 		conversationType = null;
@@ -90,7 +90,11 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder
 	}
 
 	public void setUserImage(String imageUri) {
-		ImageUtils.loadUserImage(userImageView, imageUri);
+		if (imageUri != null) {
+			ImageUtils.loadUserImage(userImageView, imageUri);
+		} else {
+			userImageView.setImageResource(R.drawable.ic_account_circle_white_48dp);
+		}
 	}
 
 	public void setConversationId(Long conversationId) {
@@ -106,7 +110,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder
 		if (boldText == null) {
 			titleTextView.setText(conversationTitle);
 		} else {
-			titleTextView.setText(TextUtils.setBoldText(conversationTitle, boldText));
+			titleTextView.setText(TextUtils.setBoldText(conversationTitle, boldText, true));
 		}
 	}
 
@@ -125,7 +129,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder
 			if (boldText == null) {
 				userNameTextView.setText(contactName);
 			} else {
-				userNameTextView.setText(TextUtils.setBoldText(contactName, boldText));
+				userNameTextView.setText(TextUtils.setBoldText(contactName, boldText, true));
 			}
 		} else {
 			userNameTextView.setText(null);

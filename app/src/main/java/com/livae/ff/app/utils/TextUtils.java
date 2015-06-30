@@ -9,10 +9,16 @@ public class TextUtils {
 
 	private static final StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
 
-	public static SpannableString setBoldText(CharSequence text, CharSequence boldText) {
+	public static SpannableString setBoldText(CharSequence text, CharSequence boldText,
+											  boolean ignoreCase) {
 		final SpannableString spannableString = new SpannableString(text);
 		if (boldText != null && boldText.length() > 0) {
-			int pos = text.toString().indexOf(boldText.toString());
+			int pos = -1;
+			if (ignoreCase) {
+				pos = text.toString().toLowerCase().indexOf(boldText.toString().toLowerCase());
+			} else {
+				pos = text.toString().indexOf(boldText.toString());
+			}
 			if (pos >= 0) {
 				spannableString.setSpan(boldSpan, pos, pos + boldText.length(),
 										Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

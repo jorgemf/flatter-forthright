@@ -1,5 +1,6 @@
 package com.livae.ff.app.fragment;
 
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -41,6 +42,14 @@ public class PublicChatsFragment extends AbstractFragment
 
 	private TextView emptyView;
 
+	private ContentObserver contentObserver = new ContentObserver(null) {
+
+		@Override
+		public void onChange(boolean selfChange) {
+			getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, PublicChatsFragment.this);
+		}
+	};
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,6 +77,14 @@ public class PublicChatsFragment extends AbstractFragment
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
+		getActivity().getContentResolver().registerContentObserver(DataProvider.getUriContacts(),
+																   true, contentObserver);
+	}
+
+	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(SAVE_COMMENT_TYPE, chatType);
@@ -77,6 +94,7 @@ public class PublicChatsFragment extends AbstractFragment
 	public void onPause() {
 		super.onPause();
 		search(null);
+		getActivity().getContentResolver().unregisterContentObserver(contentObserver);
 	}
 
 	public Constants.ChatType getChatType() {
@@ -105,14 +123,16 @@ public class PublicChatsFragment extends AbstractFragment
 
 	@Override
 	public void search(String text) {
-		if (text != null) {
-			text = text.trim();
-		}
-		searchText = text;
-		if (TextUtils.isEmpty(searchText)) {
+		if (!TextUtils.isEmpty(text)) {
+			text = text.trim().toLowerCase();
+			if (!text.equals(searchText)) {
+				searchText = text;
+				getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
+			}
+		} else if (!TextUtils.isEmpty(searchText)) {
 			searchText = null;
+			getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
 		}
-		getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
 	}
 
 	@Override
@@ -122,18 +142,18 @@ public class PublicChatsFragment extends AbstractFragment
 				String selection;
 				String[] selectionArgs;
 				String order;
-				if (searchText == null) {
+				if (TextUtils.isEmpty(searchText)) {
 					selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND ( " +
 								Table.Conversation.TYPE + " IS NULL OR " + Table.Conversation.TYPE +
 								"=? )";
 					selectionArgs = new String[]{chatType.name()};
 					order = Table.Conversation.LAST_ACCESS + ", " + Table.LocalUser.CONTACT_NAME;
 				} else {
-					selection = Table.LocalUser.IS_MOBILE_NUMBER + "=1 AND " +
+					selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND " +
 								Table.LocalUser.CONTACT_NAME + " LIKE ? AND ( " +
 								Table.Conversation.TYPE + " IS NULL OR " + Table.Conversation.TYPE +
 								"=? )";
-					selectionArgs = new String[]{searchText, chatType.name()};
+					selectionArgs = new String[]{"%" + searchText + "%", chatType.name()};
 					order = Table.LocalUser.CONTACT_NAME;
 				}
 				return new CursorLoader(getActivity(), DataProvider.getUriContactsConversations(),

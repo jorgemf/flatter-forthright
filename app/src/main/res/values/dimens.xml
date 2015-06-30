@@ -6,6 +6,8 @@
 	<dimen name="space_medium">12dp</dimen>
 	<dimen name="space_large">16dp</dimen>
 	<dimen name="space_huge">32dp</dimen>
+	<dimen name="space_huge_normal">40dp</dimen>
+	<dimen name="space_enormous">64dp</dimen>
 	<dimen name="space_press">48dp</dimen>
 	<dimen name="space_press_small">36dp</dimen>
 	<dimen name="space_on_boarding">28dp</dimen>
@@ -19,8 +21,8 @@
 
 	<dimen name="comment_card_radius">12dp</dimen>
 	<dimen name="item_comment_user_image_size">32dp</dimen>
-	<dimen name="item_user_image_size">40dp</dimen>
-	<dimen name="item_user_image_time_margin">26dp</dimen>
+	<dimen name="item_user_image_size">48dp</dimen>
+	<dimen name="item_user_image_time_margin">36dp</dimen>
 	<dimen name="item_flag_size">24dp</dimen>
 
 </resources>

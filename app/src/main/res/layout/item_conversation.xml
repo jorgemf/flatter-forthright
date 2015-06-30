@@ -18,7 +18,7 @@
 		android:layout_marginEnd="@dimen/space_large"
 		android:layout_marginRight="@dimen/space_large"
 		tools:ignore="ContentDescription"
-		tools:src="@drawable/anom_user"/>
+		tools:src="@drawable/ic_account_circle_white_48dp"/>
 
 	<com.livae.ff.app.view.AnonymousImage
 		android:id="@+id/image_anonymous"
@@ -41,7 +41,7 @@
 		android:layout_alignParentTop="true"
 		android:text="\?"
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:textColor="@color/grey"
+		android:textColor="@color/black"
 		android:textSize="28sp"
 		tools:ignore="HardcodedText"/>
 
@@ -51,7 +51,8 @@
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="@dimen/item_user_image_time_margin"
 		android:layout_marginStart="@dimen/item_user_image_time_margin"
-		android:src="@drawable/ic_access_time_black_24dp"/>
+		android:src="@drawable/ic_timer_black_24dp"/>
+	<!--android:src="@drawable/ic_access_time_black_24dp"/>-->
 
 	<TextView
 		android:id="@+id/user_name"
@@ -60,6 +61,7 @@
 		android:ellipsize="end"
 		android:layout_marginEnd="@dimen/space_normal"
 		android:layout_marginRight="@dimen/space_normal"
+		android:layout_marginTop="@dimen/space_tiny"
 		android:layout_toEndOf="@id/image"
 		android:layout_toRightOf="@id/image"
 		android:maxLines="1"
@@ -88,8 +90,9 @@
 		android:layout_below="@id/title"
 		android:layout_marginLeft="@dimen/space_normal"
 		android:layout_marginStart="@dimen/space_normal"
-		android:layout_marginTop="@dimen/space_small"
+		android:layout_marginTop="@dimen/space_normal"
 		android:lines="1"
+		android:paddingTop="@dimen/space_tiny"
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		tools:text="@string/lorem_ipsum_date"/>
 
@@ -99,7 +102,7 @@
 		android:layout_height="wrap_content"
 		android:ellipsize="end"
 		android:layout_below="@id/title"
-		android:layout_marginTop="@dimen/space_small"
+		android:layout_marginTop="@dimen/space_normal"
 		android:layout_toEndOf="@id/image"
 		android:layout_toLeftOf="@id/date"
 		android:layout_toRightOf="@id/image"

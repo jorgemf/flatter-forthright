@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -60,6 +59,10 @@ public class ChatsActivity extends AbstractActivity
 
 	private MenuItem searchMenuItem;
 
+	private ViewPager viewPager;
+
+	private String searchText;
+
 	public static void start(Activity activity) {
 		Intent intent = new Intent(activity, ChatsActivity.class);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -75,8 +78,10 @@ public class ChatsActivity extends AbstractActivity
 		super.onPause();
 		notificationDisabledReceiver.unregister(this);
 		if (searchMenuItem != null) {
-			MenuItemCompat.collapseActionView(searchMenuItem);
+			SearchView searchView = (SearchView) searchMenuItem.getActionView();
+			searchView.setIconified(true);
 		}
+		searchText = null;
 	}
 
 	@Override
@@ -180,7 +185,7 @@ public class ChatsActivity extends AbstractActivity
 			setSupportActionBar(toolbar);
 			tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 //			tabLayout.addTab(tabLayout.newTab().setCustomView());
-			ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+			viewPager = (ViewPager) findViewById(R.id.view_pager);
 			viewPager.addOnPageChangeListener(this);
 			viewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.space_normal));
 			viewPager.setPageMarginDrawable(R.color.black_light);
@@ -230,6 +235,11 @@ public class ChatsActivity extends AbstractActivity
 
 	@Override
 	public void onPageSelected(int position) {
+		Fragment fragment = chatsFragmentsAdapter.getRegisteredFragment(position);
+		if (fragment != null && fragment instanceof SearchListener) {
+			SearchListener searchListener = (SearchListener) fragment;
+			searchListener.search(searchText);
+		}
 	}
 
 	@Override
@@ -244,13 +254,8 @@ public class ChatsActivity extends AbstractActivity
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
-		for (int i = 0; i < chatsFragmentsAdapter.getCount(); i++) {
-			Fragment fragment = chatsFragmentsAdapter.getRegisteredFragment(i);
-			if (fragment != null && fragment instanceof SearchListener) {
-				SearchListener searchListener = (SearchListener) fragment;
-				searchListener.search(newText);
-			}
-		}
+		searchText = newText;
+		onPageSelected(viewPager.getCurrentItem());
 		return true;
 	}
 }

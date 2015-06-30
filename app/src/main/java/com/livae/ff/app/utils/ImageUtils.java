@@ -88,7 +88,7 @@ public class ImageUtils {
 	}
 
 	private static String parseUrl(String imageUrl, Context context) {
-		if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+		if (!imageUrl.contains("://")) {
 			//noinspection PointlessBooleanExpression,ConstantConditions
 			if (BuildConfig.DEV) {
 				String newImageUrl = Settings.SERVER_URL + imageUrl;

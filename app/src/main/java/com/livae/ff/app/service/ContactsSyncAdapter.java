@@ -112,11 +112,15 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 			}
 		}
-		try {
-			contentResolver.applyBatch(DataProvider.getAuthority(DataProvider.class), operations);
-		} catch (RemoteException | OperationApplicationException e) {
-			e.printStackTrace();
-			Analytics.logAndReport(e, false);
+		if (operations.size() > 0) {
+			try {
+				contentResolver.applyBatch(DataProvider.getAuthority(DataProvider.class),
+										   operations);
+				getContext().getContentResolver().notifyChange(uriContacts, null, false);
+			} catch (RemoteException | OperationApplicationException e) {
+				e.printStackTrace();
+				Analytics.logAndReport(e, false);
+			}
 		}
 	}
 
@@ -127,8 +131,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		String select = Table.LocalUser.IS_MOBILE_NUMBER +
 						" AND NOT " + Table.LocalUser.ACCEPTS_PRIVATE +
 						" AND NOT " + Table.LocalUser.BLOCKED;
-		String[] selectArgs = null;
-		final Cursor cursor = contentResolver.query(uri, projection, select, selectArgs, null);
+		final Cursor cursor = contentResolver.query(uri, projection, select, null, null);
 		int iPhone = cursor.getColumnIndex(Table.LocalUser.PHONE);
 		if (cursor.moveToFirst()) {
 			do {
@@ -149,11 +152,12 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 			numbers.setNumbers(list);
 			Numbers validNumbers = API.endpoint().getContacts(numbers).execute();
 			if (validNumbers != null && validNumbers.size() > 0) {
+				final String selection = Table.LocalUser.PHONE + "=?";
+				final String[] selectionArgs = new String[1];
 				for (Long phone : validNumbers.getNumbers()) {
 					ContentValues contentValues = new ContentValues();
 					contentValues.put(Table.LocalUser.ACCEPTS_PRIVATE, true);
-					final String selection = Table.LocalUser.PHONE + "=?";
-					final String[] selectionArgs = {phone.toString()};
+					selectionArgs[0] = phone.toString();
 					operation = ContentProviderOperation.newUpdate(uriContacts)
 														.withSelection(selection, selectionArgs)
 														.withValues(contentValues).build();

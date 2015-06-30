@@ -17,7 +17,7 @@
 		android:layout_alignParentTop="true"
 		android:layout_marginEnd="@dimen/space_large"
 		android:layout_marginRight="@dimen/space_large"
-		tools:src="@drawable/anom_user"/>
+		tools:src="@drawable/ic_account_circle_white_48dp"/>
 
 	<TextView
 		android:id="@+id/user_name"
@@ -38,7 +38,7 @@
 		android:layout_alignLeft="@id/user_name"
 		android:layout_alignRight="@id/user_name"
 		android:layout_below="@id/user_name"
-		android:layout_marginTop="@dimen/space_small"
+		android:layout_marginTop="@dimen/space_normal"
 		android:lines="1"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		tools:text="@string/lorem_ipsum"/>

@@ -39,7 +39,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 		userImageView.setImageBitmap(null);
 		userNameTextView.setText(null);
 		userPhoneTextView.setText(null);
-		userImageView.setImageResource(R.drawable.anom_user);
+		userImageView.setImageResource(R.drawable.ic_account_circle_white_48dp);
 		userPhone = null;
 		conversationId = null;
 	}
@@ -60,7 +60,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
 	public void setUserName(CharSequence name, String boldText) {
 		if (boldText != null) {
-			this.userNameTextView.setText(TextUtils.setBoldText(name, boldText));
+			this.userNameTextView.setText(TextUtils.setBoldText(name, boldText, true));
 		} else {
 			this.userNameTextView.setText(name);
 		}
@@ -75,7 +75,11 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 	}
 
 	public void setUserImage(String imageUri) {
-		ImageUtils.loadUserImage(userImageView, imageUri);
+		if (imageUri != null) {
+			ImageUtils.loadUserImage(userImageView, imageUri);
+		} else {
+			userImageView.setImageResource(R.drawable.ic_account_circle_white_48dp);
+		}
 	}
 
 	public void setConversationId(Long conversationId) {

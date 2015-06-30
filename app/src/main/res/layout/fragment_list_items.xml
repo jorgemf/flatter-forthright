@@ -18,12 +18,16 @@
 		android:id="@+id/empty_view"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_centerInParent="true"
-		android:layout_margin="@dimen/space_large"
-		android:paddingBottom="@dimen/space_huge"
+		android:gravity="center"
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginLeft="@dimen/space_large"
+		android:layout_marginRight="@dimen/space_large"
+		android:layout_marginTop="@dimen/space_enormous"
 		android:text="@string/empty_text"
 		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:visibility="gone"/>
+		android:visibility="gone"
+		tools:visibility="visible"/>
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/recycler_view"

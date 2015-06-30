@@ -12,7 +12,6 @@ import com.livae.ff.app.api.Model;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.settings.Settings;
-import com.livae.ff.app.sql.DBHelper;
 import com.livae.ff.app.task.TaskWakeup;
 import com.livae.ff.app.utils.SyncUtils;
 import com.livae.ff.common.Constants;
@@ -99,7 +98,6 @@ public class Application extends android.app.Application {
 		if (!BuildConfig.DEBUG) {
 			CustomUncaughtExceptionHandler.configure();
 		}
-		DBHelper.clearData(this);
 		appUser = new AppUser(getApplicationContext());
 		setAdmin();
 		seeAdmin = false;
