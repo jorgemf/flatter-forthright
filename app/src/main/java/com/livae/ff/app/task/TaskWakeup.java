@@ -7,14 +7,18 @@ import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.api.API;
 import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.app.utils.DeviceUtils;
+import com.livae.ff.app.utils.SyncUtils;
 
 public class TaskWakeup extends NetworkAsyncTask<Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void aVoid) throws Exception {
-		if (Application.appUser().getUserPhone() != null) {
+		final AppUser appUser = Application.appUser();
+		if (appUser.getUserPhone() != null) {
+			// sync user profile
+			SyncUtils.syncUserProfile(Application.getContext());
+			// send the wake up
 			Ff.ApiEndpoint.Wakeup wakeup = API.endpoint().wakeup();
-			final AppUser appUser = Application.appUser();
 			if (appUser.getCloudMessagesId() == null ||
 				appUser.getAppVersion() != BuildConfig.VERSION_CODE) {
 				String deviceId = DeviceUtils.getCloudMessageId(Application.getContext());

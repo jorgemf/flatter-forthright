@@ -229,7 +229,7 @@ public class ChatsActivity extends AbstractActivity
 			findViewById(R.id.create_chat_anonymous_button).setOnClickListener(this);
 			findViewById(R.id.close_button).setOnClickListener(this);
 
-			buttonsTranslationStep = getResources().getDimensionPixelSize(R.dimen.space_huge);
+			buttonsTranslationStep = getResources().getDimensionPixelSize(R.dimen.space_enormous);
 		}
 	}
 
@@ -322,7 +322,7 @@ public class ChatsActivity extends AbstractActivity
 
 		createChatNormalView.animate().alpha(0).translationY(buttonsTranslationStep * 3).start();
 		createChatSecretView.animate().alpha(0).translationY(buttonsTranslationStep * 2).start();
-		createChatAnonymousView.animate().alpha(0).translationY(buttonsTranslationStep * 1).start();
+		createChatAnonymousView.animate().alpha(0).translationY(buttonsTranslationStep).start();
 		addChatsContainer.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
 			@Override
 			public void onAnimationEnd(Animator animation) {
@@ -344,7 +344,7 @@ public class ChatsActivity extends AbstractActivity
 		}
 		if (createChatAnonymousView.getTranslationY() == 0) {
 			createChatAnonymousView.setAlpha(0f);
-			createChatAnonymousView.setTranslationY(buttonsTranslationStep * 1);
+			createChatAnonymousView.setTranslationY(buttonsTranslationStep);
 		}
 		createChatNormalView.animate().alpha(1).translationY(0).start();
 		createChatSecretView.animate().alpha(1).translationY(0).start();

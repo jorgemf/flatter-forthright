@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -104,6 +105,26 @@ public class SyncUtils {
 			appUser.setAccessToken(null);
 		}
 		return registered;
+	}
+
+	public static void syncUserProfile(Context context) {
+		final String[] projection = {ContactsContract.Profile.PHOTO_THUMBNAIL_URI,
+									 ContactsContract.Profile.DISPLAY_NAME};
+		Cursor cursor = context.getContentResolver().query(ContactsContract.Profile.CONTENT_URI,
+														   projection, null, null, null);
+		String imageUri = null;
+		String userName = null;
+		if (cursor.moveToFirst()) {
+			imageUri = cursor.getString(cursor
+										  .getColumnIndex(ContactsContract.Profile.PHOTO_THUMBNAIL_URI));
+			userName = cursor.getString(cursor
+										  .getColumnIndex(ContactsContract.Profile.DISPLAY_NAME));
+
+		}
+		cursor.close();
+		AppUser user = Application.appUser();
+		user.setUserImageUri(imageUri);
+		user.setUserDisplayName(userName);
 	}
 
 }

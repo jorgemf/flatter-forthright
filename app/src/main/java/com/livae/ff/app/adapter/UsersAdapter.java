@@ -18,7 +18,9 @@ public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 	public static final String[] PROJECTION = {Table.LocalUser.T_ID, Table.LocalUser.CONTACT_NAME,
 											   Table.LocalUser.PHONE, Table.LocalUser.IMAGE_URI};
 
-	private String search;
+	protected String search;
+
+	protected String countryISO;
 
 	private int iContact;
 
@@ -27,8 +29,6 @@ public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 	private int iImageUri;
 
 	private UserClickListener userClickListener;
-
-	private String countryISO;
 
 	public UsersAdapter(@Nonnull Context context, @Nonnull UserClickListener userClickListener) {
 		super(context);

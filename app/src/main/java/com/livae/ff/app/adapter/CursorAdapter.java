@@ -37,7 +37,7 @@ public abstract class CursorAdapter<k extends RecyclerView.ViewHolder>
 
 	@Override
 	public void onBindViewHolder(k viewHolder, int position) {
-		int size = getItemCount();
+		int size = getCursorItemCount();
 		if (position >= 0 && position < size) {
 			cursor.moveToPosition(position);
 			bindCustomViewHolder(viewHolder, position, cursor);
@@ -46,7 +46,7 @@ public abstract class CursorAdapter<k extends RecyclerView.ViewHolder>
 
 	@Override
 	public long getItemId(int position) {
-		int size = getItemCount();
+		int size = getCursorItemCount();
 		if (position >= 0 && position < size) {
 			cursor.moveToPosition(position);
 			return cursor.getLong(iId);
@@ -57,6 +57,10 @@ public abstract class CursorAdapter<k extends RecyclerView.ViewHolder>
 
 	@Override
 	public int getItemCount() {
+		return getCursorItemCount();
+	}
+
+	private int getCursorItemCount() {
 		return cursor == null ? 0 : cursor.getCount();
 	}
 

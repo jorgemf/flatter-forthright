@@ -1,6 +1,7 @@
 package com.livae.ff.app.viewholders;
 
-import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -66,12 +67,16 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 		}
 	}
 
-	public void setUser(CharSequence name) {
+	public void setUserNameRes(@StringRes int stringRes) {
+		this.userNameTextView.setText(stringRes);
+	}
+
+	public void setUserName(CharSequence name) {
 		this.userNameTextView.setText(name);
 	}
 
-	public void setUserImageView(Drawable drawable) {
-		this.userImageView.setImageDrawable(drawable);
+	public void setUserImageRes(@DrawableRes int drawableRed) {
+		this.userImageView.setImageResource(drawableRed);
 	}
 
 	public void setUserImage(String imageUri) {

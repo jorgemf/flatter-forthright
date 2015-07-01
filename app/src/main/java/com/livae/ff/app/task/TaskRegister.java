@@ -17,7 +17,7 @@ public class TaskRegister extends NetworkAsyncTask<Long, Void> {
 
 	@Override
 	protected Void doInBackground(Long phoneNumber) throws Exception {
-		AppUser appUser = Application.appUser();
+		final AppUser appUser = Application.appUser();
 		if (appUser.isDeviceConnected()) {
 			Log.d(LOG_TAG, "Device already connected");
 			cancel();
@@ -38,6 +38,8 @@ public class TaskRegister extends NetworkAsyncTask<Long, Void> {
 			} catch (Exception ignore) {
 			}
 			appUser.setProfile(profile);
+			// sync user profile
+			SyncUtils.syncUserProfile(Application.getContext());
 			SyncUtils.createAccount(Application.getContext(), phoneNumber);
 		}
 		return null;

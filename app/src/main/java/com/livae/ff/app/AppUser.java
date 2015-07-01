@@ -19,6 +19,10 @@ public class AppUser {
 
 	private static final String USER_PROFILE = "ff.user.profile";
 
+	private static final String USER_IMAGE_URI = "ff.user.image_uri";
+
+	private static final String USER_DISPLAY_NAME = "ff.user.display_name";
+
 	private static final String USER_BLOCKED_FORTHRIGHT_CHATS = "ff.user.blocked_forthright_chats";
 
 	private Long blockedForthRightChats;
@@ -28,6 +32,10 @@ public class AppUser {
 	private String cloudMessagesId;
 
 	private String accessToken;
+
+	private String displayName;
+
+	private String imageUri;
 
 	private Long userPhone;
 
@@ -54,6 +62,7 @@ public class AppUser {
 		if (userPhone == 0) {
 			userPhone = null;
 		}
+		imageUri = prefs.getString(USER_IMAGE_URI, null);
 		accessToken = prefs.getString(ACCESS_TOKEN, null);
 		setProfile(prefs.getString(USER_PROFILE, null));
 	}
@@ -110,15 +119,6 @@ public class AppUser {
 		return profile;
 	}
 
-	public void setProfile(Profile profile) {
-		this.profile = profile;
-		if (profile == null) {
-			prefs.edit().putString(USER_PROFILE, null).apply();
-		} else {
-			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
-		}
-	}
-
 	public void setProfile(String profile) {
 		try {
 			if (profile == null) {
@@ -131,6 +131,15 @@ public class AppUser {
 		}
 	}
 
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+		if (profile == null) {
+			prefs.edit().putString(USER_PROFILE, null).apply();
+		} else {
+			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
+		}
+	}
+
 	public String getCloudMessagesId() {
 		return cloudMessagesId;
 	}
@@ -138,6 +147,24 @@ public class AppUser {
 	public void setCloudMessagesId(String cloudMessagesId) {
 		this.cloudMessagesId = cloudMessagesId;
 		prefs.edit().putString(CLOUD_MESSAGES_ID, cloudMessagesId).apply();
+	}
+
+	public String getUserImageUri() {
+		return imageUri;
+	}
+
+	public void setUserImageUri(String imageUri) {
+		this.imageUri = imageUri;
+		prefs.edit().putString(USER_IMAGE_URI, imageUri).apply();
+	}
+
+	public String getUserDisplayName() {
+		return displayName;
+	}
+
+	public void setUserDisplayName(String displayName) {
+		this.displayName = displayName;
+		prefs.edit().putString(USER_DISPLAY_NAME, displayName).apply();
 	}
 
 	public Notifications getNotifications() {
@@ -150,6 +177,8 @@ public class AppUser {
 			   "[cloudMessagesId = " + cloudMessagesId + "] " +
 			   "[appVersion = " + appVersion + "] " +
 			   "[profile = " + profile + "] " +
+			   "[imageUri = " + imageUri + "] " +
+			   "[displayName = " + displayName + "] " +
 			   "[blockedForthRightChats = " + blockedForthRightChats + "] ";
 	}
 
