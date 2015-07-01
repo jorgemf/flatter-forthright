@@ -36,6 +36,12 @@ public class ChatsActivity extends AbstractActivity
   implements NotificationDisabledReceiver.CloudMessagesDisabledListener,
 			 ViewPager.OnPageChangeListener, SearchView.OnQueryTextListener, View.OnClickListener {
 
+	private static final int REQUEST_CONTACT_PRIVATE = 6901;
+
+	private static final int REQUEST_CONTACT_SECRET = 6902;
+
+	private static final int REQUEST_CONTACT_ANONYMOUS = 6903;
+
 	private NotificationDisabledReceiver notificationDisabledReceiver;
 
 	private ChatsFragmentsAdapter chatsFragmentsAdapter;
@@ -84,17 +90,6 @@ public class ChatsActivity extends AbstractActivity
 		} else {
 			activity.startActivity(intent);
 		}
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		notificationDisabledReceiver.unregister(this);
-		if (searchMenuItem != null) {
-			SearchView searchView = (SearchView) searchMenuItem.getActionView();
-			searchView.setIconified(true);
-		}
-		searchText = null;
 	}
 
 	@Override
@@ -306,13 +301,16 @@ public class ChatsActivity extends AbstractActivity
 				hideChatsButtonsContainer();
 				break;
 			case R.id.create_chat_normal_button:
-				// TODO
+				startActivityForResult(new Intent(this, ContactsActivity.class),
+									   REQUEST_CONTACT_PRIVATE);
 				break;
 			case R.id.create_chat_secret_button:
-				// TODO
+				startActivityForResult(new Intent(this, ContactsActivity.class),
+									   REQUEST_CONTACT_SECRET);
 				break;
 			case R.id.create_chat_anonymous_button:
-				// TODO
+				startActivityForResult(new Intent(this, ContactsActivity.class),
+									   REQUEST_CONTACT_ANONYMOUS);
 				break;
 		}
 	}
@@ -358,5 +356,47 @@ public class ChatsActivity extends AbstractActivity
 				addChatsContainer.setVisibility(View.VISIBLE);
 			}
 		}).start();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			hideChatsButtonsContainer();
+			switch (requestCode) {
+				case REQUEST_CONTACT_PRIVATE:
+					startChat(Constants.ChatType.PRIVATE,
+							  data.getLongExtra(ContactsActivity.SELECTED_PHONE, 0),
+							  data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME));
+					break;
+				case REQUEST_CONTACT_SECRET:
+					startChat(Constants.ChatType.SECRET,
+							  data.getLongExtra(ContactsActivity.SELECTED_PHONE, 0),
+							  data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME));
+					break;
+				case REQUEST_CONTACT_ANONYMOUS:
+					startChat(Constants.ChatType.PRIVATE_ANONYMOUS,
+							  data.getLongExtra(ContactsActivity.SELECTED_PHONE, 0),
+							  data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME));
+					break;
+			}
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		notificationDisabledReceiver.unregister(this);
+		if (searchMenuItem != null) {
+			SearchView searchView = (SearchView) searchMenuItem.getActionView();
+			searchView.setIconified(true);
+		}
+		searchText = null;
+	}
+
+	private void startChat(Constants.ChatType chatType, long phoneNumber, String displayName) {
+		System.out.println("chatType = [" + chatType + "], phoneNumber = [" + phoneNumber +
+						   "], displayName = [" + displayName + "]");
+		// TODO
 	}
 }

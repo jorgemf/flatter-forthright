@@ -49,9 +49,12 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
+		<activity android:name="com.livae.ff.app.activity.OnBoardingActivity"/>
+		<activity
+			android:name="com.livae.ff.app.activity.ContactsActivity"
+			android:windowSoftInputMode="adjustPan"/>
 		<activity android:name="com.livae.ff.app.activity.CommentsActivity"/>
 		<activity android:name="com.livae.ff.app.activity.AboutActivity"/>
-		<activity android:name="com.livae.ff.app.activity.OnBoardingActivity"/>
 
 		<service android:name="com.livae.ff.app.service.AuthenticatorService">
 			<intent-filter>

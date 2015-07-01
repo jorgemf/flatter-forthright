@@ -88,4 +88,5 @@
 		future we hope to fix all the bugs but we will probably move some features to only premium
 		users of the app.
 	</string>
+	<string name="select_contact">Select Contact</string>
 </resources>

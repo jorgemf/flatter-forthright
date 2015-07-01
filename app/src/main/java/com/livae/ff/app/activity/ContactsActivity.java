@@ -5,11 +5,16 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.widget.Toolbar;
 
 import com.livae.ff.app.Analytics;
+import com.livae.ff.app.R;
 
-public class ContactsActivity extends AbstractActivity implements View.OnClickListener {
+public class ContactsActivity extends AbstractActivity {
+
+	public static final String SELECTED_PHONE = "SELECTED_PHONE";
+
+	public static final String SELECTED_DISPLAY_NAME = "SELECTED_DISPLAY_NAME";
 
 	public static void start(Activity activity) {
 		Intent intent = new Intent(activity, ContactsActivity.class);
@@ -30,18 +35,8 @@ public class ContactsActivity extends AbstractActivity implements View.OnClickLi
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// Set up the action bar.
-//		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//		setSupportActionBar(toolbar);
-//		ActionBar actionBar = getSupportActionBar();
-//		actionBar.setTitle(R.string.activity_contacts);
-//		actionBar.setHomeButtonEnabled(true);
-//		actionBar.setDisplayHomeAsUpEnabled(true);
-	}
-
-	@Override
-	public void onClick(View v) {
-
+		setContentView(R.layout.activity_contacts);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
 	}
 }

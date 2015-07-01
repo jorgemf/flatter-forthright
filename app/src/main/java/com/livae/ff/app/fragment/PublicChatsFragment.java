@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.adapter.PublicChatsAdapter;
 import com.livae.ff.app.listener.SearchListener;
@@ -148,7 +147,6 @@ public class PublicChatsFragment extends AbstractFragment
 								Table.Conversation.TYPE + " IS NULL OR " + Table.Conversation.TYPE +
 								"=? )";
 					selectionArgs = new String[]{chatType.name()};
-					String phoneNumber = Application.appUser().getUserPhone().toString();
 					order = Table.Conversation.LAST_ACCESS + ", " +
 							Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
 				} else {
