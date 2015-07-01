@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/add_chat_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/black_shadow"
                 android:clickable="true"
-                android:layout_gravity="bottom|end">
+                android:elevation="@dimen/space_normal"
+                android:visibility="gone"
+                tools:visibility="visible">
 
 	<android.support.design.widget.FloatingActionButton
 		android:id="@+id/close_button"
@@ -20,7 +24,7 @@
 		app:fabSize="normal"/>
 
 	<LinearLayout
-		android:id="@+id/create_chat_private"
+		android:id="@+id/create_chat_anonymous"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_above="@id/close_button"
@@ -40,7 +44,7 @@
 			android:textColor="?android:attr/textColorPrimaryInverse"/>
 
 		<android.support.design.widget.FloatingActionButton
-			android:id="@+id/create_chat_private_button"
+			android:id="@+id/create_chat_anonymous_button"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/space_normal"
@@ -56,7 +60,7 @@
 		android:id="@+id/create_chat_secret"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_above="@id/create_chat_private"
+		android:layout_above="@id/create_chat_anonymous"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
 		android:layout_marginEnd="@dimen/space_huge"
@@ -119,3 +123,4 @@
 	</LinearLayout>
 
 </RelativeLayout>
+

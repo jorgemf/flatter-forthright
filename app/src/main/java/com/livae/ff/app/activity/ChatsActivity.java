@@ -1,5 +1,7 @@
 package com.livae.ff.app.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -16,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
@@ -31,13 +34,19 @@ import com.livae.ff.common.model.NotificationComment;
 
 public class ChatsActivity extends AbstractActivity
   implements NotificationDisabledReceiver.CloudMessagesDisabledListener,
-			 ViewPager.OnPageChangeListener, SearchView.OnQueryTextListener {
+			 ViewPager.OnPageChangeListener, SearchView.OnQueryTextListener, View.OnClickListener {
 
 	private NotificationDisabledReceiver notificationDisabledReceiver;
 
 	private ChatsFragmentsAdapter chatsFragmentsAdapter;
 
 	private FloatingActionButton floatingActionButton;
+
+	private View createChatNormalView;
+
+	private View createChatSecretView;
+
+	private View createChatAnonymousView;
 
 	private ArgbEvaluator argbEvaluator;
 
@@ -62,6 +71,10 @@ public class ChatsActivity extends AbstractActivity
 	private ViewPager viewPager;
 
 	private String searchText;
+
+	private View addChatsContainer;
+
+	private int buttonsTranslationStep;
 
 	public static void start(Activity activity) {
 		Intent intent = new Intent(activity, ChatsActivity.class);
@@ -154,6 +167,15 @@ public class ChatsActivity extends AbstractActivity
 	}
 
 	@Override
+	public void onBackPressed() {
+		if (addChatsContainer.getVisibility() == View.VISIBLE) {
+			hideChatsButtonsContainer();
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		Analytics.screen(Analytics.Screen.CHATS);
@@ -194,6 +216,20 @@ public class ChatsActivity extends AbstractActivity
 			viewPager.setAdapter(chatsFragmentsAdapter);
 			tabLayout.setupWithViewPager(viewPager);
 			viewPager.setCurrentItem(ChatsFragmentsAdapter.CHAT_PRIVATE);
+
+			addChatsContainer = findViewById(R.id.add_chat_container);
+			createChatNormalView = findViewById(R.id.create_chat_normal);
+			createChatSecretView = findViewById(R.id.create_chat_secret);
+			createChatAnonymousView = findViewById(R.id.create_chat_anonymous);
+
+			floatingActionButton.setOnClickListener(this);
+			addChatsContainer.setOnClickListener(this);
+			findViewById(R.id.create_chat_normal_button).setOnClickListener(this);
+			findViewById(R.id.create_chat_secret_button).setOnClickListener(this);
+			findViewById(R.id.create_chat_anonymous_button).setOnClickListener(this);
+			findViewById(R.id.close_button).setOnClickListener(this);
+
+			buttonsTranslationStep = getResources().getDimensionPixelSize(R.dimen.space_huge);
 		}
 	}
 
@@ -257,5 +293,70 @@ public class ChatsActivity extends AbstractActivity
 		searchText = newText;
 		onPageSelected(viewPager.getCurrentItem());
 		return true;
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.create_chat_button:
+				showChatsButtonsContainer();
+				break;
+			case R.id.close_button:
+			case R.id.add_chat_container:
+				hideChatsButtonsContainer();
+				break;
+			case R.id.create_chat_normal_button:
+				// TODO
+				break;
+			case R.id.create_chat_secret_button:
+				// TODO
+				break;
+			case R.id.create_chat_anonymous_button:
+				// TODO
+				break;
+		}
+	}
+
+	private void hideChatsButtonsContainer() {
+		floatingActionButton.animate().alpha(1).start();
+
+		createChatNormalView.animate().alpha(0).translationY(buttonsTranslationStep * 3).start();
+		createChatSecretView.animate().alpha(0).translationY(buttonsTranslationStep * 2).start();
+		createChatAnonymousView.animate().alpha(0).translationY(buttonsTranslationStep * 1).start();
+		addChatsContainer.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				addChatsContainer.setVisibility(View.GONE);
+			}
+		}).start();
+	}
+
+	private void showChatsButtonsContainer() {
+		floatingActionButton.animate().alpha(0).start();
+
+		if (createChatNormalView.getTranslationY() == 0) {
+			createChatNormalView.setAlpha(0f);
+			createChatNormalView.setTranslationY(buttonsTranslationStep * 3);
+		}
+		if (createChatSecretView.getTranslationY() == 0) {
+			createChatSecretView.setAlpha(0f);
+			createChatSecretView.setTranslationY(buttonsTranslationStep * 2);
+		}
+		if (createChatAnonymousView.getTranslationY() == 0) {
+			createChatAnonymousView.setAlpha(0f);
+			createChatAnonymousView.setTranslationY(buttonsTranslationStep * 1);
+		}
+		createChatNormalView.animate().alpha(1).translationY(0).start();
+		createChatSecretView.animate().alpha(1).translationY(0).start();
+		createChatAnonymousView.animate().alpha(1).translationY(0).start();
+		if (addChatsContainer.getAlpha() == 1) {
+			addChatsContainer.setAlpha(0f);
+		}
+		addChatsContainer.animate().alpha(1).setListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationStart(Animator animation) {
+				addChatsContainer.setVisibility(View.VISIBLE);
+			}
+		}).start();
 	}
 }

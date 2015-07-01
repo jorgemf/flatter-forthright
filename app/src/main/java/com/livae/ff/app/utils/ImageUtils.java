@@ -7,7 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.support.annotation.IntegerRes;
+import android.support.annotation.DrawableRes;
 import android.util.TypedValue;
 import android.widget.ImageView;
 
@@ -55,11 +55,11 @@ public class ImageUtils {
 		if (imageUrl != null) {
 			imageUrl = imageUrl.replace("?sz=512", "?sz=256");
 		}
-		loadDefault(imageView, imageUrl, 0, true, true);
+		loadDefault(imageView, imageUrl, R.drawable.ic_account_circle_white_48dp, true, true);
 	}
 
 	public static void loadDefault(@Nonnull ImageView imageView, String imageUrl,
-								   @IntegerRes int placeholderResId, boolean round, boolean fade) {
+								   @DrawableRes int placeholderResId, boolean round, boolean fade) {
 		Context context = imageView.getContext();
 		if (imageUrl != null) {
 			imageUrl = parseUrl(imageUrl, context);
