@@ -105,10 +105,12 @@ public class ContactsFragment extends AbstractFragment
 				String[] selectionArgs;
 				String order;
 				if (TextUtils.isEmpty(searchText)) {
-					selection = Table.LocalUser.IS_MOBILE_NUMBER;
+					selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND " +
+								Table.LocalUser.ACCEPTS_PRIVATE;
 					selectionArgs = null;
 				} else {
 					selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND " +
+								Table.LocalUser.ACCEPTS_PRIVATE + " AND " +
 								Table.LocalUser.CONTACT_NAME + " LIKE ? ";
 					selectionArgs = new String[]{"%" + searchText + "%"};
 				}
@@ -129,7 +131,7 @@ public class ContactsFragment extends AbstractFragment
 		if (data.getCount() == 0) {
 			emptyView.setVisibility(View.VISIBLE);
 			if (searchText == null) {
-				emptyView.setText(R.string.no_contacts);
+				emptyView.setText(R.string.no_contacts_in_app);
 			} else {
 				emptyView.setText(R.string.nothing_found);
 			}
@@ -144,7 +146,8 @@ public class ContactsFragment extends AbstractFragment
 	}
 
 	@Override
-	public void userClicked(Long userId, Long conversationId, TextView name, ImageView image) {
+	public void userClicked(Long userId, Long conversationId, String userDisplayName,
+							String conversationName, TextView name, ImageView image) {
 		FragmentActivity activity = getActivity();
 		Intent data = new Intent();
 		data.putExtra(ContactsActivity.SELECTED_DISPLAY_NAME, name.getText().toString());

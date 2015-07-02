@@ -19,10 +19,16 @@
 	<string name="phone_number">Phone number</string>
 	<string name="post_comment_hint">Type a message</string>
 	<string name="no_contacts">You don\'t have any mobile contact.</string>
+	<string name="no_contacts_in_app">None of your contacts has the app installed.</string>
 	<string name="nothing_found">We haven\'t find anything</string>
 	<string name="start_first_conversation">TODO</string>
 	<string name="no_conversations">There are no conversation with the current search terms.</string>
 	<string name="search">Search</string>
+
+	<string name="anonymous_room_title">Room name</string>
+	<string name="anonymous_room_message">The anonymous chat needs a name for the room. It cannot be changed later.</string>
+	<string name="anonymous_name_title">Anonymous nick</string>
+	<string name="anonymous_name_message">When you join the conversation you need an anonymous nickname. You can change it later anytime.</string>
 
 	<string name="verification_sms">Pensamientos verification code #%d#</string>
 	<string name="verification_sms_dialog_confirmation">Are you sure %s is your number?</string>

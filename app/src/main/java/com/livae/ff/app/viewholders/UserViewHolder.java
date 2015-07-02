@@ -19,6 +19,10 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
 	private Long conversationId;
 
+	private String userName;
+
+	private String conversationName;
+
 	private TextView userNameTextView;
 
 	private TextView userPhoneTextView;
@@ -43,11 +47,14 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 		userImageView.setImageResource(R.drawable.ic_account_circle_white_48dp);
 		userPhone = null;
 		conversationId = null;
+		conversationName = null;
+		userName = null;
 	}
 
 	@Override
 	public void onClick(View v) {
-		userClickListener.userClicked(userPhone, conversationId, userNameTextView, userImageView);
+		userClickListener.userClicked(userPhone, conversationId, userName, conversationName,
+									  userNameTextView, userImageView);
 	}
 
 	public Long getUserPhone() {
@@ -72,6 +79,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 	}
 
 	public void setUserName(CharSequence name) {
+		this.userName = name.toString();
 		this.userNameTextView.setText(name);
 	}
 
@@ -89,5 +97,9 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
 	public void setConversationId(Long conversationId) {
 		this.conversationId = conversationId;
+	}
+
+	public void setConversationName(String conversationName) {
+		this.conversationName = conversationName;
 	}
 }

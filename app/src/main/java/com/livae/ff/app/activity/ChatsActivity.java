@@ -148,9 +148,8 @@ public class ChatsActivity extends AbstractActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
-			case R.id.menu_settings:
-				// TODO
-				break;
+//			case R.id.menu_settings:
+//				break;
 			case R.id.menu_share:
 				IntentUtils.shareApp(this);
 				break;

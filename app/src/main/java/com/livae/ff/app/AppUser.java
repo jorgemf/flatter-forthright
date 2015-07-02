@@ -23,6 +23,8 @@ public class AppUser {
 
 	private static final String USER_DISPLAY_NAME = "ff.user.display_name";
 
+	private static final String USER_ANONYMOUS_NAME = "ff.user.anonymous_name";
+
 	private static final String USER_BLOCKED_FORTHRIGHT_CHATS = "ff.user.blocked_forthright_chats";
 
 	private Long blockedForthRightChats;
@@ -34,6 +36,8 @@ public class AppUser {
 	private String accessToken;
 
 	private String displayName;
+
+	private String anonymousName;
 
 	private String imageUri;
 
@@ -119,6 +123,15 @@ public class AppUser {
 		return profile;
 	}
 
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+		if (profile == null) {
+			prefs.edit().putString(USER_PROFILE, null).apply();
+		} else {
+			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
+		}
+	}
+
 	public void setProfile(String profile) {
 		try {
 			if (profile == null) {
@@ -128,15 +141,6 @@ public class AppUser {
 			}
 			prefs.edit().putString(USER_PROFILE, profile).apply();
 		} catch (Exception ignore) {
-		}
-	}
-
-	public void setProfile(Profile profile) {
-		this.profile = profile;
-		if (profile == null) {
-			prefs.edit().putString(USER_PROFILE, null).apply();
-		} else {
-			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
 		}
 	}
 
@@ -165,6 +169,15 @@ public class AppUser {
 	public void setUserDisplayName(String displayName) {
 		this.displayName = displayName;
 		prefs.edit().putString(USER_DISPLAY_NAME, displayName).apply();
+	}
+
+	public String getUserAnonymousName() {
+		return anonymousName;
+	}
+
+	public void setUserAnonymousName(String anonymousName) {
+		this.anonymousName = anonymousName;
+		prefs.edit().putString(USER_ANONYMOUS_NAME, anonymousName).apply();
 	}
 
 	public Notifications getNotifications() {

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.livae.ff.app.R;
+import com.livae.ff.app.activity.CommentsActivity;
 import com.livae.ff.app.adapter.ConversationsAdapter;
 import com.livae.ff.app.listener.ConversationClickListener;
 import com.livae.ff.app.listener.SearchListener;
@@ -84,14 +85,16 @@ public class ChatsFragment extends AbstractFragment
 	}
 
 	@Override
-	public void conversationClicked(Long conversationId, String roomName,
-									Constants.ChatType chatType, TextView name, View image,
-									String imageUri) {
-		// TODO
+	public void conversationClicked(Long conversationId, String roomName, String userDisplayName,
+									Long userId, Constants.ChatType chatType, Long lastMessageDate,
+									TextView name, View image, String imageUri) {
+		CommentsActivity.startChat(getActivity(), conversationId, chatType, userId, userDisplayName,
+								   roomName);
 	}
 
 	@Override
 	public boolean onNotificationReceived(Notification notification) {
+		getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, this);
 		// TODO
 		return true;
 	}

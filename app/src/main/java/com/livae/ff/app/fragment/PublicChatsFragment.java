@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.livae.ff.app.R;
+import com.livae.ff.app.activity.CommentsActivity;
 import com.livae.ff.app.adapter.PublicChatsAdapter;
 import com.livae.ff.app.listener.SearchListener;
 import com.livae.ff.app.listener.UserClickListener;
@@ -106,12 +107,15 @@ public class PublicChatsFragment extends AbstractFragment
 	}
 
 	@Override
-	public void userClicked(Long userId, Long conversationId, TextView name, ImageView image) {
-		// TODO
+	public void userClicked(Long userId, Long conversationId, String userDisplayName,
+							String conversationName, TextView name, ImageView image) {
+		CommentsActivity.startChat(getActivity(), conversationId, chatType, userId, userDisplayName,
+								   conversationName);
 	}
 
 	@Override
 	public boolean onNotificationReceived(Notification notification) {
+		getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
 		// TODO
 		return true;
 	}

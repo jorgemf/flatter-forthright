@@ -16,10 +16,13 @@ public class PublicChatsAdapter extends UsersAdapter {
 
 	public static final String[] PROJECTION = {Table.LocalUser.T_ID,
 											   Table.Conversation.T_ID + " AS CID",
+											   Table.Conversation.ROOM_NAME,
 											   Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
 											   Table.LocalUser.IMAGE_URI};
 
 	private int iConversationId;
+
+	private int iRoomName;
 
 	public PublicChatsAdapter(@Nonnull Context context,
 							  @Nonnull UserClickListener userClickListener) {
@@ -30,6 +33,7 @@ public class PublicChatsAdapter extends UsersAdapter {
 	protected void findIndexes(@Nonnull Cursor cursor) {
 		super.findIndexes(cursor);
 		iConversationId = cursor.getColumnIndex("CID");
+		iRoomName = cursor.getColumnIndex(Table.Conversation.ROOM_NAME);
 	}
 
 	@Override
@@ -38,8 +42,10 @@ public class PublicChatsAdapter extends UsersAdapter {
 			position--;
 			super.bindCustomViewHolder(holder, position, cursor);
 			if (!cursor.isNull(iConversationId)) {
-				long conversationId = cursor.getLong(iConversationId);
-				holder.setConversationId(conversationId);
+				holder.setConversationId(cursor.getLong(iConversationId));
+			}
+			if (!cursor.isNull(iRoomName)) {
+				holder.setConversationName(cursor.getString(iRoomName));
 			}
 		} else {
 			holder.setUserPhone(Application.appUser().getUserPhone(), countryISO);

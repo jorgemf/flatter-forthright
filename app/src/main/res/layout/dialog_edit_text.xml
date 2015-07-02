@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:padding="@dimen/space_large">
+
+	<ProgressBar
+		android:id="@+id/dialog_progress"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:visibility="gone"
+		tools:visibility="visible"/>
+
+	<android.support.design.widget.TextInputLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/space_normal">
+
+		<EditText
+			android:id="@+id/dialog_edit_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:inputType="textCapSentences|textAutoCorrect|textShortMessage"
+			android:maxLines="2"
+			tools:hint="This is the hint"
+			tools:text="This is an example of the text"/>
+	</android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

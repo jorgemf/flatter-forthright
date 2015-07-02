@@ -7,8 +7,8 @@ import com.livae.ff.common.Constants;
 
 public interface ConversationClickListener {
 
-	public void conversationClicked(Long conversationId, String roomName,
-									Constants.ChatType chatType, TextView name, View image,
-									String imageUri);
+	public void conversationClicked(Long conversationId, String roomName, String userDisplayName,
+									Long userId, Constants.ChatType chatType, Long lastMessageDate,
+									TextView name, View image, String imageUri);
 
 }

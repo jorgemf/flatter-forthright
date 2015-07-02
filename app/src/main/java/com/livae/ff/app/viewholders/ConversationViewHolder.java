@@ -26,6 +26,10 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder
 
 	private String imageUri;
 
+	private Long lastMessageDate;
+
+	private Long userPhone;
+
 	private TextView userNameTextView;
 
 	private ImageView userImageView;
@@ -74,19 +78,16 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder
 		conversationType = null;
 		contactName = null;
 		imageUri = null;
+		lastMessageDate = null;
+		userPhone = null;
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (conversationType == Constants.ChatType.PRIVATE_ANONYMOUS && contactName == null) {
-			conversationClickListener.conversationClicked(conversationId, conversationTitle,
-														  conversationType, titleTextView,
-														  anonymousImageView, null);
-		} else {
-			conversationClickListener.conversationClicked(conversationId, contactName,
-														  conversationType, userNameTextView,
-														  userImageView, imageUri);
-		}
+		conversationClickListener.conversationClicked(conversationId, conversationTitle,
+													  contactName, userPhone, conversationType,
+													  lastMessageDate, userNameTextView,
+													  userImageView, imageUri);
 	}
 
 	public void setUserImage(String imageUri) {
@@ -142,7 +143,12 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder
 	}
 
 	public void setLastMessage(String message, long date) {
+		lastMessageDate = date;
 		subtitleTextView.setText(message);
 		dateTextView.setText(UnitUtils.getAgoTime(subtitleTextView.getContext(), date));
+	}
+
+	public void setUserPhone(Long userPhone) {
+		this.userPhone = userPhone;
 	}
 }

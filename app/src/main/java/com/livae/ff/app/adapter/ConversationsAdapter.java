@@ -75,6 +75,7 @@ public class ConversationsAdapter extends CursorAdapter<ConversationViewHolder> 
 		if (!cursor.isNull(iPhone)) {
 			viewHolder.setContactName(cursor.getString(iContactName), search);
 			viewHolder.setUserImage(cursor.getString(iContactImageUri));
+			viewHolder.setUserPhone(cursor.getLong(iPhone));
 		} else {
 			viewHolder.setImageAnonymous(roomName);
 		}

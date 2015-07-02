@@ -27,9 +27,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
-    <orderEntry type="library" exported="" name="libphonenumber-7.0.6" level="project" />
-    <orderEntry type="library" exported="" name="prefixmapper-2.22" level="project" />
-    <orderEntry type="library" exported="" name="geocoder-2.22" level="project" />
+    <orderEntry type="library" exported="" name="libphonenumber-7.0.7" level="project" />
+    <orderEntry type="library" exported="" name="prefixmapper-2.23" level="project" />
+    <orderEntry type="library" exported="" name="geocoder-2.23" level="project" />
     <orderEntry type="library" exported="" name="common.common" level="project" />
   </component>
 </module>

@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 public interface UserClickListener {
 
-	public void userClicked(Long userId, Long conversationId, TextView name, ImageView image);
+	public void userClicked(Long userId, Long conversationId, String userDisplayName,
+							String conversationName, TextView name, ImageView image);
 
 }

@@ -4,11 +4,11 @@ import android.accounts.NetworkErrorException;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.livae.ff.app.R;
@@ -22,16 +22,7 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
 	private Toolbar toolbar;
 
-	public void showSnackBarException(@NonNull Exception e) {
-//		showSnackBar(getSnackBarExceptionError(e));
-	}
-
-	public void showSnackBarException(@NonNull Exception e,
-									  @NonNull View.OnClickListener retryListener) {
-//		showSnackBar(getSnackBarExceptionError(e), R.string.button_retry, retryListener, false);
-	}
-
-	private String getSnackBarExceptionError(@NonNull Exception e) {
+	private String getExceptionError(@NonNull Exception e) {
 		if (e instanceof NetworkErrorException) {
 			return getString(R.string.error_network_error);
 		} else if (e instanceof ConnectException) {
@@ -101,5 +92,10 @@ public abstract class AbstractActivity extends AppCompatActivity {
 	public void setSupportActionBar(Toolbar toolbar) {
 		this.toolbar = toolbar;
 		super.setSupportActionBar(toolbar);
+	}
+
+	public void showSnackBarException(Exception e) {
+		Snackbar.make(findViewById(R.id.container), getExceptionError(e), Snackbar.LENGTH_LONG)
+				.show();
 	}
 }
