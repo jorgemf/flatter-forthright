@@ -54,6 +54,7 @@
 			android:name="com.livae.ff.app.activity.ContactsActivity"
 			android:windowSoftInputMode="adjustPan"/>
 		<activity android:name="com.livae.ff.app.activity.CommentsActivity"/>
+		<activity android:name="com.livae.ff.app.activity.WebViewActivity"/>
 		<activity android:name="com.livae.ff.app.activity.AboutActivity"/>
 
 		<service android:name="com.livae.ff.app.service.AuthenticatorService">

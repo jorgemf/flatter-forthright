@@ -28,7 +28,9 @@ import com.livae.ff.app.fragment.ChatsFragment;
 import com.livae.ff.app.fragment.PublicChatsFragment;
 import com.livae.ff.app.listener.SearchListener;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
+import com.livae.ff.app.utils.IntentUtils;
 import com.livae.ff.common.Constants;
+import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.model.Notification;
 import com.livae.ff.common.model.NotificationComment;
 
@@ -109,7 +111,7 @@ public class ChatsActivity extends AbstractActivity
 	public boolean onNotificationReceived(Notification notification) {
 		if (notification.getType() == Constants.PushNotificationType.COMMENT) {
 			NotificationComment nc = (NotificationComment) notification;
-			Constants.ChatType chatType = Constants.ChatType.valueOf(nc.getConversationType());
+			ChatType chatType = ChatType.valueOf(nc.getConversationType());
 			Fragment fragment;
 			switch (chatType) {
 				case PRIVATE_ANONYMOUS:
@@ -146,14 +148,17 @@ public class ChatsActivity extends AbstractActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
-			case R.id.menu_feedback:
-				// TODO
-				break;
 			case R.id.menu_settings:
 				// TODO
 				break;
 			case R.id.menu_share:
-				// TODO
+				IntentUtils.shareApp(this);
+				break;
+			case R.id.menu_rate:
+				IntentUtils.rateApp(this);
+				break;
+			case R.id.menu_feedback:
+				IntentUtils.sendFeedback(this);
 				break;
 			default:
 				return super.onOptionsItemSelected(menuItem);
@@ -363,21 +368,17 @@ public class ChatsActivity extends AbstractActivity
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			hideChatsButtonsContainer();
+			final long phone = data.getLongExtra(ContactsActivity.SELECTED_PHONE, 0);
+			final String name = data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME);
 			switch (requestCode) {
 				case REQUEST_CONTACT_PRIVATE:
-					startChat(Constants.ChatType.PRIVATE,
-							  data.getLongExtra(ContactsActivity.SELECTED_PHONE, 0),
-							  data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME));
+					CommentsActivity.startChat(this, ChatType.PRIVATE, phone, name);
 					break;
 				case REQUEST_CONTACT_SECRET:
-					startChat(Constants.ChatType.SECRET,
-							  data.getLongExtra(ContactsActivity.SELECTED_PHONE, 0),
-							  data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME));
+					CommentsActivity.startChat(this, ChatType.SECRET, phone, name);
 					break;
 				case REQUEST_CONTACT_ANONYMOUS:
-					startChat(Constants.ChatType.PRIVATE_ANONYMOUS,
-							  data.getLongExtra(ContactsActivity.SELECTED_PHONE, 0),
-							  data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME));
+					CommentsActivity.startChat(this, ChatType.PRIVATE_ANONYMOUS, phone, name);
 					break;
 			}
 		}
@@ -392,11 +393,5 @@ public class ChatsActivity extends AbstractActivity
 			searchView.setIconified(true);
 		}
 		searchText = null;
-	}
-
-	private void startChat(Constants.ChatType chatType, long phoneNumber, String displayName) {
-		System.out.println("chatType = [" + chatType + "], phoneNumber = [" + phoneNumber +
-						   "], displayName = [" + displayName + "]");
-		// TODO
 	}
 }

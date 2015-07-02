@@ -6,13 +6,42 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 
+import com.livae.ff.app.Analytics;
+import com.livae.ff.app.AppUser;
+import com.livae.ff.app.Application;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.R;
+import com.livae.ff.app.activity.WebViewActivity;
 
 public class IntentUtils {
 
-	public static void openMarket(Context context, String packageName) {
+	public static void readTermsAndConditions(Context context) {
+		Analytics.event(Analytics.Category.USER, Analytics.Action.VISITED_TERMS);
+		String urlTermsConditions = context.getString(R.string.url_terms_conditions);
+		String title = context.getString(R.string.activity_about);
+		WebViewActivity.start(context, urlTermsConditions, title);
+	}
+
+	public static void sendFeedback(Context context) {
+		Analytics.event(Analytics.Category.USER, Analytics.Action.SEND_FEEDBACK);
+		Uri uri = Uri.fromParts("mailto", context.getString(R.string.feedback_email), null);
+		Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+		AppUser appUser = Application.appUser();
+		Long userId = appUser.getUserPhone();
+		intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.feedback_email_subject) +
+											  " [" + DeviceUtils.getApplicationVersionString() +
+											  "-" + Build.VERSION.SDK_INT + "-" + Build.MODEL +
+											  "-" + Build.DEVICE + " - " + userId + "]");
+		intent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.feedback_email_body));
+		context.startActivity(Intent.createChooser(intent,
+												   context.getString(R.string.send_feedback)));
+	}
+
+	public static void rateApp(Context context) {
+		Analytics.event(Analytics.Category.USER, Analytics.Action.REVIEW_APP);
+		String packageName = context.getApplicationContext().getPackageName();
 		Uri marketUri = Uri.parse(context.getString(R.string.rate_app_market_url, packageName));
 		Intent goToMarket = new Intent(Intent.ACTION_VIEW, marketUri);
 		try {
@@ -32,16 +61,9 @@ public class IntentUtils {
 		}
 	}
 
-//	public static void shareApp(Context context, long appId) {
-//		Analytics.event(Analytics.Category.CONTENT, Analytics.Action.APP_SHARED);
-//		Intent sendIntent = new Intent();
-//		sendIntent.setAction(Intent.ACTION_SEND);
-//		sendIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_app_link, appId));
-//		sendIntent.setType("text/plain");
-//		context.startActivity(sendIntent);
-//	}
-
-	public static void shareApp(Context context, String packageName) {
+	public static void shareApp(Context context) {
+		Analytics.event(Analytics.Category.USER, Analytics.Action.SHARED_APP);
+		String packageName = context.getApplicationContext().getPackageName();
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_SEND);
 		sendIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.rate_app_web_url,
@@ -50,37 +72,4 @@ public class IntentUtils {
 		context.startActivity(sendIntent);
 	}
 
-	public static String getAppId(Intent intent) {
-		String appId = null;
-		if (intent != null) {
-			switch (intent.getAction()) {
-				case Intent.ACTION_VIEW:
-					Uri data = intent.getData();
-					if (data != null) {
-						appId = data.getQueryParameter("id");
-					}
-					break;
-				case Intent.ACTION_SEND:
-					String textUrl = intent.getStringExtra(Intent.EXTRA_TEXT);
-					String findString = "?id=";
-					if (textUrl.contains(findString)) {
-						int start = textUrl.indexOf(findString) + findString.length();
-						int end = textUrl.lastIndexOf(' ');
-						if (end == -1) {
-							end = textUrl.lastIndexOf('\n');
-						}
-						if (end == -1) {
-							end = textUrl.lastIndexOf('\t');
-						}
-						if (end > 0) {
-							appId = textUrl.substring(start, end);
-						} else {
-							appId = textUrl.substring(start);
-						}
-					}
-					break;
-			}
-		}
-		return appId;
-	}
 }
