@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:accountType="com.livae.pensamientos"
 	android:allowParallelSyncs="false"
-	android:contentAuthority="com.livae.ff.app.provider.DataProvider"
+	android:contentAuthority="com.livae.ff.app.provider.ContactsProvider"
 	android:isAlwaysSyncable="true"
 	android:supportsUploading="true"
 	android:userVisible="true"/>

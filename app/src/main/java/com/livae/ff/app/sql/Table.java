@@ -134,4 +134,31 @@ public class Table {
 												" );";
 	}
 
+	public static class CommentSync {
+
+		public static final String NAME = "comment_sync";
+
+		public static final String DATE = NAME + "_" + "date";
+
+		public static final String CONVERSATION_ID = NAME + "_" + "conversation_id";
+
+		public static final String USER_ALIAS = NAME + "_" + "user_alias";
+
+		public static final String COMMENT = NAME + "_" + "comment";
+
+		public static final String ID = BaseColumns._ID;
+
+		public static final String T_ID = NAME + "." + ID;
+
+		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
+												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+												CONVERSATION_ID + " INTEGER NOT NULL, " +
+												USER_ALIAS + " TEXT, " +
+												COMMENT + " TEXT NOT NULL, " +
+												DATE + " INTEGER NOT NULL " +
+												" );";
+
+		public static final String TEMP_SYNC = NAME + "_" + "temp_sync";
+	}
+
 }

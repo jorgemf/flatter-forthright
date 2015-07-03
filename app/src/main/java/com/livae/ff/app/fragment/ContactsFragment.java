@@ -27,7 +27,7 @@ import com.livae.ff.app.activity.ContactsActivity;
 import com.livae.ff.app.adapter.PublicChatsAdapter;
 import com.livae.ff.app.adapter.UsersAdapter;
 import com.livae.ff.app.listener.UserClickListener;
-import com.livae.ff.app.provider.DataProvider;
+import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.sql.Table;
 
 public class ContactsFragment extends AbstractFragment
@@ -115,7 +115,8 @@ public class ContactsFragment extends AbstractFragment
 					selectionArgs = new String[]{"%" + searchText + "%"};
 				}
 				order = Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
-				return new CursorLoader(getActivity(), DataProvider.getUriContactsConversations(),
+				return new CursorLoader(getActivity(),
+										ContactsProvider.getUriContactsConversations(),
 										PublicChatsAdapter.PROJECTION, selection, selectionArgs,
 										order);
 			// break

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,7 @@ import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.dialog.EditTextDialogFragment;
+import com.livae.ff.app.fragment.CommentsFragment;
 import com.livae.ff.common.Constants.ChatType;
 
 public class CommentsActivity extends AbstractActivity {
@@ -29,6 +31,18 @@ public class CommentsActivity extends AbstractActivity {
 	private static final String EXTRA_PHONE_NUMBER = "EXTRA_PHONE_NUMBER";
 
 	private static final String EXTRA_LAST_MESSAGE_DATE = "EXTRA_LAST_MESSAGE_DATE";
+
+	private Long conversationId;
+
+	private ChatType chatType;
+
+	private String displayName;
+
+	private String roomName;
+
+	private Long phoneNumber;
+
+	private Long lastMessageDate;
 
 	public static void startChat(@NonNull FragmentActivity activity, @NonNull ChatType chatType,
 								 @NonNull Long phoneNumber, @NonNull String displayName) {
@@ -103,16 +117,61 @@ public class CommentsActivity extends AbstractActivity {
 	}
 
 	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putLong(EXTRA_CONVERSATION_ID, conversationId);
+		outState.putSerializable(EXTRA_CHAT_TYPE, chatType);
+		outState.putString(EXTRA_DISPLAY_NAME, displayName);
+		outState.putString(EXTRA_ROOM_NAME, roomName);
+		outState.putLong(EXTRA_PHONE_NUMBER, phoneNumber);
+		outState.putLong(EXTRA_LAST_MESSAGE_DATE, lastMessageDate);
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_comments);
+		Bundle extras = getIntent().getExtras();
+		if (savedInstanceState != null) {
+			extras = savedInstanceState;
+		}
+		// load data
+		conversationId = extras.getLong(EXTRA_CONVERSATION_ID, 0);
+		if (conversationId == 0) {
+			conversationId = null;
+		}
+		chatType = (ChatType) extras.getSerializable(EXTRA_CHAT_TYPE);
+		displayName = extras.getString(EXTRA_DISPLAY_NAME, null);
+		roomName = extras.getString(EXTRA_ROOM_NAME, null);
+		phoneNumber = extras.getLong(EXTRA_PHONE_NUMBER, 0);
+		if (phoneNumber == 0) {
+			phoneNumber = null;
+		}
+		lastMessageDate = extras.getLong(EXTRA_LAST_MESSAGE_DATE, 0);
+		if (lastMessageDate == 0) {
+			lastMessageDate = null;
+		}
 
 		// Set up the action bar.
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
-//		actionBar.setTitle(R.string.activity_about);
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
+	@Override
+	public void onAttachFragment(Fragment fragment) {
+		super.onAttachFragment(fragment);
+		if (conversationId != null) {
+			if (fragment instanceof CommentsFragment) {
+				CommentsFragment commentsFragment = (CommentsFragment) fragment;
+				commentsFragment.setConversationType(chatType);
+				commentsFragment.setConversationPhone(phoneNumber);
+				commentsFragment.setAnonymousNick(roomName);
+				commentsFragment.setConversationId(conversationId);
+			}
+		}
+	}
 }

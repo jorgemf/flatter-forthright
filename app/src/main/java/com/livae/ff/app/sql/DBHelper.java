@@ -39,6 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			sqLiteDatabase.execSQL(Table.LocalUser.CREATE_SQL);
 			sqLiteDatabase.execSQL(Table.Conversation.CREATE_SQL);
 			sqLiteDatabase.execSQL(Table.Comment.CREATE_SQL);
+			sqLiteDatabase.execSQL(Table.CommentSync.CREATE_SQL);
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 		}
@@ -66,6 +67,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.LocalUser.NAME);
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Conversation.NAME);
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Comment.NAME);
+		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.CommentSync.NAME);
 		onCreate(sqLiteDatabase);
 	}
 }

@@ -135,6 +135,7 @@ public class Application extends android.app.Application {
 //			SyncUtils.syncContactsEveryDay();
 			SyncUtils.syncContactsWhenChange();
 			SyncUtils.syncContactsNow();
+			SyncUtils.syncCommentsWhenNetwork();
 		}
 	}
 

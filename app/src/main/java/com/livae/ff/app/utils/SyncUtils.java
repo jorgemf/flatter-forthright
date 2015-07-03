@@ -14,7 +14,7 @@ import android.util.Log;
 import com.livae.ff.app.AppUser;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.Constants;
-import com.livae.ff.app.provider.DataProvider;
+import com.livae.ff.app.provider.ContactsProvider;
 
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +34,7 @@ public class SyncUtils {
 			syncContactsWhenChange();
 //			syncContactsEveryDay();
 			syncContactsNow();
+			syncCommentsWhenNetwork();
 			accountManager.setUserData(account, USER_DATA_PHONE, phone.toString());
 		} else {
 			Log.w(LOG_TAG, "Could not create the account, maybe it exists before.");
@@ -54,7 +55,7 @@ public class SyncUtils {
 				if (phone != null) {
 					final String name = phone.toString() + Constants.ACCOUNT_SUFFIX;
 					final Account account = new Account(name, Constants.ACCOUNT_TYPE);
-					final String authority = DataProvider.getAuthority(DataProvider.class);
+					final String authority = ContactsProvider.getAuthority(ContactsProvider.class);
 					ContentResolver.requestSync(account, authority, Bundle.EMPTY);
 				}
 			}
@@ -70,7 +71,7 @@ public class SyncUtils {
 		if (phone != null) {
 			final String name = phone.toString() + Constants.ACCOUNT_SUFFIX;
 			final Account account = new Account(name, Constants.ACCOUNT_TYPE);
-			final String authority = DataProvider.getAuthority(DataProvider.class);
+			final String authority = ContactsProvider.getAuthority(ContactsProvider.class);
 			ContentResolver.addPeriodicSync(account, authority, Bundle.EMPTY,
 											TimeUnit.DAYS.toSeconds(1));
 		}
@@ -81,7 +82,7 @@ public class SyncUtils {
 		if (phone != null) {
 			final String name = phone.toString() + Constants.ACCOUNT_SUFFIX;
 			final Account account = new Account(name, Constants.ACCOUNT_TYPE);
-			final String authority = DataProvider.getAuthority(DataProvider.class);
+			final String authority = ContactsProvider.getAuthority(ContactsProvider.class);
 			Bundle settingsBundle = new Bundle();
 			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
@@ -125,6 +126,16 @@ public class SyncUtils {
 		AppUser user = Application.appUser();
 		user.setUserImageUri(imageUri);
 		user.setUserDisplayName(userName);
+	}
+
+	public static void syncCommentsWhenNetwork() {
+		final Long phone = Application.appUser().getUserPhone();
+		if (phone != null) {
+			final String name = phone.toString() + Constants.ACCOUNT_SUFFIX;
+			final Account account = new Account(name, Constants.ACCOUNT_TYPE);
+			final String authority = ContactsProvider.getAuthority(ContactsProvider.class);
+			ContentResolver.setSyncAutomatically(account, authority, true);
+		}
 	}
 
 }

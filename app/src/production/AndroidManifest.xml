@@ -12,9 +12,16 @@
 	<application>
 
 		<provider
-			android:authorities="com.livae.ff.app.provider.DataProvider"
+			android:authorities="com.livae.ff.app.provider.ContactsProvider"
 			android:exported="false"
-			android:name=".provider.DataProvider"
+			android:label="@string/provider_contacts"
+			android:name="com.livae.ff.app.provider.ContactsProvider"
+			android:syncable="true"/>
+		<provider
+			android:authorities="com.livae.ff.app.provider.ConversationsProvider"
+			android:exported="false"
+			android:label="@string/provider_conversations"
+			android:name="com.livae.ff.app.provider.ConversationsProvider"
 			android:syncable="true"/>
 
 		<receiver

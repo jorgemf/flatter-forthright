@@ -10,7 +10,8 @@ import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.api.ff.model.Conversation;
 import com.livae.ff.api.ff.model.Numbers;
 import com.livae.ff.app.BuildConfig;
-import com.livae.ff.app.provider.DataProvider;
+import com.livae.ff.app.provider.ContactsProvider;
+import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.common.Constants.FlagReason;
 import com.livae.ff.common.model.Notification;
@@ -25,6 +26,8 @@ public class Model {
 	private List<ContentValues> conversationsList;
 
 	private List<ContentValues> commentsList;
+
+	private List<ContentValues> commentsSyncList;
 
 	private List<ContentValues> phonesList;
 
@@ -55,58 +58,81 @@ public class Model {
 					Log.v(LOG_TAG, value.toString());
 				}
 			}
+			if (commentsSyncList.size() > 0) {
+				Log.v(LOG_TAG, "COMMENTS_SYNC");
+				for (ContentValues value : commentsSyncList) {
+					Log.v(LOG_TAG, value.toString());
+				}
+			}
 		}
 		ContentResolver contentResolver = context.getContentResolver();
 		if (phonesList.size() > 0) {
 			ContentValues contentValues = new ContentValues();
 			contentValues.put(Table.LocalUser.ACCEPTS_PRIVATE, false);
-			contentResolver.update(DataProvider.getUriContacts(), contentValues, null, null);
-			contentResolver.bulkInsert(DataProvider.getUriComments(),
+			contentResolver.update(ContactsProvider.getUriContacts(), contentValues, null, null);
+			contentResolver.bulkInsert(ConversationsProvider.getUriComments(),
 									   phonesList.toArray(new ContentValues[phonesList.size()]));
 			phonesList.clear();
 		}
 		if (conversationsList.size() > 0) {
-			contentResolver.bulkInsert(DataProvider.getUriComments(),
+			contentResolver.bulkInsert(ConversationsProvider.getUriComments(),
 									   conversationsList.toArray(new ContentValues[conversationsList
 																					 .size()]));
 			conversationsList.clear();
 		}
 		if (commentsList.size() > 0) {
-			contentResolver.bulkInsert(DataProvider.getUriComments(),
+			contentResolver.bulkInsert(ConversationsProvider.getUriComments(),
 									   commentsList.toArray(new ContentValues[commentsList
 																				.size()]));
 			commentsList.clear();
 		}
+		if (commentsSyncList.size() > 0) {
+			contentResolver.bulkInsert(ConversationsProvider.getUriCommentsSync(),
+									   commentsSyncList.toArray(new ContentValues[commentsSyncList
+																					.size()]));
+			commentsSyncList.clear();
+		}
 	}
 
-	public synchronized void parse(Comment comment) {
-		ContentValues val = new ContentValues();
+	public void parse(Comment comment) {
+		parse(comment, false);
+	}
 
-		val.put(Table.Comment.ID, comment.getId());
-		val.put(Table.Comment.CONVERSATION_ID, comment.getConversationId());
-		val.put(Table.Comment.USER_ANONYMOUS_ID, comment.getAliasId());
-		val.put(Table.Comment.USER_ALIAS, comment.getAlias());
-		val.put(Table.Comment.AGREE_VOTES, comment.getAgreeVotes());
-		val.put(Table.Comment.DISAGREE_VOTES, comment.getDisagreeVotes());
-		val.put(Table.Comment.DATE, comment.getDate().getValue());
-		val.put(Table.Comment.IS_ME, comment.getIsMe());
-		val.put(Table.Comment.VOTE_TYPE, comment.getVoteType());
-		val.put(Table.Comment.USER_VOTE_TYPE, comment.getUserVoteType());
-		val.put(Table.Comment.COMMENT, comment.getComment());
-		val.put(Table.Comment.USER_MARK, comment.getUserMark());
-		val.put(Table.Comment.TIMES_FLAGGED, comment.getTimesFlagged());
-		final List<Integer> flaggedTypeList = comment.getTimesFlaggedType();
-		int[] flaggedType = new int[FlagReason.values().length];
-		if (flaggedTypeList != null && flaggedTypeList.size() >= flaggedType.length) {
-			for (int i = 0; i < flaggedType.length; i++) {
-				flaggedType[i] = flaggedTypeList.get(i);
+	public synchronized void parse(Comment comment, boolean forSyncing) {
+		ContentValues val = new ContentValues();
+		if (forSyncing) {
+			val.put(Table.CommentSync.CONVERSATION_ID, comment.getConversationId());
+			val.put(Table.CommentSync.DATE, System.currentTimeMillis());
+			val.put(Table.CommentSync.COMMENT, comment.getComment());
+			val.put(Table.CommentSync.USER_ALIAS, comment.getAlias());
+			commentsSyncList.add(val);
+		} else {
+			val.put(Table.Comment.ID, comment.getId());
+			val.put(Table.Comment.CONVERSATION_ID, comment.getConversationId());
+			val.put(Table.Comment.USER_ANONYMOUS_ID, comment.getAliasId());
+			val.put(Table.Comment.USER_ALIAS, comment.getAlias());
+			val.put(Table.Comment.AGREE_VOTES, comment.getAgreeVotes());
+			val.put(Table.Comment.DISAGREE_VOTES, comment.getDisagreeVotes());
+			val.put(Table.Comment.DATE, comment.getDate().getValue());
+			val.put(Table.Comment.IS_ME, comment.getIsMe());
+			val.put(Table.Comment.VOTE_TYPE, comment.getVoteType());
+			val.put(Table.Comment.USER_VOTE_TYPE, comment.getUserVoteType());
+			val.put(Table.Comment.COMMENT, comment.getComment());
+			val.put(Table.Comment.USER_MARK, comment.getUserMark());
+			val.put(Table.Comment.TIMES_FLAGGED, comment.getTimesFlagged());
+			final List<Integer> flaggedTypeList = comment.getTimesFlaggedType();
+			int[] flaggedType = new int[FlagReason.values().length];
+			if (flaggedTypeList != null && flaggedTypeList.size() >= flaggedType.length) {
+				for (int i = 0; i < flaggedType.length; i++) {
+					flaggedType[i] = flaggedTypeList.get(i);
+				}
 			}
+			val.put(Table.Comment.TIMES_FLAGGED_ABUSE, flaggedType[FlagReason.ABUSE.ordinal()]);
+			val.put(Table.Comment.TIMES_FLAGGED_INSULT, flaggedType[FlagReason.INSULT.ordinal()]);
+			val.put(Table.Comment.TIMES_FLAGGED_LIE, flaggedType[FlagReason.LIE.ordinal()]);
+			val.put(Table.Comment.TIMES_FLAGGED_OTHER, flaggedType[FlagReason.OTHER.ordinal()]);
+			commentsList.add(val);
 		}
-		val.put(Table.Comment.TIMES_FLAGGED_ABUSE, flaggedType[FlagReason.ABUSE.ordinal()]);
-		val.put(Table.Comment.TIMES_FLAGGED_INSULT, flaggedType[FlagReason.INSULT.ordinal()]);
-		val.put(Table.Comment.TIMES_FLAGGED_LIE, flaggedType[FlagReason.LIE.ordinal()]);
-		val.put(Table.Comment.TIMES_FLAGGED_OTHER, flaggedType[FlagReason.OTHER.ordinal()]);
-		commentsList.add(val);
 	}
 
 	public synchronized void parse(CollectionResponseComment comments) {

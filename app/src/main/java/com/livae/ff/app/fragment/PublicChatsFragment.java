@@ -21,7 +21,7 @@ import com.livae.ff.app.activity.CommentsActivity;
 import com.livae.ff.app.adapter.PublicChatsAdapter;
 import com.livae.ff.app.listener.SearchListener;
 import com.livae.ff.app.listener.UserClickListener;
-import com.livae.ff.app.provider.DataProvider;
+import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.common.Constants;
@@ -81,7 +81,8 @@ public class PublicChatsFragment extends AbstractFragment
 	public void onResume() {
 		super.onResume();
 		getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
-		getActivity().getContentResolver().registerContentObserver(DataProvider.getUriContacts(),
+		getActivity().getContentResolver().registerContentObserver(ContactsProvider
+																	 .getUriContacts(),
 																   true, contentObserver);
 	}
 
@@ -161,7 +162,8 @@ public class PublicChatsFragment extends AbstractFragment
 					selectionArgs = new String[]{"%" + searchText + "%", chatType.name()};
 					order = Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
 				}
-				return new CursorLoader(getActivity(), DataProvider.getUriContactsConversations(),
+				return new CursorLoader(getActivity(),
+										ContactsProvider.getUriContactsConversations(),
 										PublicChatsAdapter.PROJECTION, selection, selectionArgs,
 										order);
 			// break

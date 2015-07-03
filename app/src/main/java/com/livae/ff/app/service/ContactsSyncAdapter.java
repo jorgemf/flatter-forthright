@@ -22,7 +22,7 @@ import com.livae.ff.api.ff.model.Numbers;
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.api.API;
-import com.livae.ff.app.provider.DataProvider;
+import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.utils.PhoneUtils;
 
@@ -74,7 +74,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 			PhoneContact phoneContact = phoneContacts.get(localContact.rawId);
 			if (phoneContact == null && !localContact.blocked) {
 				// delete
-				Uri uriDelete = DataProvider.getUriContact(localContact.id);
+				Uri uriDelete = ContactsProvider.getUriContact(localContact.id);
 				operation = ContentProviderOperation.newDelete(uriDelete).withExpectedCount(1)
 													.build();
 				operations.add(operation);
@@ -85,7 +85,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 				phoneContact.flag = true;
 				if (phoneContact.version > localContact.lastVersion) {
 					// update
-					Uri uriUpdate = DataProvider.getUriContact(localContact.id);
+					Uri uriUpdate = ContactsProvider.getUriContact(localContact.id);
 					ContentValues contentValues;
 					contentValues = phoneContact.getContentValues(localContact, countryISO);
 					operation = ContentProviderOperation.newUpdate(uriUpdate)
@@ -97,7 +97,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 			}
 		}
-		final Uri uriContacts = DataProvider.getUriContacts();
+		final Uri uriContacts = ContactsProvider.getUriContacts();
 		for (PhoneContact phoneContact : phoneContacts.values()) {
 			if (!phoneContact.flag) {
 				// add
@@ -114,7 +114,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		}
 		if (operations.size() > 0) {
 			try {
-				contentResolver.applyBatch(DataProvider.getAuthority(DataProvider.class),
+				contentResolver.applyBatch(ContactsProvider.getAuthority(ContactsProvider.class),
 										   operations);
 				getContext().getContentResolver().notifyChange(uriContacts, null, false);
 			} catch (RemoteException | OperationApplicationException e) {
@@ -126,7 +126,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private void checkPhonesWithServer() {
 		Set<Long> contacts = new HashSet<>();
-		final Uri uri = DataProvider.getUriContacts();
+		final Uri uri = ContactsProvider.getUriContacts();
 		String[] projection = {Table.LocalUser.PHONE};
 		String select = Table.LocalUser.IS_MOBILE_NUMBER +
 						" AND NOT " + Table.LocalUser.ACCEPTS_PRIVATE +
@@ -142,7 +142,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 
 		ArrayList<ContentProviderOperation> operations = new ArrayList<>();
 		ContentProviderOperation operation;
-		final Uri uriContacts = DataProvider.getUriContacts();
+		final Uri uriContacts = ContactsProvider.getUriContacts();
 
 		// add new users of the platform
 		try {
@@ -165,7 +165,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 			}
 			try {
-				contentResolver.applyBatch(DataProvider.getAuthority(DataProvider.class),
+				contentResolver.applyBatch(ContactsProvider.getAuthority(ContactsProvider.class),
 										   operations);
 			} catch (RemoteException | OperationApplicationException e) {
 				Analytics.logAndReport(e, false);
@@ -219,7 +219,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 	private List<LocalContact> getAppContacts(ContentResolver contentResolver) {
 		ArrayList<LocalContact> contacts = new ArrayList<>();
 		LocalContact contact;
-		final Uri uri = DataProvider.getUriContacts();
+		final Uri uri = ContactsProvider.getUriContacts();
 		String[] projection = {Table.LocalUser.ID, Table.LocalUser.ANDROID_RAW_CONTACT_ID,
 							   Table.LocalUser.ANDROID_RAW_CONTACT_LAST_VERSION,
 							   Table.LocalUser.BLOCKED, Table.LocalUser.PHONE};

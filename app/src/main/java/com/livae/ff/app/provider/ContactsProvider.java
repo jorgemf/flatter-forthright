@@ -12,30 +12,16 @@ import com.livae.ff.app.sql.Table;
 
 import java.util.List;
 
-public class DataProvider extends AbstractProvider {
+public class ContactsProvider extends AbstractProvider {
 
 	private static final int URI_CONTACTS = 1;
 
 	private static final int URI_CONTACT = 2;
 
-	private static final int URI_CONVERSATIONS = 3;
-
-	private static final int URI_CONVERSATION = 4;
-
-	private static final int URI_CONVERSATION_COMMENTS = 5;
-
-	private static final int URI_COMMENTS = 6;
-
-	private static final int URI_CONTACTS_CONVERSATIONS = 7;
-
-	private static final int URI_CONVERSATIONS_CONTACTS = 8;
+	private static final int URI_CONTACTS_CONVERSATIONS = 3;
 
 	private static Uri getContentUri() {
-		return Uri.parse(CONTENT_URI_BASE + getAuthority(DataProvider.class));
-	}
-
-	public static Uri getUriComments() {
-		return Uri.withAppendedPath(getContentUri(), Table.Comment.NAME);
+		return Uri.parse(CONTENT_URI_BASE + getAuthority(ContactsProvider.class));
 	}
 
 	public static Uri getUriContacts() {
@@ -46,25 +32,10 @@ public class DataProvider extends AbstractProvider {
 		return ContentUris.withAppendedId(getUriContacts(), id);
 	}
 
-	public static Uri getUriConversations() {
-		return Uri.withAppendedPath(getContentUri(), Table.Conversation.NAME);
-	}
-
-	public static Uri getUriConversation(Long conversationId) {
-		return ContentUris.withAppendedId(getUriConversations(), conversationId);
-	}
-
-	public static Uri getUriConversationComments(Long conversationId) {
-		return Uri.withAppendedPath(getUriConversation(conversationId), Table.Comment.NAME);
-	}
-
 	public static Uri getUriContactsConversations() {
 		return Uri.withAppendedPath(getUriContacts(), Table.Conversation.NAME);
 	}
 
-	public static Uri getUriConversationsContacts() {
-		return Uri.withAppendedPath(getUriConversations(), Table.LocalUser.NAME);
-	}
 
 	@Override
 	public boolean onCreate() {
@@ -72,15 +43,8 @@ public class DataProvider extends AbstractProvider {
 		final String authority = getAuthority(this.getClass());
 		uriMatcher.addURI(authority, Table.LocalUser.NAME, URI_CONTACTS);
 		uriMatcher.addURI(authority, Table.LocalUser.NAME + "/#/", URI_CONTACT);
-		uriMatcher.addURI(authority, Table.Comment.NAME, URI_COMMENTS);
-		uriMatcher.addURI(authority, Table.Conversation.NAME, URI_CONVERSATIONS);
-		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/", URI_CONVERSATION);
-		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/" +
-									 Table.Comment.NAME, URI_CONVERSATION_COMMENTS);
 		uriMatcher.addURI(authority, Table.LocalUser.NAME + "/" + Table.Conversation.NAME,
 						  URI_CONTACTS_CONVERSATIONS);
-		uriMatcher.addURI(authority, Table.Conversation.NAME + "/" + Table.LocalUser.NAME,
-						  URI_CONVERSATIONS_CONTACTS);
 		return result;
 	}
 
@@ -100,48 +64,6 @@ public class DataProvider extends AbstractProvider {
 					db.insert(table, null, value);
 				}
 				break;
-			case URI_CONVERSATIONS:
-				table = Table.Conversation.NAME;
-				for (ContentValues value : values) {
-					db.insert(table, null, value);
-				}
-				break;
-			case URI_COMMENTS:
-				table = Table.Comment.NAME;
-				for (ContentValues value : values) {
-					db.insert(table, null, value);
-				}
-				break;
-//			case URI_CONTACTS:
-//				table = Table.LocalUser.NAME;
-//				query = Table.LocalUser.PHONE + "=?";
-//				for (ContentValues value : values) {
-//					args[0] = value.getAsString(Table.LocalUser.PHONE);
-//					if (db.update(table, value, query, args) == 0) {
-//						db.insert(table, null, value);
-//					}
-//				}
-//				break;
-//			case URI_CONVERSATIONS:
-//				table = Table.Conversation.NAME;
-//				query = Table.Conversation.ID + "=?";
-//				for (ContentValues value : values) {
-//					args[0] = value.getAsString(Table.Conversation.ID);
-//					if (db.update(table, value, query, args) == 0) {
-//						db.insert(table, null, value);
-//					}
-//				}
-//				break;
-//			case URI_COMMENTS:
-//				table = Table.Comment.NAME;
-//				query = Table.Comment.ID + "=?";
-//				for (ContentValues value : values) {
-//					args[0] = value.getAsString(Table.Comment.ID);
-//					if (db.update(table, value, query, args) == 0) {
-//						db.insert(table, null, value);
-//					}
-//				}
-//				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -168,28 +90,12 @@ public class DataProvider extends AbstractProvider {
 				qb.setTables(Table.LocalUser.NAME);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
-			case URI_CONVERSATIONS:
-				qb.setTables(Table.Conversation.NAME);
-				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
-				break;
-			case URI_CONVERSATION_COMMENTS:
-				where = Table.Comment.CONVERSATION_ID + "=?";
-				args = new String[1];
-				args[0] = uri.getPathSegments().get(1);
-				qb.setTables(Table.Comment.NAME);
-				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
-				break;
 			case URI_CONTACTS_CONVERSATIONS:
 				qb.setTables(Table.LocalUser.NAME + " LEFT JOIN " + Table.Conversation.NAME +
 							 " ON " + Table.LocalUser.PHONE + "=" + Table.Conversation.PHONE);
 				qb.setDistinct(true);
 				c = qb.query(getReadableDatabase(), select, where, args, Table.LocalUser.PHONE,
 							 null, order);
-				break;
-			case URI_CONVERSATIONS_CONTACTS:
-				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +
-							 " ON " + Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
-				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -204,14 +110,8 @@ public class DataProvider extends AbstractProvider {
 				return TYPE_LIST_BASE + Table.LocalUser.NAME;
 			case URI_CONTACT:
 				return TYPE_ITEM_BASE + Table.LocalUser.NAME;
-			case URI_COMMENTS:
-				return TYPE_LIST_BASE + Table.Comment.NAME;
-			case URI_CONVERSATION:
-				return TYPE_ITEM_BASE + Table.Conversation.NAME;
-			case URI_CONVERSATIONS:
+			case URI_CONTACTS_CONVERSATIONS:
 				return TYPE_LIST_BASE + Table.Conversation.NAME;
-			case URI_CONVERSATION_COMMENTS:
-				return TYPE_LIST_BASE + Table.Comment.NAME;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -222,12 +122,6 @@ public class DataProvider extends AbstractProvider {
 		final int uriId = uriMatcher.match(uri);
 		int updated;
 		switch (uriId) {
-			case URI_CONVERSATION:
-				updated = update(uri, null, null, null);
-				if (updated == 0) {
-					getWritableDatabase().insert(Table.Conversation.NAME, null, values);
-				}
-				break;
 			case URI_CONTACT:
 				updated = update(uri, null, null, null);
 				if (updated == 0) {
@@ -248,18 +142,6 @@ public class DataProvider extends AbstractProvider {
 		final int uriId = uriMatcher.match(uri);
 		int deleted;
 		switch (uriId) {
-			case URI_CONVERSATION:
-				query = Table.Conversation.ID + "=?";
-				args = new String[1];
-				args[0] = uri.getLastPathSegment();
-				deleted = getWritableDatabase().delete(Table.Conversation.NAME, query, args);
-				break;
-			case URI_CONVERSATION_COMMENTS:
-				query = Table.Comment.CONVERSATION_ID + "=?";
-				args = new String[1];
-				args[0] = uri.getPathSegments().get(1);
-				deleted = getWritableDatabase().delete(Table.Comment.NAME, query, args);
-				break;
 			case URI_CONTACT:
 				query = Table.LocalUser.T_ID + "=?";
 				args = new String[1];
@@ -279,13 +161,6 @@ public class DataProvider extends AbstractProvider {
 		final int uriId = uriMatcher.match(uri);
 		int updated;
 		switch (uriId) {
-			case URI_CONVERSATION:
-				query = Table.Conversation.ID + "=?";
-				args = new String[1];
-				args[0] = uri.getLastPathSegment();
-				updated = getWritableDatabase().update(Table.Conversation.NAME, values, query,
-													   args);
-				break;
 			case URI_CONTACT:
 				query = Table.LocalUser.T_ID + "=?";
 				args = new String[1];

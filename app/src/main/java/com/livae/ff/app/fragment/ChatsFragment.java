@@ -20,7 +20,8 @@ import com.livae.ff.app.activity.CommentsActivity;
 import com.livae.ff.app.adapter.ConversationsAdapter;
 import com.livae.ff.app.listener.ConversationClickListener;
 import com.livae.ff.app.listener.SearchListener;
-import com.livae.ff.app.provider.DataProvider;
+import com.livae.ff.app.provider.ContactsProvider;
+import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.common.Constants;
@@ -73,7 +74,8 @@ public class ChatsFragment extends AbstractFragment
 	public void onResume() {
 		super.onResume();
 		getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, this);
-		getActivity().getContentResolver().registerContentObserver(DataProvider.getUriContacts(),
+		getActivity().getContentResolver().registerContentObserver(ContactsProvider
+																	 .getUriContacts(),
 																   true, contentObserver);
 	}
 
@@ -142,7 +144,8 @@ public class ChatsFragment extends AbstractFragment
 												 Constants.ChatType.PRIVATE.name(),
 												 Constants.ChatType.SECRET.name()};
 				}
-				return new CursorLoader(getActivity(), DataProvider.getUriConversationsContacts(),
+				return new CursorLoader(getActivity(),
+										ConversationsProvider.getUriConversationsContacts(),
 										ConversationsAdapter.PROJECTION, selection, selectionArgs,
 										order);
 			// break

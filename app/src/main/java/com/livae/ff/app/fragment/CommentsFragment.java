@@ -1,10 +1,16 @@
 package com.livae.ff.app.fragment;
 
+import android.content.ContentResolver;
+import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.util.Pair;
+import android.widget.EditText;
 
 import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.app.Analytics;
+import com.livae.ff.app.Application;
 import com.livae.ff.app.activity.AbstractActivity;
 import com.livae.ff.app.adapter.CommentsAdapter;
 import com.livae.ff.app.adapter.EndlessCursorAdapter;
@@ -12,6 +18,7 @@ import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.app.listener.CommentActionListener;
+import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.task.ListResult;
 import com.livae.ff.app.task.QueryId;
@@ -19,6 +26,7 @@ import com.livae.ff.app.task.TaskCommentVoteAgree;
 import com.livae.ff.app.task.TaskCommentVoteDelete;
 import com.livae.ff.app.task.TaskCommentVoteDisagree;
 import com.livae.ff.app.task.TaskCommentsGet;
+import com.livae.ff.app.task.TaskPostComment;
 import com.livae.ff.app.viewholders.CommentsViewHolder;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
@@ -32,13 +40,48 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 
 	private TaskCommentVoteDelete taskNoVoteComment;
 
-//	private TaskDeleteComment taskDeleteComment;
+	private TaskPostComment taskPostComment;
+
+	private FloatingActionButton buttonPostComment;
+
+	private EditText commentText;
 
 	private Long conversationId;
 
 	private ChatType conversationType;
 
+	private String anonymousNick;
+
+	private Long conversationPhone;
+
+	private boolean isMyPublicChat;
+
 	private CommentsAdapter commentsAdapter;
+
+	private ContentObserver contentObserver = new ContentObserver(null) {
+
+		@Override
+		public void onChange(boolean selfChange) {
+			// TODO
+//			getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, ChatsFragment.this);
+		}
+	};
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		isMyPublicChat = false;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (conversationId != null) {
+			final ContentResolver cr = getActivity().getContentResolver();
+			cr.registerContentObserver(ConversationsProvider.getUriConversation(conversationId),
+									   true, contentObserver);
+		}
+	}
 
 	@Override
 	public void onPause() {
@@ -52,12 +95,8 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 		if (taskNoVoteComment != null) {
 			taskNoVoteComment.cancel();
 		}
-//		if (taskDeleteComment != null) {
-//			taskDeleteComment.cancel();
-//		}
-//		if (taskUpdateComment != null) {
-//			taskUpdateComment.cancel();
-//		}
+		final ContentResolver cr = getActivity().getContentResolver();
+		cr.unregisterContentObserver(contentObserver);
 	}
 
 	@Override
@@ -88,7 +127,7 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 
 	@Override
 	protected String getOrderString() {
-		return "-" + Table.Comment.DATE;
+		return Table.Comment.DATE;
 	}
 
 	@Override
@@ -176,45 +215,54 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 		});
 	}
 
-//	@Override
-//	public void commentDelete(final Long commentId, String comment, final int adapterPosition) {
-//		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//		builder.setTitle(R.string.dialog_delete_comment)
-//			   .setMessage(getString(R.string.dialog_delete_comment_confirmation, comment))
-//			   .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//				   @Override
-//				   public void onClick(DialogInterface dialog, int which) {
-//					   dialog.dismiss();
-//				   }
-//			   }).setPositiveButton(R.string.action_delete, new DialogInterface.OnClickListener() {
-//
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				dialog.dismiss();
-//				if (taskDeleteComment == null) {
-//					taskDeleteComment = new TaskDeleteComment();
-//				}
-//				taskDeleteComment.execute(commentId, new Callback<Long, Void>() {
-//					@Override
-//					public void onComplete(CustomAsyncTask<Long, Void> task, Long param,
-//										   Void result) {
-//						removeItem(adapterPosition);
-//						if (!task.isCancelled()) {
-//							AbstractActivity activity = (AbstractActivity) getActivity();
-//							activity.showSnackBar(R.string.comment_deleted);
-//						}
-//					}
-//
-//					@Override
-//					public void onError(CustomAsyncTask<Long, Void> task, Long param, Exception e) {
-//						if (!task.isCancelled()) {
-//							AbstractActivity activity = (AbstractActivity) getActivity();
-//							activity.showSnackBarException(e);
-//						}
-//					}
-//				});
-//			}
-//		}).show();
-//	}
+	public void setConversationId(Long conversationId) {
+		this.conversationId = conversationId;
+		final ContentResolver cr = getActivity().getContentResolver();
+		if (conversationId != null) {
+			cr.registerContentObserver(ConversationsProvider.getUriConversation(conversationId),
+									   true, contentObserver);
+		} else {
+			cr.unregisterContentObserver(contentObserver);
+		}
+		// TODO Start loading messages
+	}
 
+	public void setConversationType(ChatType conversationType) {
+		this.conversationType = conversationType;
+		checkCanSendMessages();
+	}
+
+	public void setAnonymousNick(String anonymousNick) {
+		this.anonymousNick = anonymousNick;
+		checkCanSendMessages();
+	}
+
+	public void setConversationPhone(Long conversationPhone) {
+		this.conversationPhone = conversationPhone;
+		checkCanSendMessages();
+	}
+
+	private void checkCanSendMessages() {
+		boolean canSendMessages = true;
+		if (conversationType != null) {
+			switch (conversationType) {
+				case FLATTER:
+				case FORTHRIGHT:
+					if (conversationPhone != null && anonymousNick != null) {
+						isMyPublicChat = Application.appUser().getUserPhone()
+													.equals(conversationPhone);
+						canSendMessages = !isMyPublicChat;
+					}
+					break;
+				case PRIVATE:
+				case SECRET:
+				case PRIVATE_ANONYMOUS:
+					canSendMessages = true;
+					break;
+			}
+		}
+		if (canSendMessages) {
+			// TODO now can send messages
+		}
+	}
 }

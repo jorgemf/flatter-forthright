@@ -75,7 +75,19 @@
 			</intent-filter>
 			<meta-data
 				android:name="android.content.SyncAdapter"
-				android:resource="@xml/syncadapter"/>
+				android:resource="@xml/syncadapter_contacts"/>
+		</service>
+
+		<service
+			android:exported="true"
+			android:name="com.livae.ff.app.service.ConversationsSyncService"
+			android:process=":sync">
+			<intent-filter>
+				<action android:name="android.content.SyncAdapter"/>
+			</intent-filter>
+			<meta-data
+				android:name="android.content.SyncAdapter"
+				android:resource="@xml/syncadapter_conversations"/>
 		</service>
 
 		<service android:name="com.livae.ff.app.service.CloudMessagesService"/>
