@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.livae.ff.api.ff.model.Numbers;
@@ -67,9 +66,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		List<LocalContact> appContacts = getAppContacts(contentResolver);
 		ArrayList<ContentProviderOperation> operations = new ArrayList<>();
 		ContentProviderOperation operation;
-		TelephonyManager tm;
-		tm = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-		String countryISO = tm.getSimCountryIso().toUpperCase();
+		String countryISO = PhoneUtils.getCountryISO(getContext());
 		for (LocalContact localContact : appContacts) {
 			PhoneContact phoneContact = phoneContacts.get(localContact.rawId);
 			if (phoneContact == null && !localContact.blocked) {

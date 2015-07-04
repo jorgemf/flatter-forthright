@@ -82,8 +82,8 @@ public class PublicChatsFragment extends AbstractFragment
 		super.onResume();
 		getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
 		getActivity().getContentResolver().registerContentObserver(ContactsProvider
-																	 .getUriContacts(),
-																   true, contentObserver);
+																	 .getUriContacts(), true,
+																   contentObserver);
 	}
 
 	@Override
@@ -109,9 +109,17 @@ public class PublicChatsFragment extends AbstractFragment
 
 	@Override
 	public void userClicked(Long userId, Long conversationId, String userDisplayName,
-							String conversationName, TextView name, ImageView image) {
-		CommentsActivity.startChat(getActivity(), conversationId, chatType, userId, userDisplayName,
-								   conversationName);
+							String anonymousName, TextView name, ImageView image) {
+		switch (chatType) {
+			case FLATTER:
+				CommentsActivity.startChatFlatter(getActivity(), conversationId, userId,
+												  userDisplayName, anonymousName);
+				break;
+			case FORTHRIGHT:
+				CommentsActivity.startChatForthright(getActivity(), conversationId, userId,
+													 userDisplayName, anonymousName);
+				break;
+		}
 	}
 
 	@Override

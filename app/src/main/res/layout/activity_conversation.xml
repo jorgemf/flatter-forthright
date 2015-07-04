@@ -10,10 +10,10 @@
 	<include layout="@layout/view_toolbar_rich"/>
 
 	<fragment
-		android:id="@+id/comments_fragment"
+		android:id="@+id/conversation_fragment"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:name="com.livae.ff.app.fragment.CommentsFragment"
+		android:name="com.livae.ff.app.fragment.ConversationFragment"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"
 		tools:layout="@layout/fragment_list_items"/>
 

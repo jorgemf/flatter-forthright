@@ -14,7 +14,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -64,11 +63,7 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 
 	private RecyclerView.OnScrollListener onScrollListener;
 
-	private LifeCycleListener lifeCycleListener;
-
 	private int preloadAhead;
-
-	private Menu menu;
 
 	private ProgressBar loading;
 
@@ -195,21 +190,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		if (lifeCycleListener != null) {
-			lifeCycleListener.onResumed(this);
-		}
-		loaderTask = getLoaderTask();
-		if (totalLoaded == 0 && nextCursor == null) {
-			loadNext();
-		} else {
-			hideLoading();
-			reloadCursor();
-		}
-	}
-
-	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(KEY_SAVED_NEXT_CURSOR, nextCursor);
@@ -225,6 +205,16 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		loaderTask.cancel();
 		adapter.setIsLoading(false);
 		finishLoading = false;
+	}
+
+	protected void startLoading() {
+		loaderTask = getLoaderTask();
+		if (totalLoaded == 0 && nextCursor == null) {
+			loadNext();
+		} else {
+			hideLoading();
+			reloadCursor();
+		}
 	}
 
 	private void checkLoadNext() {
@@ -379,10 +369,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 				// nothing
 			}
 		});
-	}
-
-	public void setLifeCycleListener(LifeCycleListener lifeCycleListener) {
-		this.lifeCycleListener = lifeCycleListener;
 	}
 
 	public int getFirstItemTranslationY() {

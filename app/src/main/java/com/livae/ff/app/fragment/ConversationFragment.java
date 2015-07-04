@@ -31,7 +31,7 @@ import com.livae.ff.app.viewholders.CommentsViewHolder;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 
-public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder, QueryId>
+public class ConversationFragment extends AbstractLoaderFragment<CommentsViewHolder, QueryId>
   implements CommentActionListener {
 
 	private TaskCommentVoteAgree taskVoteAgreeComment;
@@ -48,7 +48,11 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 
 	private Long conversationId;
 
+	private ChatType conversationType;
+
 	private String anonymousNick;
+
+	private Long conversationPhone;
 
 	private boolean isMyPublicChat;
 

@@ -28,6 +28,11 @@
 	<string name="provider_contacts">Contacts</string>
 	<string name="provider_conversations">Conversations</string>
 
+	<string name="chat_flatter_subtitle">Flatter %s</string>
+	<string name="chat_forthright_subtitle">Be forthright to %s</string>
+	<string name="chat_anonymous_me_subtitle">Anonymous chat with %s</string>
+	<string name="chat_anonymous_other_subtitle">Anonymous chat</string>
+
 	<string name="anonymous_room_title">Room name</string>
 	<string name="anonymous_room_message">The anonymous chat needs a name for the room. It cannot be changed later.</string>
 	<string name="anonymous_name_title">Anonymous nick</string>

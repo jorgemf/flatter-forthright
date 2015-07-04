@@ -8,13 +8,15 @@ public class Settings {
 
 	public static final String APP_NAME = SystemProperty.applicationId.get();
 
-	public static final int DEFAULT_LIST_LIMIT = 30;
+	public static final int DEFAULT_LIST_LIMIT = 50;
 
-	public static final int MAX_LIST_LIMIT = 60;
+	public static final int MAX_LIST_LIMIT = 100;
 
-	public static final int MIN_LIST_LIMIT = 10;
+	public static final int MIN_LIST_LIMIT = 20;
 
 	public static final int LIST_STEP = 10; // for cache purposes
+
+	public static final int MAX_ROOM_NAME_CHARS = 100;
 
 	public static final int GCM_NOTIFICATION_RETRIES = 5;
 

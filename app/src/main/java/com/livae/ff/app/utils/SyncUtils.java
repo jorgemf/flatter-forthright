@@ -15,6 +15,7 @@ import com.livae.ff.app.AppUser;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.provider.ContactsProvider;
+import com.livae.ff.app.provider.ConversationsProvider;
 
 import java.util.concurrent.TimeUnit;
 
@@ -133,7 +134,7 @@ public class SyncUtils {
 		if (phone != null) {
 			final String name = phone.toString() + Constants.ACCOUNT_SUFFIX;
 			final Account account = new Account(name, Constants.ACCOUNT_TYPE);
-			final String authority = ContactsProvider.getAuthority(ContactsProvider.class);
+			final String authority = ContactsProvider.getAuthority(ConversationsProvider.class);
 			ContentResolver.setSyncAutomatically(account, authority, true);
 		}
 	}

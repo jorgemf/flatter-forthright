@@ -371,13 +371,13 @@ public class ChatsActivity extends AbstractActivity
 			final String name = data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME);
 			switch (requestCode) {
 				case REQUEST_CONTACT_PRIVATE:
-					CommentsActivity.startChat(this, ChatType.PRIVATE, phone, name);
+					ConversationActivity.startChatPrivate(this, phone, name);
 					break;
 				case REQUEST_CONTACT_SECRET:
-					CommentsActivity.startChat(this, ChatType.SECRET, phone, name);
+					ConversationActivity.startChatSecret(this, phone, name);
 					break;
 				case REQUEST_CONTACT_ANONYMOUS:
-					CommentsActivity.startChat(this, ChatType.PRIVATE_ANONYMOUS, phone, name);
+					ConversationActivity.startChatAnonymous(this, phone, name);
 					break;
 			}
 		}

@@ -264,6 +264,8 @@ public class ApiEndpoint {
 				}
 				if (roomName == null) {
 					throw new BadRequestException("roomName required");
+				} else if (roomName.length() > Settings.MAX_ROOM_NAME_CHARS) {
+					roomName = roomName.substring(0, Settings.MAX_ROOM_NAME_CHARS - 1);
 				}
 				conversation = new Conversation(type);
 				conversation.setAlias(roomName);
@@ -334,7 +336,10 @@ public class ApiEndpoint {
 				}
 				if (alias == null) {
 					throw new BadRequestException("Alias cannot be empty");
+				} else if (alias.length() > Settings.MAX_ROOM_NAME_CHARS) {
+					alias = alias.substring(0, Settings.MAX_ROOM_NAME_CHARS - 1);
 				}
+
 				Comment previousComment;
 				previousComment = ofy().load().type(Comment.class).filter("userId", userPhone)
 									   .filter("conversationId", conversationId).order("-date")

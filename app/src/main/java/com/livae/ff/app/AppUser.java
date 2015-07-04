@@ -68,6 +68,8 @@ public class AppUser {
 		}
 		imageUri = prefs.getString(USER_IMAGE_URI, null);
 		accessToken = prefs.getString(ACCESS_TOKEN, null);
+		displayName = prefs.getString(USER_DISPLAY_NAME, null);
+		anonymousName = prefs.getString(USER_ANONYMOUS_NAME, null);
 		setProfile(prefs.getString(USER_PROFILE, null));
 	}
 
@@ -123,15 +125,6 @@ public class AppUser {
 		return profile;
 	}
 
-	public void setProfile(Profile profile) {
-		this.profile = profile;
-		if (profile == null) {
-			prefs.edit().putString(USER_PROFILE, null).apply();
-		} else {
-			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
-		}
-	}
-
 	public void setProfile(String profile) {
 		try {
 			if (profile == null) {
@@ -141,6 +134,15 @@ public class AppUser {
 			}
 			prefs.edit().putString(USER_PROFILE, profile).apply();
 		} catch (Exception ignore) {
+		}
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+		if (profile == null) {
+			prefs.edit().putString(USER_PROFILE, null).apply();
+		} else {
+			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
 		}
 	}
 
@@ -192,6 +194,7 @@ public class AppUser {
 			   "[profile = " + profile + "] " +
 			   "[imageUri = " + imageUri + "] " +
 			   "[displayName = " + displayName + "] " +
+			   "[anonymousName = " + anonymousName + "] " +
 			   "[blockedForthRightChats = " + blockedForthRightChats + "] ";
 	}
 

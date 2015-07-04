@@ -8,6 +8,4 @@ public interface CommentActionListener {
 
 	public void commentNoVoted(Long commentId, Long userCommentId, int adapterPosition);
 
-//	public void commentDelete(Long commentId, String comment, int adapterPosition);
-
 }

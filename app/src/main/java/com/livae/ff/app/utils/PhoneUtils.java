@@ -1,5 +1,7 @@
 package com.livae.ff.app.utils;
 
+import android.content.Context;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.i18n.phonenumbers.NumberParseException;
@@ -69,5 +71,11 @@ public class PhoneUtils {
 		Phonenumber.PhoneNumber phoneNumber = getPhoneNumber("+" + phone.toString(), null);
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		return phoneUtil.formatOutOfCountryKeepingAlphaChars(phoneNumber, countryISO);
+	}
+
+	public static String getCountryISO(Context context) {
+		TelephonyManager tm;
+		tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		return tm.getSimCountryIso().toUpperCase();
 	}
 }

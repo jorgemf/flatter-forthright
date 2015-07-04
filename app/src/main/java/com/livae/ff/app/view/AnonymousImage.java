@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -64,12 +65,8 @@ public class AnonymousImage extends View {
 		this.seed = seed;
 	}
 
-	public void setSeed(String text) {
-		setSeed(text.hashCode());
-	}
-
 	@Override
-	public void draw(Canvas canvas) {
+	public void draw(@NonNull Canvas canvas) {
 		super.draw(canvas);
 		if (seed != 0) {
 			random.setSeed(seed);

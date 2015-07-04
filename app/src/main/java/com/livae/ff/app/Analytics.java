@@ -133,7 +133,15 @@ public class Analytics {
 
 		public static final String CONTACTS = "CONTACTS";
 
-		public static final String COMMENTS = "COMMENTS";
+		public static final String CONVERSATION_FLATTER = "CONVERSATION_FLATTER";
+
+		public static final String CONVERSATION_FORTHRIGHT = "CONVERSATION_FORTHRIGHT";
+
+		public static final String CONVERSATION_PRIVATE = "CONVERSATION_PRIVATE";
+
+		public static final String CONVERSATION_SECRET = "CONVERSATION_SECRET";
+
+		public static final String CONVERSATION_ANONYMOUS = "CONVERSATION_ANONYMOUS";
 
 		public static final String CHATS = "CHATS";
 

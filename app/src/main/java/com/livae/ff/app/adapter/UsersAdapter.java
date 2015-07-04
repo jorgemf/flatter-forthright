@@ -2,13 +2,13 @@ package com.livae.ff.app.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.livae.ff.app.R;
 import com.livae.ff.app.listener.UserClickListener;
 import com.livae.ff.app.sql.Table;
+import com.livae.ff.app.utils.PhoneUtils;
 import com.livae.ff.app.viewholders.UserViewHolder;
 
 import javax.annotation.Nonnull;
@@ -33,9 +33,7 @@ public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 	public UsersAdapter(@Nonnull Context context, @Nonnull UserClickListener userClickListener) {
 		super(context);
 		this.userClickListener = userClickListener;
-		TelephonyManager tm;
-		tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		countryISO = tm.getSimCountryIso().toUpperCase();
+		countryISO = PhoneUtils.getCountryISO(context);
 	}
 
 	@Override

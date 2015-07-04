@@ -31,6 +31,7 @@
 	<color name="divider">@color/grey_light</color>
 	<!-- others -->
 	<color name="black">#000000</color>
+	<color name="black_toolbar">#222222</color>
 	<color name="black_shadow">#88000000</color>
 
 </resources>

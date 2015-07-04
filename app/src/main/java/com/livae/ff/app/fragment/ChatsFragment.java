@@ -1,5 +1,6 @@
 package com.livae.ff.app.fragment;
 
+import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.livae.ff.app.R;
-import com.livae.ff.app.activity.CommentsActivity;
+import com.livae.ff.app.activity.ConversationActivity;
 import com.livae.ff.app.adapter.ConversationsAdapter;
 import com.livae.ff.app.listener.ConversationClickListener;
 import com.livae.ff.app.listener.SearchListener;
@@ -74,9 +75,8 @@ public class ChatsFragment extends AbstractFragment
 	public void onResume() {
 		super.onResume();
 		getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, this);
-		getActivity().getContentResolver().registerContentObserver(ContactsProvider
-																	 .getUriContacts(),
-																   true, contentObserver);
+		final ContentResolver resolver = getActivity().getContentResolver();
+		resolver.registerContentObserver(ContactsProvider.getUriContacts(), true, contentObserver);
 	}
 
 	@Override
@@ -90,8 +90,8 @@ public class ChatsFragment extends AbstractFragment
 	public void conversationClicked(Long conversationId, String roomName, String userDisplayName,
 									Long userId, Constants.ChatType chatType, Long lastMessageDate,
 									TextView name, View image, String imageUri) {
-		CommentsActivity.startChat(getActivity(), conversationId, chatType, userId, userDisplayName,
-								   roomName);
+		ConversationActivity.start(getActivity(), chatType, conversationId, userId, userDisplayName,
+								   roomName, null);
 	}
 
 	@Override
