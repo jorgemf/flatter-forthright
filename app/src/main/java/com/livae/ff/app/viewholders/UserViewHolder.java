@@ -91,6 +91,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 	}
 
 	public void setUserImage(String imageUri) {
+		userModel.userImageUri = imageUri;
 		if (userModel.userImageView != null) {
 			if (imageUri != null) {
 				ImageUtils.loadUserImage(userModel.userImageView, imageUri);

@@ -20,6 +20,20 @@
 		android:visibility="gone"
 		tools:visibility="visible"/>
 
+	<TextView
+		android:id="@+id/tutorial"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginLeft="@dimen/space_large"
+		android:layout_marginRight="@dimen/space_large"
+		android:layout_marginTop="@dimen/space_huge"
+		android:lineSpacingMultiplier="1.1"
+		android:text="@string/start_first_conversation_tutorial"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:visibility="visible"/>
+
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/recycler_view"
 		android:layout_width="match_parent"

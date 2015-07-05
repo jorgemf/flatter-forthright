@@ -1,16 +1,26 @@
 package com.livae.ff.app.fragment;
 
 import android.content.ContentResolver;
+import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.util.Pair;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.livae.ff.api.ff.model.Comment;
+import com.livae.ff.api.ff.model.Conversation;
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
+import com.livae.ff.app.R;
 import com.livae.ff.app.activity.AbstractActivity;
 import com.livae.ff.app.activity.AbstractChatActivity;
 import com.livae.ff.app.adapter.CommentsAdapter;
@@ -21,19 +31,26 @@ import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.sql.Table;
+import com.livae.ff.app.task.ConversationParams;
 import com.livae.ff.app.task.ListResult;
 import com.livae.ff.app.task.QueryId;
 import com.livae.ff.app.task.TaskCommentVoteAgree;
 import com.livae.ff.app.task.TaskCommentVoteDelete;
 import com.livae.ff.app.task.TaskCommentVoteDisagree;
 import com.livae.ff.app.task.TaskCommentsGet;
+import com.livae.ff.app.task.TaskConversationCreate;
+import com.livae.ff.app.task.TaskConversationJoin;
+import com.livae.ff.app.task.TaskConversationLeave;
 import com.livae.ff.app.task.TaskPostComment;
+import com.livae.ff.app.utils.AnimUtils;
 import com.livae.ff.app.viewholders.CommentViewHolder;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 
 public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder, QueryId>
   implements CommentActionListener {
+
+	private static final int LOADER_CONVERSATION_ID = 2;
 
 	private TaskCommentVoteAgree taskVoteAgreeComment;
 
@@ -42,6 +59,8 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 	private TaskCommentVoteDelete taskNoVoteComment;
 
 	private TaskPostComment taskPostComment;
+
+	private View commentPostContainer;
 
 	private FloatingActionButton buttonPostComment;
 
@@ -63,8 +82,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 
 		@Override
 		public void onChange(boolean selfChange) {
-			// TODO
-//			getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, ChatsFragment.this);
+			reloadCursor();
 		}
 	};
 
@@ -78,8 +96,37 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 		}
 		chatType = (ChatType) extras.getSerializable(AbstractChatActivity.EXTRA_CHAT_TYPE);
 		anonymousNick = extras.getString(AbstractChatActivity.EXTRA_ROOM_NAME, null);
+		conversationPhone = extras.getLong(AbstractChatActivity.EXTRA_PHONE_NUMBER);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+							 @Nullable Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.fragment_comments, container, false);
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		commentPostContainer = view.findViewById(R.id.comment_post_container);
+		buttonPostComment = (FloatingActionButton) view.findViewById(R.id.button_post_comment);
+		commentText = (EditText) view.findViewById(R.id.comment_text);
+		commentPostContainer.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
 		checkCanSendMessages();
-		// TODO get null things: conversation Id and anonymous Nick
+		if (conversationId == null) {
+			getConversation();
+		} else {
+			getLoaderManager().restartLoader(LOADER_CONVERSATION_ID, Bundle.EMPTY,
+											 ChatPublicFragment.this);
+			registerContentObserver();
+			joinConversation();
+		}
 	}
 
 	@Override
@@ -96,6 +143,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 		}
 		final ContentResolver cr = getActivity().getContentResolver();
 		cr.unregisterContentObserver(contentObserver);
+		leaveConversation();
 	}
 
 	@Override
@@ -105,7 +153,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 
 	@Override
 	protected Uri getUriCursor() {
-		return null;
+		return ConversationsProvider.getUriConversation(conversationId);
 	}
 
 	@Override
@@ -129,14 +177,54 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 		return Table.Comment.DATE;
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
+	private void getConversation() {
+		ConversationParams conversationParams = new ConversationParams(chatType, conversationPhone);
+		Callback<ConversationParams, Conversation> callback;
+		callback = new Callback<ConversationParams, Conversation>() {
+			@Override
+			public void onComplete(CustomAsyncTask<ConversationParams, Conversation> task,
+								   ConversationParams conversationParams,
+								   Conversation conversation) {
+				conversationId = conversation.getId();
+				if (isResumed()) {
+					getLoaderManager().restartLoader(LOADER_CONVERSATION_ID, Bundle.EMPTY,
+													 ChatPublicFragment.this);
+				}
+			}
+
+			@Override
+			public void onError(CustomAsyncTask<ConversationParams, Conversation> task,
+								ConversationParams conversationParams, Exception e) {
+				if (isResumed()) {
+					AbstractActivity abstractActivity = (AbstractActivity) getActivity();
+					abstractActivity.showSnackBarException(e);
+				}
+			}
+		};
+		new TaskConversationCreate().execute(conversationParams, callback);
+	}
+
+	private void registerContentObserver() {
 		if (conversationId != null) {
 			final ContentResolver cr = getActivity().getContentResolver();
 			cr.registerContentObserver(ConversationsProvider.getUriConversation(conversationId),
 									   true, contentObserver);
 		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.edit_menu, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_edit) {
+			// TODO
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -224,18 +312,6 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 		});
 	}
 
-	public void setConversationId(Long conversationId) {
-		this.conversationId = conversationId;
-		final ContentResolver cr = getActivity().getContentResolver();
-		if (conversationId != null) {
-			cr.registerContentObserver(ConversationsProvider.getUriConversation(conversationId),
-									   true, contentObserver);
-			restart();
-		} else {
-			cr.unregisterContentObserver(contentObserver);
-		}
-	}
-
 	private void checkCanSendMessages() {
 		boolean canSendMessages = true;
 		if (chatType != null) {
@@ -256,7 +332,47 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 			}
 		}
 		if (canSendMessages) {
-			// TODO now can send messages
+			Resources res = getResources();
+			int shortTime = res.getInteger(android.R.integer.config_shortAnimTime);
+			int height = commentPostContainer.getHeight();
+			int margin = res.getDimensionPixelSize(R.dimen.space_normal);
+			AnimUtils.build(commentPostContainer).alpha(0.2f, 1).translateY(height + margin, 0)
+					 .accelerateDecelerate().start();
+			height = buttonPostComment.getHeight();
+			AnimUtils.build(buttonPostComment).alpha(0.2f, 1).translateY(height + margin, 0)
+					 .accelerateDecelerate().start();
+			commentPostContainer.setVisibility(View.VISIBLE);
 		}
+	}
+
+	private void joinConversation() {
+		new TaskConversationJoin().execute(conversationId, new Callback<Long, Void>() {
+			@Override
+			public void onComplete(CustomAsyncTask<Long, Void> task, Long aLong, Void aVoid) {
+				startLoading();
+			}
+
+			@Override
+			public void onError(CustomAsyncTask<Long, Void> task, Long aLong, Exception e) {
+				if (isResumed()) {
+					AbstractActivity activity = (AbstractActivity) getActivity();
+					activity.showSnackBarException(e);
+				}
+			}
+		});
+	}
+
+	private void leaveConversation() {
+		new TaskConversationLeave().execute(conversationId, new Callback<Long, Void>() {
+			@Override
+			public void onComplete(CustomAsyncTask<Long, Void> task, Long aLong, Void aVoid) {
+				// nothing
+			}
+
+			@Override
+			public void onError(CustomAsyncTask<Long, Void> task, Long aLong, Exception e) {
+				// nothing
+			}
+		});
 	}
 }

@@ -190,6 +190,12 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		loaderTask = getLoaderTask();
+	}
+
+	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(KEY_SAVED_NEXT_CURSOR, nextCursor);
@@ -202,13 +208,14 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 	@Override
 	public void onPause() {
 		super.onPause();
-		loaderTask.cancel();
+		if (loaderTask != null) {
+			loaderTask.cancel();
+		}
 		adapter.setIsLoading(false);
 		finishLoading = false;
 	}
 
 	protected void startLoading() {
-		loaderTask = getLoaderTask();
 		if (totalLoaded == 0 && nextCursor == null) {
 			loadNext();
 		} else {
@@ -404,11 +411,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 				}
 			}).start();
 		}
-	}
-
-	public interface LifeCycleListener {
-
-		public void onResumed(AbstractLoaderFragment fragment);
 	}
 
 	public class GridSpanSize extends GridLayoutManager.SpanSizeLookup {

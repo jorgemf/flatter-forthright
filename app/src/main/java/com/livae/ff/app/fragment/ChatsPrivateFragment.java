@@ -41,6 +41,8 @@ public class ChatsPrivateFragment extends AbstractFragment
 
 	private TextView emptyView;
 
+	private TextView tutorialView;
+
 	private ContentObserver contentObserver = new ContentObserver(null) {
 
 		@Override
@@ -66,6 +68,7 @@ public class ChatsPrivateFragment extends AbstractFragment
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		emptyView = (TextView) view.findViewById(R.id.empty_view);
+		tutorialView = (TextView) view.findViewById(R.id.tutorial);
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 		conversationsAdapter = new ChatsPrivateAdapter(getActivity(), this);
 		recyclerView.setAdapter(conversationsAdapter);
@@ -98,13 +101,7 @@ public class ChatsPrivateFragment extends AbstractFragment
 	@Override
 	public boolean onNotificationReceived(Notification notification) {
 		getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, this);
-		// TODO
 		return true;
-	}
-
-	public int getUnreadChats() {
-		// TODO
-		return 1;
 	}
 
 	@Override
@@ -160,14 +157,17 @@ public class ChatsPrivateFragment extends AbstractFragment
 		conversationsAdapter.setCursor(data);
 		conversationsAdapter.notifyDataSetChanged();
 		if (data.getCount() == 0) {
-			emptyView.setVisibility(View.VISIBLE);
-			if (searchText == null) {
-				emptyView.setText(R.string.start_first_conversation);
+			if (TextUtils.isEmpty(searchText)) {
+				tutorialView.setVisibility(View.VISIBLE);
+				emptyView.setVisibility(View.GONE);
 			} else {
+				tutorialView.setVisibility(View.GONE);
+				emptyView.setVisibility(View.VISIBLE);
 				emptyView.setText(R.string.no_conversations);
 			}
 		} else {
 			emptyView.setVisibility(View.GONE);
+			tutorialView.setVisibility(View.GONE);
 		}
 	}
 

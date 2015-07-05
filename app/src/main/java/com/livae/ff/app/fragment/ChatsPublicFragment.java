@@ -131,13 +131,7 @@ public class ChatsPublicFragment extends AbstractFragment
 	@Override
 	public boolean onNotificationReceived(Notification notification) {
 		getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
-		// TODO
 		return true;
-	}
-
-	public int getUnreadChats() {
-		// TODO
-		return 1;
 	}
 
 	@Override

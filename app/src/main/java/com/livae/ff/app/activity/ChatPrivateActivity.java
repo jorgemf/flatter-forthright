@@ -37,6 +37,7 @@ public class ChatPrivateActivity extends AbstractChatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_comments);
+		onCreated();
 
 //		EditTextDialogFragment dialog = new EditTextDialogFragment() {
 //

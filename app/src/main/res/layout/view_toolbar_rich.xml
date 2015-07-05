@@ -42,6 +42,8 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:drawablePadding="@dimen/space_small"
+				android:ellipsize="end"
+				android:maxLines="1"
 				android:textAppearance="?android:attr/textAppearanceLarge"
 				android:textSize="@dimen/text_size_large"
 				tools:text="Title"
@@ -52,10 +54,14 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:drawablePadding="@dimen/space_small"
+				android:ellipsize="end"
+				android:maxLines="1"
 				android:textAppearance="?android:attr/textAppearanceSmall"
-				android:textSize="@dimen/text_size_medium"
+				android:textSize="@dimen/text_size_normal"
+				android:visibility="gone"
 				tools:text="Subtitle"
-				tools:textColor="@color/white_dark"/>
+				tools:textColor="@color/white_dark"
+				tools:visibility="visible"/>
 
 		</LinearLayout>
 

@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -73,17 +72,14 @@ public class AbstractChatActivity extends AbstractActivity {
 		}
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-		super.onCreate(savedInstanceState, persistentState);
-
+	protected void onCreated() {
 		// Set up the action bar.
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 		assert actionBar != null;
-		actionBar.setHomeButtonEnabled(true);
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setTitle(null);
 
 		title = (TextView) findViewById(R.id.toolbar_title);
@@ -124,8 +120,8 @@ public class AbstractChatActivity extends AbstractActivity {
 				if (imageUri != null) {
 					setImageUri(imageUri);
 				}
-				if (displayName != null) {
-					setSubtitle(res.getString(R.string.chat_forthright_subtitle, displayName));
+				if (roomName != null) {
+					setSubtitle(res.getString(R.string.chat_forthright_subtitle, roomName));
 				}
 				break;
 			case FLATTER:
@@ -135,8 +131,8 @@ public class AbstractChatActivity extends AbstractActivity {
 				if (imageUri != null) {
 					setImageUri(imageUri);
 				}
-				if (displayName != null) {
-					setSubtitle(res.getString(R.string.chat_flatter_subtitle, displayName));
+				if (roomName != null) {
+					setSubtitle(res.getString(R.string.chat_flatter_subtitle, roomName));
 				}
 				break;
 			case PRIVATE:
@@ -253,11 +249,21 @@ public class AbstractChatActivity extends AbstractActivity {
 	}
 
 	public void setSubtitle(CharSequence subtitle) {
-		this.subtitle.setText(subtitle);
+		if (subtitle != null) {
+			this.subtitle.setText(subtitle);
+			this.subtitle.setVisibility(View.VISIBLE);
+		} else {
+			this.subtitle.setVisibility(View.GONE);
+		}
 	}
 
 	public void setSubtitle(@StringRes int subtitle) {
-		this.subtitle.setText(subtitle);
+		if (subtitle != 0) {
+			this.subtitle.setText(subtitle);
+			this.subtitle.setVisibility(View.VISIBLE);
+		} else {
+			this.subtitle.setVisibility(View.GONE);
+		}
 	}
 
 	public void setRandomImageSeed(long imageSeed) {
