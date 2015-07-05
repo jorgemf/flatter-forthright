@@ -13,29 +13,29 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.livae.ff.app.R;
-import com.livae.ff.app.activity.CommentsActivity;
-import com.livae.ff.app.adapter.PublicChatsAdapter;
+import com.livae.ff.app.activity.ChatPublicActivity;
+import com.livae.ff.app.adapter.ChatsPublicAdapter;
+import com.livae.ff.app.listener.ChatPublicClickListener;
 import com.livae.ff.app.listener.SearchListener;
-import com.livae.ff.app.listener.UserClickListener;
+import com.livae.ff.app.model.ChatPublicModel;
 import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.common.Constants;
 import com.livae.ff.common.model.Notification;
 
-public class PublicChatsFragment extends AbstractFragment
-  implements UserClickListener, NotificationDisabledReceiver.CloudMessagesDisabledListener,
+public class ChatsPublicFragment extends AbstractFragment
+  implements ChatPublicClickListener, NotificationDisabledReceiver.CloudMessagesDisabledListener,
 			 SearchListener, LoaderManager.LoaderCallbacks<Cursor> {
 
 	private static final String SAVE_COMMENT_TYPE = "SAVE_COMMENT_TYPE";
 
 	private static final int LOAD_CONTACTS = 1;
 
-	protected PublicChatsAdapter publicChatsAdapter;
+	protected ChatsPublicAdapter publicChatsAdapter;
 
 	private Constants.ChatType chatType;
 
@@ -47,7 +47,7 @@ public class PublicChatsFragment extends AbstractFragment
 
 		@Override
 		public void onChange(boolean selfChange) {
-			getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, PublicChatsFragment.this);
+			getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, ChatsPublicFragment.this);
 		}
 	};
 
@@ -72,7 +72,7 @@ public class PublicChatsFragment extends AbstractFragment
 		super.onViewCreated(view, savedInstanceState);
 		emptyView = (TextView) view.findViewById(R.id.empty_view);
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-		publicChatsAdapter = new PublicChatsAdapter(getActivity(), this);
+		publicChatsAdapter = new ChatsPublicAdapter(getActivity(), chatType, this);
 		recyclerView.setAdapter(publicChatsAdapter);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 	}
@@ -108,16 +108,22 @@ public class PublicChatsFragment extends AbstractFragment
 	}
 
 	@Override
-	public void userClicked(Long userId, Long conversationId, String userDisplayName,
-							String anonymousName, TextView name, ImageView image) {
+	public void chatClicked(ChatPublicModel chatPublicModel) {
 		switch (chatType) {
 			case FLATTER:
-				CommentsActivity.startChatFlatter(getActivity(), conversationId, userId,
-												  userDisplayName, anonymousName);
+				ChatPublicActivity.startChatFlatter(getActivity(), chatPublicModel.conversationId,
+													chatPublicModel.userId,
+													chatPublicModel.userDisplayName,
+													chatPublicModel.roomName,
+													chatPublicModel.userImageUri);
 				break;
 			case FORTHRIGHT:
-				CommentsActivity.startChatForthright(getActivity(), conversationId, userId,
-													 userDisplayName, anonymousName);
+				ChatPublicActivity.startChatForthright(getActivity(),
+													   chatPublicModel.conversationId,
+													   chatPublicModel.userId,
+													   chatPublicModel.userDisplayName,
+													   chatPublicModel.roomName,
+													   chatPublicModel.userImageUri);
 				break;
 		}
 	}
@@ -172,7 +178,7 @@ public class PublicChatsFragment extends AbstractFragment
 				}
 				return new CursorLoader(getActivity(),
 										ContactsProvider.getUriContactsConversations(),
-										PublicChatsAdapter.PROJECTION, selection, selectionArgs,
+										ChatsPublicAdapter.PROJECTION, selection, selectionArgs,
 										order);
 			// break
 		}

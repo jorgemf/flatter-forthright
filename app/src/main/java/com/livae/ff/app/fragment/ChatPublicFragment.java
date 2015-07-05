@@ -12,6 +12,7 @@ import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.activity.AbstractActivity;
+import com.livae.ff.app.activity.AbstractChatActivity;
 import com.livae.ff.app.adapter.CommentsAdapter;
 import com.livae.ff.app.adapter.EndlessCursorAdapter;
 import com.livae.ff.app.async.Callback;
@@ -27,11 +28,11 @@ import com.livae.ff.app.task.TaskCommentVoteDelete;
 import com.livae.ff.app.task.TaskCommentVoteDisagree;
 import com.livae.ff.app.task.TaskCommentsGet;
 import com.livae.ff.app.task.TaskPostComment;
-import com.livae.ff.app.viewholders.CommentsViewHolder;
+import com.livae.ff.app.viewholders.CommentViewHolder;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 
-public class ConversationFragment extends AbstractLoaderFragment<CommentsViewHolder, QueryId>
+public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder, QueryId>
   implements CommentActionListener {
 
 	private TaskCommentVoteAgree taskVoteAgreeComment;
@@ -48,11 +49,11 @@ public class ConversationFragment extends AbstractLoaderFragment<CommentsViewHol
 
 	private Long conversationId;
 
-	private ChatType conversationType;
+	private Long conversationPhone;
 
 	private String anonymousNick;
 
-	private Long conversationPhone;
+	private ChatType chatType;
 
 	private boolean isMyPublicChat;
 
@@ -71,6 +72,14 @@ public class ConversationFragment extends AbstractLoaderFragment<CommentsViewHol
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		isMyPublicChat = false;
+		Bundle extras = getActivity().getIntent().getExtras();
+		if (extras.containsKey(AbstractChatActivity.EXTRA_PHONE_NUMBER)) {
+			conversationId = extras.getLong(AbstractChatActivity.EXTRA_PHONE_NUMBER);
+		}
+		chatType = (ChatType) extras.getSerializable(AbstractChatActivity.EXTRA_CHAT_TYPE);
+		anonymousNick = extras.getString(AbstractChatActivity.EXTRA_ROOM_NAME, null);
+		checkCanSendMessages();
+		// TODO get null things: conversation Id and anonymous Nick
 	}
 
 	@Override
@@ -100,8 +109,8 @@ public class ConversationFragment extends AbstractLoaderFragment<CommentsViewHol
 	}
 
 	@Override
-	protected EndlessCursorAdapter<CommentsViewHolder> getAdapter() {
-		commentsAdapter = new CommentsAdapter(this, this, conversationType);
+	protected EndlessCursorAdapter<CommentViewHolder> getAdapter() {
+		commentsAdapter = new CommentsAdapter(this, this, chatType);
 		return commentsAdapter;
 	}
 
@@ -227,25 +236,10 @@ public class ConversationFragment extends AbstractLoaderFragment<CommentsViewHol
 		}
 	}
 
-	public void setConversationType(ChatType conversationType) {
-		this.conversationType = conversationType;
-		checkCanSendMessages();
-	}
-
-	public void setAnonymousNick(String anonymousNick) {
-		this.anonymousNick = anonymousNick;
-		checkCanSendMessages();
-	}
-
-	public void setConversationPhone(Long conversationPhone) {
-		this.conversationPhone = conversationPhone;
-		checkCanSendMessages();
-	}
-
 	private void checkCanSendMessages() {
 		boolean canSendMessages = true;
-		if (conversationType != null) {
-			switch (conversationType) {
+		if (chatType != null) {
+			switch (chatType) {
 				case FLATTER:
 				case FORTHRIGHT:
 					if (conversationPhone != null && anonymousNick != null) {

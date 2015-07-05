@@ -17,10 +17,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.livae.ff.app.R;
-import com.livae.ff.app.activity.ConversationActivity;
-import com.livae.ff.app.adapter.ConversationsAdapter;
-import com.livae.ff.app.listener.ConversationClickListener;
+import com.livae.ff.app.activity.ChatPrivateActivity;
+import com.livae.ff.app.adapter.ChatsPrivateAdapter;
+import com.livae.ff.app.listener.ChatPrivateClickListener;
 import com.livae.ff.app.listener.SearchListener;
+import com.livae.ff.app.model.ChatPrivateModel;
 import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
@@ -28,13 +29,13 @@ import com.livae.ff.app.sql.Table;
 import com.livae.ff.common.Constants;
 import com.livae.ff.common.model.Notification;
 
-public class ChatsFragment extends AbstractFragment
-  implements ConversationClickListener, NotificationDisabledReceiver.CloudMessagesDisabledListener,
+public class ChatsPrivateFragment extends AbstractFragment
+  implements ChatPrivateClickListener, NotificationDisabledReceiver.CloudMessagesDisabledListener,
 			 SearchListener, LoaderManager.LoaderCallbacks<Cursor> {
 
 	private static final int LOAD_CHATS = 2;
 
-	private ConversationsAdapter conversationsAdapter;
+	private ChatsPrivateAdapter conversationsAdapter;
 
 	private String searchText;
 
@@ -44,7 +45,7 @@ public class ChatsFragment extends AbstractFragment
 
 		@Override
 		public void onChange(boolean selfChange) {
-			getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, ChatsFragment.this);
+			getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, ChatsPrivateFragment.this);
 		}
 	};
 
@@ -66,7 +67,7 @@ public class ChatsFragment extends AbstractFragment
 		super.onViewCreated(view, savedInstanceState);
 		emptyView = (TextView) view.findViewById(R.id.empty_view);
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-		conversationsAdapter = new ConversationsAdapter(getActivity(), this);
+		conversationsAdapter = new ChatsPrivateAdapter(getActivity(), this);
 		recyclerView.setAdapter(conversationsAdapter);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 	}
@@ -87,11 +88,11 @@ public class ChatsFragment extends AbstractFragment
 	}
 
 	@Override
-	public void conversationClicked(Long conversationId, String roomName, String userDisplayName,
-									Long userId, Constants.ChatType chatType, Long lastMessageDate,
-									TextView name, View image, String imageUri) {
-		ConversationActivity.start(getActivity(), chatType, conversationId, userId, userDisplayName,
-								   roomName, null);
+	public void chatClicked(ChatPrivateModel chatPrivateModel) {
+		ChatPrivateActivity.start(getActivity(), chatPrivateModel.chatType,
+								  chatPrivateModel.conversationId, chatPrivateModel.userId,
+								  chatPrivateModel.userDisplayName, chatPrivateModel.roomName,
+								  chatPrivateModel.userImageUri);
 	}
 
 	@Override
@@ -146,7 +147,7 @@ public class ChatsFragment extends AbstractFragment
 				}
 				return new CursorLoader(getActivity(),
 										ConversationsProvider.getUriConversationsContacts(),
-										ConversationsAdapter.PROJECTION, selection, selectionArgs,
+										ChatsPrivateAdapter.PROJECTION, selection, selectionArgs,
 										order);
 			// break
 		}
@@ -174,4 +175,5 @@ public class ChatsFragment extends AbstractFragment
 	public void onLoaderReset(Loader<Cursor> loader) {
 
 	}
+
 }

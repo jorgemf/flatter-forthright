@@ -19,14 +19,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.livae.ff.app.R;
 import com.livae.ff.app.activity.ContactsActivity;
-import com.livae.ff.app.adapter.PublicChatsAdapter;
+import com.livae.ff.app.adapter.ChatsPublicAdapter;
 import com.livae.ff.app.adapter.UsersAdapter;
 import com.livae.ff.app.listener.UserClickListener;
+import com.livae.ff.app.model.UserModel;
 import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.sql.Table;
 
@@ -117,7 +117,7 @@ public class ContactsFragment extends AbstractFragment
 				order = Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
 				return new CursorLoader(getActivity(),
 										ContactsProvider.getUriContactsConversations(),
-										PublicChatsAdapter.PROJECTION, selection, selectionArgs,
+										ChatsPublicAdapter.PROJECTION, selection, selectionArgs,
 										order);
 			// break
 		}
@@ -147,13 +147,13 @@ public class ContactsFragment extends AbstractFragment
 	}
 
 	@Override
-	public void userClicked(Long userId, Long conversationId, String userDisplayName,
-							String conversationName, TextView name, ImageView image) {
+	public void userClicked(UserModel userModel) {
 		FragmentActivity activity = getActivity();
 		Intent data = new Intent();
-		data.putExtra(ContactsActivity.SELECTED_DISPLAY_NAME, name.getText().toString());
-		data.putExtra(ContactsActivity.SELECTED_PHONE, userId);
+		data.putExtra(ContactsActivity.SELECTED_DISPLAY_NAME, userModel.userDisplayName);
+		data.putExtra(ContactsActivity.SELECTED_PHONE, userModel.userId);
 		activity.setResult(Activity.RESULT_OK, data);
 		activity.finish();
 	}
+
 }

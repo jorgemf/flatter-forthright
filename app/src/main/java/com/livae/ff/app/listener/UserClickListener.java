@@ -1,11 +1,9 @@
 package com.livae.ff.app.listener;
 
-import android.widget.ImageView;
-import android.widget.TextView;
+import com.livae.ff.app.model.UserModel;
 
 public interface UserClickListener {
 
-	public void userClicked(Long userId, Long conversationId, String userDisplayName,
-							String conversationName, TextView name, ImageView image);
+	public void userClicked(UserModel userModel);
 
 }

@@ -51,10 +51,10 @@ public class AbstractChatActivity extends AbstractActivity {
 
 	private ImageView imageUser;
 
-	public static void startIntent(@NonNull Intent intent, @NonNull Activity activity,
-								   @NonNull ChatType chatType, Long conversationId,
-								   Long phoneNumber, String displayName, String roomName,
-								   String imageUri, Long imageSeed) {
+	protected static void startIntent(@NonNull Intent intent, @NonNull Activity activity,
+									  @NonNull ChatType chatType, Long conversationId,
+									  Long phoneNumber, String displayName, String roomName,
+									  String imageUri, Long imageSeed) {
 		if (conversationId == null && phoneNumber == null) {
 			throw new RuntimeException("Not enough data to start the conversation");
 		}

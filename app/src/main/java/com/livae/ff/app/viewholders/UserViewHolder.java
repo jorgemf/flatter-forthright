@@ -9,97 +9,94 @@ import android.widget.TextView;
 
 import com.livae.ff.app.R;
 import com.livae.ff.app.listener.UserClickListener;
+import com.livae.ff.app.model.UserModel;
 import com.livae.ff.app.utils.ImageUtils;
 import com.livae.ff.app.utils.PhoneUtils;
 import com.livae.ff.app.utils.TextUtils;
 
 public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-	private Long userPhone;
-
-	private Long conversationId;
-
-	private String userName;
-
-	private String conversationName;
-
-	private TextView userNameTextView;
-
-	private TextView userPhoneTextView;
-
-	private ImageView userImageView;
+	private UserModel userModel;
 
 	private UserClickListener userClickListener;
 
 	public UserViewHolder(View itemView, UserClickListener userClickListener) {
-		super(itemView);
+		this(itemView, new UserModel());
 		this.userClickListener = userClickListener;
 		itemView.setOnClickListener(this);
-		userNameTextView = (TextView) itemView.findViewById(R.id.user_name);
-		userPhoneTextView = (TextView) itemView.findViewById(R.id.user_phone);
-		userImageView = (ImageView) itemView.findViewById(R.id.user_image);
+	}
+
+	protected UserViewHolder(View itemView, UserModel userModel) {
+		super(itemView);
+		this.userModel = userModel;
+		userModel.displayNameTextView = (TextView) itemView.findViewById(R.id.user_name);
+		userModel.phoneTextView = (TextView) itemView.findViewById(R.id.subtitle);
+		userModel.userImageView = (ImageView) itemView.findViewById(R.id.user_image);
 	}
 
 	public void clear() {
-		userImageView.setImageBitmap(null);
-		userNameTextView.setText(null);
-		userPhoneTextView.setText(null);
-		userImageView.setImageResource(R.drawable.ic_account_circle_white_48dp);
-		userPhone = null;
-		conversationId = null;
-		conversationName = null;
-		userName = null;
+		userModel.clear();
 	}
 
 	@Override
 	public void onClick(View v) {
-		userClickListener.userClicked(userPhone, conversationId, userName, conversationName,
-									  userNameTextView, userImageView);
+		if (userClickListener != null) {
+			userClickListener.userClicked(userModel);
+		}
 	}
 
-	public Long getUserPhone() {
-		return userPhone;
+	public Long getUserId() {
+		return userModel.userId;
+	}
+
+	public void setUserPhone(Long userPhone) {
+		userModel.userId = userPhone;
 	}
 
 	public void setUserPhone(Long userPhone, String countryISO) {
-		this.userPhone = userPhone;
-		this.userPhoneTextView.setText(PhoneUtils.getPrettyPrint(userPhone, countryISO));
+		userModel.userId = userPhone;
+		if (userModel.phoneTextView != null) {
+			userModel.phoneTextView.setText(PhoneUtils.getPrettyPrint(userPhone, countryISO));
+		}
 	}
 
-	public void setUserName(CharSequence name, String boldText) {
-		if (boldText != null) {
-			this.userNameTextView.setText(TextUtils.setBoldText(name, boldText, true));
-		} else {
-			this.userNameTextView.setText(name);
+	public void setUserName(String name, String boldText) {
+		userModel.userDisplayName = name;
+		if (userModel.displayNameTextView != null) {
+			if (boldText != null) {
+				userModel.displayNameTextView.setText(TextUtils.setBoldText(name, boldText, true));
+			} else {
+				userModel.displayNameTextView.setText(name);
+			}
 		}
 	}
 
 	public void setUserNameRes(@StringRes int stringRes) {
-		this.userNameTextView.setText(stringRes);
-	}
-
-	public void setUserName(CharSequence name) {
-		this.userName = name.toString();
-		this.userNameTextView.setText(name);
-	}
-
-	public void setUserImageRes(@DrawableRes int drawableRed) {
-		this.userImageView.setImageResource(drawableRed);
-	}
-
-	public void setUserImage(String imageUri) {
-		if (imageUri != null) {
-			ImageUtils.loadUserImage(userImageView, imageUri);
-		} else {
-			userImageView.setImageResource(R.drawable.ic_account_circle_white_48dp);
+		if (userModel.displayNameTextView != null) {
+			userModel.displayNameTextView.setText(stringRes);
 		}
 	}
 
-	public void setConversationId(Long conversationId) {
-		this.conversationId = conversationId;
+	public void setUserName(String name) {
+		userModel.userDisplayName = name;
+		if (userModel.displayNameTextView != null) {
+			userModel.displayNameTextView.setText(name);
+		}
 	}
 
-	public void setConversationName(String conversationName) {
-		this.conversationName = conversationName;
+	public void setUserImageRes(@DrawableRes int drawableRed) {
+		if (userModel.userImageView != null) {
+			userModel.userImageView.setImageResource(drawableRed);
+		}
+	}
+
+	public void setUserImage(String imageUri) {
+		if (userModel.userImageView != null) {
+			if (imageUri != null) {
+				ImageUtils.loadUserImage(userModel.userImageView, imageUri);
+			} else {
+				userModel.userImageView.setImageResource(R.drawable.ic_account_circle_white_48dp);
+			}
+		}
 	}
 }

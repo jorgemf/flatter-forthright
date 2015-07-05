@@ -27,11 +27,11 @@ import com.livae.ff.app.task.TaskCommentVoteDelete;
 import com.livae.ff.app.task.TaskCommentVoteDisagree;
 import com.livae.ff.app.task.TaskCommentsGet;
 import com.livae.ff.app.task.TaskPostComment;
-import com.livae.ff.app.viewholders.CommentsViewHolder;
+import com.livae.ff.app.viewholders.CommentViewHolder;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 
-public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder, QueryId>
+public class ChatPrivateFragment extends AbstractLoaderFragment<CommentViewHolder, QueryId>
   implements CommentActionListener {
 
 	private TaskCommentVoteAgree taskVoteAgreeComment;
@@ -48,7 +48,11 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 
 	private Long conversationId;
 
+	private ChatType conversationType;
+
 	private String anonymousNick;
+
+	private Long conversationPhone;
 
 	private boolean isMyPublicChat;
 
@@ -96,7 +100,7 @@ public class CommentsFragment extends AbstractLoaderFragment<CommentsViewHolder,
 	}
 
 	@Override
-	protected EndlessCursorAdapter<CommentsViewHolder> getAdapter() {
+	protected EndlessCursorAdapter<CommentViewHolder> getAdapter() {
 		commentsAdapter = new CommentsAdapter(this, this, conversationType);
 		return commentsAdapter;
 	}

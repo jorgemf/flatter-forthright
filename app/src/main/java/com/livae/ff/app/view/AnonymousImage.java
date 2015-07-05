@@ -61,6 +61,10 @@ public class AnonymousImage extends View {
 		bounds = new Rect();
 	}
 
+	public void setSeed(String seed) {
+		setSeed(seed.hashCode());
+	}
+
 	public void setSeed(long seed) {
 		this.seed = seed;
 	}

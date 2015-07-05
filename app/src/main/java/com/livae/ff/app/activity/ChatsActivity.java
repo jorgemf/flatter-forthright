@@ -24,8 +24,8 @@ import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.adapter.ChatsFragmentsAdapter;
-import com.livae.ff.app.fragment.ChatsFragment;
-import com.livae.ff.app.fragment.PublicChatsFragment;
+import com.livae.ff.app.fragment.ChatsPrivateFragment;
+import com.livae.ff.app.fragment.ChatsPublicFragment;
 import com.livae.ff.app.listener.SearchListener;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.app.utils.IntentUtils;
@@ -120,7 +120,7 @@ public class ChatsActivity extends AbstractActivity
 					fragment = chatsFragmentsAdapter
 								 .getRegisteredFragment(ChatsFragmentsAdapter.CHAT_PRIVATE);
 					if (fragment != null) {
-						ChatsFragment chatsFragment = (ChatsFragment) fragment;
+						ChatsPrivateFragment chatsFragment = (ChatsPrivateFragment) fragment;
 						return chatsFragment.onNotificationReceived(notification);
 					}
 					break;
@@ -128,16 +128,16 @@ public class ChatsActivity extends AbstractActivity
 					fragment = chatsFragmentsAdapter
 								 .getRegisteredFragment(ChatsFragmentsAdapter.CHAT_FLATTERED);
 					if (fragment != null) {
-						PublicChatsFragment publicChatsFragment = (PublicChatsFragment) fragment;
-						return publicChatsFragment.onNotificationReceived(notification);
+						ChatsPublicFragment chatsPublicFragment = (ChatsPublicFragment) fragment;
+						return chatsPublicFragment.onNotificationReceived(notification);
 					}
 					break;
 				case FORTHRIGHT:
 					fragment = chatsFragmentsAdapter
 								 .getRegisteredFragment(ChatsFragmentsAdapter.CHAT_FORTHRIGHT);
 					if (fragment != null) {
-						PublicChatsFragment publicChatsFragment = (PublicChatsFragment) fragment;
-						return publicChatsFragment.onNotificationReceived(notification);
+						ChatsPublicFragment chatsPublicFragment = (ChatsPublicFragment) fragment;
+						return chatsPublicFragment.onNotificationReceived(notification);
 					}
 					break;
 			}
@@ -371,13 +371,13 @@ public class ChatsActivity extends AbstractActivity
 			final String name = data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME);
 			switch (requestCode) {
 				case REQUEST_CONTACT_PRIVATE:
-					ConversationActivity.startChatPrivate(this, phone, name);
+					ChatPrivateActivity.startChatPrivate(this, phone, name);
 					break;
 				case REQUEST_CONTACT_SECRET:
-					ConversationActivity.startChatSecret(this, phone, name);
+					ChatPrivateActivity.startChatSecret(this, phone, name);
 					break;
 				case REQUEST_CONTACT_ANONYMOUS:
-					ConversationActivity.startChatAnonymous(this, phone, name);
+					ChatPrivateActivity.startChatAnonymous(this, phone, name);
 					break;
 			}
 		}

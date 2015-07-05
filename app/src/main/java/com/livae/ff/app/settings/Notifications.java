@@ -71,11 +71,11 @@ public class Notifications {
 		prefs.edit().putBoolean(NOTIFICATIONS_IMPORTANT, important).apply();
 	}
 
-	public SharedPreferences getPrefs() {
-		return prefs;
+	public String toString() {
+		return "[commentsChat = " + commentsChat + "] " +
+			   "[commentsFlatteredMe = " + commentsFlatteredMe + "] " +
+			   "[commentsForthrightMe = " + commentsForthrightMe + "] " +
+			   "[important = " + important + "] ";
 	}
 
-	public void setPrefs(SharedPreferences prefs) {
-		this.prefs = prefs;
-	}
 }

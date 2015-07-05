@@ -20,8 +20,10 @@
 		android:layout_alignParentRight="true"
 		android:layout_margin="@dimen/space_huge"
 		android:src="@drawable/ic_content_clear_white_24dp"
+		app:backgroundTint="@color/purple"
 		app:borderWidth="0dp"
-		app:fabSize="normal"/>
+		app:fabSize="normal"
+		app:rippleColor="@color/purple_dark"/>
 
 	<LinearLayout
 		android:id="@+id/create_chat_anonymous"
@@ -49,10 +51,10 @@
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/space_normal"
 			android:src="@drawable/ic_question_mark_white_24dp"
-			app:backgroundTint="@color/purple"
+			app:backgroundTint="@color/amber"
 			app:borderWidth="0dp"
 			app:fabSize="mini"
-			app:rippleColor="@color/purple_dark"/>
+			app:rippleColor="@color/amber_dark"/>
 
 	</LinearLayout>
 
@@ -82,10 +84,10 @@
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/space_normal"
 			android:src="@drawable/ic_timer_white_24dp"
-			app:backgroundTint="@color/purple"
+			app:backgroundTint="@color/amber"
 			app:borderWidth="0dp"
 			app:fabSize="mini"
-			app:rippleColor="@color/purple_dark"/>
+			app:rippleColor="@color/amber_dark"/>
 
 	</LinearLayout>
 
@@ -115,10 +117,10 @@
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/space_normal"
 			android:src="@drawable/ic_chat_bubble_outline_white_24dp"
-			app:backgroundTint="@color/purple"
+			app:backgroundTint="@color/amber"
 			app:borderWidth="0dp"
 			app:fabSize="mini"
-			app:rippleColor="@color/purple_dark"/>
+			app:rippleColor="@color/amber_dark"/>
 
 	</LinearLayout>
 

@@ -8,8 +8,8 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.livae.ff.app.R;
-import com.livae.ff.app.fragment.ChatsFragment;
-import com.livae.ff.app.fragment.PublicChatsFragment;
+import com.livae.ff.app.fragment.ChatsPrivateFragment;
+import com.livae.ff.app.fragment.ChatsPublicFragment;
 import com.livae.ff.common.Constants;
 
 public class ChatsFragmentsAdapter extends FragmentPagerAdapter {
@@ -37,15 +37,15 @@ public class ChatsFragmentsAdapter extends FragmentPagerAdapter {
 	public Fragment getItem(int position) {
 		switch (position) {
 			case CHAT_FLATTERED:
-				PublicChatsFragment flatterer = new PublicChatsFragment();
+				ChatsPublicFragment flatterer = new ChatsPublicFragment();
 				flatterer.setChatType(Constants.ChatType.FLATTER);
 				return flatterer;
 			case CHAT_FORTHRIGHT:
-				PublicChatsFragment forthright = new PublicChatsFragment();
+				ChatsPublicFragment forthright = new ChatsPublicFragment();
 				forthright.setChatType(Constants.ChatType.FORTHRIGHT);
 				return forthright;
 			case CHAT_PRIVATE:
-				return new ChatsFragment();
+				return new ChatsPrivateFragment();
 		}
 		return null;
 	}

@@ -9,7 +9,7 @@
 	android:padding="@dimen/space_large">
 
 	<ImageView
-		android:id="@+id/image_user"
+		android:id="@+id/user_image"
 		android:layout_width="@dimen/item_user_image_size"
 		android:layout_height="@dimen/item_user_image_size"
 		android:layout_alignParentLeft="true"
@@ -21,7 +21,7 @@
 		tools:ignore="ContentDescription"/>
 
 	<com.livae.ff.app.view.AnonymousImage
-		android:id="@+id/image_anonymous"
+		android:id="@+id/anonymous_image"
 		android:layout_width="@dimen/item_user_image_size"
 		android:layout_height="@dimen/item_user_image_size"
 		android:layout_alignParentLeft="true"
@@ -52,7 +52,6 @@
 		android:layout_marginLeft="@dimen/item_user_image_time_margin"
 		android:layout_marginStart="@dimen/item_user_image_time_margin"
 		android:src="@drawable/ic_timer_black_24dp"/>
-	<!--android:src="@drawable/ic_access_time_black_24dp"/>-->
 
 	<TextView
 		android:id="@+id/user_name"
@@ -62,8 +61,8 @@
 		android:layout_marginEnd="@dimen/space_normal"
 		android:layout_marginRight="@dimen/space_normal"
 		android:layout_marginTop="@dimen/space_tiny"
-		android:layout_toEndOf="@id/image"
-		android:layout_toRightOf="@id/image"
+		android:layout_toEndOf="@id/user_image"
+		android:layout_toRightOf="@id/user_image"
 		android:maxLines="1"
 		android:maxWidth="120dp"
 		android:textAppearance="?android:attr/textAppearanceMedium"
@@ -103,9 +102,9 @@
 		android:ellipsize="end"
 		android:layout_below="@id/title"
 		android:layout_marginTop="@dimen/space_normal"
-		android:layout_toEndOf="@id/image"
+		android:layout_toEndOf="@id/user_image"
 		android:layout_toLeftOf="@id/date"
-		android:layout_toRightOf="@id/image"
+		android:layout_toRightOf="@id/user_image"
 		android:layout_toStartOf="@id/date"
 		android:lines="1"
 		android:textAppearance="?android:attr/textAppearanceMedium"

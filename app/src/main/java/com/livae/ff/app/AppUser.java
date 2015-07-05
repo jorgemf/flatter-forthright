@@ -3,6 +3,7 @@ package com.livae.ff.app;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.livae.ff.app.settings.Chats;
 import com.livae.ff.app.settings.Notifications;
 import com.livae.ff.app.settings.Settings;
 import com.livae.ff.common.Constants.Profile;
@@ -19,15 +20,7 @@ public class AppUser {
 
 	private static final String USER_PROFILE = "ff.user.profile";
 
-	private static final String USER_IMAGE_URI = "ff.user.image_uri";
-
-	private static final String USER_DISPLAY_NAME = "ff.user.display_name";
-
-	private static final String USER_ANONYMOUS_NAME = "ff.user.anonymous_name";
-
 	private static final String USER_BLOCKED_FORTHRIGHT_CHATS = "ff.user.blocked_forthright_chats";
-
-	private Long blockedForthRightChats;
 
 	private Integer appVersion;
 
@@ -35,11 +28,7 @@ public class AppUser {
 
 	private String accessToken;
 
-	private String displayName;
-
-	private String anonymousName;
-
-	private String imageUri;
+	private Long blockedForthRightChats;
 
 	private Long userPhone;
 
@@ -49,9 +38,12 @@ public class AppUser {
 
 	private Notifications notifications;
 
+	private Chats chats;
+
 	protected AppUser(Context context) {
 		load(context.getApplicationContext());
 		notifications = new Notifications(prefs);
+		chats = new Chats(prefs);
 	}
 
 	private void load(Context context) {
@@ -66,10 +58,7 @@ public class AppUser {
 		if (userPhone == 0) {
 			userPhone = null;
 		}
-		imageUri = prefs.getString(USER_IMAGE_URI, null);
 		accessToken = prefs.getString(ACCESS_TOKEN, null);
-		displayName = prefs.getString(USER_DISPLAY_NAME, null);
-		anonymousName = prefs.getString(USER_ANONYMOUS_NAME, null);
 		setProfile(prefs.getString(USER_PROFILE, null));
 	}
 
@@ -125,6 +114,15 @@ public class AppUser {
 		return profile;
 	}
 
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+		if (profile == null) {
+			prefs.edit().putString(USER_PROFILE, null).apply();
+		} else {
+			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
+		}
+	}
+
 	public void setProfile(String profile) {
 		try {
 			if (profile == null) {
@@ -137,15 +135,6 @@ public class AppUser {
 		}
 	}
 
-	public void setProfile(Profile profile) {
-		this.profile = profile;
-		if (profile == null) {
-			prefs.edit().putString(USER_PROFILE, null).apply();
-		} else {
-			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
-		}
-	}
-
 	public String getCloudMessagesId() {
 		return cloudMessagesId;
 	}
@@ -155,35 +144,12 @@ public class AppUser {
 		prefs.edit().putString(CLOUD_MESSAGES_ID, cloudMessagesId).apply();
 	}
 
-	public String getUserImageUri() {
-		return imageUri;
-	}
-
-	public void setUserImageUri(String imageUri) {
-		this.imageUri = imageUri;
-		prefs.edit().putString(USER_IMAGE_URI, imageUri).apply();
-	}
-
-	public String getUserDisplayName() {
-		return displayName;
-	}
-
-	public void setUserDisplayName(String displayName) {
-		this.displayName = displayName;
-		prefs.edit().putString(USER_DISPLAY_NAME, displayName).apply();
-	}
-
-	public String getUserAnonymousName() {
-		return anonymousName;
-	}
-
-	public void setUserAnonymousName(String anonymousName) {
-		this.anonymousName = anonymousName;
-		prefs.edit().putString(USER_ANONYMOUS_NAME, anonymousName).apply();
-	}
-
 	public Notifications getNotifications() {
 		return notifications;
+	}
+
+	public Chats getChats() {
+		return chats;
 	}
 
 	public String toString() {
@@ -192,10 +158,8 @@ public class AppUser {
 			   "[cloudMessagesId = " + cloudMessagesId + "] " +
 			   "[appVersion = " + appVersion + "] " +
 			   "[profile = " + profile + "] " +
-			   "[imageUri = " + imageUri + "] " +
-			   "[displayName = " + displayName + "] " +
-			   "[anonymousName = " + anonymousName + "] " +
-			   "[blockedForthRightChats = " + blockedForthRightChats + "] ";
+			   "[blockedForthRightChats = " + blockedForthRightChats + "] " + chats.toString() +
+			   notifications.toString();
 	}
 
 }

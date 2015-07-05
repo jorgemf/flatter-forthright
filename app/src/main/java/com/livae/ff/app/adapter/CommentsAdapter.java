@@ -9,7 +9,7 @@ import com.livae.ff.app.R;
 import com.livae.ff.app.fragment.AbstractLoaderFragment;
 import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.sql.Table;
-import com.livae.ff.app.viewholders.CommentsViewHolder;
+import com.livae.ff.app.viewholders.CommentViewHolder;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
 
@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 
-public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
+public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
 	public static final String[] PROJECTION = {Table.Comment.T_ID, Table.Comment.DATE,
 											   Table.Comment.CONVERSATION_ID,
@@ -114,13 +114,13 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentsViewHolder> {
 	}
 
 	@Override
-	protected CommentsViewHolder createCustomViewHolder(ViewGroup viewGroup, int type) {
+	protected CommentViewHolder createCustomViewHolder(ViewGroup viewGroup, int type) {
 		View view = layoutInflater.inflate(R.layout.item_comment, viewGroup, false);
-		return new CommentsViewHolder(view, commentActionListener);
+		return new CommentViewHolder(view, commentActionListener);
 	}
 
 	@Override
-	protected void bindCustomViewHolder(CommentsViewHolder holder, int position, Cursor cursor) {
+	protected void bindCustomViewHolder(CommentViewHolder holder, int position, Cursor cursor) {
 		holder.clear();
 		long commentId = cursor.getLong(iId);
 		holder.setCommentId(commentId);

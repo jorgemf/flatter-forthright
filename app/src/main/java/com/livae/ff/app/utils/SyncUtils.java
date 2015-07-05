@@ -16,6 +16,7 @@ import com.livae.ff.app.Application;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.provider.ConversationsProvider;
+import com.livae.ff.app.settings.Chats;
 
 import java.util.concurrent.TimeUnit;
 
@@ -124,9 +125,9 @@ public class SyncUtils {
 
 		}
 		cursor.close();
-		AppUser user = Application.appUser();
-		user.setUserImageUri(imageUri);
-		user.setUserDisplayName(userName);
+		Chats chats = Application.appUser().getChats();
+		chats.setUserImageUri(imageUri);
+		chats.setUserDisplayName(userName);
 	}
 
 	public static void syncCommentsWhenNetwork() {

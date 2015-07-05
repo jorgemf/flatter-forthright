@@ -11,7 +11,7 @@ import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.utils.UnitUtils;
 import com.livae.ff.common.Constants.CommentVoteType;
 
-public class CommentsViewHolder extends RecyclerView.ViewHolder
+public class CommentViewHolder extends RecyclerView.ViewHolder
   implements View.OnClickListener, View.OnLongClickListener {
 
 	private Long commentId;
@@ -26,7 +26,7 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder
 
 	private CommentActionListener commentActionListener;
 
-	public CommentsViewHolder(View itemView, CommentActionListener commentActionListener) {
+	public CommentViewHolder(View itemView, CommentActionListener commentActionListener) {
 		super(itemView);
 		this.commentActionListener = commentActionListener;
 		userImage = (ImageView) itemView.findViewById(R.id.user_image);

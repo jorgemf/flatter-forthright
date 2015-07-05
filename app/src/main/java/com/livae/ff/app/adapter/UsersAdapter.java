@@ -22,17 +22,21 @@ public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 
 	protected String countryISO;
 
-	private int iContact;
+	protected int iContact;
 
-	private int iPhone;
+	protected int iPhone;
 
-	private int iImageUri;
+	protected int iImageUri;
 
 	private UserClickListener userClickListener;
 
 	public UsersAdapter(@Nonnull Context context, @Nonnull UserClickListener userClickListener) {
-		super(context);
+		this(context);
 		this.userClickListener = userClickListener;
+	}
+
+	protected UsersAdapter(@Nonnull Context context) {
+		super(context);
 		countryISO = PhoneUtils.getCountryISO(context);
 	}
 
