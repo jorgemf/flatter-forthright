@@ -1,11 +1,7 @@
 <resources>
 
 	<style name="FFBase.Theme">
-		<item name="android:windowActionModeOverlay">true</item>
-		<item name="windowActionModeOverlay">true</item>
-		<item name="android:windowContentTransitions">true</item>
-		<item name="android:windowEnterTransition">@transition/fade</item>
-		<item name="android:windowExitTransition">@transition/fade</item>
+		<!--<item name="android:windowActionModeOverlay">true</item>-->		<!--<item name="windowActionModeOverlay">true</item>-->		<!--<item name="android:windowContentTransitions">true</item>-->		<!--<item name="android:windowEnterTransition">@transition/fade</item>-->		<!--<item name="android:windowExitTransition">@transition/fade</item>-->
 	</style>
 
 </resources>

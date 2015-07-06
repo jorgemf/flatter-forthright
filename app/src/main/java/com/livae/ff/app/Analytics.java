@@ -159,15 +159,21 @@ public class Analytics {
 
 		// CONTENT
 
-		public static final String COMMENT_CREATED = "COMMENT_CREATED"; // MAIN METRIC
+		public static final String COMMENT_FLATTER = "COMMENT_FLATTER";
 
-		public static final String COMMENT_VOTED_AGREE = "COMMENT_VOTED_AGREE"; // QUALITY CONTENT METRIC 2
+		public static final String COMMENT_FORTHRIGHT = "COMMENT_FORTHRIGHT";
 
-		public static final String COMMENT_VOTED_DISAGREE = "COMMENT_VOTED_DISAGREE"; // QUALITY CONTENT METRIC 1
+		public static final String COMMENT_PRIVATE = "COMMENT_PRIVATE";
+
+		public static final String COMMENT_SECRET = "COMMENT_SECRET";
+
+		public static final String COMMENT_ANONYMOUS = "COMMENT_ANONYMOUS";
+
+		public static final String COMMENT_VOTED_AGREE = "COMMENT_VOTED_AGREE";
+
+		public static final String COMMENT_VOTED_DISAGREE = "COMMENT_VOTED_DISAGREE";
 
 		public static final String COMMENT_VOTE_REMOVED = "COMMENT_VOTE_REMOVED";
-
-		public static final String FLAG_USER = "FLAG_USER"; // QUALITY CONTENT METRIC 3
 
 		// USER
 

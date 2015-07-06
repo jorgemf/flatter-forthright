@@ -16,6 +16,7 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -54,7 +55,6 @@ public abstract class EditTextDialogFragment extends DialogFragment
 		arguments.putInt(ARGUMENT_MAX_CHARS, maximumChars);
 		arguments.putString(ARGUMENT_TEXT, text);
 		setArguments(arguments);
-		setCancelable(true);
 		show(fragmentManager, null);
 	}
 
@@ -68,7 +68,6 @@ public abstract class EditTextDialogFragment extends DialogFragment
 		View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_text, null);
 		builder.setView(view);
 		builder.setPositiveButton(R.string.ok, this);
-		builder.setNegativeButton(R.string.cancel, this);
 		AlertDialog dialog = builder.create();
 		editText = (EditText) view.findViewById(R.id.dialog_edit_text);
 		progressBar = (ProgressBar) view.findViewById(R.id.dialog_progress);
@@ -85,6 +84,12 @@ public abstract class EditTextDialogFragment extends DialogFragment
 				AlertDialog dialog = (AlertDialog) dialogInterface;
 				Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
 				button.setOnClickListener(EditTextDialogFragment.this);
+
+				InputMethodManager keyboard;
+				keyboard = (InputMethodManager) getActivity()
+												  .getSystemService(Context.INPUT_METHOD_SERVICE);
+				keyboard.showSoftInput(editText, 0);
+				editText.selectAll();
 			}
 		});
 		return dialog;

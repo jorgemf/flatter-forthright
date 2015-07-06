@@ -46,12 +46,13 @@ public class Conversation {
 	private Map<Long, Date> usersNotification;
 
 	public Conversation() {
+		usersNotification = new HashMap<>();
+		users = new ArrayList<>();
 	}
 
 	public Conversation(ChatType type) {
+		this();
 		this.type = type;
-		users = new ArrayList<>();
-		usersNotification = new HashMap<>();
 	}
 
 	public static Conversation get(Long id) {

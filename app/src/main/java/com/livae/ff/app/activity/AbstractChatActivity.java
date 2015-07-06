@@ -57,13 +57,25 @@ public class AbstractChatActivity extends AbstractActivity {
 		if (conversationId == null && phoneNumber == null) {
 			throw new RuntimeException("Not enough data to start the conversation");
 		}
-		intent.putExtra(EXTRA_CONVERSATION_ID, conversationId);
+		if (conversationId != null) {
+			intent.putExtra(EXTRA_CONVERSATION_ID, conversationId);
+		}
 		intent.putExtra(EXTRA_CHAT_TYPE, chatType);
-		intent.putExtra(EXTRA_DISPLAY_NAME, displayName);
-		intent.putExtra(EXTRA_ROOM_NAME, roomName);
-		intent.putExtra(EXTRA_PHONE_NUMBER, phoneNumber);
-		intent.putExtra(EXTRA_IMAGE_URI, imageUri);
-		intent.putExtra(EXTRA_IMAGE_SEED, imageSeed);
+		if (displayName != null) {
+			intent.putExtra(EXTRA_DISPLAY_NAME, displayName);
+		}
+		if (roomName != null) {
+			intent.putExtra(EXTRA_ROOM_NAME, roomName);
+		}
+		if (phoneNumber != null) {
+			intent.putExtra(EXTRA_PHONE_NUMBER, phoneNumber);
+		}
+		if (imageUri != null) {
+			intent.putExtra(EXTRA_IMAGE_URI, imageUri);
+		}
+		if (imageSeed != null) {
+			intent.putExtra(EXTRA_IMAGE_SEED, imageSeed);
+		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity)
 														  .toBundle());
@@ -109,8 +121,8 @@ public class AbstractChatActivity extends AbstractActivity {
 		this.title.setText(title);
 	}
 
-	private void bindToolbar(String roomName, String displayName, String imageUri, Long imageSeed,
-							 Long phoneNumber) {
+	public void bindToolbar(String roomName, String displayName, String imageUri, Long imageSeed,
+							Long phoneNumber) {
 		final Resources res = getResources();
 		switch (chatType) {
 			case FORTHRIGHT:

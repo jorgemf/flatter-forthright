@@ -15,6 +15,11 @@ public class TextId {
 		this.id = id;
 	}
 
+	public TextId(String text, long id, String alias) {
+		this(text, id);
+		this.alias = alias;
+	}
+
 	public Text getText() {
 		Text t = new Text();
 		t.setText(text);

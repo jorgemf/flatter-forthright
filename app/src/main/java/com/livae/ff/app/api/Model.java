@@ -35,7 +35,10 @@ public class Model {
 
 	public Model(Context applicationContext) {
 		this.context = applicationContext;
+		conversationsList = new ArrayList<>();
 		commentsList = new ArrayList<>();
+		commentsSyncList = new ArrayList<>();
+		phonesList = new ArrayList<>();
 	}
 
 	public synchronized void save() {
@@ -75,7 +78,7 @@ public class Model {
 			phonesList.clear();
 		}
 		if (conversationsList.size() > 0) {
-			contentResolver.bulkInsert(ConversationsProvider.getUriComments(),
+			contentResolver.bulkInsert(ConversationsProvider.getUriConversations(),
 									   conversationsList.toArray(new ContentValues[conversationsList
 																					 .size()]));
 			conversationsList.clear();
@@ -148,8 +151,14 @@ public class Model {
 
 		val.put(Table.Conversation.ID, conversation.getId());
 		val.put(Table.Conversation.TYPE, conversation.getType());
-		val.put(Table.Conversation.PHONE, conversation.getPhone());
-		val.put(Table.Conversation.ROOM_NAME, conversation.getAlias());
+		final Long conversationPhone = conversation.getPhone();
+		if (conversationPhone != null) {
+			val.put(Table.Conversation.PHONE, conversationPhone);
+		}
+		final String roomName = conversation.getAlias();
+		if (roomName != null) {
+			val.put(Table.Conversation.ROOM_NAME, roomName);
+		}
 
 		conversationsList.add(val);
 	}

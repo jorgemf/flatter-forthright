@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 
 import com.livae.ff.app.sql.Table;
@@ -119,6 +120,14 @@ public class ConversationsProvider extends AbstractProvider {
 		final SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		List<String> pathSegments = uri.getPathSegments();
 		switch (uriId) {
+			case URI_CONVERSATION:
+				where = Table.Conversation.T_ID + "=?";
+				args = new String[1];
+				args[0] = uri.getLastPathSegment();
+				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +
+							 " ON " + Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
+				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
+				break;
 			case URI_CONVERSATIONS:
 				qb.setTables(Table.Conversation.NAME);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
@@ -128,27 +137,45 @@ public class ConversationsProvider extends AbstractProvider {
 				String limit = order;
 				String[] queries = new String[2];
 				qb.setTables(Table.Comment.NAME);
-				String[] qSelect;
-				if (select != null) {
-					qSelect = new String[select.length + 1];
-					System.arraycopy(select, 0, qSelect, 0, select.length);
-					qSelect[select.length] = Table.Comment.DATE + " AS date";
-				} else {
-					qSelect = new String[]{Table.Comment.DATE + " AS date"};
-				}
+				String[] qSelect = {Table.Comment.T_ID + " AS " + BaseColumns._ID,
+									"0 AS " + Table.CommentSync.TEMP_SYNC, Table.Comment.IS_ME,
+									Table.Comment.DATE + " AS date", Table.Comment.DATE,
+									Table.Comment.COMMENT, Table.Comment.USER_ALIAS,
+									Table.Comment.USER_ANONYMOUS_ID, Table.Comment.USER_ALIAS,
+									Table.Comment.AGREE_VOTES, Table.Comment.DISAGREE_VOTES,
+									Table.Comment.USER_VOTE_TYPE, Table.Comment.VOTE_TYPE,
+									Table.Comment.USER_MARK, Table.Comment.TIMES_FLAGGED,
+									Table.Comment.TIMES_FLAGGED_LIE,
+									Table.Comment.TIMES_FLAGGED_INSULT,
+									Table.Comment.TIMES_FLAGGED_ABUSE,
+									Table.Comment.TIMES_FLAGGED_OTHER};
 				queries[0] = qb.buildQuery(qSelect,
 										   Table.Comment.CONVERSATION_ID + "=" + conversationId,
-										   null, null, "date", limit);
-				String[] uSelect = {"1 AS " + Table.CommentSync.TEMP_SYNC,
+										   null, null, null, null);
+				String[] uSelect = {Table.CommentSync.T_ID + " AS " + BaseColumns._ID,
+									"1 AS " + Table.CommentSync.TEMP_SYNC,
 									"1 AS " + Table.Comment.IS_ME,
 									Table.CommentSync.DATE + " AS date",
 									Table.CommentSync.DATE + " AS " + Table.Comment.DATE,
 									Table.CommentSync.COMMENT + " AS " + Table.Comment.COMMENT,
 									Table.CommentSync.USER_ALIAS + " AS " +
 									Table.Comment.USER_ALIAS,
-									Table.CommentSync.CONVERSATION_ID + " AS " +
-									Table.Comment.CONVERSATION_ID};
-				queries[1] = qb.buildQuery(uSelect, where, null, null, "date", limit);
+									"null AS " + Table.Comment.USER_ANONYMOUS_ID,
+									"null AS " + Table.Comment.USER_ALIAS,
+									"null AS " + Table.Comment.AGREE_VOTES,
+									"null AS " + Table.Comment.DISAGREE_VOTES,
+									"null AS " + Table.Comment.USER_VOTE_TYPE,
+									"null AS " + Table.Comment.VOTE_TYPE,
+									"null AS " + Table.Comment.USER_MARK,
+									"null AS " + Table.Comment.TIMES_FLAGGED,
+									"null AS " + Table.Comment.TIMES_FLAGGED_LIE,
+									"null AS " + Table.Comment.TIMES_FLAGGED_INSULT,
+									"null AS " + Table.Comment.TIMES_FLAGGED_ABUSE,
+									"null AS " + Table.Comment.TIMES_FLAGGED_OTHER};
+				qb.setTables(Table.CommentSync.NAME);
+				queries[1] = qb.buildQuery(uSelect,
+										   Table.CommentSync.CONVERSATION_ID + "=" + conversationId,
+										   null, null, null, null);
 				String query = qb.buildUnionQuery(queries, "date", limit);
 				c = getReadableDatabase().rawQuery(query, args);
 				break;

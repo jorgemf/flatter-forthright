@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.R;
@@ -33,7 +35,7 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
   extends AbstractFragment
   implements LoaderManager.LoaderCallbacks<Cursor>, Callback<QUERY, ListResult> {
 
-	private static final int LOADER_ID = 1;
+	protected static final int LOADER_ID = 1;
 
 	private final String KEY_SAVED_NEXT_CURSOR = "KEY_SAVED_NEXT_CURSOR";
 
@@ -343,6 +345,12 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		loadNext();
 	}
 
+	protected void setEmptyViewText(@StringRes int stringRes) {
+		if (emptyView != null && emptyView instanceof TextView) {
+			((TextView) emptyView).setText(stringRes);
+		}
+	}
+
 	protected void setEmptyView() {
 		hideLoading();
 		if (emptyView != null) {
@@ -413,6 +421,26 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		}
 	}
 
+	public int getTotalLoaded() {
+		return totalLoaded;
+	}
+
+	public void increaseTotalLoaded() {
+		totalLoaded++;
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+		switch (id) {
+			case LOADER_ID:
+				return new CursorLoader(getActivity(), getUriCursor(), getProjection(), selection,
+										selectionArgs, getOrderString() + " LIMIT " +
+													   totalLoaded);
+			// break
+		}
+		return null;
+	}
+
 	public class GridSpanSize extends GridLayoutManager.SpanSizeLookup {
 
 		private GridLayoutManager.SpanSizeLookup mSpanSizeLookUpWrapped;
@@ -450,25 +478,17 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 	}
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-		switch (id) {
-			case LOADER_ID:
-				return new CursorLoader(getActivity(), getUriCursor(), getProjection(), selection,
-										selectionArgs, getOrderString() + " LIMIT " +
-													   totalLoaded);
-			// break
-		}
-		return null;
-	}
-
-	@Override
 	public void onLoadFinished(Loader<Cursor> objectLoader, Cursor cursor) {
-		if (BuildConfig.DEBUG) {
-			Debug.print(cursor);
+		switch (objectLoader.getId()) {
+			case LOADER_ID:
+				if (BuildConfig.DEBUG) {
+					Debug.print(cursor);
+				}
+				adapter.setCursor(cursor);
+				setEmptyView();
+				checkLoadNext();
+				break;
 		}
-		adapter.setCursor(cursor);
-		setEmptyView();
-		checkLoadNext();
 	}
 
 	@Override

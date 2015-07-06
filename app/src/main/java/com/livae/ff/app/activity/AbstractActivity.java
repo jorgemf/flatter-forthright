@@ -98,4 +98,8 @@ public abstract class AbstractActivity extends AppCompatActivity {
 		Snackbar.make(findViewById(R.id.container), getExceptionError(e), Snackbar.LENGTH_LONG)
 				.show();
 	}
+
+	public void showSnackBarException(String message) {
+		Snackbar.make(findViewById(R.id.container), message, Snackbar.LENGTH_LONG).show();
+	}
 }

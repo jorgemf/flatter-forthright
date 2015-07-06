@@ -36,7 +36,6 @@ public class ContactsProvider extends AbstractProvider {
 		return Uri.withAppendedPath(getUriContacts(), Table.Conversation.NAME);
 	}
 
-
 	@Override
 	public boolean onCreate() {
 		final boolean result = super.onCreate();
@@ -165,6 +164,9 @@ public class ContactsProvider extends AbstractProvider {
 				query = Table.LocalUser.T_ID + "=?";
 				args = new String[1];
 				args[0] = uri.getLastPathSegment();
+				updated = getWritableDatabase().update(Table.LocalUser.NAME, values, query, args);
+				break;
+			case URI_CONTACTS:
 				updated = getWritableDatabase().update(Table.LocalUser.NAME, values, query, args);
 				break;
 			default:

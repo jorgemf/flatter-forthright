@@ -36,37 +36,8 @@ public class ChatPublicActivity extends AbstractChatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_comments);
+		setContentView(R.layout.activity_chat_public);
 		onCreated();
-
-//		if (anonymousName == null) {
-//			EditTextDialogFragment dialog = new EditTextDialogFragment() {
-//
-//				@Override
-//				protected void performAction(EditTextDialogFragment dialog, String newText) {
-//					Application.appUser().setUserAnonymousName(newText);
-//					dialog.dismiss();
-//					startChat(activity, conversationId, chatType, phoneNumber, displayName,
-//							  newText);
-//				}
-//			};
-//			dialog.show(activity, activity.getSupportFragmentManager(),
-//						R.string.anonymous_name_title, R.string.anonymous_name_message,
-//						R.integer.anonymous_name_max_chars,
-//						Application.appUser().getUserAnonymousName());
-//			return;
-//		}
-
-
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-//		if (conversationId != null) {
-//			new TaskConversationLeave().execute(conversationId, null);
-//		new TaskConversationJoin().execute(conversationId,null);
-//		}
 	}
 
 }

@@ -53,7 +53,12 @@
 		<activity
 			android:name="com.livae.ff.app.activity.ContactsActivity"
 			android:windowSoftInputMode="adjustPan"/>
-		<activity android:name=".activity.ChatPublicActivity"/>
+		<activity
+			android:name="com.livae.ff.app.activity.ChatPublicActivity"
+			android:windowSoftInputMode="adjustResize"/>
+		<activity
+			android:name="com.livae.ff.app.activity.ChatPrivateActivity"
+			android:windowSoftInputMode="adjustResize"/>
 		<activity android:name="com.livae.ff.app.activity.WebViewActivity"/>
 		<activity android:name="com.livae.ff.app.activity.AboutActivity"/>
 
