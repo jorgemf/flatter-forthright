@@ -34,7 +34,7 @@ public class CreateCommentWorkerServlet extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
-		Conversation conversation = Conversation.get(comment.getId());
+		Conversation conversation = Conversation.get(comment.getConversationId());
 		switch (conversation.getType()) {
 			case PRIVATE:
 			case SECRET:

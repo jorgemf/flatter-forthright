@@ -78,34 +78,34 @@ public class SendStatsEmailServlet extends HttpServlet {
 
 		// active users of the last 1 days
 		date.setTime(now - TimeUnit.DAYS.toMillis(1));
-		count = ofy().load().type(PhoneUser.class).filter("lastAccess", date).count();
+		count = ofy().load().type(PhoneUser.class).filter("lastAccess >=", date).count();
 		stats.setActiveUsersLast1Day((long) count);
 		// created users of the last 1 days
-		count = ofy().load().type(PhoneUser.class).filter("created", date).count();
+		count = ofy().load().type(PhoneUser.class).filter("created >=", date).count();
 		stats.setCreatedUsersLast1Day((long) count);
 
 		// active users of the last 7 days
 		date.setTime(now - TimeUnit.DAYS.toMillis(7));
-		count = ofy().load().type(PhoneUser.class).filter("lastAccess", date).count();
+		count = ofy().load().type(PhoneUser.class).filter("lastAccess >=", date).count();
 		stats.setActiveUsersLast7Days((long) count);
 		// created users of the last 7 days
-		count = ofy().load().type(PhoneUser.class).filter("created", date).count();
+		count = ofy().load().type(PhoneUser.class).filter("created >=", date).count();
 		stats.setCreatedUsersLast7Days((long) count);
 
 		// active users of the last 15 days
 		date.setTime(now - TimeUnit.DAYS.toMillis(15));
-		count = ofy().load().type(PhoneUser.class).filter("lastAccess", date).count();
+		count = ofy().load().type(PhoneUser.class).filter("lastAccess >=", date).count();
 		stats.setActiveUsersLast15Days((long) count);
 		// created users of the last 15 days
-		count = ofy().load().type(PhoneUser.class).filter("created", date).count();
+		count = ofy().load().type(PhoneUser.class).filter("created >=", date).count();
 		stats.setCreatedUsersLast15Days((long) count);
 
 		// active users of the last 30 days
 		date.setTime(now - TimeUnit.DAYS.toMillis(30));
-		count = ofy().load().type(PhoneUser.class).filter("lastAccess", date).count();
+		count = ofy().load().type(PhoneUser.class).filter("lastAccess >=", date).count();
 		stats.setActiveUsersLast30Days((long) count);
 		// created users of the last 30 days
-		count = ofy().load().type(PhoneUser.class).filter("created", date).count();
+		count = ofy().load().type(PhoneUser.class).filter("created >=", date).count();
 		stats.setCreatedUsersLast30Days((long) count);
 
 		CounterStats counterStats = ofy().load().type(CounterStats.class).first().now();
@@ -122,7 +122,7 @@ public class SendStatsEmailServlet extends HttpServlet {
 		ofy().save().entity(stats);
 
 		Session session = Session.getDefaultInstance(new Properties(), null);
-		String subject = "Stats of thoughts.livae";
+		String subject = "Stats of pensamientos.livae";
 		String msgBody = "";
 		final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,
 																	 DateFormat.LONG);

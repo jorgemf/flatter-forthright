@@ -1,0 +1,71 @@
+<datastore-indexes autoGenerate="false">
+
+	<!-- Comments -->
+
+	<!-- comments of a conversation -->
+	<datastore-index ancestor="false" kind="Comment" source="manual">
+		<property direction="asc" name="conversationId"/>
+		<property direction="asc" name="deleted"/>
+		<property direction="desc" name="date"/>
+	</datastore-index>
+
+	<!-- previous comment of a user -->
+	<datastore-index ancestor="false" kind="Comment" source="manual">
+		<property direction="asc" name="userId"/>
+		<property direction="asc" name="conversationId"/>
+		<property direction="asc" name="deleted"/>
+		<property direction="desc" name="date"/>
+	</datastore-index>
+
+	<!-- notifications to users-->
+	<datastore-index ancestor="false" kind="Comment" source="manual">
+		<property direction="asc" name="conversationId"/>
+		<property direction="desc" name="date"/>
+	</datastore-index>
+
+	<!-- Conversations -->
+
+	<!-- private conversations -->
+	<datastore-index ancestor="false" kind="Conversation" source="manual">
+		<property direction="asc" name="type"/>
+		<property direction="asc" name="phones"/>
+	</datastore-index>
+
+	<!-- public conversations -->
+	<datastore-index ancestor="false" kind="Conversation" source="manual">
+		<property direction="asc" name="type"/>
+		<property direction="asc" name="phone"/>
+	</datastore-index>
+
+	<!-- Comment vote -->
+
+	<!-- user comment vote -->
+	<datastore-index ancestor="false" kind="CommentVote" source="manual">
+		<property direction="asc" name="userId"/>
+		<property direction="asc" name="commentId"/>
+	</datastore-index>
+
+	<!-- Flag comment -->
+
+	<!-- user comment flag -->
+	<datastore-index ancestor="false" kind="FlagComment" source="manual">
+		<property direction="asc" name="userId"/>
+		<property direction="asc" name="commentId"/>
+	</datastore-index>
+	<!-- to forget flagged comments -->
+	<datastore-index ancestor="false" kind="FlagComment" source="manual">
+		<property direction="asc" name="forgot"/>
+		<property direction="desc" name="date"/>
+	</datastore-index>
+
+	<!-- Phone users -->
+
+	<!-- for stats -->
+	<datastore-index ancestor="false" kind="PhoneUser" source="manual">
+		<property direction="asc" name="created"/>
+	</datastore-index>
+	<datastore-index ancestor="false" kind="FlagComment" source="manual">
+		<property direction="asc" name="lastAccess"/>
+	</datastore-index>
+
+</datastore-indexes>

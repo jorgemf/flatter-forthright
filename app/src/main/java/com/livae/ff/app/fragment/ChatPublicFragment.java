@@ -122,6 +122,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		view.findViewById(R.id.center_progressbar).setVisibility(View.VISIBLE);
 		commentPostContainer = view.findViewById(R.id.comment_post);
 		buttonPostComment = (FloatingActionButton) view.findViewById(R.id.button_post_comment);
 		commentText = (EditText) view.findViewById(R.id.comment_text);

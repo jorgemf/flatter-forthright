@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -14,6 +15,7 @@ import com.livae.ff.app.fragment.OnBoardingPaymentFragment;
 import com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment;
 import com.livae.ff.app.fragment.OnBoardingWarningFragment;
 import com.livae.ff.app.fragment.OnBoardingWelcomeFragment;
+import com.livae.ff.app.sql.DBHelper;
 
 public class OnBoardingActivity extends AbstractActivity {
 
@@ -38,6 +40,13 @@ public class OnBoardingActivity extends AbstractActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Handler handler = new Handler();
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				DBHelper.clearData(OnBoardingActivity.this);
+			}
+		});
 		setContentView(R.layout.activity_on_boarding);
 		if (savedInstanceState == null) {
 			final FragmentManager fragmentManager = getSupportFragmentManager();

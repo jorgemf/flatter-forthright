@@ -34,7 +34,7 @@ public class Settings {
 
 	public static final int NOTIFY_PUBLIC_COMMENTS_LAST_COMMENTERS = 20;
 
-	public static final int NOTIFICATIONS_TIME_TO_LIFE = (int) TimeUnit.DAYS.toSeconds(31);
+	public static final int NOTIFICATIONS_TIME_TO_LIFE = (int) TimeUnit.DAYS.toSeconds(10);
 
 	public static class Google {
 

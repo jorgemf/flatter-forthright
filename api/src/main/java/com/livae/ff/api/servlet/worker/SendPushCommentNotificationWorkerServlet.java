@@ -51,7 +51,9 @@ public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 		notificationComment.setDate(comment.getDate());
 		notificationComment.setAlias(comment.getAlias());
 		notificationComment.setAliasId(comment.getAliasId());
-		notificationComment.setUserMark(comment.getUserMark().name());
+		if (comment.getUserMark() != null) {
+			notificationComment.setUserMark(comment.getUserMark().name());
+		}
 		notificationComment.setConversationType(conversation.getType().name());
 		Gson gson = new GsonBuilder().create();
 		return gson.toJson(notificationComment);

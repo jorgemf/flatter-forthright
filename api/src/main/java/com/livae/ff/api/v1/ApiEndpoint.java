@@ -280,8 +280,8 @@ public class ApiEndpoint {
 				}
 				// find previous conversation
 				String mixPhones = Conversation.mixPhones(phoneNumber, user.getPhone());
-				conversation = ofy().load().type(Conversation.class).filter("phones", mixPhones)
-									.filter("type", type).first().now();
+				conversation = ofy().load().type(Conversation.class).filter("type", type)
+									.filter("phones", mixPhones).first().now();
 				// create a new one
 				if (conversation == null) {
 					conversation = new Conversation(type);
@@ -297,8 +297,8 @@ public class ApiEndpoint {
 					throw new BadRequestException("Number not valid");
 				}
 				// find previous conversation
-				conversation = ofy().load().type(Conversation.class).filter("phone", phoneNumber)
-									.filter("type", type).first().now();
+				conversation = ofy().load().type(Conversation.class).filter("type", type)
+									.filter("phone", phoneNumber).first().now();
 				// create a new one
 				if (conversation == null) {
 					conversation = new Conversation(type);
@@ -342,8 +342,9 @@ public class ApiEndpoint {
 
 				Comment previousComment;
 				previousComment = ofy().load().type(Comment.class).filter("userId", userPhone)
-									   .filter("conversationId", conversationId).order("-date")
-									   .first().now();
+									   .filter("conversationId", conversationId).filter("deleted",
+																						false)
+									   .order("-date").first().now();
 				long aliasId;
 				if (previousComment != null && previousComment.getAlias().equals(alias)) {
 					aliasId = previousComment.getAliasId();
@@ -422,7 +423,7 @@ public class ApiEndpoint {
 		// get comments
 		limit = InputUtil.getLimit(limit);
 		Query<Comment> query;
-		query = ofy().load().type(Comment.class).filter("conversation", conversationId)
+		query = ofy().load().type(Comment.class).filter("conversationId", conversationId)
 					 .filter("deleted", false).order("-date").limit(limit);
 		if (date != null) {
 			query.filter("date<", new Date(date));
@@ -448,7 +449,6 @@ public class ApiEndpoint {
 			Comment comment = queryIterator.next();
 			final boolean isMe = comment.getUserId().equals(userPhone);
 			comment.setIsMe(isMe);
-//			if (isPublicChat) {
 			// set comment vote type
 			CommentVote commentVote;
 			commentVote = ofy().load().type(CommentVote.class).filter("userId", userPhone)
@@ -460,7 +460,6 @@ public class ApiEndpoint {
 				// hide comments since the user blocked the list
 				comment.setComment(null);
 			}
-//			}
 			commentList.add(comment);
 		}
 		return CollectionResponse.<Comment>builder().setItems(commentList)
@@ -490,8 +489,8 @@ public class ApiEndpoint {
 
 		}
 		CommentVote commentVote;
-		commentVote = ofy().load().type(CommentVote.class).filter("commentId", commentId)
-						   .filter("userId", user.getPhone()).first().now();
+		commentVote = ofy().load().type(CommentVote.class).filter("userId", user.getPhone())
+						   .filter("commentId", commentId).first().now();
 		PhoneUser commentUser = PhoneUser.get(comment.getUserId());
 		if (commentVote != null) {
 			if (commentVote.getType() == CommentVoteType.DISAGREE) {
@@ -540,8 +539,8 @@ public class ApiEndpoint {
 
 		}
 		CommentVote commentVote;
-		commentVote = ofy().load().type(CommentVote.class).filter("commentId", commentId)
-						   .filter("userId", user.getPhone()).first().now();
+		commentVote = ofy().load().type(CommentVote.class).filter("userId", user.getPhone())
+						   .filter("commentId", commentId).first().now();
 		PhoneUser commentUser = PhoneUser.get(comment.getUserId());
 		if (commentVote != null) {
 			if (commentVote.getType() == CommentVoteType.AGREE) {
@@ -590,8 +589,8 @@ public class ApiEndpoint {
 
 		}
 		CommentVote commentVote;
-		commentVote = ofy().load().type(CommentVote.class).filter("commentId", commentId)
-						   .filter("userId", user.getPhone()).first().now();
+		commentVote = ofy().load().type(CommentVote.class).filter("userId", user.getPhone())
+						   .filter("commentId", commentId).first().now();
 		PhoneUser commentUser = PhoneUser.get(comment.getUserId());
 		if (commentVote != null) {
 			switch (commentVote.getType()) {

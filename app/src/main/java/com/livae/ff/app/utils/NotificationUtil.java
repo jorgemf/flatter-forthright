@@ -43,7 +43,7 @@ public class NotificationUtil {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 		builder.setContentTitle(res.getString(R.string.app_name));
 		builder.setDefaults(android.app.Notification.DEFAULT_ALL);
-		builder.setSmallIcon(R.mipmap.ic_launcher);
+		builder.setSmallIcon(R.drawable.ic_stat_notifications);
 		builder.setCategory("Pensamientos");
 		builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 		builder.setAutoCancel(true);

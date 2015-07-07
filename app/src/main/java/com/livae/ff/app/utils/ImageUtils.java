@@ -63,7 +63,6 @@ public class ImageUtils {
 		Context context = imageView.getContext();
 		if (imageUrl != null) {
 			imageUrl = parseUrl(imageUrl, context);
-			Debug.print(imageUrl);
 			RequestCreator requestCreator = Picasso.with(context).load(imageUrl);
 			if (placeholderResId != 0) {
 				requestCreator = requestCreator.placeholder(placeholderResId);

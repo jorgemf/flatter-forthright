@@ -115,7 +115,7 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
 	@Override
 	protected CommentViewHolder createCustomViewHolder(ViewGroup viewGroup, int type) {
-		View view = layoutInflater.inflate(R.layout.item_comment, viewGroup, false);
+		View view = layoutInflater.inflate(R.layout.item_comment_private, viewGroup, false);
 		return new CommentViewHolder(view, commentActionListener);
 	}
 

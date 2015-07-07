@@ -8,20 +8,10 @@
 	android:padding="@dimen/space_normal">
 
 	<TextView
-		android:id="@+id/anonymous_name"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:lines="1"
-		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:textColor="@color/black_light"
-		android:textStyle="bold"
-		tools:text="This is the nickname of the user"/>
-
-	<TextView
 		android:id="@+id/comment"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/anonymous_name"
+		android:layout_alignParentTop="true"
 		android:layout_marginTop="@dimen/space_small"
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		android:textColor="@color/black_light"
@@ -36,7 +26,6 @@
 		android:layout_below="@id/comment"
 		android:layout_marginTop="@dimen/space_small"
 		android:textAppearance="?android:attr/textAppearanceSmall"
-		tools:ignore="HardcodedText"
 		tools:text="2 hours ago"/>
 
 	<ProgressBar
@@ -65,4 +54,5 @@
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:visibility="gone"
 		tools:visibility="visible"/>
+
 </RelativeLayout>

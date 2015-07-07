@@ -113,4 +113,5 @@
 		users of the app.
 	</string>
 	<string name="select_contact">Select Contact</string>
+	<string name="sending_comment">Sending comment</string>
 </resources>
