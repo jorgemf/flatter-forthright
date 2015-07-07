@@ -7,11 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.support.annotation.NonNull;
 
 import com.livae.ff.app.sql.Table;
 
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class ConversationsProvider extends AbstractProvider {
 
@@ -78,7 +79,7 @@ public class ConversationsProvider extends AbstractProvider {
 	}
 
 	@Override
-	public int bulkInsert(Uri uri, @NonNull ContentValues[] values) {
+	public int bulkInsert(Uri uri, @Nonnull ContentValues[] values) {
 		final int uriId = uriMatcher.match(uri);
 		final int numValues = values.length;
 //		String query;
@@ -90,13 +91,13 @@ public class ConversationsProvider extends AbstractProvider {
 			case URI_CONVERSATIONS:
 				table = Table.Conversation.NAME;
 				for (ContentValues value : values) {
-					db.insert(table, null, value);
+					db.insertWithOnConflict(table, null, value, SQLiteDatabase.CONFLICT_REPLACE);
 				}
 				break;
 			case URI_COMMENTS:
 				table = Table.Comment.NAME;
 				for (ContentValues value : values) {
-					db.insert(table, null, value);
+					db.insertWithOnConflict(table, null, value, SQLiteDatabase.CONFLICT_REPLACE);
 				}
 				break;
 			case URI_COMMENTS_SYNC:

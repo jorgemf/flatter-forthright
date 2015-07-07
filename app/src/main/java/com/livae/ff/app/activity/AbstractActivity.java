@@ -3,7 +3,6 @@ package com.livae.ff.app.activity;
 import android.accounts.NetworkErrorException;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,13 +15,15 @@ import com.livae.ff.app.utils.SyncUtils;
 
 import java.net.ConnectException;
 
+import javax.annotation.Nonnull;
+
 public abstract class AbstractActivity extends AppCompatActivity {
 
 	protected static final String LOG_TAG = "ACTIVITY";
 
 	private Toolbar toolbar;
 
-	private String getExceptionError(@NonNull Exception e) {
+	private String getExceptionError(@Nonnull Exception e) {
 		if (e instanceof NetworkErrorException) {
 			return getString(R.string.error_network_error);
 		} else if (e instanceof ConnectException) {
@@ -42,7 +43,7 @@ public abstract class AbstractActivity extends AppCompatActivity {
 	}
 
 	@Override
-	protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+	protected void onRestoreInstanceState(@Nonnull Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 

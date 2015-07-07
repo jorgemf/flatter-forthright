@@ -7,11 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
 import java.util.Random;
+
+import javax.annotation.Nonnull;
 
 public class AnonymousImage extends View {
 
@@ -70,7 +71,7 @@ public class AnonymousImage extends View {
 	}
 
 	@Override
-	public void draw(@NonNull Canvas canvas) {
+	public void draw(@Nonnull Canvas canvas) {
 		super.draw(canvas);
 		if (seed != 0) {
 			random.setSeed(seed);

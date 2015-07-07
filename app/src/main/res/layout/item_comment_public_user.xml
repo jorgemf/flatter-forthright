@@ -18,6 +18,7 @@
 		android:layout_marginLeft="@dimen/space_normal"
 		android:layout_marginRight="@dimen/space_huge"
 		android:layout_marginStart="@dimen/space_normal"
+		android:translationZ="@dimen/space_small"
 		card_view:cardBackgroundColor="@color/purple_light"
 		card_view:cardCornerRadius="@dimen/comment_card_radius">
 
@@ -32,7 +33,7 @@
 		android:layout_alignParentStart="true"
 		android:layout_marginTop="@dimen/comment_card_radius"
 		android:rotation="45"
-		android:translationZ="@dimen/space_normal"/>
+		android:translationZ="@dimen/space_small"/>
 
 	<View
 		android:id="@+id/extra_padding"

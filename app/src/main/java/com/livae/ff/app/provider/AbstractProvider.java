@@ -5,10 +5,11 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.sql.DBHelper;
+
+import javax.annotation.Nonnull;
 
 public abstract class AbstractProvider extends ContentProvider {
 
@@ -42,7 +43,7 @@ public abstract class AbstractProvider extends ContentProvider {
 	}
 
 	@Override
-	public int bulkInsert(Uri uri, @NonNull ContentValues[] values) {
+	public int bulkInsert(Uri uri, @Nonnull ContentValues[] values) {
 		SQLiteDatabase db = getWritableDatabase();
 		db.beginTransaction();
 		int insertedOrUpdated = super.bulkInsert(uri, values);

@@ -100,7 +100,6 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		Bundle extras = getActivity().getIntent().getExtras();
 		if (extras.containsKey(AbstractChatActivity.EXTRA_CONVERSATION_ID)) {
 			conversationId = extras.getLong(AbstractChatActivity.EXTRA_CONVERSATION_ID);
@@ -109,6 +108,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 		anonymousNick = extras.getString(AbstractChatActivity.EXTRA_ROOM_NAME, null);
 		conversationPhone = extras.getLong(AbstractChatActivity.EXTRA_PHONE_NUMBER);
 		isMyPublicChat = Application.appUser().getUserPhone().equals(conversationPhone);
+		super.onCreate(savedInstanceState);
 
 		setHasOptionsMenu(true);
 	}

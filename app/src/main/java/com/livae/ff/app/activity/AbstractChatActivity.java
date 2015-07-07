@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
@@ -23,6 +22,8 @@ import com.livae.ff.app.utils.ImageUtils;
 import com.livae.ff.app.utils.PhoneUtils;
 import com.livae.ff.app.view.AnonymousImage;
 import com.livae.ff.common.Constants.ChatType;
+
+import javax.annotation.Nonnull;
 
 public class AbstractChatActivity extends AbstractActivity {
 
@@ -50,8 +51,8 @@ public class AbstractChatActivity extends AbstractActivity {
 
 	private ImageView imageUser;
 
-	protected static void startIntent(@NonNull Intent intent, @NonNull Activity activity,
-									  @NonNull ChatType chatType, Long conversationId,
+	protected static void startIntent(@Nonnull Intent intent, @Nonnull Activity activity,
+									  @Nonnull ChatType chatType, Long conversationId,
 									  Long phoneNumber, String displayName, String roomName,
 									  String imageUri, Long imageSeed) {
 		if (conversationId == null && phoneNumber == null) {

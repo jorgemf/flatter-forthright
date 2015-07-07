@@ -3,30 +3,31 @@ package com.livae.ff.app.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
 import com.livae.ff.app.R;
 import com.livae.ff.common.Constants.ChatType;
 
+import javax.annotation.Nonnull;
+
 public class ChatPrivateActivity extends AbstractChatActivity {
 
-	public static void startChatPrivate(@NonNull ChatsActivity chatsActivity, @NonNull Long phone,
-										@NonNull String displayName) {
+	public static void startChatPrivate(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
+										@Nonnull String displayName) {
 		start(chatsActivity, ChatType.PRIVATE, null, phone, displayName, null, null);
 	}
 
-	public static void startChatAnonymous(@NonNull ChatsActivity chatsActivity, @NonNull Long phone,
-										  @NonNull String displayName) {
+	public static void startChatAnonymous(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
+										  @Nonnull String displayName) {
 		start(chatsActivity, ChatType.PRIVATE_ANONYMOUS, null, phone, displayName, null, null);
 	}
 
-	public static void startChatSecret(@NonNull ChatsActivity chatsActivity, @NonNull Long phone,
-									   @NonNull String displayName) {
+	public static void startChatSecret(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
+									   @Nonnull String displayName) {
 		start(chatsActivity, ChatType.SECRET, null, phone, displayName, null, null);
 	}
 
-	public static void start(@NonNull Activity activity, @NonNull ChatType chatType,
-							 Long conversationId, @NonNull Long phoneNumber, String displayName,
+	public static void start(@Nonnull Activity activity, @Nonnull ChatType chatType,
+							 Long conversationId, @Nonnull Long phoneNumber, String displayName,
 							 String anonymousName, String imageUri) {
 		Intent intent = new Intent(activity, ChatPublicActivity.class);
 		AbstractChatActivity.startIntent(intent, activity, chatType, conversationId, phoneNumber,

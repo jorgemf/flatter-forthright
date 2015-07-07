@@ -2,7 +2,6 @@ package com.livae.ff.app.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,13 +33,13 @@ public class ChatsPublicAdapter extends UsersAdapter {
 
 	private ChatType chatType;
 
-	public ChatsPublicAdapter(@Nonnull Context context, @NonNull ChatType chatType,
+	public ChatsPublicAdapter(@Nonnull Context context, @Nonnull ChatType chatType,
 							  @Nonnull ChatPublicClickListener chatPublicClickListener) {
 		this(context, chatType);
 		this.chatPublicClickListener = chatPublicClickListener;
 	}
 
-	protected ChatsPublicAdapter(@Nonnull Context context, @NonNull ChatType chatType) {
+	protected ChatsPublicAdapter(@Nonnull Context context, @Nonnull ChatType chatType) {
 		super(context);
 		if (chatType != ChatType.FLATTER && chatType != ChatType.FORTHRIGHT) {
 			throw new RuntimeException("Only public chats allowed");

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.IntegerRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.livae.ff.app.R;
+
+import javax.annotation.Nonnull;
 
 public abstract class EditTextDialogFragment extends DialogFragment
   implements DialogInterface.OnClickListener, TextWatcher, View.OnClickListener {
@@ -58,7 +59,7 @@ public abstract class EditTextDialogFragment extends DialogFragment
 		show(fragmentManager, null);
 	}
 
-	@NonNull
+	@Nonnull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Bundle arguments = getArguments();

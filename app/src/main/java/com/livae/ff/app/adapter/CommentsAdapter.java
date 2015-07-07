@@ -33,6 +33,16 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 											   Table.Comment.TIMES_FLAGGED_LIE,
 											   Table.Comment.TIMES_FLAGGED_OTHER};
 
+	private static final int COMMENT_PUBLIC_ME = 1;
+
+	private static final int COMMENT_PUBLIC_OTHERS = 2;
+
+	private static final int COMMENT_PUBLIC_USER = 3;
+
+	private static final int COMMENT_PRIVATE_ME = 4;
+
+	private static final int COMMENT_PRIVATE_OTHERS = 5;
+
 	private int iId;
 
 	private int iDate;
@@ -69,18 +79,18 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
 	private LayoutInflater layoutInflater;
 
-	private ChatType conversationType;
+	private ChatType chatType;
 
 	private HashMap<Long, CommentVoteType> commentVoteTypeHashMap;
 
 	public CommentsAdapter(@Nonnull AbstractLoaderFragment fragment,
 						   @Nonnull CommentActionListener commentActionListener,
-						   ChatType conversationType) {
+						   @Nonnull ChatType chatType) {
 		super(fragment.getActivity(), fragment);
 		layoutInflater = fragment.getActivity().getLayoutInflater();
 		this.commentActionListener = commentActionListener;
 		commentVoteTypeHashMap = new HashMap<>();
-		this.conversationType = conversationType;
+		this.chatType = chatType;
 	}
 
 	public void votedComment(Long commentId, CommentVoteType voteType) {
@@ -114,14 +124,61 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 	}
 
 	@Override
+	public int getCustomItemViewType(int position, Cursor cursor) {
+		boolean isMe = !cursor.isNull(iIsMe) && cursor.getInt(iIsMe) != 0;
+		switch (chatType) {
+			case FLATTER:
+			case FORTHRIGHT:
+				if (isMe) {
+					return COMMENT_PUBLIC_ME;
+				} else {
+					return COMMENT_PUBLIC_OTHERS;
+				}
+//				break;
+			case PRIVATE:
+			case PRIVATE_ANONYMOUS:
+			case SECRET:
+				if (isMe) {
+					return COMMENT_PRIVATE_ME;
+				} else {
+					return COMMENT_PRIVATE_OTHERS;
+				}
+//				break;
+		}
+		return super.getCustomItemViewType(position, cursor);
+	}
+
+	@Override
 	protected CommentViewHolder createCustomViewHolder(ViewGroup viewGroup, int type) {
-		View view = layoutInflater.inflate(R.layout.item_comment_private, viewGroup, false);
+		View view = null;
+		switch (type) {
+			case COMMENT_PRIVATE_ME:
+				view = layoutInflater.inflate(R.layout.item_comment_private_mine, viewGroup, false);
+				break;
+			case COMMENT_PRIVATE_OTHERS:
+				view = layoutInflater.inflate(R.layout.item_comment_private_others, viewGroup,
+											  false);
+				break;
+			case COMMENT_PUBLIC_ME:
+				view = layoutInflater.inflate(R.layout.item_comment_public_mine, viewGroup, false);
+				break;
+			case COMMENT_PUBLIC_OTHERS:
+				view = layoutInflater.inflate(R.layout.item_comment_public_others, viewGroup,
+											  false);
+				break;
+			case COMMENT_PUBLIC_USER:
+				view = layoutInflater.inflate(R.layout.item_comment_public_user, viewGroup, false);
+				break;
+		}
 		return new CommentViewHolder(view, commentActionListener);
 	}
 
 	@Override
 	protected void bindCustomViewHolder(CommentViewHolder holder, int position, Cursor cursor) {
 		holder.clear();
+		// TODO set also the sending information and information about the votes
+		holder.setAnonymousImageSeed(cursor.getLong(iUserAnonymousId));
+		holder.setAnonymousNick(cursor.getString(iUserAlias));
 		long commentId = cursor.getLong(iId);
 		holder.setCommentId(commentId);
 		long date = cursor.getLong(iDate);

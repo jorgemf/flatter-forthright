@@ -1,14 +1,13 @@
 package com.livae.ff.app.viewholders;
 
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.livae.ff.app.R;
 import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.utils.UnitUtils;
+import com.livae.ff.app.view.AnonymousImage;
 import com.livae.ff.common.Constants.CommentVoteType;
 
 public class CommentViewHolder extends RecyclerView.ViewHolder
@@ -16,9 +15,9 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
 	private Long commentId;
 
-	private ImageView userImage;
+	private AnonymousImage anonymousImage;
 
-	private TextView title;
+	private TextView userAlias;
 
 	private TextView comment;
 
@@ -29,8 +28,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 	public CommentViewHolder(View itemView, CommentActionListener commentActionListener) {
 		super(itemView);
 		this.commentActionListener = commentActionListener;
-		userImage = (ImageView) itemView.findViewById(R.id.user_image);
-		title = (TextView) itemView.findViewById(R.id.title);
+		anonymousImage = (AnonymousImage) itemView.findViewById(R.id.anonymous_image);
+		userAlias = (TextView) itemView.findViewById(R.id.anonymous_name);
 		comment = (TextView) itemView.findViewById(R.id.comment);
 		date = (TextView) itemView.findViewById(R.id.comment_date);
 //		voteAgreeButton = (Button) itemView.findViewById(R.id.vote_agree);
@@ -45,8 +44,12 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 	}
 
 	public void clear() {
-		userImage.setImageBitmap(null);
-		title.setText(null);
+		if (anonymousImage != null) {
+			anonymousImage.setVisibility(View.INVISIBLE);
+		}
+		if (userAlias != null) {
+			userAlias.setText(null);
+		}
 		comment.setText(null);
 		date.setText(null);
 //		comment.setOnLongClickListener(null);
@@ -56,15 +59,24 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		this.commentId = commentId;
 	}
 
-	public void setUserImageUrl(String userImageUrl) {
-//		ImageUtils.loadDefault(this.userImage, userImageUrl);
-		this.userImage.setVisibility(View.VISIBLE);
+	public void setAnonymousImageSeed(String seed) {
+		if (anonymousImage != null) {
+			anonymousImage.setVisibility(View.VISIBLE);
+			anonymousImage.setSeed(seed);
+		}
 	}
 
-	public void setTitle(String title) {
-		Typeface nameTypeFace = this.title.getTypeface();
-		this.title.setTypeface(Typeface.create(nameTypeFace, Typeface.NORMAL));
-		this.title.setText(title);
+	public void setAnonymousImageSeed(long seed) {
+		if (anonymousImage != null) {
+			anonymousImage.setVisibility(View.VISIBLE);
+			anonymousImage.setSeed(seed);
+		}
+	}
+
+	public void setAnonymousNick(String alias) {
+		if (userAlias != null) {
+			userAlias.setText(alias);
+		}
 	}
 
 	public void setComment(String comment) {

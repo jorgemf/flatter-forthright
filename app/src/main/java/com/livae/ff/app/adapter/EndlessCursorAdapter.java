@@ -184,7 +184,8 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 			position--;
 		}
 		if (position < size) {
-			return getCustomItemViewType(position);
+			cursor.moveToPosition(position);
+			return getCustomItemViewType(position, cursor);
 		}
 		if (isError && size == position) {
 			return TYPE_ERROR;
@@ -241,7 +242,7 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 		return cursor == null ? 0 : cursor.getCount();
 	}
 
-	protected int getCustomItemViewType(int position) {
+	protected int getCustomItemViewType(int position, Cursor cursor) {
 		return 0;
 	}
 

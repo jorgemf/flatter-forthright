@@ -48,7 +48,7 @@ public class ChatPrivateFragment extends AbstractLoaderFragment<CommentViewHolde
 
 	private Long conversationId;
 
-	private ChatType conversationType;
+	private ChatType chatType;
 
 	private String anonymousNick;
 
@@ -71,6 +71,16 @@ public class ChatPrivateFragment extends AbstractLoaderFragment<CommentViewHolde
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		isMyPublicChat = false;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (conversationId != null) {
+			final ContentResolver cr = getActivity().getContentResolver();
+			cr.registerContentObserver(ConversationsProvider.getUriConversation(conversationId),
+									   true, contentObserver);
+		}
 	}
 
 	@Override
@@ -101,7 +111,7 @@ public class ChatPrivateFragment extends AbstractLoaderFragment<CommentViewHolde
 
 	@Override
 	protected EndlessCursorAdapter<CommentViewHolder> getAdapter() {
-		commentsAdapter = new CommentsAdapter(this, this, conversationType);
+		commentsAdapter = new CommentsAdapter(this, this, chatType);
 		return commentsAdapter;
 	}
 
@@ -118,16 +128,6 @@ public class ChatPrivateFragment extends AbstractLoaderFragment<CommentViewHolde
 	@Override
 	protected String getOrderString() {
 		return Table.Comment.DATE;
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (conversationId != null) {
-			final ContentResolver cr = getActivity().getContentResolver();
-			cr.registerContentObserver(ConversationsProvider.getUriConversation(conversationId),
-									   true, contentObserver);
-		}
 	}
 
 	@Override
@@ -227,8 +227,8 @@ public class ChatPrivateFragment extends AbstractLoaderFragment<CommentViewHolde
 		}
 	}
 
-	public void setConversationType(ChatType conversationType) {
-		this.conversationType = conversationType;
+	public void setChatType(ChatType chatType) {
+		this.chatType = chatType;
 		checkCanSendMessages();
 	}
 
@@ -244,8 +244,8 @@ public class ChatPrivateFragment extends AbstractLoaderFragment<CommentViewHolde
 
 	private void checkCanSendMessages() {
 		boolean canSendMessages = true;
-		if (conversationType != null) {
-			switch (conversationType) {
+		if (chatType != null) {
+			switch (chatType) {
 				case FLATTER:
 				case FORTHRIGHT:
 					if (conversationPhone != null && anonymousNick != null) {

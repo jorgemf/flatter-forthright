@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.livae.ff.app.Analytics;
 import com.livae.ff.app.AppUser;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.Constants;
@@ -33,13 +34,25 @@ public class SyncUtils {
 		accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
 		if (accountManager.addAccountExplicitly(account, null, null)) {
 			Log.i(LOG_TAG, "Account created: " + name);
+			syncContactsConversationsNow();
 			syncContactsWhenChange();
-//			syncContactsEveryDay();
-			syncContactsNow();
 			syncCommentsWhenNetwork();
+//			syncContactsEveryDay();
 			accountManager.setUserData(account, USER_DATA_PHONE, phone.toString());
 		} else {
 			Log.w(LOG_TAG, "Could not create the account, maybe it exists before.");
+			try {
+				syncContactsConversationsNow();
+				syncContactsWhenChange();
+				syncCommentsWhenNetwork();
+			} catch (Exception e) {
+				Analytics.logAndReport(e, false);
+			}
+			try {
+				accountManager.setUserData(account, USER_DATA_PHONE, phone.toString());
+			} catch (IllegalArgumentException e) {
+				Analytics.logAndReport(e, false);
+			}
 		}
 	}
 
@@ -79,16 +92,19 @@ public class SyncUtils {
 		}
 	}
 
-	public static void syncContactsNow() {
+	public static void syncContactsConversationsNow() {
 		final Long phone = Application.appUser().getUserPhone();
 		if (phone != null) {
 			final String name = phone.toString() + Constants.ACCOUNT_SUFFIX;
 			final Account account = new Account(name, Constants.ACCOUNT_TYPE);
-			final String authority = ContactsProvider.getAuthority(ContactsProvider.class);
+			final String authorityContacts = ContactsProvider.getAuthority(ContactsProvider.class);
+			final String authorityConversations = ContactsProvider
+													.getAuthority(ConversationsProvider.class);
 			Bundle settingsBundle = new Bundle();
 			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			ContentResolver.requestSync(account, authority, settingsBundle);
+			ContentResolver.requestSync(account, authorityContacts, settingsBundle);
+			ContentResolver.requestSync(account, authorityConversations, settingsBundle);
 		}
 	}
 

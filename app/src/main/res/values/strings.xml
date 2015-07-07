@@ -16,7 +16,7 @@
 	<string name="settings">Settings</string>
 	<string name="signing_in">Signing in…</string>
 	<string name="empty_text">Ops… there is nothing here.</string>
-	<string name="empty_chat_flatter">No compliments here, be the first!</string>
+	<string name="empty_chat_flatter">No compliments here, be the first! \n<i>Message older than 100 days are deleted.</i></string>
 	<string name="empty_chat_forthright">Ops… nothing here. Message older than 100 days are deleted.</string>
 	<string name="phone_number">Phone number</string>
 	<string name="post_comment_hint">Type a message…</string>

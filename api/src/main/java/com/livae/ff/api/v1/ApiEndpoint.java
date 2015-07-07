@@ -426,10 +426,10 @@ public class ApiEndpoint {
 		query = ofy().load().type(Comment.class).filter("conversationId", conversationId)
 					 .filter("deleted", false).order("-date").limit(limit);
 		if (date != null) {
-			query.filter("date<", new Date(date));
+			query.filter("date <=", new Date(date));
 		}
 		// anonymous messages are forgotten after 100 days
-		query.filter("date>", new Date(System.currentTimeMillis() - Settings.MAX_COMMENT_DATE));
+		query.filter("date >=", new Date(System.currentTimeMillis() - Settings.MAX_COMMENT_DATE));
 		if (cursor != null) {
 			query = query.startAt(Cursor.fromWebSafeString(cursor));
 		}

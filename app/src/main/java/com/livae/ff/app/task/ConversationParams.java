@@ -1,8 +1,8 @@
 package com.livae.ff.app.task;
 
-import android.support.annotation.NonNull;
-
 import com.livae.ff.common.Constants.ChatType;
+
+import javax.annotation.Nonnull;
 
 public class ConversationParams {
 
@@ -12,33 +12,33 @@ public class ConversationParams {
 
 	private String roomName;
 
-	public ConversationParams(@NonNull ChatType chatType, @NonNull Long phoneNumber) {
+	public ConversationParams(@Nonnull ChatType chatType, @Nonnull Long phoneNumber) {
 		this.chatType = chatType;
 		this.phoneNumber = phoneNumber;
 	}
 
-	public ConversationParams(@NonNull ChatType chatType, @NonNull Long phoneNumber,
+	public ConversationParams(@Nonnull ChatType chatType, @Nonnull Long phoneNumber,
 							  String roomName) {
 		this.chatType = chatType;
 		this.phoneNumber = phoneNumber;
 		this.roomName = roomName;
 	}
 
-	@NonNull
+	@Nonnull
 	public ChatType getChatType() {
 		return chatType;
 	}
 
-	public void setChatType(@NonNull ChatType chatType) {
+	public void setChatType(@Nonnull ChatType chatType) {
 		this.chatType = chatType;
 	}
 
-	@NonNull
+	@Nonnull
 	public Long getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(@NonNull Long phoneNumber) {
+	public void setPhoneNumber(@Nonnull Long phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 

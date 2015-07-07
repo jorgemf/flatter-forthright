@@ -30,6 +30,7 @@
 		android:layout_marginStart="@dimen/space_normal"
 		android:layout_toLeftOf="@id/anonymous_image"
 		android:layout_toStartOf="@id/anonymous_image"
+		android:translationZ="@dimen/space_small"
 		card_view:cardBackgroundColor="@color/purple_light"
 		card_view:cardCornerRadius="@dimen/comment_card_radius">
 
@@ -44,7 +45,7 @@
 		android:layout_toLeftOf="@id/anonymous_image"
 		android:layout_toStartOf="@id/anonymous_image"
 		android:rotation="45"
-		android:translationZ="@dimen/space_normal"/>
+		android:translationZ="@dimen/space_small"/>
 
 	<View
 		android:id="@+id/extra_padding"

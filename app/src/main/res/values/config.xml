@@ -2,8 +2,8 @@
 <resources
 	xmlns:tools="http://schemas.android.com/tools"
 	tools:ignore="MissingTranslation">
-	<!--<string name="api.url.development">http://10.0.2.2:8080/_ah/api/</string>-->
-	<string name="api.url.development">http://192.168.1.128:8080/_ah/api/</string>
+	<!--<string name="api.url.development">http://10.0.2.2:8080/_ah/api/</string>-->	<!--<string name="api.url.development">http://192.168.1.128:8080/_ah/api/</string>-->
+	<string name="api.url.development">http://10.102.82.154:8080/_ah/api/</string>
 	<string name="api.url">https://flatter-forthright.appspot.com/_ah/api/</string>
 	<!--<string name="server.url.development">http://10.0.2.2:8080</string>-->
 	<string name="server.url.development">http://192.168.1.128:8080</string>

@@ -7,7 +7,6 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfNotNull;
-import com.googlecode.objectify.condition.IfTrue;
 import com.livae.ff.common.Constants.CommentVoteType;
 import com.livae.ff.common.Constants.FlagReason;
 import com.livae.ff.common.Constants.UserMark;
@@ -54,7 +53,6 @@ public class Comment implements Serializable {
 	@Ignore
 	private Boolean isMe;
 
-	@Index(IfTrue.class)
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Boolean deleted;
 

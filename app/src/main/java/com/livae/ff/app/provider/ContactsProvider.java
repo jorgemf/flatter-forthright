@@ -6,11 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 
 import com.livae.ff.app.sql.Table;
 
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class ContactsProvider extends AbstractProvider {
 
@@ -48,7 +49,7 @@ public class ContactsProvider extends AbstractProvider {
 	}
 
 	@Override
-	public int bulkInsert(Uri uri, @NonNull ContentValues[] values) {
+	public int bulkInsert(Uri uri, @Nonnull ContentValues[] values) {
 		final int uriId = uriMatcher.match(uri);
 		final int numValues = values.length;
 //		String query;

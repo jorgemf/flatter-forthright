@@ -1,12 +1,13 @@
 package com.livae.ff.app.viewholders;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.R;
+
+import javax.annotation.Nonnull;
 
 public class CountryViewHolder {
 
@@ -16,7 +17,7 @@ public class CountryViewHolder {
 
 	private Constants.COUNTRY country;
 
-	public CountryViewHolder(@NonNull View view) {
+	public CountryViewHolder(@Nonnull View view) {
 		flag = (ImageView) view.findViewById(R.id.flag_icon);
 		countryName = (TextView) view.findViewById(R.id.country_name);
 	}
@@ -25,7 +26,7 @@ public class CountryViewHolder {
 		return country;
 	}
 
-	public void setCountry(@NonNull Constants.COUNTRY country, boolean prefix) {
+	public void setCountry(@Nonnull Constants.COUNTRY country, boolean prefix) {
 		this.country = country;
 		int flagRes = country.getCountryFlagResId();
 		flag.setImageResource(flagRes);

@@ -3,8 +3,9 @@ package com.livae.ff.app.dialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+
+import javax.annotation.Nonnull;
 
 public class ProgressDialogFragment extends DialogFragment {
 
@@ -16,7 +17,7 @@ public class ProgressDialogFragment extends DialogFragment {
 		setArguments(bundle);
 	}
 
-	@NonNull
+	@Nonnull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		ProgressDialog progressDialog = new ProgressDialog(getActivity());
