@@ -53,6 +53,7 @@ public class Comment implements Serializable {
 	@Ignore
 	private Boolean isMe;
 
+	@Index
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	private Boolean deleted;
 

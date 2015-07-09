@@ -1,5 +1,6 @@
 <resources>
 
+	<dimen name="space_tiniest">1dp</dimen>
 	<dimen name="space_tiny">2dp</dimen>
 	<dimen name="space_small">4dp</dimen>
 	<dimen name="space_normal">8dp</dimen>
@@ -19,7 +20,7 @@
 
 	<dimen name="item_max_width">400dp</dimen>
 
-	<dimen name="comment_card_radius">12dp</dimen>
+	<dimen name="comment_card_radius">8dp</dimen>
 	<dimen name="item_comment_user_image_size">32dp</dimen>
 	<dimen name="item_user_image_size">48dp</dimen>
 	<dimen name="item_user_image_toolbar_size">40dp</dimen>

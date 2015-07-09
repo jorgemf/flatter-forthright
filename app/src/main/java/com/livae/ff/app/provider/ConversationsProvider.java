@@ -177,7 +177,7 @@ public class ConversationsProvider extends AbstractProvider {
 				queries[1] = qb.buildQuery(uSelect,
 										   Table.CommentSync.CONVERSATION_ID + "=" + conversationId,
 										   null, null, null, null);
-				String query = qb.buildUnionQuery(queries, "date", limit);
+				String query = qb.buildUnionQuery(queries, "date DESC", limit);
 				c = getReadableDatabase().rawQuery(query, args);
 				break;
 			case URI_CONVERSATIONS_CONTACTS:

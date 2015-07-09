@@ -177,8 +177,13 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 	protected void bindCustomViewHolder(CommentViewHolder holder, int position, Cursor cursor) {
 		holder.clear();
 		// TODO set also the sending information and information about the votes
-		holder.setAnonymousImageSeed(cursor.getLong(iUserAnonymousId));
-		holder.setAnonymousNick(cursor.getString(iUserAlias));
+		Long anonymousId = null;
+		if (!cursor.isNull(iUserAnonymousId)) {
+			anonymousId = cursor.getLong(iUserAnonymousId);
+			holder.setAnonymousImageSeed(anonymousId);
+			holder.setAnonymousNick(cursor.getString(iUserAlias));
+		}
+		boolean isMe = cursor.getInt(iIsMe) != 0;
 		long commentId = cursor.getLong(iId);
 		holder.setCommentId(commentId);
 		long date = cursor.getLong(iDate);
@@ -230,5 +235,15 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		}
 		holder.setVotes(agreeVotes, disagreeVotes);
 		holder.setVoteType(voteType);
+		if (cursor.moveToNext()) {
+			boolean nextIsMe = cursor.getInt(iIsMe) != 0;
+			Long nextAnonymousId = null;
+			if (!cursor.isNull(iUserAnonymousId)) {
+				nextAnonymousId = cursor.getLong(iUserAnonymousId);
+			}
+			holder.setExtraPadding(!(isMe && nextIsMe) ||
+								   !(anonymousId != null && anonymousId.equals(nextAnonymousId)));
+			cursor.moveToPrevious();
+		}
 	}
 }

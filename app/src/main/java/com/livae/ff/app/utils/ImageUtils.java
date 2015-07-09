@@ -75,7 +75,9 @@ public class ImageUtils {
 			}
 			requestCreator.config(Bitmap.Config.RGB_565).into(imageView);
 		} else {
-			if (round) {
+			if (placeholderResId != 0) {
+				imageView.setImageResource(placeholderResId);
+			} else if (round) {
 				imageView.setImageResource(R.drawable.anom_user);
 			} else {
 				TypedValue a = new TypedValue();

@@ -19,6 +19,7 @@ public class TaskPostComment extends CustomAsyncTask<TextId, Comment> {
 			request = API.endpoint().postComment(params.getId(), params.getText());
 			request.setAlias(params.getAlias());
 			comment = request.execute();
+			comment.setIsMe(true);
 			model.parse(comment);
 		} else {
 			comment = saveCommentForSync(params);

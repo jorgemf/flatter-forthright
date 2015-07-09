@@ -30,6 +30,8 @@ public class AnonymousImage extends View {
 
 	private Path path;
 
+	private Path clipPath;
+
 	private Rect bounds;
 
 	public AnonymousImage(Context context) {
@@ -59,6 +61,7 @@ public class AnonymousImage extends View {
 		paint.setStyle(Paint.Style.FILL);
 		path = new Path();
 		path.setFillType(Path.FillType.EVEN_ODD);
+		clipPath = new Path();
 		bounds = new Rect();
 	}
 
@@ -75,14 +78,13 @@ public class AnonymousImage extends View {
 		super.draw(canvas);
 		if (seed != 0) {
 			random.setSeed(seed);
-			int width = canvas.getWidth();
-			int height = canvas.getHeight();
-			int minX = -width / 2;
-			int maxX = width + width / 2;
-			int minY = -height / 2;
-			int maxY = height + height / 2;
+			int width = getWidth();
+			int height = getHeight();
 			// draw background
 			canvas.getClipBounds(bounds);
+			clipPath.addCircle(width / 2, height / 2, Math.min(width, height) / 2,
+							   Path.Direction.CW);
+			canvas.clipPath(clipPath);
 			paint.setColor(getColor());
 			canvas.drawRect(bounds, paint);
 			// draw random shapes
@@ -92,43 +94,44 @@ public class AnonymousImage extends View {
 				SHAPE shape = shapes[random.nextInt(shapes.length)];
 				switch (shape) {
 					case CIRCLE: {
-						int minRadius = Math.max(width, height) / 2;
-						int maxRadius = Math.max(width, height);
-						int centerX = random.nextInt(width * 2) + minX;
-						int centerY = random.nextInt(height * 2) + minY;
+						int minRadius = Math.max(width, height) / 4;
+						int maxRadius = Math.max(width, height) / 2;
+						int centerX = random.nextInt(width);
+						int centerY = random.nextInt(height);
 						int radius = random.nextInt(maxRadius - minRadius) + minRadius;
 						paint.setColor(getColor());
 						canvas.drawCircle(centerX, centerY, radius, paint);
 					}
 					break;
 					case SQUARE: {
-						int x1 = random.nextInt(width * 2) + minX;
-						int x2 = random.nextInt(width * 2) + minX;
-						int y1 = random.nextInt(height * 2) + minY;
-						int y2 = random.nextInt(height * 2) + minY;
+						int x1 = random.nextInt(width);
+						int x2 = random.nextInt(width);
+						int y1 = random.nextInt(height);
+						int y2 = random.nextInt(height);
 						paint.setColor(getColor());
 						canvas.drawRect(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2),
 										Math.max(y1, y2), paint);
 					}
 					break;
 					case TRIANGLE: {
-						int x1 = random.nextInt(width * 2) + minX;
-						int y1 = random.nextInt(height * 2) + minY;
-						int x2 = random.nextInt(width * 2) + minX;
-						int y2 = random.nextInt(height * 2) + minY;
-						int x3 = random.nextInt(width * 2) + minX;
-						int y3 = random.nextInt(height * 2) + minY;
+						int x1 = random.nextInt(width);
+						int y1 = random.nextInt(height);
+						int x2 = random.nextInt(width);
+						int y2 = random.nextInt(height);
+						int x3 = random.nextInt(width);
+						int y3 = random.nextInt(height);
 						path.reset();
 						path.moveTo(x1, y1);
 						path.lineTo(x2, y2);
 						path.lineTo(x3, y3);
 						path.close();
+						paint.setColor(getColor());
 						canvas.drawPath(path, paint);
 					}
 					break;
 				}
 				shapesCounter++;
-			} while (shapesCounter < 3 && random.nextBoolean());
+			} while (shapesCounter < 2 || (shapesCounter < 5 && random.nextFloat() < 0.8f));
 		}
 	}
 

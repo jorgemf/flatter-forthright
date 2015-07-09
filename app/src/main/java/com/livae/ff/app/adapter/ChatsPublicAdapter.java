@@ -2,6 +2,7 @@ package com.livae.ff.app.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,8 @@ public class ChatsPublicAdapter extends UsersAdapter {
 	public static final String[] PROJECTION = {Table.LocalUser.T_ID, Table.LocalUser.CONTACT_NAME,
 											   Table.LocalUser.PHONE, Table.LocalUser.IMAGE_URI,
 											   Table.Conversation.T_ID + " AS CID",
-											   Table.Conversation.ROOM_NAME};
+											   Table.Conversation.ROOM_NAME,
+											   Table.Conversation.LAST_ACCESS};
 
 	protected int iConversationId;
 
@@ -56,10 +58,12 @@ public class ChatsPublicAdapter extends UsersAdapter {
 
 	@Override
 	protected void bindCustomViewHolder(UserViewHolder userHolder, int position, Cursor cursor) {
-		super.bindCustomViewHolder(userHolder, position, cursor);
 		ChatPublicViewHolder holder = (ChatPublicViewHolder) userHolder;
 		if (position > 0 || !TextUtils.isEmpty(search)) {
-			position--;
+			if (TextUtils.isEmpty(search)) {
+				position--;
+			}
+			cursor.moveToPosition(position);
 			super.bindCustomViewHolder(holder, position, cursor);
 			if (!cursor.isNull(iConversationId)) {
 				holder.setConversationId(cursor.getLong(iConversationId));
@@ -68,6 +72,7 @@ public class ChatsPublicAdapter extends UsersAdapter {
 				holder.setRoomName(cursor.getString(iRoomName));
 			}
 		} else {
+			holder.clear();
 			final AppUser appUser = Application.appUser();
 			final Chats chats = appUser.getChats();
 			switch (chatType) {
@@ -101,12 +106,20 @@ public class ChatsPublicAdapter extends UsersAdapter {
 	}
 
 	@Override
+	public void onBindViewHolder(UserViewHolder viewHolder, int position) {
+		int size = getItemCount();
+		if (position >= 0 && position < size) {
+			bindCustomViewHolder(viewHolder, position, getCursor());
+		}
+	}
+
+	@Override
 	public long getItemId(int position) {
 		if (position > 0 || !TextUtils.isEmpty(search)) {
 			position--;
 			return super.getItemId(position);
 		} else {
-			return 0;
+			return RecyclerView.NO_ID;
 		}
 	}
 

@@ -1,6 +1,10 @@
 package com.livae.ff.app.viewholders;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,6 +29,10 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
 	private CommentActionListener commentActionListener;
 
+	private View extraPadding;
+
+	private View arrow;
+
 	public CommentViewHolder(View itemView, CommentActionListener commentActionListener) {
 		super(itemView);
 		this.commentActionListener = commentActionListener;
@@ -32,6 +40,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		userAlias = (TextView) itemView.findViewById(R.id.anonymous_name);
 		comment = (TextView) itemView.findViewById(R.id.comment);
 		date = (TextView) itemView.findViewById(R.id.comment_date);
+		extraPadding = itemView.findViewById(R.id.extra_padding);
+		arrow = itemView.findViewById(R.id.comment_arrow);
 //		voteAgreeButton = (Button) itemView.findViewById(R.id.vote_agree);
 //		voteDisagreeButton = (Button) itemView.findViewById(R.id.vote_disagree);
 //		voteAgreeButton.setOnClickListener(this);
@@ -48,8 +58,12 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 			anonymousImage.setVisibility(View.INVISIBLE);
 		}
 		if (userAlias != null) {
+			userAlias.setVisibility(View.VISIBLE);
+		}
+		if (userAlias != null) {
 			userAlias.setText(null);
 		}
+		arrow.setVisibility(View.VISIBLE);
 		comment.setText(null);
 		date.setText(null);
 //		comment.setOnLongClickListener(null);
@@ -80,7 +94,12 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 	}
 
 	public void setComment(String comment) {
-		this.comment.setText(comment);
+		final String sufix = " ______________";
+		comment = comment + sufix;
+		Spannable span = new SpannableString(comment);
+		span.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), comment.length() - sufix.length(),
+					 comment.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		this.comment.setText(span);
 	}
 
 	public void setDate(long date) {
@@ -202,5 +221,27 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 //		commentActionListener.commentUpdate(commentId, comment.getText().toString(),
 //											getAdapterPosition());
 		return true;
+	}
+
+	public void setExtraPadding(boolean extra) {
+		if (extra) {
+			extraPadding.setVisibility(View.VISIBLE);
+			arrow.setVisibility(View.VISIBLE);
+			if (anonymousImage != null) {
+				anonymousImage.setVisibility(View.VISIBLE);
+			}
+			if (userAlias != null) {
+				userAlias.setVisibility(View.VISIBLE);
+			}
+		} else {
+			extraPadding.setVisibility(View.GONE);
+			arrow.setVisibility(View.GONE);
+			if (anonymousImage != null) {
+				anonymousImage.setVisibility(View.INVISIBLE);
+			}
+			if (userAlias != null) {
+				userAlias.setVisibility(View.GONE);
+			}
+		}
 	}
 }

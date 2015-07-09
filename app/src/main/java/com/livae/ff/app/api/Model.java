@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.api.client.util.DateTime;
 import com.livae.ff.api.ff.model.CollectionResponseComment;
 import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.api.ff.model.Conversation;
@@ -15,6 +16,7 @@ import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.common.Constants.FlagReason;
 import com.livae.ff.common.model.Notification;
+import com.livae.ff.common.model.NotificationComment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -188,6 +190,18 @@ public class Model {
 	}
 
 	public void parse(Notification notification) {
-		// TODO
+		if (notification instanceof NotificationComment) {
+			NotificationComment nc = (NotificationComment) notification;
+			Comment comment = new Comment();
+			comment.setAlias(nc.getAlias());
+			comment.setAliasId(nc.getAliasId());
+			comment.setComment(nc.getComment());
+			comment.setConversationId(nc.getConversationId());
+			comment.setUserMark(nc.getUserMark());
+			comment.setDate(new DateTime(nc.getDate()));
+			comment.setIsMe(nc.getIsMe());
+			comment.setId(nc.getId());
+			parse(comment);
+		}
 	}
 }

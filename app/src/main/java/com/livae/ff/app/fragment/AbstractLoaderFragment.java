@@ -153,12 +153,14 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 			emptyView.setVisibility(View.GONE);
 		}
 		recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+		layoutManager.setReverseLayout(true);
+		recyclerView.setLayoutManager(layoutManager);
 		recyclerView.setAdapter(adapter);
 		loading = (ProgressBar) view.findViewById(R.id.center_progressbar);
 		Resources res = getResources();
 		preloadAhead = res.getInteger(R.integer.default_preload_ahead);
-		recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
@@ -429,18 +431,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		totalLoaded++;
 	}
 
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-		switch (id) {
-			case LOADER_ID:
-				return new CursorLoader(getActivity(), getUriCursor(), getProjection(), selection,
-										selectionArgs, getOrderString() + " LIMIT " +
-													   totalLoaded);
-			// break
-		}
-		return null;
-	}
-
 	public class GridSpanSize extends GridLayoutManager.SpanSizeLookup {
 
 		private GridLayoutManager.SpanSizeLookup mSpanSizeLookUpWrapped;
@@ -475,6 +465,18 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 				return position % spanCount;
 			}
 		}
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+		switch (id) {
+			case LOADER_ID:
+				return new CursorLoader(getActivity(), getUriCursor(), getProjection(), selection,
+										selectionArgs, getOrderString() + " LIMIT " +
+													   totalLoaded);
+			// break
+		}
+		return null;
 	}
 
 	@Override

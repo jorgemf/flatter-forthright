@@ -34,8 +34,7 @@ public class NotificationDisabledReceiver extends BroadcastReceiver {
 		Notification notification = NotificationUtil.parseNotification(extras);
 		if (notification != null) {
 			Model model = Application.model();
-			// TODO
-//			model.parse(notification);
+			model.parse(notification);
 			model.save();
 			if (listener != null) {
 				if (listener.onNotificationReceived(notification)) {

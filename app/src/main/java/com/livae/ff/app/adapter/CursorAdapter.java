@@ -22,17 +22,6 @@ public abstract class CursorAdapter<k extends RecyclerView.ViewHolder>
 		setHasStableIds(true);
 	}
 
-	public void setCursor(Cursor cursor) {
-		if (cursor != null) {
-			iId = cursor.getColumnIndexOrThrow(BaseColumns._ID);
-			findIndexes(cursor);
-		}
-		if (this.cursor != null && this.cursor != cursor) {
-			this.cursor.close();
-		}
-		this.cursor = cursor;
-	}
-
 	protected abstract void findIndexes(@Nonnull Cursor cursor);
 
 	@Override
@@ -65,5 +54,20 @@ public abstract class CursorAdapter<k extends RecyclerView.ViewHolder>
 	}
 
 	protected abstract void bindCustomViewHolder(k viewHolder, int position, Cursor cursor);
+
+	public Cursor getCursor() {
+		return cursor;
+	}
+
+	public void setCursor(Cursor cursor) {
+		if (cursor != null) {
+			iId = cursor.getColumnIndexOrThrow(BaseColumns._ID);
+			findIndexes(cursor);
+		}
+		if (this.cursor != null && this.cursor != cursor) {
+			this.cursor.close();
+		}
+		this.cursor = cursor;
+	}
 
 }

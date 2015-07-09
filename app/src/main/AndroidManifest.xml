@@ -41,6 +41,7 @@
 		<activity
 			android:label="@string/app_name"
 			android:name="com.livae.ff.app.activity.ChatsActivity"
+			android:screenOrientation="portrait"
 			android:windowSoftInputMode="adjustPan">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -49,18 +50,27 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
-		<activity android:name="com.livae.ff.app.activity.OnBoardingActivity"/>
+		<activity
+			android:name="com.livae.ff.app.activity.OnBoardingActivity"
+			android:screenOrientation="portrait"/>
 		<activity
 			android:name="com.livae.ff.app.activity.ContactsActivity"
+			android:screenOrientation="portrait"
 			android:windowSoftInputMode="adjustPan"/>
 		<activity
 			android:name="com.livae.ff.app.activity.ChatPublicActivity"
+			android:screenOrientation="portrait"
 			android:windowSoftInputMode="adjustResize"/>
 		<activity
 			android:name="com.livae.ff.app.activity.ChatPrivateActivity"
+			android:screenOrientation="portrait"
 			android:windowSoftInputMode="adjustResize"/>
-		<activity android:name="com.livae.ff.app.activity.WebViewActivity"/>
-		<activity android:name="com.livae.ff.app.activity.AboutActivity"/>
+		<activity
+			android:name="com.livae.ff.app.activity.WebViewActivity"
+			android:screenOrientation="portrait"/>
+		<activity
+			android:name="com.livae.ff.app.activity.AboutActivity"
+			android:screenOrientation="portrait"/>
 
 		<service android:name="com.livae.ff.app.service.AuthenticatorService">
 			<intent-filter>

@@ -160,16 +160,16 @@ public class ChatsPublicFragment extends AbstractFragment
 								Table.Conversation.TYPE + " IS NULL OR " + Table.Conversation.TYPE +
 								"=? )";
 					selectionArgs = new String[]{chatType.name()};
-					order = Table.Conversation.LAST_ACCESS + ", " +
-							Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
 				} else {
 					selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND " +
 								Table.LocalUser.CONTACT_NAME + " LIKE ? AND ( " +
 								Table.Conversation.TYPE + " IS NULL OR " + Table.Conversation.TYPE +
 								"=? )";
 					selectionArgs = new String[]{"%" + searchText + "%", chatType.name()};
-					order = Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
 				}
+				order = "CASE WHEN " + Table.Conversation.LAST_ACCESS + " IS NULL THEN 0 ELSE " +
+						Table.Conversation.LAST_ACCESS + " END DESC, " +
+						Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
 				return new CursorLoader(getActivity(),
 										ContactsProvider.getUriContactsConversations(),
 										ChatsPublicAdapter.PROJECTION, selection, selectionArgs,

@@ -2,7 +2,6 @@ package com.livae.ff.app.fragment;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -20,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -39,6 +37,7 @@ import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.app.dialog.EditTextDialogFragment;
 import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.provider.ConversationsProvider;
+import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.task.ConversationParams;
 import com.livae.ff.app.task.ListResult;
@@ -56,9 +55,12 @@ import com.livae.ff.app.utils.AnimUtils;
 import com.livae.ff.app.viewholders.CommentViewHolder;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
+import com.livae.ff.common.model.Notification;
+import com.livae.ff.common.model.NotificationComment;
 
 public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder, QueryId>
-  implements CommentActionListener, View.OnClickListener {
+  implements CommentActionListener, View.OnClickListener,
+			 NotificationDisabledReceiver.CloudMessagesDisabledListener {
 
 	private static final int LOADER_CONVERSATION_ID = 2;
 
@@ -98,6 +100,8 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 
 	private MenuItem editMenuItem;
 
+	private NotificationDisabledReceiver notificationDisabledReceiver;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Bundle extras = getActivity().getIntent().getExtras();
@@ -109,6 +113,9 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 		conversationPhone = extras.getLong(AbstractChatActivity.EXTRA_PHONE_NUMBER);
 		isMyPublicChat = Application.appUser().getUserPhone().equals(conversationPhone);
 		super.onCreate(savedInstanceState);
+
+		notificationDisabledReceiver = new NotificationDisabledReceiver();
+		notificationDisabledReceiver.setListener(this);
 
 		setHasOptionsMenu(true);
 	}
@@ -142,6 +149,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 	@Override
 	public void onResume() {
 		super.onResume();
+		notificationDisabledReceiver.register(getActivity());
 		if (conversationId == null) {
 			getConversation();
 		} else {
@@ -152,6 +160,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 	@Override
 	public void onPause() {
 		super.onPause();
+		notificationDisabledReceiver.unregister(getActivity());
 		if (taskVoteAgreeComment != null) {
 			taskVoteAgreeComment.cancel();
 		}
@@ -196,7 +205,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 
 	@Override
 	protected String getOrderString() {
-		return Table.Comment.DATE;
+		return "-" + Table.Comment.DATE;
 	}
 
 	@Override
@@ -471,6 +480,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 		}
 		TextId textId = new TextId(comment, conversationId, anonymousNick);
 		commentText.setEnabled(false);
+		buttonPostComment.setEnabled(false);
 		taskPostComment.execute(textId, new Callback<TextId, Comment>() {
 			@Override
 			public void onComplete(CustomAsyncTask<TextId, Comment> task, TextId param,
@@ -485,15 +495,17 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 										Analytics.Action.COMMENT_FORTHRIGHT);
 						break;
 				}
+				increaseTotalLoaded();
+				reloadCursor();
 				if (isResumed()) {
 					commentText.setEnabled(true);
+					buttonPostComment.setEnabled(true);
 					commentText.setText("");
-					commentText.clearFocus();
-					reloadCursor();
-					InputMethodManager imm;
-					imm = (InputMethodManager) getActivity()
-												 .getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(commentText.getWindowToken(), 0);
+//					commentText.clearFocus();
+//					InputMethodManager imm;
+//					imm = (InputMethodManager) getActivity()
+//												 .getSystemService(Context.INPUT_METHOD_SERVICE);
+//					imm.hideSoftInputFromWindow(commentText.getWindowToken(), 0);
 				}
 			}
 
@@ -501,6 +513,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 			public void onError(CustomAsyncTask<TextId, Comment> task, TextId param, Exception e) {
 				if (isResumed()) {
 					commentText.setEnabled(true);
+					buttonPostComment.setEnabled(true);
 					AbstractActivity activity = (AbstractActivity) getActivity();
 					if (e instanceof GoogleJsonResponseException) {
 						GoogleJsonResponseException ge = (GoogleJsonResponseException) e;
@@ -531,5 +544,20 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 				}
 				break;
 		}
+	}
+
+	@Override
+	public boolean onNotificationReceived(Notification notification) {
+		if (notification instanceof NotificationComment) {
+			NotificationComment nc = (NotificationComment) notification;
+			if (conversationId != null && conversationId.equals(nc.getConversationId())) {
+				if (!nc.getIsMe()) {
+					increaseTotalLoaded();
+					reloadCursor();
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 }
