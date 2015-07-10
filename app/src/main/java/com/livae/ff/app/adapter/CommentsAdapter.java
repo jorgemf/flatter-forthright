@@ -130,11 +130,14 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 	@Override
 	public int getCustomItemViewType(int position, Cursor cursor) {
 		boolean isMe = !cursor.isNull(iIsMe) && cursor.getInt(iIsMe) != 0;
+		boolean isTheUser = cursor.isNull(iUserAnonymousId);
 		switch (chatType) {
 			case FLATTER:
 			case FORTHRIGHT:
 				if (isMe) {
 					return COMMENT_PUBLIC_ME;
+				} else if (isTheUser) {
+					return COMMENT_PUBLIC_USER;
 				} else {
 					return COMMENT_PUBLIC_OTHERS;
 				}
@@ -192,6 +195,8 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 			holder.setAnonymousNick(alias);
 		}
 		boolean isMe = cursor.getInt(iIsMe) != 0;
+		boolean isTheUser =
+		  holder.getItemViewType() == COMMENT_PUBLIC_USER; // TODO use the imageView
 		long commentId = cursor.getLong(iId);
 		holder.setCommentId(commentId);
 		long date = cursor.getLong(iDate);

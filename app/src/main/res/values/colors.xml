@@ -5,21 +5,27 @@
 	<!--<color name="amber_light">#FFFDE7</color>-->
 	<color name="amber_light">#FFECB3</color>
 	<color name="amber_dark">#FFA000</color>
+	<color name="amber_comment">#ffde50</color>
 	<!-- flatter -->
 	<color name="pink">#E91E63</color>
 	<!--<color name="pink_light">#FCE4EC</color>-->
 	<color name="pink_light">#F8BBD0</color>
 	<color name="pink_dark">#C2185B</color>
+	<color name="pink_comment">#fe226d</color>
 	<!-- private -->
 	<color name="purple">#9C27B0</color>
 	<!--<color name="purple_light">#F3E5F5</color>-->
 	<color name="purple_light">#E1BEE7</color>
 	<color name="purple_dark">#7B1FA2</color>
+	<color name="purple_comment">#e23bfe</color>
 	<!-- forthright -->
 	<color name="deep_purple">#673AB7</color>
 	<!--<color name="deep_purple_light">#EDE7F6</color>-->
 	<color name="deep_purple_light">#D1C4E9</color>
 	<color name="deep_purple_dark">#512DA8</color>
+	<color name="deep_purple_comment">#9051fe</color>
+	<!-- anonymous -->
+	<color name="grey_comment">#cccccc</color>
 
 	<!-- text / icons -->
 	<color name="white">#FFFFFF</color>

@@ -256,6 +256,8 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 						} else {
 							showSendMessagesPanel();
 						}
+					} else {
+						showSendMessagesPanel();
 					}
 				}
 				break;

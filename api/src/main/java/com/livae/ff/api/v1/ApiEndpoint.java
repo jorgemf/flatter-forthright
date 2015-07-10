@@ -331,28 +331,26 @@ public class ApiEndpoint {
 		switch (conversation.getType()) {
 			case FORTHRIGHT:
 			case FLATTER:
-				if (conversation.getPhone().equals(user.getPhone())) {
-					throw new ForbiddenException("User cannot write in himself/herself");
-				}
-				if (alias == null) {
-					throw new BadRequestException("Alias cannot be empty");
-				} else if (alias.length() > Settings.MAX_ROOM_NAME_CHARS) {
-					alias = alias.substring(0, Settings.MAX_ROOM_NAME_CHARS - 1);
-				}
+				if (!conversation.getPhone().equals(user.getPhone())) {
+					if (alias == null) {
+						throw new BadRequestException("Alias cannot be empty");
+					} else if (alias.length() > Settings.MAX_ROOM_NAME_CHARS) {
+						alias = alias.substring(0, Settings.MAX_ROOM_NAME_CHARS - 1);
+					}
 
-				Comment previousComment;
-				previousComment = ofy().load().type(Comment.class).filter("userId", userPhone)
-									   .filter("conversationId", conversationId).filter("deleted",
-																						false)
-									   .order("-date").first().now();
-				long aliasId;
-				if (previousComment != null && previousComment.getAlias().equals(alias)) {
-					aliasId = previousComment.getAliasId();
-				} else {
-					aliasId = obfuscatePhone(userPhone);
+					Comment previousComment;
+					previousComment = ofy().load().type(Comment.class).filter("userId", userPhone)
+										   .filter("conversationId", conversationId)
+										   .filter("deleted", false).order("-date").first().now();
+					long aliasId;
+					if (previousComment != null && previousComment.getAlias().equals(alias)) {
+						aliasId = previousComment.getAliasId();
+					} else {
+						aliasId = obfuscatePhone(userPhone);
+					}
+					comment.setAlias(alias);
+					comment.setAliasId(aliasId);
 				}
-				comment.setAlias(alias);
-				comment.setAliasId(aliasId);
 				if (user.getTimesFlagged() != null &&
 					user.getTimesFlagged() >= Settings.MIN_FLAG_TO_MARK_USER) {
 					Integer[] flaggedType = user.getTimesFlaggedType();

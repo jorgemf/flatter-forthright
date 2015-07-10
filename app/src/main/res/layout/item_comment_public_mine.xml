@@ -22,7 +22,6 @@
 		android:layout_below="@id/extra_padding"
 		android:layout_marginEnd="@dimen/space_small"
 		android:layout_marginRight="@dimen/space_small"
-		android:layout_marginTop="@dimen/space_normal"
 		tools:background="@drawable/me_drawable"/>
 
 	<View
@@ -32,16 +31,16 @@
 		android:layout_marginLeft="@dimen/space_small"
 		android:layout_marginStart="@dimen/space_small"/>
 
-	<View
+	<com.livae.ff.app.view.Triangle
 		android:id="@+id/comment_arrow"
 		android:layout_width="@dimen/space_large"
 		android:layout_height="@dimen/space_large"
-		android:background="@color/amber_light"
+		android:color="@color/amber_comment"
+		android:gravity="left"
 		android:layout_below="@id/extra_padding"
-		android:layout_marginTop="@dimen/comment_card_radius"
+		android:layout_marginTop="@dimen/space_tiniest"
 		android:layout_toLeftOf="@id/anonymous_image"
-		android:layout_toStartOf="@id/anonymous_image"
-		android:rotation="45"/>
+		android:layout_toStartOf="@id/anonymous_image"/>
 
 	<android.support.v7.widget.CardView
 		android:id="@+id/card_view"
@@ -59,7 +58,7 @@
 		android:layout_toLeftOf="@id/anonymous_image"
 		android:layout_toRightOf="@+id/padding_image"
 		android:layout_toStartOf="@id/anonymous_image"
-		card_view:cardBackgroundColor="@color/amber_light"
+		card_view:cardBackgroundColor="@color/amber_comment"
 		card_view:cardCornerRadius="@dimen/comment_card_radius">
 
 		<include layout="@layout/item_comment_public"/>
