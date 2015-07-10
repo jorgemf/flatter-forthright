@@ -44,7 +44,7 @@
 		tools:ignore="HardcodedText"
 		tools:text="2 hours ago"/>
 
-	<ProgressBar
+	<ImageView
 		android:id="@+id/progress_bar"
 		style="?android:attr/progressBarStyleSmall"
 		android:layout_width="wrap_content"
@@ -53,6 +53,9 @@
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
 		android:layout_marginTop="@dimen/space_small"
+		android:src="@drawable/ic_sending"
+		android:tint="@color/grey_light"
+		android:tintMode="src_in"
 		android:visibility="gone"
 		tools:visibility="visible"/>
 

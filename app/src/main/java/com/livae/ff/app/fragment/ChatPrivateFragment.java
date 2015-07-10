@@ -62,7 +62,6 @@ public class ChatPrivateFragment extends AbstractLoaderFragment<CommentViewHolde
 
 		@Override
 		public void onChange(boolean selfChange) {
-			// TODO
 //			getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, ChatsFragment.this);
 		}
 	};

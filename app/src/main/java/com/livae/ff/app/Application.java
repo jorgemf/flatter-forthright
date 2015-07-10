@@ -134,7 +134,8 @@ public class Application extends android.app.Application {
 		if (SyncUtils.isAccountRegistered(this)) {
 //			SyncUtils.syncContactsEveryDay();
 			SyncUtils.syncContactsWhenChange();
-			SyncUtils.syncContactsConversationsNow();
+			SyncUtils.syncContactsNow();
+			SyncUtils.syncConversationsNow();
 			SyncUtils.syncCommentsWhenNetwork();
 		}
 	}

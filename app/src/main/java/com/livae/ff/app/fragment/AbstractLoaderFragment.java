@@ -292,6 +292,9 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 			@Override
 			public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 				adapter.setCursor(data);
+				if (BuildConfig.DEBUG) {
+					Debug.print(data);
+				}
 				setEmptyView();
 			}
 

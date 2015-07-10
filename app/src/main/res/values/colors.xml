@@ -25,6 +25,7 @@
 	<color name="white">#FFFFFF</color>
 	<!-- background -->
 	<color name="white_dark">#EEEEEE</color>
+	<color name="black_add">#292929</color>
 
 	<!-- primary text -->    <!--<color name="black_light">#212121</color>-->
 	<color name="black_light">#DE000000</color>

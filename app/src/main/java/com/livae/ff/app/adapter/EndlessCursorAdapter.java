@@ -87,13 +87,14 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 		if (headerView != null) {
 			start++;
 		}
-		if (diff > 0) {
-			notifyItemRangeInserted(start + currentSize, diff);
-		} else if (diff < 0) {
-			notifyItemRangeRemoved(start, -diff);
-		} else {
-			notifyDataSetChanged();
-		}
+//		if (diff > 0) {
+//			notifyItemRangeInserted(start + currentSize, diff);
+//		} else if (diff < 0) {
+//			notifyItemRangeRemoved(start, -diff);
+//		} else {
+//			notifyDataSetChanged();
+//		}
+		notifyDataSetChanged();
 		setIsLoading(false);
 		setIsError(false);
 	}

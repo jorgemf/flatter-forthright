@@ -36,7 +36,7 @@
 		android:id="@+id/comment_arrow"
 		android:layout_width="@dimen/space_large"
 		android:layout_height="@dimen/space_large"
-		android:background="@color/purple_light"
+		android:background="@color/amber_light"
 		android:layout_below="@id/extra_padding"
 		android:layout_marginTop="@dimen/comment_card_radius"
 		android:layout_toLeftOf="@id/anonymous_image"
@@ -59,7 +59,7 @@
 		android:layout_toLeftOf="@id/anonymous_image"
 		android:layout_toRightOf="@+id/padding_image"
 		android:layout_toStartOf="@id/anonymous_image"
-		card_view:cardBackgroundColor="@color/purple_light"
+		card_view:cardBackgroundColor="@color/amber_light"
 		card_view:cardCornerRadius="@dimen/comment_card_radius">
 
 		<include layout="@layout/item_comment_public"/>

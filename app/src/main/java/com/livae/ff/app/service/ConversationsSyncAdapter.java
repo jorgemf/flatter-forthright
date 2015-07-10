@@ -63,6 +63,7 @@ public class ConversationsSyncAdapter extends AbstractThreadedSyncAdapter {
 				request = API.endpoint().postComment(comment.conversationId, text);
 				request.setAlias(comment.alias);
 				commentPosted = request.execute();
+				commentPosted.setIsMe(true);
 				Model model = Application.model();
 				model.parse(commentPosted);
 				model.save();
@@ -90,6 +91,7 @@ public class ConversationsSyncAdapter extends AbstractThreadedSyncAdapter {
 				comment.conversationId = cursor.getLong(iConversationId);
 				comment.comment = cursor.getString(iComment);
 				comment.alias = cursor.getString(iAlias);
+				comments.add(comment);
 			} while (cursor.moveToNext());
 		}
 		cursor.close();

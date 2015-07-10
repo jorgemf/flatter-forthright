@@ -2,6 +2,7 @@ package com.livae.ff.app.fragment;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -90,17 +91,13 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 
 	private CommentsAdapter commentsAdapter;
 
-	private ContentObserver contentObserver = new ContentObserver(null) {
-
-		@Override
-		public void onChange(boolean selfChange) {
-			reloadCursor();
-		}
-	};
+	private ContentObserver contentObserver;
 
 	private MenuItem editMenuItem;
 
 	private NotificationDisabledReceiver notificationDisabledReceiver;
+
+	private EditTextDialogFragment dialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -114,6 +111,13 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 		isMyPublicChat = Application.appUser().getUserPhone().equals(conversationPhone);
 		super.onCreate(savedInstanceState);
 
+		contentObserver = new ContentObserver(new Handler()) {
+
+			@Override
+			public void onChange(boolean selfChange) {
+				reloadCursor();
+			}
+		};
 		notificationDisabledReceiver = new NotificationDisabledReceiver();
 		notificationDisabledReceiver.setListener(this);
 
@@ -246,7 +250,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 							handler.post(new Runnable() {
 								@Override
 								public void run() {
-									requestNickName(false);
+									requestNickName();
 								}
 							});
 						} else {
@@ -257,6 +261,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 				break;
 			default:
 				super.onLoadFinished(objectLoader, cursor);
+				break;
 		}
 	}
 
@@ -291,6 +296,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 										 ChatPublicFragment.this);
 		registerContentObserver();
 		joinConversation();
+		restart();
 	}
 
 	private void registerContentObserver() {
@@ -319,7 +325,7 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_edit) {
-			requestNickName(true);
+			requestNickName();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -431,29 +437,41 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 		new TaskConversationLeave().execute(conversationId, null);
 	}
 
-	private void requestNickName(boolean cancelable) {
-		EditTextDialogFragment dialog = new EditTextDialogFragment() {
+	private synchronized void requestNickName() {
+		if (dialog == null) {
+			dialog = new EditTextDialogFragment() {
 
-			@Override
-			protected void performAction(EditTextDialogFragment dialog, String newText) {
-				anonymousNick = newText;
-				ContentResolver contentResolver = getActivity().getContentResolver();
-				ContentValues values = new ContentValues();
-				values.put(Table.Conversation.ROOM_NAME, anonymousNick);
-				contentResolver.update(ConversationsProvider.getUriConversation(conversationId),
-									   values, null, null);
-				Application.appUser().getChats().setUserAnonymousName(anonymousNick);
-				dialog.dismiss();
-				showSendMessagesPanel();
-				final AbstractChatActivity activity = (AbstractChatActivity) getActivity();
-				activity.bindToolbar(anonymousNick, null, null, null, conversationPhone);
-			}
-		};
-		dialog.setCancelable(cancelable);
-		dialog.show(getActivity(), getActivity().getSupportFragmentManager(),
-					R.string.anonymous_name_title, R.string.anonymous_name_message,
-					R.integer.anonymous_name_max_chars,
-					Application.appUser().getChats().getUserAnonymousName());
+				@Override
+				protected void performAction(EditTextDialogFragment dialogFragment,
+											 String newText) {
+					anonymousNick = newText;
+					ContentResolver contentResolver = getActivity().getContentResolver();
+					ContentValues values = new ContentValues();
+					values.put(Table.Conversation.ROOM_NAME, anonymousNick);
+					contentResolver.update(ConversationsProvider.getUriConversation(conversationId),
+										   values, null, null);
+					Application.appUser().getChats().setUserAnonymousName(anonymousNick);
+					dialogFragment.dismiss();
+					showSendMessagesPanel();
+					final AbstractChatActivity activity = (AbstractChatActivity) getActivity();
+					activity.bindToolbar(anonymousNick, null, null, null, conversationPhone);
+					dialog = null;
+				}
+
+				@Override
+				public void onCancel(DialogInterface dialogInterface) {
+					if (anonymousNick == null) {
+						dialog = null;
+						getActivity().finish();
+					}
+				}
+			};
+			dialog.setCancelable(true);
+			dialog.show(getActivity(), getActivity().getSupportFragmentManager(),
+						R.string.anonymous_name_title, R.string.anonymous_name_message,
+						R.integer.anonymous_name_max_chars,
+						Application.appUser().getChats().getUserAnonymousName());
+		}
 	}
 
 	private void showSendMessagesPanel() {
@@ -479,7 +497,6 @@ public class ChatPublicFragment extends AbstractLoaderFragment<CommentViewHolder
 			taskPostComment = new TaskPostComment();
 		}
 		TextId textId = new TextId(comment, conversationId, anonymousNick);
-		commentText.setEnabled(false);
 		buttonPostComment.setEnabled(false);
 		taskPostComment.execute(textId, new Callback<TextId, Comment>() {
 			@Override

@@ -33,6 +33,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
 	private View arrow;
 
+	private View progressBar;
+
 	public CommentViewHolder(View itemView, CommentActionListener commentActionListener) {
 		super(itemView);
 		this.commentActionListener = commentActionListener;
@@ -42,6 +44,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		date = (TextView) itemView.findViewById(R.id.comment_date);
 		extraPadding = itemView.findViewById(R.id.extra_padding);
 		arrow = itemView.findViewById(R.id.comment_arrow);
+		progressBar = itemView.findViewById(R.id.progress_bar);
 //		voteAgreeButton = (Button) itemView.findViewById(R.id.vote_agree);
 //		voteDisagreeButton = (Button) itemView.findViewById(R.id.vote_disagree);
 //		voteAgreeButton.setOnClickListener(this);
@@ -55,7 +58,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
 	public void clear() {
 		if (anonymousImage != null) {
-			anonymousImage.setVisibility(View.INVISIBLE);
+			anonymousImage.setSeed(0);
 		}
 		if (userAlias != null) {
 			userAlias.setVisibility(View.VISIBLE);
@@ -63,9 +66,13 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		if (userAlias != null) {
 			userAlias.setText(null);
 		}
+		if (progressBar != null) {
+			progressBar.setVisibility(View.GONE);
+		}
 		arrow.setVisibility(View.VISIBLE);
 		comment.setText(null);
 		date.setText(null);
+		date.setVisibility(View.VISIBLE);
 //		comment.setOnLongClickListener(null);
 	}
 
@@ -84,6 +91,11 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		if (anonymousImage != null) {
 			anonymousImage.setVisibility(View.VISIBLE);
 			anonymousImage.setSeed(seed);
+			if (seed == 0) {
+				anonymousImage.setBackgroundResource(R.drawable.me_drawable);
+			} else {
+				anonymousImage.setBackgroundResource(0);
+			}
 		}
 	}
 
@@ -221,6 +233,18 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 //		commentActionListener.commentUpdate(commentId, comment.getText().toString(),
 //											getAdapterPosition());
 		return true;
+	}
+
+	public void setSending(boolean sending) {
+		if (progressBar != null) {
+			if (sending) {
+				progressBar.setVisibility(View.VISIBLE);
+				date.setVisibility(View.GONE);
+			} else {
+				progressBar.setVisibility(View.GONE);
+				date.setVisibility(View.VISIBLE);
+			}
+		}
 	}
 
 	public void setExtraPadding(boolean extra) {

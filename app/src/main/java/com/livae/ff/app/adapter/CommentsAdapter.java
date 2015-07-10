@@ -31,7 +31,8 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 											   Table.Comment.TIMES_FLAGGED_ABUSE,
 											   Table.Comment.TIMES_FLAGGED_INSULT,
 											   Table.Comment.TIMES_FLAGGED_LIE,
-											   Table.Comment.TIMES_FLAGGED_OTHER};
+											   Table.Comment.TIMES_FLAGGED_OTHER,
+											   Table.CommentSync.TEMP_SYNC};
 
 	private static final int COMMENT_PUBLIC_ME = 1;
 
@@ -74,6 +75,8 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 	private int iTimesFlaggedLie;
 
 	private int iTimesFlaggedOther;
+
+	private int iSyncTemp;
 
 	private CommentActionListener commentActionListener;
 
@@ -121,6 +124,7 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		iTimesFlaggedInsult = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED_INSULT);
 		iTimesFlaggedLie = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED_LIE);
 		iTimesFlaggedOther = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED_OTHER);
+		iSyncTemp = cursor.getColumnIndex(Table.CommentSync.TEMP_SYNC);
 	}
 
 	@Override
@@ -176,12 +180,16 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 	@Override
 	protected void bindCustomViewHolder(CommentViewHolder holder, int position, Cursor cursor) {
 		holder.clear();
-		// TODO set also the sending information and information about the votes
+		// TODO set information about the votes
 		Long anonymousId = null;
 		if (!cursor.isNull(iUserAnonymousId)) {
 			anonymousId = cursor.getLong(iUserAnonymousId);
 			holder.setAnonymousImageSeed(anonymousId);
-			holder.setAnonymousNick(cursor.getString(iUserAlias));
+		}
+		String alias = null;
+		if (!cursor.isNull(iUserAlias)) {
+			alias = cursor.getString(iUserAlias);
+			holder.setAnonymousNick(alias);
 		}
 		boolean isMe = cursor.getInt(iIsMe) != 0;
 		long commentId = cursor.getLong(iId);
@@ -235,14 +243,27 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		}
 		holder.setVotes(agreeVotes, disagreeVotes);
 		holder.setVoteType(voteType);
+		boolean isSyncTemp = false;
+		if (iSyncTemp >= 0) {
+			isSyncTemp = cursor.getInt(iSyncTemp) != 0;
+			holder.setSending(isSyncTemp);
+		}
 		if (cursor.moveToNext()) {
 			boolean nextIsMe = cursor.getInt(iIsMe) != 0;
 			Long nextAnonymousId = null;
 			if (!cursor.isNull(iUserAnonymousId)) {
 				nextAnonymousId = cursor.getLong(iUserAnonymousId);
 			}
-			holder.setExtraPadding(!(isMe && nextIsMe) ||
-								   !(anonymousId != null && anonymousId.equals(nextAnonymousId)));
+			String nextAlias = null;
+			if (!cursor.isNull(iUserAlias)) {
+				nextAlias = cursor.getString(iUserAlias);
+			}
+			if (isMe && nextIsMe) {
+				holder.setExtraPadding(!(alias != null && alias.equals(nextAlias)));
+			} else {
+				holder.setExtraPadding(!(anonymousId != null &&
+										 anonymousId.equals(nextAnonymousId)));
+			}
 			cursor.moveToPrevious();
 		}
 	}
