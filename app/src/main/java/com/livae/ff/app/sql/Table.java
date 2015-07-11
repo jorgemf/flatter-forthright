@@ -56,6 +56,8 @@ public class Table {
 
 		public static final String ROOM_NAME = NAME + "_" + "room_name";
 
+		public static final String ALIAS_ID = NAME + "_" + "alias_id";
+
 		public static final String LAST_ACCESS = NAME + "_" + "last_access";
 
 		public static final String LAST_MESSAGE_DATE = NAME + "_" + "last_message_date";
@@ -65,6 +67,7 @@ public class Table {
 		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
 												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 												ROOM_NAME + " TEXT, " +
+												ALIAS_ID + " INTEGER, " +
 												PHONE + " INTEGER, " +
 												LAST_ACCESS + " INTEGER, " +
 												LAST_MESSAGE + " TEXT, " +

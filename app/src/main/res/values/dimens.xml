@@ -22,6 +22,7 @@
 
 	<dimen name="comment_card_radius">8dp</dimen>
 	<dimen name="item_comment_user_image_size">32dp</dimen>
+	<dimen name="item_comment_user_image_size_padding">44dp</dimen>
 	<dimen name="item_user_image_size">48dp</dimen>
 	<dimen name="item_user_image_toolbar_size">40dp</dimen>
 	<dimen name="item_user_image_time_margin">36dp</dimen>

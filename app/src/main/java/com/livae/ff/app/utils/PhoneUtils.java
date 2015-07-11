@@ -24,8 +24,8 @@ public class PhoneUtils {
 			phoneUtil.isValidNumber(phoneNumber) &&
 			(numberType == PhoneNumberUtil.PhoneNumberType.MOBILE ||
 			 numberType == PhoneNumberUtil.PhoneNumberType.UNKNOWN)) {
-			String phoneString =
-			  "+" + phoneNumber.getCountryCode() + phoneNumber.getNationalNumber();
+			String phoneString = Long.toString(phoneNumber.getCountryCode()) +
+								 Long.toString(phoneNumber.getNationalNumber());
 			return Long.parseLong(phoneString);
 		} else //noinspection PointlessBooleanExpression,ConstantConditions
 			if (BuildConfig.DEV && phoneNumber.getCountryCode() == 1 &&

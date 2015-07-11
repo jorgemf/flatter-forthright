@@ -2,6 +2,7 @@ package com.livae.ff.app.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,16 +10,13 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
+
+import com.livae.ff.app.R;
 
 import javax.annotation.Nonnull;
 
 public class Triangle extends View {
-
-	private int color;
-
-	private int gravity;
 
 	private Paint paint;
 
@@ -50,11 +48,14 @@ public class Triangle extends View {
 		path = new Path();
 		path.setFillType(Path.FillType.EVEN_ODD);
 
-		int[] attrStyleable = new int[]{android.R.attr.color, android.R.attr.gravity};
-		TypedArray a = context.obtainStyledAttributes(attrs, attrStyleable);
-		color = a.getColor(android.R.attr.color, Color.BLACK);
-		gravity = a.getInteger(android.R.attr.gravity, Gravity.LEFT);
-		a.recycle();
+		final Resources.Theme theme = context.getTheme();
+		TypedArray a = theme.obtainStyledAttributes(attrs, R.styleable.Triangle, 0, 0);
+		int color = Color.BLACK;
+		try {
+			color = a.getColor(R.styleable.Triangle_triangle_color, Color.BLACK);
+		} finally {
+			a.recycle();
+		}
 		paint.setColor(color);
 	}
 
@@ -64,19 +65,9 @@ public class Triangle extends View {
 		path.reset();
 		final int width = getWidth();
 		final int height = getHeight();
-		switch (gravity) {
-			case Gravity.RIGHT:
-				path.moveTo(0, 0);
-				path.lineTo(width, 0);
-				path.lineTo(0, height);
-				break;
-			default:
-			case Gravity.LEFT:
-				path.moveTo(width, 0);
-				path.lineTo(0, 0);
-				path.lineTo(width, height);
-				break;
-		}
+		path.moveTo(0, 0);
+		path.lineTo(width, 0);
+		path.lineTo(width / 2, height);
 		path.close();
 		canvas.drawPath(path, paint);
 	}

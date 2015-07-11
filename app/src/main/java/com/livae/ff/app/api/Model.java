@@ -14,6 +14,7 @@ import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.sql.Table;
+import com.livae.ff.common.Constants;
 import com.livae.ff.common.Constants.FlagReason;
 import com.livae.ff.common.model.Notification;
 import com.livae.ff.common.model.NotificationComment;
@@ -149,6 +150,10 @@ public class Model {
 	}
 
 	public synchronized void parse(Conversation conversation) {
+		parse(conversation, null);
+	}
+
+	public synchronized void parse(Conversation conversation, Long lastAccessDate) {
 		ContentValues val = new ContentValues();
 
 		val.put(Table.Conversation.ID, conversation.getId());
@@ -160,6 +165,13 @@ public class Model {
 		final String roomName = conversation.getAlias();
 		if (roomName != null) {
 			val.put(Table.Conversation.ROOM_NAME, roomName);
+		}
+		final Long aliasId = conversation.getAliasId();
+		if (aliasId != null) {
+			val.put(Table.Conversation.ALIAS_ID, aliasId);
+		}
+		if (lastAccessDate != null) {
+			val.put(Table.Conversation.LAST_ACCESS, lastAccessDate);
 		}
 
 		conversationsList.add(val);
@@ -193,14 +205,33 @@ public class Model {
 		if (notification instanceof NotificationComment) {
 			NotificationComment nc = (NotificationComment) notification;
 			Comment comment = new Comment();
-			comment.setAlias(nc.getAlias());
-			comment.setAliasId(nc.getAliasId());
 			comment.setComment(nc.getComment());
 			comment.setConversationId(nc.getConversationId());
 			comment.setUserMark(nc.getUserMark());
 			comment.setDate(new DateTime(nc.getDate()));
 			comment.setIsMe(nc.getIsMe());
 			comment.setId(nc.getId());
+			try {
+				Constants.ChatType chatType = Constants.ChatType.valueOf(nc.getConversationType());
+				switch (chatType) {
+					case FORTHRIGHT:
+					case FLATTER:
+						comment.setAlias(nc.getAlias());
+						comment.setAliasId(nc.getAliasId());
+					case PRIVATE_ANONYMOUS:
+						Conversation conversation = new Conversation();
+						conversation.setType(nc.getConversationType());
+						conversation.setAlias(nc.getAlias());
+						conversation.setAliasId(nc.getAliasId());
+						conversation.setId(nc.getConversationId());
+						parse(conversation, comment.getDate().getValue());
+						break;
+					case SECRET:
+					case PRIVATE:
+						break;
+				}
+			} catch (IllegalArgumentException ignore) {
+			}
 			parse(comment);
 		}
 	}

@@ -1,12 +1,12 @@
 package com.livae.ff.app.adapter;
 
 import android.database.Cursor;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.livae.ff.app.R;
-import com.livae.ff.app.fragment.AbstractLoaderFragment;
 import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.viewholders.CommentViewHolder;
@@ -86,14 +86,23 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
 	private HashMap<Long, CommentVoteType> commentVoteTypeHashMap;
 
-	public CommentsAdapter(@Nonnull AbstractLoaderFragment fragment,
+	private boolean isPublicChat;
+
+	private String userImageUri;
+
+	private String userName;
+
+	public CommentsAdapter(@Nonnull Fragment fragment, @Nonnull ViewCreator viewCreator,
 						   @Nonnull CommentActionListener commentActionListener,
-						   @Nonnull ChatType chatType) {
-		super(fragment.getActivity(), fragment);
+						   @Nonnull ChatType chatType, String userName, String userImageUri) {
+		super(fragment.getActivity(), viewCreator);
 		layoutInflater = fragment.getActivity().getLayoutInflater();
 		this.commentActionListener = commentActionListener;
 		commentVoteTypeHashMap = new HashMap<>();
 		this.chatType = chatType;
+		isPublicChat = chatType == ChatType.FORTHRIGHT || chatType == ChatType.FLATTER;
+		this.userName = userName;
+		this.userImageUri = userImageUri;
 	}
 
 	public void votedComment(Long commentId, CommentVoteType voteType) {
@@ -184,6 +193,7 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 	protected void bindCustomViewHolder(CommentViewHolder holder, int position, Cursor cursor) {
 		holder.clear();
 		// TODO set information about the votes
+		long commentId = cursor.getLong(iId);
 		Long anonymousId = null;
 		if (!cursor.isNull(iUserAnonymousId)) {
 			anonymousId = cursor.getLong(iUserAnonymousId);
@@ -195,13 +205,16 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 			holder.setAnonymousNick(alias);
 		}
 		boolean isMe = cursor.getInt(iIsMe) != 0;
-		boolean isTheUser =
-		  holder.getItemViewType() == COMMENT_PUBLIC_USER; // TODO use the imageView
-		long commentId = cursor.getLong(iId);
+		boolean isTheUser = isPublicChat && alias == null;
+		if (isTheUser && userImageUri != null) {
+			holder.setUserImageUri(userImageUri);
+		}
+		if (isTheUser && userName != null) {
+			holder.setAnonymousNick(userName);
+		}
 		holder.setCommentId(commentId);
 		long date = cursor.getLong(iDate);
-		holder.setDate(date);
-		holder.setComment(cursor.getString(iComment));
+		holder.setComment(cursor.getString(iComment), date);
 		int agreeVotes = cursor.getInt(iAgreeVotes);
 		int disagreeVotes = cursor.getInt(iDisagreeVotes);
 		CommentVoteType voteType = null;
@@ -263,7 +276,10 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 			if (!cursor.isNull(iUserAlias)) {
 				nextAlias = cursor.getString(iUserAlias);
 			}
-			if (isMe && nextIsMe) {
+			boolean nextIsTheUser = isPublicChat && nextAlias == null;
+			if (isTheUser && nextIsTheUser) {
+				holder.setExtraPadding(false);
+			} else if (isMe && nextIsMe) {
 				holder.setExtraPadding(!(alias != null && alias.equals(nextAlias)));
 			} else {
 				holder.setExtraPadding(!(anonymousId != null &&

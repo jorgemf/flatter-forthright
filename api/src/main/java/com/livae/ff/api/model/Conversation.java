@@ -31,6 +31,8 @@ public class Conversation {
 
 	private String alias;
 
+	private Long aliasId;
+
 	@Index(IfNotNull.class)
 	private Long phone;
 
@@ -90,6 +92,14 @@ public class Conversation {
 
 	public void setAlias(String alias) {
 		this.alias = alias;
+	}
+
+	public Long getAliasId() {
+		return aliasId;
+	}
+
+	public void setAliasId(Long aliasId) {
+		this.aliasId = aliasId;
 	}
 
 	public Long getPhone() {

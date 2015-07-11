@@ -43,7 +43,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Logger;
 
 import javax.mail.Address;
@@ -86,9 +85,13 @@ public class ApiEndpoint {
 		Transport.send(msg);
 	}
 
-	private static Long obfuscatePhone(Long userPhone) {
-		Random random = new Random();
-		return userPhone ^ random.nextLong();
+	private static Long obfuscatePhone(Long userPhone, Long phone, String alias) {
+		long h = 1125899906842597L; // prime
+		int len = alias.length();
+		for (int i = 0; i < len; i++) {
+			h = 31 * h + alias.charAt(i);
+		}
+		return userPhone ^ h + phone;
 	}
 
 	@ApiMethod(path = "version/{platform}", httpMethod = ApiMethod.HttpMethod.GET)
@@ -257,6 +260,7 @@ public class ApiEndpoint {
 		PhoneUser userConversation = PhoneUser.get(phoneNumber);
 		PhoneUser user = AuthUtil.getPhoneUser(gUser);
 		Conversation conversation = null;
+		final Long userPhone = user.getPhone();
 		switch (type) {
 			case PRIVATE_ANONYMOUS:
 				if (userConversation == null) {
@@ -269,8 +273,8 @@ public class ApiEndpoint {
 				}
 				conversation = new Conversation(type);
 				conversation.setAlias(roomName);
-				conversation.addUser(userConversation.getPhone());
-				conversation.addUser(user.getPhone());
+				conversation.addUser(phoneNumber);
+				conversation.addUser(userPhone);
 				ofy().save().entity(conversation).now();
 				break;
 			case PRIVATE:
@@ -279,15 +283,15 @@ public class ApiEndpoint {
 					throw new NotFoundException("User not in the platform");
 				}
 				// find previous conversation
-				String mixPhones = Conversation.mixPhones(phoneNumber, user.getPhone());
+				String mixPhones = Conversation.mixPhones(phoneNumber, userPhone);
 				conversation = ofy().load().type(Conversation.class).filter("type", type)
 									.filter("phones", mixPhones).first().now();
 				// create a new one
 				if (conversation == null) {
 					conversation = new Conversation(type);
 					conversation.setPhones(mixPhones);
-					conversation.addUser(userConversation.getPhone());
-					conversation.addUser(user.getPhone());
+					conversation.addUser(phoneNumber);
+					conversation.addUser(userPhone);
 					ofy().save().entity(conversation).now();
 				}
 				break;
@@ -346,7 +350,7 @@ public class ApiEndpoint {
 					if (previousComment != null && previousComment.getAlias().equals(alias)) {
 						aliasId = previousComment.getAliasId();
 					} else {
-						aliasId = obfuscatePhone(userPhone);
+						aliasId = obfuscatePhone(userPhone, user.getPhone(), alias);
 					}
 					comment.setAlias(alias);
 					comment.setAliasId(aliasId);

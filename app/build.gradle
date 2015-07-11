@@ -37,6 +37,7 @@ android {
 		}
 		debug {
 			signingConfig signingConfigs.release
+			shrinkResources true
 		}
 	}
 	productFlavors {

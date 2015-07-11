@@ -6,10 +6,12 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.livae.ff.app.R;
 import com.livae.ff.app.listener.CommentActionListener;
+import com.livae.ff.app.utils.ImageUtils;
 import com.livae.ff.app.utils.UnitUtils;
 import com.livae.ff.app.view.AnonymousImage;
 import com.livae.ff.common.Constants.CommentVoteType;
@@ -20,6 +22,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 	private Long commentId;
 
 	private AnonymousImage anonymousImage;
+
+	private ImageView userImage;
 
 	private TextView userAlias;
 
@@ -39,6 +43,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		super(itemView);
 		this.commentActionListener = commentActionListener;
 		anonymousImage = (AnonymousImage) itemView.findViewById(R.id.anonymous_image);
+		userImage = (ImageView) itemView.findViewById(R.id.user_image);
 		userAlias = (TextView) itemView.findViewById(R.id.anonymous_name);
 		comment = (TextView) itemView.findViewById(R.id.comment);
 		date = (TextView) itemView.findViewById(R.id.comment_date);
@@ -69,6 +74,10 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		if (progressBar != null) {
 			progressBar.setVisibility(View.GONE);
 		}
+		if (userImage != null) {
+			userImage.setVisibility(View.VISIBLE);
+			userImage.setImageResource(R.drawable.ic_account_circle_white_48dp);
+		}
 		arrow.setVisibility(View.VISIBLE);
 		comment.setText(null);
 		date.setText(null);
@@ -90,6 +99,9 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 	public void setAnonymousImageSeed(long seed) {
 		if (anonymousImage != null) {
 			anonymousImage.setVisibility(View.VISIBLE);
+			if (userImage != null) {
+				userImage.setVisibility(View.INVISIBLE);
+			}
 			anonymousImage.setSeed(seed);
 			if (seed == 0) {
 				anonymousImage.setBackgroundResource(R.drawable.me_drawable);
@@ -105,17 +117,15 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		}
 	}
 
-	public void setComment(String comment) {
-		final String sufix = " ______________";
+	public void setComment(String comment, long date) {
+		final CharSequence dateString = UnitUtils.getAgoTime(this.date.getContext(), date);
+		this.date.setText(dateString);
+		final String sufix = " " + dateString;
 		comment = comment + sufix;
 		Spannable span = new SpannableString(comment);
 		span.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), comment.length() - sufix.length(),
 					 comment.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		this.comment.setText(span);
-	}
-
-	public void setDate(long date) {
-		this.date.setText(UnitUtils.getAgoTime(this.date.getContext(), date));
 	}
 
 	public void setVotes(int upVotes, int downVotes) {
@@ -266,6 +276,19 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 			if (userAlias != null) {
 				userAlias.setVisibility(View.GONE);
 			}
+			if (userImage != null) {
+				userImage.setVisibility(View.INVISIBLE);
+			}
+		}
+	}
+
+	public void setUserImageUri(String userImageUri) {
+		if (userImage != null) {
+			userImage.setVisibility(View.VISIBLE);
+			if (anonymousImage != null) {
+				anonymousImage.setVisibility(View.INVISIBLE);
+			}
+			ImageUtils.loadUserImage(userImage, userImageUri);
 		}
 	}
 }

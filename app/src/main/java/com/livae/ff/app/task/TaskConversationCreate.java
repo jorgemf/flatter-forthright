@@ -18,6 +18,7 @@ public class TaskConversationCreate extends NetworkAsyncTask<ConversationParams,
 			request.setRoomName(conversation.getRoomName());
 		}
 		Conversation c = request.execute();
+		c.setPhone(conversation.getPhoneNumber());
 		Model model = new Model(Application.getContext());
 		model.parse(c);
 		model.save();

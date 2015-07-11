@@ -6,6 +6,7 @@ import com.livae.ff.api.model.Comment;
 import com.livae.ff.api.model.Conversation;
 import com.livae.ff.api.model.PhoneUser;
 import com.livae.ff.api.util.NotificationsUtil;
+import com.livae.ff.common.Constants;
 import com.livae.ff.common.Constants.PushNotificationType;
 import com.livae.ff.common.model.NotificationComment;
 
@@ -49,13 +50,27 @@ public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 		notificationComment.setIsMe(comment.getIsMe());
 		notificationComment.setComment(comment.getComment());
 		notificationComment.setDate(comment.getDate());
-		notificationComment.setAlias(comment.getAlias());
-		notificationComment.setAliasId(comment.getAliasId());
 		if (comment.getUserMark() != null) {
 			notificationComment.setUserMark(comment.getUserMark().name());
 		}
-		notificationComment.setConversationType(conversation.getType().name());
+		final Constants.ChatType chatType = conversation.getType();
+		notificationComment.setConversationType(chatType.name());
 		notificationComment.setConversationId(conversation.getId());
+		switch (chatType) {
+			case FLATTER:
+			case FORTHRIGHT:
+				notificationComment.setAlias(comment.getAlias());
+				notificationComment.setAliasId(comment.getAliasId());
+				break;
+			case PRIVATE_ANONYMOUS:
+				notificationComment.setAlias(conversation.getAlias());
+				notificationComment.setAliasId(conversation.getAliasId());
+				break;
+			case PRIVATE:
+			case SECRET:
+				break;
+		}
+
 		Gson gson = new GsonBuilder().create();
 		return gson.toJson(notificationComment);
 	}

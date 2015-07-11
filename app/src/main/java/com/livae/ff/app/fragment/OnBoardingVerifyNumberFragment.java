@@ -1,6 +1,5 @@
 package com.livae.ff.app.fragment;
 
-import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -226,9 +225,10 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		  .setMessage(getString(R.string.verification_sms_dialog_confirmation, number))
 		  .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			  public void onClick(DialogInterface dialog, int id) {
-				  String phoneString =
-					"+" + phoneNumber.getCountryCode() + phoneNumber.getNationalNumber();
+				  String phoneString = Long.toString(phoneNumber.getCountryCode()) +
+									   Long.toString(phoneNumber.getNationalNumber());
 				  Long phoneLong = Long.parseLong(phoneString);
+				  phoneString = "+" + phoneString;
 				  PhoneVerification verification = PhoneVerification.instance(getActivity());
 				  verification.setUserPhone(phoneLong);
 				  Random random = new Random();
@@ -271,10 +271,9 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		//noinspection PointlessBooleanExpression,PointlessBooleanExpression,ConstantConditions
 		if (!BuildConfig.DEV && !BuildConfig.DEBUG) {
 			sms.sendTextMessage(phoneNumber, null, message, null, null);
-		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+		} else {
 			final Handler handler = new Handler();
 			handler.postDelayed(new Runnable() {
-				@TargetApi(Build.VERSION_CODES.KITKAT)
 				@Override
 				public void run() {
 					checkSmsConfirmation(phoneNumber, message);

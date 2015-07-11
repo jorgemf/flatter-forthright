@@ -3,4 +3,8 @@
 	<attr format="reference|color" name="ff_primaryDark"/>
 	<attr format="reference|color" name="ff_primaryLight"/>
 	<attr format="reference|color" name="ff_primary"/>
+
+	<declare-styleable name="Triangle">
+		<attr format="color" name="triangle_color"/>
+	</declare-styleable>
 </resources>

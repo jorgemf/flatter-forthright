@@ -29,7 +29,7 @@ public class ChatPrivateActivity extends AbstractChatActivity {
 	public static void start(@Nonnull Activity activity, @Nonnull ChatType chatType,
 							 Long conversationId, @Nonnull Long phoneNumber, String displayName,
 							 String anonymousName, String imageUri) {
-		Intent intent = new Intent(activity, ChatPublicActivity.class);
+		Intent intent = new Intent(activity, ChatPrivateActivity.class);
 		AbstractChatActivity.startIntent(intent, activity, chatType, conversationId, phoneNumber,
 										 displayName, anonymousName, imageUri, null);
 	}
@@ -37,32 +37,9 @@ public class ChatPrivateActivity extends AbstractChatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_chat_public);
+		setContentView(R.layout.activity_chat_private);
 		onCreated();
 
-//		EditTextDialogFragment dialog = new EditTextDialogFragment() {
-//
-//			@Override
-//			protected void performAction(EditTextDialogFragment dialog, String newText) {
-//				Application.appUser().setUserAnonymousName(newText);
-//				dialog.dismiss();
-//				startChat(activity, conversationId, chatType, phoneNumber, displayName, newText);
-//			}
-//		};
-//		dialog.show(activity, activity.getSupportFragmentManager(), R.string.anonymous_room_title,
-//					R.string.anonymous_room_message, R.integer.anonymous_name_max_chars,
-//					Application.appUser().getUserAnonymousName());
-//		return;
-
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-//		if (conversationId != null) {
-//			new TaskConversationLeave().execute(conversationId, null);
-//		new TaskConversationJoin().execute(conversationId,null);
-//		}
 	}
 
 }
