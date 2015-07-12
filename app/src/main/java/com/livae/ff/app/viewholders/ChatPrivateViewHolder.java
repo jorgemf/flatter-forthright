@@ -57,6 +57,10 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder {
 		}
 		if (dateTextView != null) {
 			dateTextView.setText(null);
+			dateTextView.setVisibility(View.VISIBLE);
+		}
+		if (chatPrivateModel.conversationSubtitleView != null) {
+			chatPrivateModel.conversationSubtitleView.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -103,7 +107,23 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder {
 	}
 
 	public void setSecret(boolean secret) {
-		secretChatMark.setVisibility(secret ? View.VISIBLE : View.GONE);
+		if (secret) {
+			secretChatMark.setVisibility(View.VISIBLE);
+			if (chatPrivateModel.conversationSubtitleView != null) {
+				chatPrivateModel.conversationSubtitleView.setVisibility(View.GONE);
+			}
+			if (dateTextView != null) {
+				dateTextView.setVisibility(View.GONE);
+			}
+		} else {
+			secretChatMark.setVisibility(View.GONE);
+			if (chatPrivateModel.conversationSubtitleView != null) {
+				chatPrivateModel.conversationSubtitleView.setVisibility(View.VISIBLE);
+			}
+			if (dateTextView != null) {
+				dateTextView.setVisibility(View.VISIBLE);
+			}
+		}
 	}
 
 	public void setImageAnonymous(Long imageAnonymous) {
@@ -130,6 +150,11 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder {
 		if (dateTextView != null) {
 			dateTextView.setText(UnitUtils.getAgoTime(dateTextView.getContext(), date));
 		}
+		chatPrivateModel.lastMessage = date;
+	}
+
+	public void setLastAccessDate(long date) {
+		chatPrivateModel.lastAccess = date;
 	}
 
 }

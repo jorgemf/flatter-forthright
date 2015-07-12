@@ -2,15 +2,19 @@ package com.livae.ff.app.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.livae.ff.app.R;
+import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.common.Constants.ChatType;
 
 import javax.annotation.Nonnull;
 
 public class ChatPublicActivity extends AbstractChatActivity {
+
+	private Long secretConversationId;
 
 	public static void startChatFlatter(@Nonnull FragmentActivity activity, Long conversationId,
 										@Nonnull Long userId, @Nonnull String userDisplayName,
@@ -31,7 +35,7 @@ public class ChatPublicActivity extends AbstractChatActivity {
 							  String anonymousName, String imageUri) {
 		Intent intent = new Intent(activity, ChatPublicActivity.class);
 		AbstractChatActivity.startIntent(intent, activity, chatType, conversationId, phoneNumber,
-										 displayName, anonymousName, imageUri, null);
+										 displayName, anonymousName, imageUri, null, null, null);
 	}
 
 	@Override
@@ -41,4 +45,16 @@ public class ChatPublicActivity extends AbstractChatActivity {
 		onCreated();
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (secretConversationId != null) {
+			final Uri uri = ConversationsProvider.getUriConversationComments(secretConversationId);
+			getContentResolver().delete(uri, null, null);
+		}
+	}
+
+	public void setSecretConversationId(Long secretConversationId) {
+		this.secretConversationId = secretConversationId;
+	}
 }

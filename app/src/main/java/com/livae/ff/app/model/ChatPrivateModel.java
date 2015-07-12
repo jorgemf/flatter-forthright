@@ -18,10 +18,16 @@ public class ChatPrivateModel extends ChatPublicModel {
 
 	public TextView conversationSubtitleView;
 
+	public Long lastAccess;
+
+	public Long lastMessage;
+
 	public void clear() {
 		super.clear();
 		conversationSubtitle = null;
 		chatType = null;
+		lastAccess = null;
+		lastMessage = null;
 		if (anonymousImageView != null) {
 			anonymousImageView.setVisibility(View.GONE);
 		}

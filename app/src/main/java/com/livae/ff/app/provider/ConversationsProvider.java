@@ -130,7 +130,8 @@ public class ConversationsProvider extends AbstractProvider {
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
 			case URI_CONVERSATIONS:
-				qb.setTables(Table.Conversation.NAME);
+				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +
+							 " ON " + Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
 			case URI_CONVERSATION_COMMENTS:
@@ -221,13 +222,13 @@ public class ConversationsProvider extends AbstractProvider {
 		int updated;
 		switch (uriId) {
 			case URI_CONVERSATION:
-				updated = update(uri, null, null, null);
+				updated = update(uri, values, null, null);
 				if (updated == 0) {
 					getWritableDatabase().insert(Table.Conversation.NAME, null, values);
 				}
 				break;
 			case URI_COMMENTS:
-				updated = update(uri, null, null, null);
+				updated = update(uri, values, null, null);
 				if (updated == 0) {
 					getWritableDatabase().insert(Table.Comment.NAME, null, values);
 				}

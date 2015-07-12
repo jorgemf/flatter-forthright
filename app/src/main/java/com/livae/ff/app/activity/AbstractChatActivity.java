@@ -41,6 +41,10 @@ public class AbstractChatActivity extends AbstractActivity {
 
 	public static final String EXTRA_IMAGE_SEED = "EXTRA_IMAGE_SEED";
 
+	public static final String EXTRA_LAST_ACCESS_DATE = "EXTRA_LAST_ACCESS_DATE";
+
+	public static final String EXTRA_LAST_MESSAGE_DATE = "EXTRA_LAST_MESSAGE_DATE";
+
 	private ChatType chatType;
 
 	private TextView title;
@@ -54,7 +58,8 @@ public class AbstractChatActivity extends AbstractActivity {
 	protected static void startIntent(@Nonnull Intent intent, @Nonnull Activity activity,
 									  @Nonnull ChatType chatType, Long conversationId,
 									  Long phoneNumber, String displayName, String roomName,
-									  String imageUri, Long imageSeed) {
+									  String imageUri, Long imageSeed, Long lastAccess,
+									  Long lastMessage) {
 		if (conversationId == null && phoneNumber == null) {
 			throw new RuntimeException("Not enough data to start the conversation");
 		}
@@ -76,6 +81,12 @@ public class AbstractChatActivity extends AbstractActivity {
 		}
 		if (imageSeed != null) {
 			intent.putExtra(EXTRA_IMAGE_SEED, imageSeed);
+		}
+		if (lastAccess != null) {
+			intent.putExtra(EXTRA_LAST_ACCESS_DATE, lastAccess);
+		}
+		if (lastMessage != null) {
+			intent.putExtra(EXTRA_LAST_MESSAGE_DATE, lastMessage);
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity)

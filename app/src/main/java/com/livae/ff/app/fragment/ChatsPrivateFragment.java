@@ -91,11 +91,10 @@ public class ChatsPrivateFragment extends AbstractFragment
 	}
 
 	@Override
-	public void chatClicked(ChatPrivateModel chatPrivateModel) {
-		ChatPrivateActivity.start(getActivity(), chatPrivateModel.chatType,
-								  chatPrivateModel.conversationId, chatPrivateModel.userId,
-								  chatPrivateModel.userDisplayName, chatPrivateModel.roomName,
-								  chatPrivateModel.userImageUri);
+	public void chatClicked(ChatPrivateModel model) {
+		ChatPrivateActivity.start(getActivity(), model.chatType, model.conversationId, model.userId,
+								  model.userDisplayName, model.roomName, model.userImageUri,
+								  model.lastAccess, model.lastMessage);
 	}
 
 	@Override
@@ -123,7 +122,9 @@ public class ChatsPrivateFragment extends AbstractFragment
 				String selection;
 				String[] selectionArgs;
 				String order;
-				order = Table.Conversation.LAST_MESSAGE_DATE;
+				order =
+				  "CASE WHEN " + Table.Conversation.LAST_MESSAGE_DATE + " IS NULL THEN 0 ELSE " +
+				  Table.Conversation.LAST_MESSAGE_DATE + " END DESC ";
 				if (TextUtils.isEmpty(searchText)) {
 					selection = Table.Conversation.TYPE + "=? OR " +
 								Table.Conversation.TYPE + "=? OR " +

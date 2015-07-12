@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 import com.livae.ff.app.sql.Table;
+import com.livae.ff.common.Constants;
 
 import java.util.List;
 
@@ -33,8 +34,9 @@ public class ContactsProvider extends AbstractProvider {
 		return ContentUris.withAppendedId(getUriContacts(), id);
 	}
 
-	public static Uri getUriContactsConversations() {
-		return Uri.withAppendedPath(getUriContacts(), Table.Conversation.NAME);
+	public static Uri getUriContactsConversations(Constants.ChatType chatType) {
+		return Uri.withAppendedPath(Uri.withAppendedPath(getUriContacts(), Table.Conversation.NAME),
+									chatType.name());
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class ContactsProvider extends AbstractProvider {
 		final String authority = getAuthority(this.getClass());
 		uriMatcher.addURI(authority, Table.LocalUser.NAME, URI_CONTACTS);
 		uriMatcher.addURI(authority, Table.LocalUser.NAME + "/#/", URI_CONTACT);
-		uriMatcher.addURI(authority, Table.LocalUser.NAME + "/" + Table.Conversation.NAME,
+		uriMatcher.addURI(authority, Table.LocalUser.NAME + "/" + Table.Conversation.NAME + "/*/",
 						  URI_CONTACTS_CONVERSATIONS);
 		return result;
 	}
@@ -91,8 +93,10 @@ public class ContactsProvider extends AbstractProvider {
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
 			case URI_CONTACTS_CONVERSATIONS:
+				String chatType = uri.getLastPathSegment();
 				qb.setTables(Table.LocalUser.NAME + " LEFT JOIN " + Table.Conversation.NAME +
-							 " ON " + Table.LocalUser.PHONE + "=" + Table.Conversation.PHONE);
+							 " ON " + Table.LocalUser.PHONE + "=" + Table.Conversation.PHONE +
+							 " AND " + Table.Conversation.TYPE + "=\'" + chatType + "\'");
 				qb.setDistinct(true);
 				c = qb.query(getReadableDatabase(), select, where, args, Table.LocalUser.PHONE,
 							 null, order);
@@ -123,7 +127,7 @@ public class ContactsProvider extends AbstractProvider {
 		int updated;
 		switch (uriId) {
 			case URI_CONTACT:
-				updated = update(uri, null, null, null);
+				updated = update(uri, values, null, null);
 				if (updated == 0) {
 					getWritableDatabase().insert(Table.LocalUser.NAME, null, values);
 				}

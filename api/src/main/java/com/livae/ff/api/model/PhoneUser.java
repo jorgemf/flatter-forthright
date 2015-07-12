@@ -91,16 +91,23 @@ public class PhoneUser implements Serializable {
 	}
 
 	public void addBlockedPhone(Long phone) {
+		if (blockedChats == null) {
+			blockedChats = new ArrayList<>();
+		}
 		if (!blockedChats.contains(phone)) {
 			blockedChats.add(phone);
 		}
 	}
 
 	public void removeBlockedPhone(Long phone) {
+		if (blockedChats != null)
 		blockedChats.remove(phone);
 	}
 
 	public void addBlockedAnonymousPhone(Long phone, Date date) {
+		if (blockedAnonymousChats == null) {
+			blockedAnonymousChats = new HashMap<>();
+		}
 		blockedAnonymousChats.put(phone, date);
 		long now = System.currentTimeMillis();
 		List<Long> numbers = new ArrayList<>();
@@ -118,16 +125,19 @@ public class PhoneUser implements Serializable {
 	}
 
 	public boolean isBlockedPhone(Long phone) {
-		return blockedChats.contains(phone);
+		return blockedChats == null || blockedChats.contains(phone);
 	}
 
 	public boolean isBlockedAnonymousPhone(Long phone) {
-		Date date = blockedAnonymousChats.get(phone);
-		if (date != null) {
-			if (date.getTime() < System.currentTimeMillis()) {
-				blockedAnonymousChats.remove(phone);
-				date = null;
-				ofy().save().entity(this);
+		Date date = null;
+		if (blockedAnonymousChats != null) {
+			date = blockedAnonymousChats.get(phone);
+			if (date != null) {
+				if (date.getTime() < System.currentTimeMillis()) {
+					blockedAnonymousChats.remove(phone);
+					date = null;
+					ofy().save().entity(this);
+				}
 			}
 		}
 		return date != null;

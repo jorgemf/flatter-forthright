@@ -49,8 +49,10 @@
 		android:id="@+id/secret_mark"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginLeft="@dimen/item_user_image_time_margin"
-		android:layout_marginStart="@dimen/item_user_image_time_margin"
+		android:layout_below="@id/title"
+		android:layout_marginTop="@dimen/space_tiny"
+		android:layout_toEndOf="@id/user_image"
+		android:layout_toRightOf="@id/user_image"
 		android:src="@drawable/ic_timer_black_24dp"/>
 
 	<TextView
@@ -77,7 +79,7 @@
 		android:layout_toRightOf="@id/user_name"
 		android:maxLines="1"
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		tools:text="@string/lorem_ipsum"/>
+		tools:text="Title"/>
 
 	<TextView
 		android:id="@+id/date"
@@ -93,7 +95,7 @@
 		android:lines="1"
 		android:paddingTop="@dimen/space_tiny"
 		android:textAppearance="?android:attr/textAppearanceSmall"
-		tools:text="@string/lorem_ipsum_date"/>
+		tools:text="12:35"/>
 
 	<TextView
 		android:id="@+id/subtitle"
@@ -108,6 +110,6 @@
 		android:layout_toStartOf="@id/date"
 		android:lines="1"
 		android:textAppearance="?android:attr/textAppearanceMedium"
-		tools:text="@string/lorem_ipsum"/>
+		tools:text="Example of a message"/>
 
 </RelativeLayout>

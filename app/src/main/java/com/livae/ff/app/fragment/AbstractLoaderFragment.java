@@ -434,6 +434,16 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		totalLoaded++;
 	}
 
+	protected void scrollToPosition(int position, boolean smooth) {
+		if (recyclerView != null) {
+			if (smooth) {
+				recyclerView.smoothScrollToPosition(position);
+			} else {
+				recyclerView.scrollToPosition(position);
+			}
+		}
+	}
+
 	public class GridSpanSize extends GridLayoutManager.SpanSizeLookup {
 
 		private GridLayoutManager.SpanSizeLookup mSpanSizeLookUpWrapped;

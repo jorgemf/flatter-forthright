@@ -3,6 +3,7 @@ package com.livae.ff.app.api;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.api.client.util.DateTime;
@@ -21,6 +22,8 @@ import com.livae.ff.common.model.NotificationComment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class Model {
 
@@ -81,9 +84,11 @@ public class Model {
 			phonesList.clear();
 		}
 		if (conversationsList.size() > 0) {
-			contentResolver.bulkInsert(ConversationsProvider.getUriConversations(),
-									   conversationsList.toArray(new ContentValues[conversationsList
-																					 .size()]));
+			for (ContentValues values : conversationsList) {
+				Long id = values.getAsLong(Table.Conversation.ID);
+				Uri uriConversation = ConversationsProvider.getUriConversation(id);
+				contentResolver.insert(uriConversation, values);
+			}
 			conversationsList.clear();
 		}
 		if (commentsList.size() > 0) {
@@ -106,24 +111,29 @@ public class Model {
 
 	public synchronized void parse(Comment comment, boolean forSyncing) {
 		ContentValues val = new ContentValues();
+		Long date;
+		Long conversationId = comment.getConversationId();
+		String commentText = comment.getComment();
 		if (forSyncing) {
-			val.put(Table.CommentSync.CONVERSATION_ID, comment.getConversationId());
-			val.put(Table.CommentSync.DATE, System.currentTimeMillis());
-			val.put(Table.CommentSync.COMMENT, comment.getComment());
+			val.put(Table.CommentSync.CONVERSATION_ID, conversationId);
+			date = System.currentTimeMillis();
+			val.put(Table.CommentSync.DATE, date);
+			val.put(Table.CommentSync.COMMENT, commentText);
 			val.put(Table.CommentSync.USER_ALIAS, comment.getAlias());
 			commentsSyncList.add(val);
 		} else {
 			val.put(Table.Comment.ID, comment.getId());
-			val.put(Table.Comment.CONVERSATION_ID, comment.getConversationId());
+			val.put(Table.Comment.CONVERSATION_ID, conversationId);
 			val.put(Table.Comment.USER_ANONYMOUS_ID, comment.getAliasId());
 			val.put(Table.Comment.USER_ALIAS, comment.getAlias());
 			val.put(Table.Comment.AGREE_VOTES, comment.getAgreeVotes());
 			val.put(Table.Comment.DISAGREE_VOTES, comment.getDisagreeVotes());
-			val.put(Table.Comment.DATE, comment.getDate().getValue());
+			date = comment.getDate().getValue();
+			val.put(Table.Comment.DATE, date);
 			val.put(Table.Comment.IS_ME, comment.getIsMe());
 			val.put(Table.Comment.VOTE_TYPE, comment.getVoteType());
 			val.put(Table.Comment.USER_VOTE_TYPE, comment.getUserVoteType());
-			val.put(Table.Comment.COMMENT, comment.getComment());
+			val.put(Table.Comment.COMMENT, commentText);
 			val.put(Table.Comment.USER_MARK, comment.getUserMark());
 			val.put(Table.Comment.TIMES_FLAGGED, comment.getTimesFlagged());
 			final List<Integer> flaggedTypeList = comment.getTimesFlaggedType();
@@ -139,6 +149,7 @@ public class Model {
 			val.put(Table.Comment.TIMES_FLAGGED_OTHER, flaggedType[FlagReason.OTHER.ordinal()]);
 			commentsList.add(val);
 		}
+		parse(conversationId, date, commentText);
 	}
 
 	public synchronized void parse(CollectionResponseComment comments) {
@@ -149,11 +160,22 @@ public class Model {
 		}
 	}
 
-	public synchronized void parse(Conversation conversation) {
-		parse(conversation, null);
+	@Deprecated
+	public void parse(Conversation conversation) {
+		parse(conversation, null, null);
 	}
 
-	public synchronized void parse(Conversation conversation, Long lastAccessDate) {
+	public synchronized void parse(@Nonnull Long conversationId, @Nonnull Long lastMessageDate,
+								   @Nonnull String lastMessage) {
+		ContentValues val = new ContentValues();
+		val.put(Table.Conversation.ID, conversationId);
+		val.put(Table.Conversation.LAST_MESSAGE_DATE, lastMessageDate);
+		val.put(Table.Conversation.LAST_MESSAGE, lastMessage);
+		conversationsList.add(val);
+	}
+
+	public synchronized void parse(Conversation conversation, Long lastMessageDate,
+								   String lastMessage) {
 		ContentValues val = new ContentValues();
 
 		val.put(Table.Conversation.ID, conversation.getId());
@@ -170,8 +192,11 @@ public class Model {
 		if (aliasId != null) {
 			val.put(Table.Conversation.ALIAS_ID, aliasId);
 		}
-		if (lastAccessDate != null) {
-			val.put(Table.Conversation.LAST_ACCESS, lastAccessDate);
+		if (lastMessageDate != null) {
+			val.put(Table.Conversation.LAST_MESSAGE_DATE, lastMessageDate);
+		}
+		if (lastMessage != null) {
+			val.put(Table.Conversation.LAST_MESSAGE, lastMessage);
 		}
 
 		conversationsList.add(val);
@@ -205,7 +230,8 @@ public class Model {
 		if (notification instanceof NotificationComment) {
 			NotificationComment nc = (NotificationComment) notification;
 			Comment comment = new Comment();
-			comment.setComment(nc.getComment());
+			String commentText = nc.getComment();
+			comment.setComment(commentText);
 			comment.setConversationId(nc.getConversationId());
 			comment.setUserMark(nc.getUserMark());
 			comment.setDate(new DateTime(nc.getDate()));
@@ -213,23 +239,24 @@ public class Model {
 			comment.setId(nc.getId());
 			try {
 				Constants.ChatType chatType = Constants.ChatType.valueOf(nc.getConversationType());
+				Conversation conversation = new Conversation();
+				conversation.setType(nc.getConversationType());
+				conversation.setId(nc.getConversationId());
 				switch (chatType) {
 					case FORTHRIGHT:
 					case FLATTER:
 						comment.setAlias(nc.getAlias());
 						comment.setAliasId(nc.getAliasId());
+						break;
 					case PRIVATE_ANONYMOUS:
-						Conversation conversation = new Conversation();
-						conversation.setType(nc.getConversationType());
 						conversation.setAlias(nc.getAlias());
 						conversation.setAliasId(nc.getAliasId());
-						conversation.setId(nc.getConversationId());
-						parse(conversation, comment.getDate().getValue());
 						break;
 					case SECRET:
 					case PRIVATE:
 						break;
 				}
+				parse(conversation, comment.getDate().getValue(), commentText);
 			} catch (IllegalArgumentException ignore) {
 			}
 			parse(comment);

@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import com.livae.ff.app.R;
 import com.livae.ff.app.activity.ContactsActivity;
-import com.livae.ff.app.adapter.ChatsPublicAdapter;
 import com.livae.ff.app.adapter.UsersAdapter;
 import com.livae.ff.app.listener.UserClickListener;
 import com.livae.ff.app.model.UserModel;
@@ -115,9 +114,8 @@ public class ContactsFragment extends AbstractFragment
 					selectionArgs = new String[]{"%" + searchText + "%"};
 				}
 				order = Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
-				return new CursorLoader(getActivity(),
-										ContactsProvider.getUriContactsConversations(),
-										ChatsPublicAdapter.PROJECTION, selection, selectionArgs,
+				return new CursorLoader(getActivity(), ContactsProvider.getUriContacts(),
+										UsersAdapter.PROJECTION, selection, selectionArgs,
 										order);
 			// break
 		}

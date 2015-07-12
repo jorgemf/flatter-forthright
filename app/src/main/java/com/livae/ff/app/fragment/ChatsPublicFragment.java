@@ -157,6 +157,7 @@ public class ChatsPublicFragment extends AbstractFragment
 				String[] selectionArgs;
 				String order;
 				Long userPhone = Application.appUser().getUserPhone();
+				// TODO this query makes that if you talk in forthright you cannot talk in flatter
 				if (TextUtils.isEmpty(searchText)) {
 					selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND ( " +
 								Table.Conversation.TYPE + " IS NULL OR " + Table.Conversation.TYPE +
@@ -174,7 +175,7 @@ public class ChatsPublicFragment extends AbstractFragment
 						Table.Conversation.LAST_ACCESS + " END DESC, " +
 						Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
 				return new CursorLoader(getActivity(),
-										ContactsProvider.getUriContactsConversations(),
+										ContactsProvider.getUriContactsConversations(chatType),
 										ChatsPublicAdapter.PROJECTION, selection, selectionArgs,
 										order);
 			// break

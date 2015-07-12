@@ -24,7 +24,7 @@ public class CounterStats {
 	public CounterStats() {
 		privateMessages = 0L;
 		secretMessages = 0L;
-		secretMessages = 0L;
+		anonymousMessages = 0L;
 		flatteredMessages = 0L;
 		forthrightMessages = 0L;
 	}

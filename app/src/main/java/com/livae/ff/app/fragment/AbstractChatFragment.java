@@ -1,6 +1,7 @@
 package com.livae.ff.app.fragment;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -62,9 +63,15 @@ public abstract class AbstractChatFragment
 
 	protected String userName;
 
+	protected Long lastAccess;
+
+	protected Long lastMessage;
+
 	private FloatingActionButton buttonPostComment;
 
 	private EditText commentText;
+
+	private View commentPostContainer;
 
 	private TaskPostComment taskPostComment;
 
@@ -83,6 +90,12 @@ public abstract class AbstractChatFragment
 		conversationPhone = extras.getLong(AbstractChatActivity.EXTRA_PHONE_NUMBER);
 		userImageUri = extras.getString(AbstractChatActivity.EXTRA_IMAGE_URI);
 		userName = extras.getString(AbstractChatActivity.EXTRA_DISPLAY_NAME);
+		if (extras.containsKey(AbstractChatActivity.EXTRA_LAST_ACCESS_DATE)) {
+			lastAccess = extras.getLong(AbstractChatActivity.EXTRA_LAST_ACCESS_DATE);
+		}
+		if (extras.containsKey(AbstractChatActivity.EXTRA_LAST_MESSAGE_DATE)) {
+			lastMessage = extras.getLong(AbstractChatActivity.EXTRA_LAST_MESSAGE_DATE);
+		}
 		super.onCreate(savedInstanceState);
 
 		contentObserver = new ContentObserver(new Handler()) {
@@ -110,8 +123,9 @@ public abstract class AbstractChatFragment
 		view.findViewById(R.id.center_progressbar).setVisibility(View.VISIBLE);
 		buttonPostComment = (FloatingActionButton) view.findViewById(R.id.button_post_comment);
 		commentText = (EditText) view.findViewById(R.id.comment_text);
+		commentPostContainer = view.findViewById(R.id.comment_post);
 		buttonPostComment.setOnClickListener(this);
-		commentText.setVisibility(View.GONE);
+		commentPostContainer.setVisibility(View.GONE);
 		buttonPostComment.setVisibility(View.GONE);
 	}
 
@@ -205,6 +219,13 @@ public abstract class AbstractChatFragment
 					}
 					activity.bindToolbar(anonymousNick, displayName, imageUri, anonymousId,
 										 conversationPhone);
+
+					final ContentResolver contentResolver = activity.getContentResolver();
+					final Uri uriConversation = ConversationsProvider
+												  .getUriConversation(conversationId);
+					final ContentValues contentValues = new ContentValues();
+					contentValues.put(Table.Conversation.LAST_ACCESS, System.currentTimeMillis());
+					contentResolver.update(uriConversation, contentValues, null, null);
 				}
 				break;
 			default:
@@ -345,16 +366,16 @@ public abstract class AbstractChatFragment
 	}
 
 	protected void showSendMessagesPanel() {
-		if (commentText.getVisibility() != View.VISIBLE) {
+		if (commentPostContainer.getVisibility() != View.VISIBLE) {
 			Resources res = getResources();
-			int height = commentText.getHeight();
+			int height = commentPostContainer.getHeight();
 			int margin = res.getDimensionPixelSize(R.dimen.space_normal) * 2;
-			AnimUtils.build(commentText).alpha(0.2f, 1).translateY(height + margin, 0)
+			AnimUtils.build(commentPostContainer).alpha(0.2f, 1).translateY(height + margin, 0)
 					 .accelerateDecelerate().start();
 			height = buttonPostComment.getHeight();
 			AnimUtils.build(buttonPostComment).alpha(0.2f, 1).translateY(height + margin, 0)
 					 .accelerateDecelerate().start();
-			commentText.setVisibility(View.VISIBLE);
+			commentPostContainer.setVisibility(View.VISIBLE);
 			buttonPostComment.setVisibility(View.VISIBLE);
 		}
 	}

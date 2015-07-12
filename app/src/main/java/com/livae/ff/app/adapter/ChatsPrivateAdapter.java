@@ -21,7 +21,8 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 											   Table.Conversation.ROOM_NAME,
 											   Table.Conversation.TYPE,
 											   Table.Conversation.LAST_MESSAGE,
-											   Table.Conversation.LAST_MESSAGE_DATE};
+											   Table.Conversation.LAST_MESSAGE_DATE,
+											   Table.Conversation.LAST_ACCESS};
 
 	protected int iConversationId;
 
@@ -32,6 +33,8 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 	protected int iLastMessage;
 
 	protected int iLastMessageDate;
+
+	protected int iLastAccess;
 
 	private ChatPrivateClickListener chatPrivateClickListener;
 
@@ -53,6 +56,7 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 		iType = cursor.getColumnIndex(Table.Conversation.TYPE);
 		iLastMessage = cursor.getColumnIndex(Table.Conversation.LAST_MESSAGE);
 		iLastMessageDate = cursor.getColumnIndex(Table.Conversation.LAST_MESSAGE_DATE);
+		iLastAccess = cursor.getColumnIndex(Table.Conversation.LAST_ACCESS);
 	}
 
 	@Override
@@ -74,8 +78,10 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 			holder.setImageAnonymous(roomName);
 		}
 		if (!cursor.isNull(iLastMessage)) {
-			holder.setLastMessage(cursor.getString(iLastMessage),
-									  cursor.getLong(iLastMessageDate));
+			holder.setLastMessage(cursor.getString(iLastMessage), cursor.getLong(iLastMessageDate));
+		}
+		if (!cursor.isNull(iLastAccess)) {
+			holder.setLastAccessDate(cursor.getLong(iLastAccess));
 		}
 	}
 

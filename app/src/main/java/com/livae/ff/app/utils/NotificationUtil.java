@@ -94,8 +94,6 @@ public class NotificationUtil {
 					com.livae.ff.common.model.NotificationComment nc;
 					nc = gson.fromJson(jsonMessage,
 									   com.livae.ff.common.model.NotificationComment.class);
-					// TODO
-
 //				break;
 					return nc;
 				default:

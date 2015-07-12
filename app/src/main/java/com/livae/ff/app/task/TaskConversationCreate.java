@@ -20,7 +20,7 @@ public class TaskConversationCreate extends NetworkAsyncTask<ConversationParams,
 		Conversation c = request.execute();
 		c.setPhone(conversation.getPhoneNumber());
 		Model model = new Model(Application.getContext());
-		model.parse(c);
+		model.parse(c, System.currentTimeMillis(), null);
 		model.save();
 		return c;
 	}

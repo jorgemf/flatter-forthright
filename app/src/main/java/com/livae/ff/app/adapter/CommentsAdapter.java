@@ -280,7 +280,16 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 			if (isTheUser && nextIsTheUser) {
 				holder.setExtraPadding(false);
 			} else if (isMe && nextIsMe) {
-				holder.setExtraPadding(!(alias != null && alias.equals(nextAlias)));
+				switch (chatType) {
+					case FLATTER:
+					case FORTHRIGHT:
+						holder.setExtraPadding(!(alias != null && alias.equals(nextAlias)));
+						break;
+					case PRIVATE:
+					case PRIVATE_ANONYMOUS:
+					case SECRET:
+						holder.setExtraPadding(false);
+				}
 			} else {
 				holder.setExtraPadding(!(anonymousId != null &&
 										 anonymousId.equals(nextAnonymousId)));

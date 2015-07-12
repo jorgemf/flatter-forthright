@@ -6,6 +6,7 @@ import com.livae.ff.app.api.API;
 import com.livae.ff.app.api.Model;
 import com.livae.ff.app.async.NetworkAsyncTask;
 
+@Deprecated
 public class TaskConversationGet extends NetworkAsyncTask<Long, Conversation> {
 
 	@Override

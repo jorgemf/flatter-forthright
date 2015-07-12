@@ -9,15 +9,18 @@ import com.livae.ff.api.ff.model.Conversation;
 import com.livae.ff.app.R;
 import com.livae.ff.app.activity.AbstractActivity;
 import com.livae.ff.app.activity.AbstractChatActivity;
+import com.livae.ff.app.activity.ChatPrivateActivity;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.app.dialog.EditTextDialogFragment;
+import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.task.ConversationParams;
 import com.livae.ff.app.task.ListResult;
 import com.livae.ff.app.task.QueryId;
 import com.livae.ff.app.task.TaskConversationCreate;
 import com.livae.ff.common.Constants;
+import com.livae.ff.common.Constants.ChatType;
 
 public class ChatPrivateFragment extends AbstractChatFragment {
 
@@ -25,10 +28,13 @@ public class ChatPrivateFragment extends AbstractChatFragment {
 
 	private EditTextDialogFragment dialogRoomName;
 
+	private boolean firstTimeLoad;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		endPreviousMessages = false;
+		firstTimeLoad = savedInstanceState == null;
 	}
 
 	@Override
@@ -38,6 +44,20 @@ public class ChatPrivateFragment extends AbstractChatFragment {
 			case LOADER_ID:
 				if (cursor.getCount() < getTotalLoaded()) {
 					endPreviousMessages = true;
+				}
+				if (firstTimeLoad && lastAccess != null) {
+					firstTimeLoad = false;
+					int pos = 0;
+					int iDate = cursor.getColumnIndex(Table.Comment.DATE);
+					if (cursor.moveToFirst()) {
+						pos = -1;
+						long date = 0;
+						do {
+							date = cursor.getLong(iDate);
+							pos++;
+						} while (cursor.moveToNext() && date < lastAccess);
+					}
+					scrollToPosition(pos, false);
 				}
 				break;
 			default:
@@ -62,6 +82,10 @@ public class ChatPrivateFragment extends AbstractChatFragment {
 	protected void startConversation() {
 		super.startConversation();
 		showSendMessagesPanel();
+		if (chatType == ChatType.SECRET) {
+			ChatPrivateActivity activity = (ChatPrivateActivity) getActivity();
+			activity.setSecretConversationId(conversationId);
+		}
 	}
 
 	@Override
@@ -69,7 +93,7 @@ public class ChatPrivateFragment extends AbstractChatFragment {
 		return new NetworkAsyncTask<QueryId, ListResult>() {
 			@Override
 			protected ListResult doInBackground(QueryId queryId) throws Exception {
-				return new ListResult(null, endPreviousMessages ? 0 : 50);
+				return new ListResult(null, endPreviousMessages ? 0 : 100);
 			}
 		};
 	}
