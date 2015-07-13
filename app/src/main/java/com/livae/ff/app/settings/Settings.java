@@ -43,9 +43,15 @@ public class Settings {
 
 	public static class Notifications {
 
-		public static final int ID_CHAT = 1;
+		public static final int MAXIMUM_MESSAGES = 5;
 
-		public static final int ID_MESSAGE = 2;
+		public static final int ID_CHAT_PRIVATE = 1;
+
+		public static final int ID_CHAT_PUBLIC_FLATTER = 2;
+
+		public static final int ID_CHAT_PUBLIC_FORTHRIGHT = 3;
+
+		public static final int ID_MESSAGE = 4;
 
 	}
 

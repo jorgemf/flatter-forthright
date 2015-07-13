@@ -34,6 +34,15 @@
 	<string name="no_conversations">There are no conversation with the current search terms.</string>
 	<string name="search">Search</string>
 	<string name="edit">Edit</string>
+	<string name="select_contact">Select Contact</string>
+	<string name="sending_comment">Sending comment</string>
+
+	<string name="notifications_flatter_title">Pensamientos Flattered</string>
+	<string name="notifications_forthright_title">Pensamientos Forthright</string>
+	<string name="notifications_chat_private_title">Pensamientos Chat</string>
+	<string name="notifications_summary_comments">%d unread new comments</string>
+	<string name="notifications_secret_content">«secret content»</string>
+
 	<string name="provider_contacts">Contacts</string>
 	<string name="provider_conversations">Conversations</string>
 
@@ -112,6 +121,4 @@
 		future we hope to fix all the bugs but we will probably move some features to only premium
 		users of the app.
 	</string>
-	<string name="select_contact">Select Contact</string>
-	<string name="sending_comment">Sending comment</string>
 </resources>

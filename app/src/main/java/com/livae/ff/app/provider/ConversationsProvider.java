@@ -22,13 +22,15 @@ public class ConversationsProvider extends AbstractProvider {
 
 	private static final int URI_CONVERSATION_COMMENTS = 3;
 
-	private static final int URI_COMMENTS = 4;
+	private static final int URI_COMMENTS_CONVERSATIONS = 4;
 
-	private static final int URI_CONVERSATIONS_CONTACTS = 5;
+	private static final int URI_COMMENTS = 5;
 
-	private static final int URI_COMMENTS_SYNC = 6;
+	private static final int URI_CONVERSATIONS_CONTACTS = 6;
 
-	private static final int URI_COMMENT_SYNC = 7;
+	private static final int URI_COMMENTS_SYNC = 7;
+
+	private static final int URI_COMMENT_SYNC = 8;
 
 	private static Uri getContentUri() {
 		return Uri.parse(CONTENT_URI_BASE + getAuthority(ConversationsProvider.class));
@@ -58,6 +60,10 @@ public class ConversationsProvider extends AbstractProvider {
 		return Uri.withAppendedPath(getUriConversation(conversationId), Table.Comment.NAME);
 	}
 
+	public static Uri getUriCommentsConversations() {
+		return Uri.withAppendedPath(getUriComments(), Table.Conversation.NAME);
+	}
+
 	public static Uri getUriConversationsContacts() {
 		return Uri.withAppendedPath(getUriConversations(), Table.LocalUser.NAME);
 	}
@@ -67,6 +73,8 @@ public class ConversationsProvider extends AbstractProvider {
 		final boolean result = super.onCreate();
 		final String authority = getAuthority(this.getClass());
 		uriMatcher.addURI(authority, Table.Comment.NAME, URI_COMMENTS);
+		uriMatcher.addURI(authority, Table.Comment.NAME + "/" + Table.Conversation.NAME,
+						  URI_COMMENTS_CONVERSATIONS);
 		uriMatcher.addURI(authority, Table.CommentSync.NAME, URI_COMMENTS_SYNC);
 		uriMatcher.addURI(authority, Table.CommentSync.NAME + "/#/", URI_COMMENT_SYNC);
 		uriMatcher.addURI(authority, Table.Conversation.NAME, URI_CONVERSATIONS);
@@ -153,6 +161,7 @@ public class ConversationsProvider extends AbstractProvider {
 				queries[0] = qb.buildQuery(qSelect,
 										   Table.Comment.CONVERSATION_ID + "=" + conversationId,
 										   null, null, null, null);
+				qb.setTables(Table.CommentSync.NAME);
 				String[] uSelect = {Table.CommentSync.T_ID + " AS " + BaseColumns._ID,
 									"1 AS " + Table.CommentSync.TEMP_SYNC,
 									"1 AS " + Table.Comment.IS_ME,
@@ -172,12 +181,18 @@ public class ConversationsProvider extends AbstractProvider {
 									"null AS " + Table.Comment.TIMES_FLAGGED_INSULT,
 									"null AS " + Table.Comment.TIMES_FLAGGED_ABUSE,
 									"null AS " + Table.Comment.TIMES_FLAGGED_OTHER};
-				qb.setTables(Table.CommentSync.NAME);
 				queries[1] = qb.buildQuery(uSelect,
 										   Table.CommentSync.CONVERSATION_ID + "=" + conversationId,
 										   null, null, null, null);
 				String query = qb.buildUnionQuery(queries, "date DESC", limit);
 				c = getReadableDatabase().rawQuery(query, args);
+				break;
+			case URI_COMMENTS_CONVERSATIONS:
+				qb.setTables(Table.Comment.NAME + " JOIN " + Table.Conversation.NAME + " ON " +
+							 Table.Comment.CONVERSATION_ID + "=" + Table.Conversation.T_ID +
+							 " LEFT JOIN " + Table.LocalUser.NAME + " ON " +
+							 Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
+				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
 			case URI_CONVERSATIONS_CONTACTS:
 				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +
@@ -191,6 +206,7 @@ public class ConversationsProvider extends AbstractProvider {
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
+
 		return c;
 	}
 

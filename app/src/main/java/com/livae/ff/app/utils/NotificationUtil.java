@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.util.Log;
 
@@ -24,6 +25,8 @@ import com.livae.ff.common.model.Notification;
 public class NotificationUtil {
 
 	private static final StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+
+	private static final StyleSpan italicSpan = new StyleSpan(Typeface.ITALIC);
 
 	public static PushNotificationType getNotificationType(Bundle extras) {
 		PushNotificationType notificationType = null;
@@ -51,12 +54,19 @@ public class NotificationUtil {
 		return builder;
 	}
 
-	public static SpannableString makeNotificationLine(String title, String text) {
+	public static SpannableString makeNotificationLine(String title, String text,
+													   String italicText) {
 		final SpannableString spannableString;
 		if (title != null && title.length() > 0) {
-			spannableString = new SpannableString(String.format("%s  %s", title, text));
+			spannableString = new SpannableString(String.format("%s  %s%s", title, text,
+																italicText));
 			spannableString.setSpan(boldSpan, 0, title.length(),
 									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			if (italicText.length() > 0) {
+				int length = spannableString.length();
+				spannableString.setSpan(italicText, length - italicText.length() - 1, length - 1,
+										Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			}
 		} else {
 			spannableString = new SpannableString(text);
 		}

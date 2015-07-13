@@ -2,6 +2,7 @@ package com.livae.ff.app.activity;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -55,6 +56,27 @@ public class AbstractChatActivity extends AbstractActivity {
 
 	private ImageView imageUser;
 
+	public static Intent createIntent(@Nonnull Context context, @Nonnull ChatType chatType,
+									  @Nonnull Long conversationId, Long phoneNumber,
+									  String displayName, String roomName, String imageUri,
+									  Long imageSeed, Long lastAccess, Long lastMessage) {
+		Intent intent = null;
+		switch (chatType) {
+			case SECRET:
+			case PRIVATE:
+			case PRIVATE_ANONYMOUS:
+				intent = new Intent(context, ChatPrivateActivity.class);
+				break;
+			case FORTHRIGHT:
+			case FLATTER:
+				intent = new Intent(context, ChatPublicActivity.class);
+				break;
+		}
+		fillIntent(intent, chatType, conversationId, phoneNumber, displayName, roomName, imageUri,
+				   imageSeed, lastAccess, lastMessage);
+		return intent;
+	}
+
 	protected static void startIntent(@Nonnull Intent intent, @Nonnull Activity activity,
 									  @Nonnull ChatType chatType, Long conversationId,
 									  Long phoneNumber, String displayName, String roomName,
@@ -63,6 +85,20 @@ public class AbstractChatActivity extends AbstractActivity {
 		if (conversationId == null && phoneNumber == null) {
 			throw new RuntimeException("Not enough data to start the conversation");
 		}
+		fillIntent(intent, chatType, conversationId, phoneNumber, displayName, roomName, imageUri,
+				   imageSeed, lastAccess, lastMessage);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity)
+														  .toBundle());
+		} else {
+			activity.startActivity(intent);
+		}
+	}
+
+	private static void fillIntent(@Nonnull Intent intent, @Nonnull ChatType chatType,
+								   Long conversationId, Long phoneNumber, String displayName,
+								   String roomName, String imageUri, Long imageSeed,
+								   Long lastAccess, Long lastMessage) {
 		if (conversationId != null) {
 			intent.putExtra(EXTRA_CONVERSATION_ID, conversationId);
 		}
@@ -87,12 +123,6 @@ public class AbstractChatActivity extends AbstractActivity {
 		}
 		if (lastMessage != null) {
 			intent.putExtra(EXTRA_LAST_MESSAGE_DATE, lastMessage);
-		}
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity)
-														  .toBundle());
-		} else {
-			activity.startActivity(intent);
 		}
 	}
 
