@@ -36,6 +36,8 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 
 	protected int iLastAccess;
 
+	protected int iUnreadCount;
+
 	private ChatPrivateClickListener chatPrivateClickListener;
 
 	public ChatsPrivateAdapter(@Nonnull Context context,
@@ -57,6 +59,7 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 		iLastMessage = cursor.getColumnIndex(Table.Conversation.LAST_MESSAGE);
 		iLastMessageDate = cursor.getColumnIndex(Table.Conversation.LAST_MESSAGE_DATE);
 		iLastAccess = cursor.getColumnIndex(Table.Conversation.LAST_ACCESS);
+		iUnreadCount = cursor.getColumnIndex(Table.Conversation.UNREAD);
 	}
 
 	@Override
@@ -83,6 +86,7 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 		if (!cursor.isNull(iLastAccess)) {
 			holder.setLastAccessDate(cursor.getLong(iLastAccess));
 		}
+		holder.setUnreadCount(cursor.getInt(iUnreadCount));
 	}
 
 	@Override

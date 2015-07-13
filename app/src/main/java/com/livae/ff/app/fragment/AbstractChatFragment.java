@@ -266,6 +266,10 @@ public abstract class AbstractChatFragment
 				}
 			}
 		});
+		ContentValues values = new ContentValues();
+		values.put(Table.Conversation.UNREAD, 0);
+		Uri uri = ConversationsProvider.getUriConversation(conversationId);
+		getActivity().getContentResolver().update(uri, values, null, null);
 	}
 
 	private void leaveConversation() {

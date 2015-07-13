@@ -6,6 +6,7 @@
 	<dimen name="space_normal">8dp</dimen>
 	<dimen name="space_medium">12dp</dimen>
 	<dimen name="space_large">16dp</dimen>
+	<dimen name="space_extra">24dp</dimen>
 	<dimen name="space_huge">32dp</dimen>
 	<dimen name="space_huge_normal">40dp</dimen>
 	<dimen name="space_enormous">80dp</dimen>

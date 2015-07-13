@@ -33,6 +33,13 @@
 			</intent-filter>
 		</receiver>
 
+		<receiver
+			android:name="com.livae.ff.app.receiver.NotificationReceiver">
+			<intent-filter>
+				<action android:name="com.livae.ff.app.dev.intent.RECEIVE"/>
+			</intent-filter>
+		</receiver>
+
 	</application>
 
 </manifest>

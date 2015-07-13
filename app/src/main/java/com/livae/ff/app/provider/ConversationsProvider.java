@@ -9,12 +9,15 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.livae.ff.app.sql.Table;
+import com.livae.ff.app.utils.Debug;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 public class ConversationsProvider extends AbstractProvider {
+
+	private static final String UNREAD = "UNREAD";
 
 	private static final int URI_CONVERSATIONS = 1;
 
@@ -31,6 +34,8 @@ public class ConversationsProvider extends AbstractProvider {
 	private static final int URI_COMMENTS_SYNC = 7;
 
 	private static final int URI_COMMENT_SYNC = 8;
+
+	private static final int URI_CONVERSATION_INCREASE_UNREAD = 9;
 
 	private static Uri getContentUri() {
 		return Uri.parse(CONTENT_URI_BASE + getAuthority(ConversationsProvider.class));
@@ -54,6 +59,10 @@ public class ConversationsProvider extends AbstractProvider {
 
 	public static Uri getUriConversation(Long conversationId) {
 		return ContentUris.withAppendedId(getUriConversations(), conversationId);
+	}
+
+	public static Uri getUriConversationIncreaseUnread(Long conversationId) {
+		return Uri.withAppendedPath(getUriConversation(conversationId), UNREAD);
 	}
 
 	public static Uri getUriConversationComments(Long conversationId) {
@@ -83,6 +92,8 @@ public class ConversationsProvider extends AbstractProvider {
 									 Table.Comment.NAME, URI_CONVERSATION_COMMENTS);
 		uriMatcher.addURI(authority, Table.Conversation.NAME + "/" + Table.LocalUser.NAME,
 						  URI_CONVERSATIONS_CONTACTS);
+		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/" + UNREAD,
+						  URI_CONVERSATION_INCREASE_UNREAD);
 		return result;
 	}
 
@@ -295,6 +306,18 @@ public class ConversationsProvider extends AbstractProvider {
 				args[0] = uri.getLastPathSegment();
 				updated = getWritableDatabase().update(Table.Conversation.NAME, values, query,
 													   args);
+				break;
+			case URI_CONVERSATION_INCREASE_UNREAD:
+				args = new String[1];
+				args[0] = uri.getLastPathSegment();
+				SQLiteDatabase db = getWritableDatabase();
+				Cursor cursor = db.rawQuery("UPDATE " + Table.Conversation.NAME + " SET " +
+											Table.Conversation.UNREAD + " = " +
+											Table.Conversation.UNREAD + " + 1 WHERE " +
+											Table.Conversation.ID + "=?", args);
+				updated = 1; // TODO fix
+				Debug.print(cursor);
+				cursor.close();
 				break;
 			case URI_COMMENTS:
 				query = Table.Comment.ID + "=?";

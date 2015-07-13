@@ -75,4 +75,5 @@ public class ChatsFragmentsAdapter extends FragmentPagerAdapter {
 	public Fragment getRegisteredFragment(int position) {
 		return registeredFragments.get(position);
 	}
+
 }

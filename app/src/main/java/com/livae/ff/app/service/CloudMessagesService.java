@@ -2,6 +2,7 @@ package com.livae.ff.app.service;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,8 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
+import com.livae.ff.app.activity.AbstractChatActivity;
+import com.livae.ff.app.activity.ChatsActivity;
 import com.livae.ff.app.api.Model;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.receiver.NotificationReceiver;
@@ -36,7 +39,7 @@ public class CloudMessagesService extends IntentService {
 		super("CloudMessagesService");
 	}
 
-	public static void processNotification(Context context, Bundle extras, boolean notify) {
+	public static void processNotification(Context context, Bundle extras) {
 		PushNotificationType type = NotificationUtil.getNotificationType(extras);
 		if (type != null) {
 			Notifications notifications = Application.appUser().getNotifications();
@@ -48,6 +51,11 @@ public class CloudMessagesService extends IntentService {
 				case COMMENT:
 					NotificationComment notificationComment = (NotificationComment) notification;
 					String conversationType = notificationComment.getConversationType();
+					// increase unread count of conversation
+					Long conversationId = notificationComment.getConversationId();
+					Uri uriConversation = ConversationsProvider.getUriConversation(conversationId);
+					context.getContentResolver().update(uriConversation, null, null, null);
+					// notify
 					try {
 						ChatType chatType = ChatType.valueOf(conversationType);
 
@@ -99,7 +107,10 @@ public class CloudMessagesService extends IntentService {
 		final Resources res = context.getResources();
 		final ContentResolver contentResolver = context.getContentResolver();
 		Uri uri = ConversationsProvider.getUriCommentsConversations();
-		final String[] projection = {Table.Comment.COMMENT};
+		final String[] projection = {Table.Comment.COMMENT, Table.Comment.USER_ALIAS,
+									 Table.Comment.USER_ANONYMOUS_ID, Table.Comment.CONVERSATION_ID,
+									 Table.Conversation.LAST_ACCESS,
+									 Table.Conversation.LAST_MESSAGE_DATE};
 		final String selection =
 		  Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS + " AND " +
 		  Table.Conversation.TYPE + "=?";
@@ -123,19 +134,34 @@ public class CloudMessagesService extends IntentService {
 			builder.setContentTitle(title);
 			int totalComments = cursor.getCount();
 			int iComment = cursor.getColumnIndex(Table.Comment.COMMENT);
+			int iAlias = cursor.getColumnIndex(Table.Comment.USER_ALIAS);
+			int iConversationId = cursor.getColumnIndex(Table.Comment.CONVERSATION_ID);
+			int iLastAccess = cursor.getColumnIndex(Table.Conversation.LAST_ACCESS);
+			int iLastMessageDate = cursor.getColumnIndex(Table.Conversation.LAST_MESSAGE_DATE);
+			Intent intent;
 			if (totalComments == 1) {
 				String comment = cursor.getString(iComment);
-				builder.setContentText(comment);
+				String alias = cursor.getString(iAlias);
+				Spannable text = NotificationUtil.makeNotificationLine(alias, comment, "");
+				builder.setContentText(text);
 				NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle(builder);
 				style.setBigContentTitle(title);
-				style.setSummaryText(comment);
+				style.setSummaryText(text);
 				builder.setStyle(style);
+				Long conversationId = cursor.getLong(iConversationId);
+				Long lastAccess = cursor.getLong(iLastAccess);
+				Long lastMessageDate = cursor.getLong(iLastMessageDate);
+				intent = AbstractChatActivity.createIntent(context, chatType, conversationId, null,
+														   null, null, null, null, lastAccess,
+														   lastMessageDate);
 			} else {
 				NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(builder);
 				int index = 0;
 				do {
 					String comment = cursor.getString(iComment);
-					style.addLine(comment);
+					String alias = cursor.getString(iAlias);
+					Spannable text = NotificationUtil.makeNotificationLine(alias, comment, "");
+					style.addLine(text);
 					index++;
 				} while (cursor.moveToNext() && index < Settings.Notifications.MAXIMUM_MESSAGES);
 				int unreadMore = totalComments - Settings.Notifications.MAXIMUM_MESSAGES;
@@ -147,7 +173,11 @@ public class CloudMessagesService extends IntentService {
 													 totalComments));
 				builder.setNumber(totalComments);
 				builder.setStyle(style);
+				intent = new Intent(context, ChatsActivity.class);
 			}
+			PendingIntent pending = PendingIntent.getActivity(context, 0, intent,
+															  PendingIntent.FLAG_UPDATE_CURRENT);
+			builder.setContentIntent(pending);
 			NotificationManager manager;
 			manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 			switch (chatType) {
@@ -168,7 +198,10 @@ public class CloudMessagesService extends IntentService {
 		final ContentResolver contentResolver = context.getContentResolver();
 		Uri uri = ConversationsProvider.getUriCommentsConversations();
 		final String[] projection = {Table.Comment.COMMENT, Table.LocalUser.CONTACT_NAME,
-									 Table.Conversation.TYPE, Table.Conversation.ROOM_NAME};
+									 Table.Conversation.TYPE, Table.Conversation.ROOM_NAME,
+									 Table.Conversation.LAST_ACCESS,
+									 Table.Conversation.LAST_MESSAGE_DATE, Table.Conversation.PHONE,
+									 Table.Conversation.ALIAS_ID};
 		final String selection =
 		  Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS + " AND " +
 		  Table.Conversation.TYPE + " IN (?,?,?)";
@@ -186,6 +219,12 @@ public class CloudMessagesService extends IntentService {
 			int iDisplayName = cursor.getColumnIndex(Table.LocalUser.CONTACT_NAME);
 			int iConversationType = cursor.getColumnIndex(Table.Conversation.TYPE);
 			int iRoomName = cursor.getColumnIndex(Table.Conversation.ROOM_NAME);
+			int iConversationId = cursor.getColumnIndex(Table.Comment.CONVERSATION_ID);
+			int iLastAccess = cursor.getColumnIndex(Table.Conversation.LAST_ACCESS);
+			int iLastMessageDate = cursor.getColumnIndex(Table.Conversation.LAST_MESSAGE_DATE);
+			int iAliasId = cursor.getColumnIndex(Table.Conversation.ALIAS_ID);
+			int iPhone = cursor.getColumnIndex(Table.Conversation.PHONE);
+			Intent intent;
 			if (totalComments == 1) {
 				String comment = cursor.getString(iComment);
 				String displayName = cursor.getString(iDisplayName);
@@ -197,6 +236,14 @@ public class CloudMessagesService extends IntentService {
 				style.setBigContentTitle(title);
 				style.setSummaryText(text);
 				builder.setStyle(style);
+				Long conversationId = cursor.getLong(iConversationId);
+				Long lastAccess = cursor.getLong(iLastAccess);
+				Long lastMessageDate = cursor.getLong(iLastMessageDate);
+				Long phone = cursor.getLong(iPhone);
+				Long aliasId = cursor.getLong(iAliasId);
+				intent = AbstractChatActivity.createIntent(context, chatType, conversationId, phone,
+														   null, roomName, null, aliasId,
+														   lastAccess, lastMessageDate);
 			} else {
 				NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(builder);
 				int index = 0;
@@ -217,7 +264,12 @@ public class CloudMessagesService extends IntentService {
 													 totalComments));
 				builder.setNumber(totalComments);
 				builder.setStyle(style);
+
+				intent = new Intent(context, ChatsActivity.class);
 			}
+			PendingIntent pending = PendingIntent.getActivity(context, 0, intent,
+															  PendingIntent.FLAG_UPDATE_CURRENT);
+			builder.setContentIntent(pending);
 			NotificationManager manager;
 			manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 			manager.notify(Settings.Notifications.ID_CHAT_PRIVATE, builder.build());
@@ -250,6 +302,7 @@ public class CloudMessagesService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		Log.e(LOG_TAG, "it is here");
 		Bundle extras = intent.getExtras();
 		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 		String messageType = gcm.getMessageType(intent);
@@ -264,7 +317,7 @@ public class CloudMessagesService extends IntentService {
 					break;
 				case GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE:
 					Log.i(LOG_TAG, "Received: " + extras.toString());
-					processNotification(this, extras, true);
+					processNotification(this, extras);
 					break;
 			}
 		}

@@ -32,6 +32,7 @@ public class NotificationDisabledReceiver extends BroadcastReceiver {
 		originalIntent = intent.getParcelableExtra(CloudMessagesReceiver.EXTRA_ORIGINAL_INTENT);
 		Bundle extras = originalIntent.getExtras();
 		Notification notification = NotificationUtil.parseNotification(extras);
+		Log.i(TAG, extras.toString());
 		if (notification != null) {
 			Model model = Application.model();
 			model.parse(notification);
@@ -41,7 +42,6 @@ public class NotificationDisabledReceiver extends BroadcastReceiver {
 					abortBroadcast();
 				}
 			}
-			Log.e(TAG, extras.toString());
 		}
 	}
 

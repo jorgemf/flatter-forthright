@@ -64,11 +64,14 @@ public class Table {
 
 		public static final String LAST_MESSAGE = NAME + "_" + "last_message";
 
+		public static final String UNREAD = NAME + "_" + "unread";
+
 		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
 												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 												ROOM_NAME + " TEXT, " +
 												ALIAS_ID + " INTEGER, " +
 												PHONE + " INTEGER, " +
+												UNREAD + " INTEGER DEFAULT 0, " +
 												LAST_ACCESS + " INTEGER, " +
 												LAST_MESSAGE + " TEXT, " +
 												LAST_MESSAGE_DATE + " INTEGER, " +

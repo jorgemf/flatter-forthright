@@ -31,6 +31,8 @@ public class ChatsPublicAdapter extends UsersAdapter {
 
 	protected int iRoomName;
 
+	protected int iUnreadCount;
+
 	private ChatPublicClickListener chatPublicClickListener;
 
 	private ChatType chatType;
@@ -54,6 +56,7 @@ public class ChatsPublicAdapter extends UsersAdapter {
 		super.findIndexes(cursor);
 		iConversationId = cursor.getColumnIndex("CID");
 		iRoomName = cursor.getColumnIndex(Table.Conversation.ROOM_NAME);
+		iUnreadCount = cursor.getColumnIndex(Table.Conversation.UNREAD);
 	}
 
 	@Override
@@ -71,6 +74,7 @@ public class ChatsPublicAdapter extends UsersAdapter {
 			if (!cursor.isNull(iRoomName)) {
 				holder.setRoomName(cursor.getString(iRoomName));
 			}
+			holder.setUnreadCount(cursor.getInt(iUnreadCount));
 		} else {
 			holder.clear();
 			final AppUser appUser = Application.appUser();

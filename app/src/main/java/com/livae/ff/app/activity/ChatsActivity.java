@@ -7,18 +7,25 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
@@ -27,7 +34,9 @@ import com.livae.ff.app.adapter.ChatsFragmentsAdapter;
 import com.livae.ff.app.fragment.ChatsPrivateFragment;
 import com.livae.ff.app.fragment.ChatsPublicFragment;
 import com.livae.ff.app.listener.SearchListener;
+import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
+import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.utils.IntentUtils;
 import com.livae.ff.common.Constants;
 import com.livae.ff.common.Constants.ChatType;
@@ -36,7 +45,14 @@ import com.livae.ff.common.model.NotificationComment;
 
 public class ChatsActivity extends AbstractActivity
   implements NotificationDisabledReceiver.CloudMessagesDisabledListener,
-			 ViewPager.OnPageChangeListener, SearchView.OnQueryTextListener, View.OnClickListener {
+			 ViewPager.OnPageChangeListener, SearchView.OnQueryTextListener, View.OnClickListener,
+			 LoaderManager.LoaderCallbacks<Cursor> {
+
+	private static final int LOADER_UNREAD_PRIVATE = 6800;
+
+	private static final int LOADER_UNREAD_FLATTER = 6801;
+
+	private static final int LOADER_UNREAD_FORTHRIGHT = 6802;
 
 	private static final int REQUEST_CONTACT_PRIVATE = 6901;
 
@@ -84,6 +100,8 @@ public class ChatsActivity extends AbstractActivity
 
 	private int buttonsTranslationStep;
 
+	private View[] tabs;
+
 	public static void start(Activity activity) {
 		Intent intent = new Intent(activity, ChatsActivity.class);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -111,6 +129,10 @@ public class ChatsActivity extends AbstractActivity
 	public boolean onNotificationReceived(Notification notification) {
 		if (notification.getType() == Constants.PushNotificationType.COMMENT) {
 			NotificationComment nc = (NotificationComment) notification;
+			// increase unread count of conversation
+			Uri uriConversation = ConversationsProvider.getUriConversation(nc.getConversationId());
+			getContentResolver().update(uriConversation, null, null, null);
+			// notify to listeners
 			ChatType chatType = ChatType.valueOf(nc.getConversationType());
 			Fragment fragment;
 			switch (chatType) {
@@ -123,6 +145,7 @@ public class ChatsActivity extends AbstractActivity
 						ChatsPrivateFragment chatsFragment = (ChatsPrivateFragment) fragment;
 						return chatsFragment.onNotificationReceived(notification);
 					}
+					getSupportLoaderManager().restartLoader(LOADER_UNREAD_PRIVATE, null, this);
 					break;
 				case FLATTER:
 					fragment = chatsFragmentsAdapter
@@ -131,6 +154,7 @@ public class ChatsActivity extends AbstractActivity
 						ChatsPublicFragment chatsPublicFragment = (ChatsPublicFragment) fragment;
 						return chatsPublicFragment.onNotificationReceived(notification);
 					}
+					getSupportLoaderManager().restartLoader(LOADER_UNREAD_FLATTER, null, this);
 					break;
 				case FORTHRIGHT:
 					fragment = chatsFragmentsAdapter
@@ -139,6 +163,7 @@ public class ChatsActivity extends AbstractActivity
 						ChatsPublicFragment chatsPublicFragment = (ChatsPublicFragment) fragment;
 						return chatsPublicFragment.onNotificationReceived(notification);
 					}
+					getSupportLoaderManager().restartLoader(LOADER_UNREAD_FORTHRIGHT, null, this);
 					break;
 			}
 		}
@@ -179,6 +204,10 @@ public class ChatsActivity extends AbstractActivity
 		super.onResume();
 		Analytics.screen(Analytics.Screen.CHATS);
 		notificationDisabledReceiver.register(this);
+		LoaderManager loaderManager = getSupportLoaderManager();
+		loaderManager.restartLoader(LOADER_UNREAD_FLATTER, null, this);
+		loaderManager.restartLoader(LOADER_UNREAD_FORTHRIGHT, null, this);
+		loaderManager.restartLoader(LOADER_UNREAD_PRIVATE, null, this);
 	}
 
 	@Override
@@ -205,13 +234,21 @@ public class ChatsActivity extends AbstractActivity
 			toolbar = (Toolbar) findViewById(R.id.toolbar);
 			setSupportActionBar(toolbar);
 			tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+			chatsFragmentsAdapter = new ChatsFragmentsAdapter(getSupportFragmentManager(),
+															  getResources());
+			tabs = new View[chatsFragmentsAdapter.getCount()];
+			LayoutInflater inflater = getLayoutInflater();
+			for (int i = 0; i < tabs.length; i++) {
+				tabs[i] = inflater.inflate(R.layout.view_chats_tab, tabLayout, false);
+				tabLayout.addTab(tabLayout.newTab().setCustomView(tabs[i]));
+				TextView text = (TextView) tabs[i].findViewById(R.id.title);
+				text.setText(chatsFragmentsAdapter.getPageTitle(i));
+			}
 //			tabLayout.addTab(tabLayout.newTab().setCustomView());
 			viewPager = (ViewPager) findViewById(R.id.view_pager);
 			viewPager.addOnPageChangeListener(this);
 			viewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.space_normal));
 			viewPager.setPageMarginDrawable(R.color.black_light);
-			chatsFragmentsAdapter = new ChatsFragmentsAdapter(getSupportFragmentManager(),
-															  getResources());
 			viewPager.setAdapter(chatsFragmentsAdapter);
 			tabLayout.setupWithViewPager(viewPager);
 			viewPager.setCurrentItem(ChatsFragmentsAdapter.CHAT_PRIVATE);
@@ -229,6 +266,11 @@ public class ChatsActivity extends AbstractActivity
 			findViewById(R.id.close_button).setOnClickListener(this);
 
 			buttonsTranslationStep = getResources().getDimensionPixelSize(R.dimen.space_enormous);
+
+			LoaderManager loaderManager = getSupportLoaderManager();
+			loaderManager.initLoader(LOADER_UNREAD_FLATTER, null, this);
+			loaderManager.initLoader(LOADER_UNREAD_FORTHRIGHT, null, this);
+			loaderManager.initLoader(LOADER_UNREAD_PRIVATE, null, this);
 		}
 	}
 
@@ -392,5 +434,65 @@ public class ChatsActivity extends AbstractActivity
 			searchView.setIconified(true);
 		}
 		searchText = null;
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		String[] projection = {Table.Comment.ID};
+		String selection = null;
+		String[] selectionArgs = null;
+		switch (id) {
+			case LOADER_UNREAD_FLATTER:
+				selection = Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS + " AND " +
+							Table.Conversation.TYPE + "=? AND " + Table.Conversation.PHONE + "=?";
+				selectionArgs = new String[]{ChatType.FLATTER.name(),
+											 Application.appUser().getUserPhone().toString()};
+				return new CursorLoader(this, ConversationsProvider.getUriCommentsConversations(),
+										projection, selection, selectionArgs, null);
+			case LOADER_UNREAD_FORTHRIGHT:
+				selection = Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS + " AND " +
+							Table.Conversation.TYPE + "=? AND " + Table.Conversation.PHONE + "=?";
+				selectionArgs = new String[]{ChatType.FORTHRIGHT.name(),
+											 Application.appUser().getUserPhone().toString()};
+				return new CursorLoader(this, ConversationsProvider.getUriCommentsConversations(),
+										projection, selection, selectionArgs, null);
+			case LOADER_UNREAD_PRIVATE:
+				selection = Table.Conversation.UNREAD + ">0";
+				return new CursorLoader(this, ConversationsProvider.getUriCommentsConversations(),
+										projection, selection, selectionArgs, null);
+		}
+		return null;
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+		int count = data.getCount();
+		int pos = -1;
+		switch (loader.getId()) {
+			case LOADER_UNREAD_FLATTER:
+				pos = ChatsFragmentsAdapter.CHAT_FLATTERED;
+				break;
+			case LOADER_UNREAD_FORTHRIGHT:
+				pos = ChatsFragmentsAdapter.CHAT_FORTHRIGHT;
+				break;
+			case LOADER_UNREAD_PRIVATE:
+				pos = ChatsFragmentsAdapter.CHAT_PRIVATE;
+				break;
+		}
+		if (pos != -1) {
+			TextView text = (TextView) tabs[pos].findViewById(R.id.unread_count);
+			if (count == 0) {
+				text.setVisibility(View.GONE);
+				text.setText(null);
+			} else {
+				text.setVisibility(View.VISIBLE);
+				text.setText(Integer.toString(count));
+			}
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		// nothing
 	}
 }
