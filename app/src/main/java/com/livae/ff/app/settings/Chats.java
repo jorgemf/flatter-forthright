@@ -14,6 +14,10 @@ public class Chats {
 
 	private static final String USER_CHAT_FORTHRIGHT_ID = "ff.chat.forthright.id";
 
+	private static final String USER_CHAT_FLATTER_UNREAD = "ff.chat.flatter.unread";
+
+	private static final String USER_CHAT_FORTHRIGHT_UNREAD = "ff.chat.forthright.unread";
+
 	private SharedPreferences prefs;
 
 	private String displayName;
@@ -25,6 +29,10 @@ public class Chats {
 	private Long chatFlatterId;
 
 	private Long chatForthrightId;
+
+	private int chatFlatterUnread;
+
+	private int chatForthrightUnread;
 
 	public Chats(SharedPreferences prefs) {
 		this.prefs = prefs;
@@ -43,6 +51,8 @@ public class Chats {
 		if (chatForthrightId == 0) {
 			chatForthrightId = null;
 		}
+		chatFlatterUnread = prefs.getInt(USER_CHAT_FLATTER_UNREAD, 0);
+		chatForthrightUnread = prefs.getInt(USER_CHAT_FLATTER_UNREAD, 0);
 	}
 
 	public String getUserImageUri() {
@@ -96,6 +106,34 @@ public class Chats {
 		} else {
 			prefs.edit().putLong(USER_CHAT_FORTHRIGHT_ID, chatForthrightId).apply();
 		}
+	}
+
+	public int getChatFlatterUnread() {
+		return chatFlatterUnread;
+	}
+
+	public void setChatFlatterUnread(int chatFlatterUnread) {
+		this.chatFlatterUnread = chatFlatterUnread;
+		prefs.edit().putInt(USER_CHAT_FLATTER_UNREAD, chatFlatterUnread).apply();
+	}
+
+	public int getChatForthrightUnread() {
+		return chatForthrightUnread;
+	}
+
+	public void setChatForthrightUnread(int chatForthrightUnread) {
+		this.chatForthrightUnread = chatForthrightUnread;
+		prefs.edit().putInt(USER_CHAT_FORTHRIGHT_UNREAD, chatForthrightUnread).apply();
+	}
+
+	public void increaseChatFlatterUnread() {
+		chatFlatterUnread++;
+		prefs.edit().putInt(USER_CHAT_FLATTER_UNREAD, chatFlatterUnread).apply();
+	}
+
+	public void increaseChatForthrightUnread() {
+		chatForthrightUnread++;
+		prefs.edit().putInt(USER_CHAT_FORTHRIGHT_UNREAD, chatForthrightUnread).apply();
 	}
 
 	public String toString() {

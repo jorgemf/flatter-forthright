@@ -108,6 +108,14 @@ public class ChatPublicFragment extends AbstractChatFragment {
 					}
 				} else {
 					showSendMessagesPanel();
+					switch (chatType) {
+						case FLATTER:
+							Application.appUser().getChats().setChatFlatterUnread(0);
+							break;
+						case FORTHRIGHT:
+							Application.appUser().getChats().setChatForthrightUnread(0);
+							break;
+					}
 				}
 				break;
 			default:

@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.livae.ff.app.sql.Table;
-import com.livae.ff.app.utils.Debug;
 
 import java.util.List;
 
@@ -90,10 +89,10 @@ public class ConversationsProvider extends AbstractProvider {
 		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/", URI_CONVERSATION);
 		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/" +
 									 Table.Comment.NAME, URI_CONVERSATION_COMMENTS);
-		uriMatcher.addURI(authority, Table.Conversation.NAME + "/" + Table.LocalUser.NAME,
-						  URI_CONVERSATIONS_CONTACTS);
 		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/" + UNREAD,
 						  URI_CONVERSATION_INCREASE_UNREAD);
+		uriMatcher.addURI(authority, Table.Conversation.NAME + "/" + Table.LocalUser.NAME,
+						  URI_CONVERSATIONS_CONTACTS);
 		return result;
 	}
 
@@ -203,11 +202,13 @@ public class ConversationsProvider extends AbstractProvider {
 							 Table.Comment.CONVERSATION_ID + "=" + Table.Conversation.T_ID +
 							 " LEFT JOIN " + Table.LocalUser.NAME + " ON " +
 							 Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
+				qb.setDistinct(true);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
 			case URI_CONVERSATIONS_CONTACTS:
 				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +
 							 " ON " + Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
+				qb.setDistinct(true);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
 			case URI_COMMENTS_SYNC:
@@ -309,15 +310,13 @@ public class ConversationsProvider extends AbstractProvider {
 				break;
 			case URI_CONVERSATION_INCREASE_UNREAD:
 				args = new String[1];
-				args[0] = uri.getLastPathSegment();
+				args[0] = uri.getPathSegments().get(1);
 				SQLiteDatabase db = getWritableDatabase();
-				Cursor cursor = db.rawQuery("UPDATE " + Table.Conversation.NAME + " SET " +
-											Table.Conversation.UNREAD + " = " +
-											Table.Conversation.UNREAD + " + 1 WHERE " +
-											Table.Conversation.ID + "=?", args);
-				updated = 1; // TODO fix
-				Debug.print(cursor);
-				cursor.close();
+				db.execSQL("UPDATE " + Table.Conversation.NAME + " SET " +
+						   Table.Conversation.UNREAD + " = " +
+						   Table.Conversation.UNREAD + " + 1 WHERE " +
+						   Table.Conversation.ID + "=?", args);
+				updated = 0;
 				break;
 			case URI_COMMENTS:
 				query = Table.Comment.ID + "=?";

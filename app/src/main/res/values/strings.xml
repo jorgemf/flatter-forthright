@@ -40,7 +40,7 @@
 	<string name="notifications_flatter_title">Pensamientos Flattered</string>
 	<string name="notifications_forthright_title">Pensamientos Forthright</string>
 	<string name="notifications_chat_private_title">Pensamientos Chat</string>
-	<string name="notifications_summary_comments">%d unread new comments</string>
+	<string name="notifications_summary_comments">+%d unread comments</string>
 	<string name="notifications_secret_content">«secret content»</string>
 
 	<string name="provider_contacts">Contacts</string>

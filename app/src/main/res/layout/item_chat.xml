@@ -35,6 +35,7 @@
 		android:id="@+id/anonymous_mark"
 		android:layout_width="@dimen/item_user_image_size"
 		android:layout_height="@dimen/item_user_image_size"
+		android:background="@drawable/white_transparent_circle"
 		android:gravity="center"
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
@@ -44,18 +45,6 @@
 		android:textColor="@color/black"
 		android:textSize="28sp"
 		tools:ignore="HardcodedText"/>
-
-	<ImageView
-		android:id="@+id/secret_mark"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/title"
-		android:layout_marginEnd="@dimen/space_small"
-		android:layout_marginRight="@dimen/space_small"
-		android:layout_marginTop="@dimen/space_small"
-		android:layout_toEndOf="@id/unread_count"
-		android:layout_toRightOf="@id/unread_count"
-		android:src="@drawable/ic_timer_black_24dp"/>
 
 	<TextView
 		android:id="@+id/user_name"
@@ -119,6 +108,18 @@
 		android:visibility="gone"
 		tools:text="00"
 		tools:visibility="visible"/>
+
+	<ImageView
+		android:id="@+id/secret_mark"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/title"
+		android:layout_marginEnd="@dimen/space_small"
+		android:layout_marginRight="@dimen/space_small"
+		android:layout_marginTop="@dimen/space_small"
+		android:layout_toEndOf="@id/unread_count"
+		android:layout_toRightOf="@id/unread_count"
+		android:src="@drawable/ic_timer_black_24dp"/>
 
 	<TextView
 		android:id="@+id/subtitle"

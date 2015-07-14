@@ -19,12 +19,12 @@ public class ChatPublicViewHolder extends UserViewHolder {
 		this(itemView, new ChatPublicModel());
 		this.chatPublicClickListener = chatPublicClickListener;
 		itemView.setOnClickListener(this);
-		unreadCount = (TextView) itemView.findViewById(R.id.unread_count);
 	}
 
 	protected ChatPublicViewHolder(View itemView, ChatPublicModel chatPublicModel) {
 		super(itemView, chatPublicModel);
 		this.chatPublicModel = chatPublicModel;
+		unreadCount = (TextView) itemView.findViewById(R.id.unread_count);
 	}
 
 	@Override
@@ -46,6 +46,7 @@ public class ChatPublicViewHolder extends UserViewHolder {
 	public void setUnreadCount(int count) {
 		if (unreadCount != null) {
 			if (count > 0) {
+				unreadCount.setVisibility(View.VISIBLE);
 				if (count > 99) {
 					unreadCount.setText("+99");
 				} else {

@@ -83,6 +83,7 @@ public class ContactsProvider extends AbstractProvider {
 		switch (uriId) {
 			case URI_CONTACTS:
 				qb.setTables(Table.LocalUser.NAME);
+				qb.setDistinct(true);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
 			case URI_CONTACT:

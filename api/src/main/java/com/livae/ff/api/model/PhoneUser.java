@@ -100,8 +100,9 @@ public class PhoneUser implements Serializable {
 	}
 
 	public void removeBlockedPhone(Long phone) {
-		if (blockedChats != null)
-		blockedChats.remove(phone);
+		if (blockedChats != null) {
+			blockedChats.remove(phone);
+		}
 	}
 
 	public void addBlockedAnonymousPhone(Long phone, Date date) {
@@ -125,7 +126,7 @@ public class PhoneUser implements Serializable {
 	}
 
 	public boolean isBlockedPhone(Long phone) {
-		return blockedChats == null || blockedChats.contains(phone);
+		return blockedChats != null && blockedChats.contains(phone);
 	}
 
 	public boolean isBlockedAnonymousPhone(Long phone) {

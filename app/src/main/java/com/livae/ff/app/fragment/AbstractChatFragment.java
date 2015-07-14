@@ -282,6 +282,7 @@ public abstract class AbstractChatFragment
 		}
 		TextId textId = new TextId(comment, conversationId, anonymousNick);
 		buttonPostComment.setEnabled(false);
+		scrollToPosition(0, true);
 		taskPostComment.execute(textId, new Callback<TextId, Comment>() {
 			@Override
 			public void onComplete(CustomAsyncTask<TextId, Comment> task, TextId param,

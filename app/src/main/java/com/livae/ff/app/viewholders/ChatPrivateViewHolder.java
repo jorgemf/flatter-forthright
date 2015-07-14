@@ -62,6 +62,16 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder {
 		if (chatPrivateModel.conversationSubtitleView != null) {
 			chatPrivateModel.conversationSubtitleView.setVisibility(View.VISIBLE);
 		}
+		if (chatPrivateModel.displayNameTextView != null) {
+			chatPrivateModel.displayNameTextView.setVisibility(View.VISIBLE);
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (chatPrivateClickListener != null) {
+			chatPrivateClickListener.chatClicked(chatPrivateModel);
+		}
 	}
 
 	public void setUserName(String name, String boldText) {
@@ -81,18 +91,14 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder {
 		}
 	}
 
-	@Override
-	public void onClick(View v) {
-		if (chatPrivateClickListener != null) {
-			chatPrivateClickListener.chatClicked(chatPrivateModel);
-		}
-	}
-
 	public void setChatType(Constants.ChatType chatType) {
 		chatPrivateModel.chatType = chatType;
 	}
 
 	public void setConversationTitle(String conversationTitle, String boldText) {
+		if (conversationTitle != null && chatPrivateModel.displayNameTextView != null) {
+			chatPrivateModel.displayNameTextView.setVisibility(View.GONE);
+		}
 		chatPrivateModel.roomName = conversationTitle;
 		if (boldText == null) {
 			chatPrivateModel.conversationTitleView.setText(conversationTitle);

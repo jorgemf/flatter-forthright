@@ -291,8 +291,18 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 						holder.setExtraPadding(false);
 				}
 			} else {
-				holder.setExtraPadding(!(anonymousId != null &&
-										 anonymousId.equals(nextAnonymousId)));
+				switch (chatType) {
+					case FLATTER:
+					case FORTHRIGHT:
+						holder.setExtraPadding(!(anonymousId != null &&
+												 anonymousId.equals(nextAnonymousId)));
+						break;
+					case PRIVATE_ANONYMOUS:
+					case PRIVATE:
+					case SECRET:
+						holder.setExtraPadding(isMe || nextIsMe);
+						break;
+				}
 			}
 			cursor.moveToPrevious();
 		}

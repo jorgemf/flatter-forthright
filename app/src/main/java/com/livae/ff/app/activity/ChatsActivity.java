@@ -130,7 +130,8 @@ public class ChatsActivity extends AbstractActivity
 		if (notification.getType() == Constants.PushNotificationType.COMMENT) {
 			NotificationComment nc = (NotificationComment) notification;
 			// increase unread count of conversation
-			Uri uriConversation = ConversationsProvider.getUriConversation(nc.getConversationId());
+			Uri uriConversation = ConversationsProvider
+									.getUriConversationIncreaseUnread(nc.getConversationId());
 			getContentResolver().update(uriConversation, null, null, null);
 			// notify to listeners
 			ChatType chatType = ChatType.valueOf(nc.getConversationType());
@@ -148,6 +149,9 @@ public class ChatsActivity extends AbstractActivity
 					getSupportLoaderManager().restartLoader(LOADER_UNREAD_PRIVATE, null, this);
 					break;
 				case FLATTER:
+					if (nc.getIsMe()) {
+						Application.appUser().getChats().increaseChatFlatterUnread();
+					}
 					fragment = chatsFragmentsAdapter
 								 .getRegisteredFragment(ChatsFragmentsAdapter.CHAT_FLATTERED);
 					if (fragment != null) {
@@ -157,6 +161,9 @@ public class ChatsActivity extends AbstractActivity
 					getSupportLoaderManager().restartLoader(LOADER_UNREAD_FLATTER, null, this);
 					break;
 				case FORTHRIGHT:
+					if (nc.getIsMe()) {
+						Application.appUser().getChats().increaseChatForthrightUnread();
+					}
 					fragment = chatsFragmentsAdapter
 								 .getRegisteredFragment(ChatsFragmentsAdapter.CHAT_FORTHRIGHT);
 					if (fragment != null) {
@@ -438,7 +445,7 @@ public class ChatsActivity extends AbstractActivity
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String[] projection = {Table.Comment.ID};
+		String[] projection = {Table.Comment.T_ID};
 		String selection = null;
 		String[] selectionArgs = null;
 		switch (id) {

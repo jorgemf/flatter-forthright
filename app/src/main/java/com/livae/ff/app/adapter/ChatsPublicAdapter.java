@@ -25,7 +25,8 @@ public class ChatsPublicAdapter extends UsersAdapter {
 											   Table.LocalUser.PHONE, Table.LocalUser.IMAGE_URI,
 											   Table.Conversation.T_ID + " AS CID",
 											   Table.Conversation.ROOM_NAME,
-											   Table.Conversation.LAST_ACCESS};
+											   Table.Conversation.LAST_ACCESS,
+											   Table.Conversation.UNREAD};
 
 	protected int iConversationId;
 
@@ -74,7 +75,9 @@ public class ChatsPublicAdapter extends UsersAdapter {
 			if (!cursor.isNull(iRoomName)) {
 				holder.setRoomName(cursor.getString(iRoomName));
 			}
+			if (!cursor.isNull(iUnreadCount)) {
 			holder.setUnreadCount(cursor.getInt(iUnreadCount));
+			}
 		} else {
 			holder.clear();
 			final AppUser appUser = Application.appUser();
@@ -82,9 +85,11 @@ public class ChatsPublicAdapter extends UsersAdapter {
 			switch (chatType) {
 				case FLATTER:
 					holder.setConversationId(chats.getChatFlatterId());
+					holder.setUnreadCount(chats.getChatFlatterUnread());
 					break;
 				case FORTHRIGHT:
 					holder.setConversationId(chats.getChatForthrightId());
+					holder.setUnreadCount(chats.getChatForthrightUnread());
 					break;
 			}
 			holder.setUserPhone(appUser.getUserPhone(), countryISO);

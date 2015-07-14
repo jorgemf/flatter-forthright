@@ -68,6 +68,7 @@ public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 				break;
 			case PRIVATE:
 			case SECRET:
+				notificationComment.setUserId(comment.getUserId());
 				break;
 		}
 

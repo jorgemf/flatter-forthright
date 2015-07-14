@@ -254,6 +254,9 @@ public class Model {
 						break;
 					case SECRET:
 					case PRIVATE:
+						if (!nc.getIsMe()) {
+							conversation.setPhone(nc.getUserId());
+						}
 						break;
 				}
 				parse(conversation, comment.getDate().getValue(), commentText);
