@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -36,6 +38,8 @@ import com.livae.ff.app.fragment.ChatsPublicFragment;
 import com.livae.ff.app.listener.SearchListener;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
+import com.livae.ff.app.settings.Chats;
+import com.livae.ff.app.settings.Settings;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.utils.IntentUtils;
 import com.livae.ff.common.Constants;
@@ -130,47 +134,49 @@ public class ChatsActivity extends AbstractActivity
 		if (notification.getType() == Constants.PushNotificationType.COMMENT) {
 			NotificationComment nc = (NotificationComment) notification;
 			// increase unread count of conversation
+			Long conversationId = nc.getConversationId();
 			Uri uriConversation = ConversationsProvider
-									.getUriConversationIncreaseUnread(nc.getConversationId());
+									.getUriConversationIncreaseUnread(conversationId);
 			getContentResolver().update(uriConversation, null, null, null);
 			// notify to listeners
 			ChatType chatType = ChatType.valueOf(nc.getConversationType());
 			Fragment fragment;
+			Chats chats = Application.appUser().getChats();
 			switch (chatType) {
 				case PRIVATE_ANONYMOUS:
 				case PRIVATE:
 				case SECRET:
+					getSupportLoaderManager().restartLoader(LOADER_UNREAD_PRIVATE, null, this);
 					fragment = chatsFragmentsAdapter
 								 .getRegisteredFragment(ChatsFragmentsAdapter.CHAT_PRIVATE);
 					if (fragment != null) {
 						ChatsPrivateFragment chatsFragment = (ChatsPrivateFragment) fragment;
 						return chatsFragment.onNotificationReceived(notification);
 					}
-					getSupportLoaderManager().restartLoader(LOADER_UNREAD_PRIVATE, null, this);
 					break;
 				case FLATTER:
-					if (nc.getIsMe()) {
-						Application.appUser().getChats().increaseChatFlatterUnread();
+					if (conversationId.equals(chats.getChatFlatterId())) {
+						chats.increaseChatFlatterUnread();
 					}
+					getSupportLoaderManager().restartLoader(LOADER_UNREAD_FLATTER, null, this);
 					fragment = chatsFragmentsAdapter
 								 .getRegisteredFragment(ChatsFragmentsAdapter.CHAT_FLATTERED);
 					if (fragment != null) {
 						ChatsPublicFragment chatsPublicFragment = (ChatsPublicFragment) fragment;
 						return chatsPublicFragment.onNotificationReceived(notification);
 					}
-					getSupportLoaderManager().restartLoader(LOADER_UNREAD_FLATTER, null, this);
 					break;
 				case FORTHRIGHT:
-					if (nc.getIsMe()) {
-						Application.appUser().getChats().increaseChatForthrightUnread();
+					if (conversationId.equals(chats.getChatForthrightId())) {
+						chats.increaseChatForthrightUnread();
 					}
+					getSupportLoaderManager().restartLoader(LOADER_UNREAD_FORTHRIGHT, null, this);
 					fragment = chatsFragmentsAdapter
 								 .getRegisteredFragment(ChatsFragmentsAdapter.CHAT_FORTHRIGHT);
 					if (fragment != null) {
 						ChatsPublicFragment chatsPublicFragment = (ChatsPublicFragment) fragment;
 						return chatsPublicFragment.onNotificationReceived(notification);
 					}
-					getSupportLoaderManager().restartLoader(LOADER_UNREAD_FORTHRIGHT, null, this);
 					break;
 			}
 		}
@@ -209,6 +215,11 @@ public class ChatsActivity extends AbstractActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
+		NotificationManager manager;
+		manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		manager.cancel(Settings.Notifications.ID_CHAT_PRIVATE);
+		manager.cancel(Settings.Notifications.ID_CHAT_PUBLIC_FLATTER);
+		manager.cancel(Settings.Notifications.ID_CHAT_PUBLIC_FORTHRIGHT);
 		Analytics.screen(Analytics.Screen.CHATS);
 		notificationDisabledReceiver.register(this);
 		LoaderManager loaderManager = getSupportLoaderManager();
@@ -251,13 +262,41 @@ public class ChatsActivity extends AbstractActivity
 				TextView text = (TextView) tabs[i].findViewById(R.id.title);
 				text.setText(chatsFragmentsAdapter.getPageTitle(i));
 			}
-//			tabLayout.addTab(tabLayout.newTab().setCustomView());
 			viewPager = (ViewPager) findViewById(R.id.view_pager);
 			viewPager.addOnPageChangeListener(this);
 			viewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.space_normal));
 			viewPager.setPageMarginDrawable(R.color.black_light);
 			viewPager.setAdapter(chatsFragmentsAdapter);
-			tabLayout.setupWithViewPager(viewPager);
+//			tabLayout.setupWithViewPager(viewPager);
+			viewPager
+			  .addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+			viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+				@Override
+				public void onPageScrolled(int position, float positionOffset,
+										   int positionOffsetPixels) {
+					if (positionOffset == 0) {
+						onPageSelected(position);
+					} else {
+						tabs[position].setAlpha(1 - 0.2f * positionOffset);
+						tabs[position + 1].setAlpha(0.8f + 0.2f * positionOffset);
+					}
+				}
+
+				@Override
+				public void onPageSelected(int position) {
+					for (View view : tabs) {
+						view.setAlpha(0.8f);
+					}
+					tabs[position].setAlpha(1);
+				}
+
+				@Override
+				public void onPageScrollStateChanged(int state) {
+
+				}
+			});
+			tabLayout
+			  .setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 			viewPager.setCurrentItem(ChatsFragmentsAdapter.CHAT_PRIVATE);
 
 			addChatsContainer = findViewById(R.id.add_chat_container);
@@ -279,56 +318,6 @@ public class ChatsActivity extends AbstractActivity
 			loaderManager.initLoader(LOADER_UNREAD_FORTHRIGHT, null, this);
 			loaderManager.initLoader(LOADER_UNREAD_PRIVATE, null, this);
 		}
-	}
-
-	@Override
-	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-		int color = colorPrivate;
-		int statusBarColor = colorPrivate;
-		switch (position) {
-			case ChatsFragmentsAdapter.CHAT_FLATTERED:
-				color = (Integer) argbEvaluator.evaluate(positionOffset, colorFlatterer,
-														 colorPrivate);
-				statusBarColor = (Integer) argbEvaluator.evaluate(positionOffset,
-																  colorFlattererDarker,
-																  colorPrivateDarker);
-				if (positionOffsetPixels > 0) {
-					int totalPixels = (int) (positionOffsetPixels / positionOffset);
-					floatingActionButton.setTranslationX(totalPixels - positionOffsetPixels);
-				}
-				break;
-			case ChatsFragmentsAdapter.CHAT_PRIVATE:
-				color = (Integer) argbEvaluator.evaluate(positionOffset, colorPrivate,
-														 colorForthright);
-				statusBarColor = (Integer) argbEvaluator.evaluate(positionOffset,
-																  colorPrivateDarker,
-																  colorForthrightDarker);
-				floatingActionButton.setTranslationX(-positionOffsetPixels);
-				break;
-			case ChatsFragmentsAdapter.CHAT_FORTHRIGHT:
-				color = colorForthright;
-				statusBarColor = colorForthrightDarker;
-				break;
-		}
-		toolbar.setBackgroundColor(color);
-		tabLayout.setBackgroundColor(color);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			getWindow().setStatusBarColor(statusBarColor);
-		}
-	}
-
-	@Override
-	public void onPageSelected(int position) {
-		Fragment fragment = chatsFragmentsAdapter.getRegisteredFragment(position);
-		if (fragment != null && fragment instanceof SearchListener) {
-			SearchListener searchListener = (SearchListener) fragment;
-			searchListener.search(searchText);
-		}
-	}
-
-	@Override
-	public void onPageScrollStateChanged(int state) {
-
 	}
 
 	@Override
@@ -445,27 +434,26 @@ public class ChatsActivity extends AbstractActivity
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String[] projection = {Table.Comment.T_ID};
+		final String[] projection = {Table.Conversation.T_ID};
 		String selection = null;
 		String[] selectionArgs = null;
 		switch (id) {
 			case LOADER_UNREAD_FLATTER:
-				selection = Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS + " AND " +
-							Table.Conversation.TYPE + "=? AND " + Table.Conversation.PHONE + "=?";
-				selectionArgs = new String[]{ChatType.FLATTER.name(),
-											 Application.appUser().getUserPhone().toString()};
-				return new CursorLoader(this, ConversationsProvider.getUriCommentsConversations(),
+				selection = Table.Conversation.UNREAD + ">0 AND " + Table.Conversation.TYPE + "=?";
+				selectionArgs = new String[]{ChatType.FLATTER.name()};
+				return new CursorLoader(this, ConversationsProvider.getUriConversations(),
 										projection, selection, selectionArgs, null);
 			case LOADER_UNREAD_FORTHRIGHT:
-				selection = Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS + " AND " +
-							Table.Conversation.TYPE + "=? AND " + Table.Conversation.PHONE + "=?";
-				selectionArgs = new String[]{ChatType.FORTHRIGHT.name(),
-											 Application.appUser().getUserPhone().toString()};
-				return new CursorLoader(this, ConversationsProvider.getUriCommentsConversations(),
+				selection = Table.Conversation.UNREAD + ">0 AND " + Table.Conversation.TYPE + "=?";
+				selectionArgs = new String[]{ChatType.FORTHRIGHT.name()};
+				return new CursorLoader(this, ConversationsProvider.getUriConversations(),
 										projection, selection, selectionArgs, null);
 			case LOADER_UNREAD_PRIVATE:
-				selection = Table.Conversation.UNREAD + ">0";
-				return new CursorLoader(this, ConversationsProvider.getUriCommentsConversations(),
+				selection = Table.Conversation.UNREAD + " > 0 AND " +
+							Table.Conversation.TYPE + " IN (?,?,?)";
+				selectionArgs = new String[]{ChatType.SECRET.name(), ChatType.PRIVATE.name(),
+											 ChatType.PRIVATE_ANONYMOUS.name()};
+				return new CursorLoader(this, ConversationsProvider.getUriConversations(),
 										projection, selection, selectionArgs, null);
 		}
 		return null;
@@ -502,4 +490,55 @@ public class ChatsActivity extends AbstractActivity
 	public void onLoaderReset(Loader<Cursor> loader) {
 		// nothing
 	}
+
+	@Override
+	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+		int color = colorPrivate;
+		int statusBarColor = colorPrivate;
+		switch (position) {
+			case ChatsFragmentsAdapter.CHAT_FLATTERED:
+				color = (Integer) argbEvaluator.evaluate(positionOffset, colorFlatterer,
+														 colorPrivate);
+				statusBarColor = (Integer) argbEvaluator.evaluate(positionOffset,
+																  colorFlattererDarker,
+																  colorPrivateDarker);
+				if (positionOffsetPixels > 0) {
+					int totalPixels = (int) (positionOffsetPixels / positionOffset);
+					floatingActionButton.setTranslationX(totalPixels - positionOffsetPixels);
+				}
+				break;
+			case ChatsFragmentsAdapter.CHAT_PRIVATE:
+				color = (Integer) argbEvaluator.evaluate(positionOffset, colorPrivate,
+														 colorForthright);
+				statusBarColor = (Integer) argbEvaluator.evaluate(positionOffset,
+																  colorPrivateDarker,
+																  colorForthrightDarker);
+				floatingActionButton.setTranslationX(-positionOffsetPixels);
+				break;
+			case ChatsFragmentsAdapter.CHAT_FORTHRIGHT:
+				color = colorForthright;
+				statusBarColor = colorForthrightDarker;
+				break;
+		}
+		toolbar.setBackgroundColor(color);
+		tabLayout.setBackgroundColor(color);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().setStatusBarColor(statusBarColor);
+		}
+	}
+
+	@Override
+	public void onPageSelected(int position) {
+		Fragment fragment = chatsFragmentsAdapter.getRegisteredFragment(position);
+		if (fragment != null && fragment instanceof SearchListener) {
+			SearchListener searchListener = (SearchListener) fragment;
+			searchListener.search(searchText);
+		}
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int state) {
+
+	}
+
 }

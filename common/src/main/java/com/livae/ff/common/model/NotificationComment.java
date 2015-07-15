@@ -10,6 +10,8 @@ public class NotificationComment implements Notification {
 
 	private Long conversationId;
 
+	private Long conversationUserId;
+
 	private Long userId;
 
 	private Long aliasId;
@@ -108,5 +110,13 @@ public class NotificationComment implements Notification {
 
 	public Constants.PushNotificationType getType() {
 		return Constants.PushNotificationType.COMMENT;
+	}
+
+	public Long getConversationUserId() {
+		return conversationUserId;
+	}
+
+	public void setConversationUserId(Long conversationUserId) {
+		this.conversationUserId = conversationUserId;
 	}
 }

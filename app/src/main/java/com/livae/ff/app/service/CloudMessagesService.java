@@ -62,7 +62,8 @@ public class CloudMessagesService extends IntentService {
 
 						switch (chatType) {
 							case FORTHRIGHT:
-								if (notificationComment.getIsMe()) {
+								if (conversationId.equals(Application.appUser().getChats()
+																	 .getChatForthrightId())) {
 									Application.appUser().getChats().increaseChatForthrightUnread();
 								}
 								if (notifications.isCommentsForthrightMe()) {
@@ -70,7 +71,8 @@ public class CloudMessagesService extends IntentService {
 								}
 								break;
 							case FLATTER:
-								if (notificationComment.getIsMe()) {
+								if (conversationId.equals(Application.appUser().getChats()
+																	 .getChatFlatterId())) {
 									Application.appUser().getChats().increaseChatFlatterUnread();
 								}
 								if (notifications.isCommentsFlatteredMe()) {

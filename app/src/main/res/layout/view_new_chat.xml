@@ -18,7 +18,7 @@
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:layout_margin="@dimen/space_huge"
+		android:layout_margin="@dimen/space_large"
 		android:src="@drawable/ic_content_clear_white_24dp"
 		app:backgroundTint="@color/purple"
 		app:borderWidth="0dp"
@@ -32,8 +32,8 @@
 		android:layout_above="@id/close_button"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:layout_marginEnd="@dimen/space_huge"
-		android:layout_marginRight="@dimen/space_huge"
+		android:layout_marginEnd="@dimen/space_large"
+		android:layout_marginRight="@dimen/space_large"
 		android:layout_marginTop="@dimen/space_normal">
 
 		<TextView
@@ -65,8 +65,8 @@
 		android:layout_above="@id/create_chat_anonymous"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:layout_marginEnd="@dimen/space_huge"
-		android:layout_marginRight="@dimen/space_huge"
+		android:layout_marginEnd="@dimen/space_large"
+		android:layout_marginRight="@dimen/space_large"
 		android:layout_marginTop="@dimen/space_normal">
 
 		<TextView
@@ -98,8 +98,8 @@
 		android:layout_above="@id/create_chat_secret"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:layout_marginEnd="@dimen/space_huge"
-		android:layout_marginRight="@dimen/space_huge"
+		android:layout_marginEnd="@dimen/space_large"
+		android:layout_marginRight="@dimen/space_large"
 		android:layout_marginTop="@dimen/space_normal">
 
 		<TextView

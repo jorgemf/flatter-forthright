@@ -82,13 +82,19 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 		holder.setSecret(chatType == Constants.ChatType.SECRET);
 		if (chatType == Constants.ChatType.PRIVATE_ANONYMOUS) {
 			holder.setImageAnonymous(roomName);
-		} else if (!cursor.isNull(iPhone)) {
-			holder.setUserName(cursor.getString(iContact), search);
+		}
+		if (!cursor.isNull(iPhone)) {
+			if (chatType == Constants.ChatType.PRIVATE_ANONYMOUS) {
+				holder.setUserName(cursor.getString(iContact), search);
+			} else {
+				holder.setConversationTitle(cursor.getString(iContact), search);
+			}
 			holder.setUserImage(cursor.getString(iImageUri));
 			holder.setUserPhone(cursor.getLong(iPhone));
-		} else {
+		} else if (!cursor.isNull(iConversationPhone)) {
 			Long conversationPhone = cursor.getLong(iConversationPhone);
-			holder.setUserName(PhoneUtils.getPrettyPrint(conversationPhone, countryISO), null);
+			holder.setConversationTitle(PhoneUtils.getPrettyPrint(conversationPhone, countryISO),
+										null);
 		}
 		if (!cursor.isNull(iLastMessage)) {
 			holder.setLastMessage(cursor.getString(iLastMessage), cursor.getLong(iLastMessageDate));

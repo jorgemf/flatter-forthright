@@ -39,7 +39,7 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder {
 		chatPrivateModel.conversationTitleView = (TextView) itemView.findViewById(R.id.title);
 		chatPrivateModel.conversationSubtitleView = (TextView) itemView.findViewById(R.id.subtitle);
 		chatPrivateModel.anonymousImageView = (AnonymousImage) itemView
-																 .findViewById(R.id.image_anonymous);
+																 .findViewById(R.id.anonymous_image);
 		dateTextView = (TextView) itemView.findViewById(R.id.date);
 		anonymousMark = itemView.findViewById(R.id.anonymous_mark);
 		secretChatMark = itemView.findViewById(R.id.secret_mark);

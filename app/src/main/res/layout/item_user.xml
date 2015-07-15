@@ -47,6 +47,7 @@
 		android:paddingRight="@dimen/space_small"
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:textColor="@color/white"
+		android:textStyle="bold"
 		android:visibility="gone"
 		tools:text="00"
 		tools:visibility="visible"/>
@@ -59,7 +60,7 @@
 		android:layout_alignEnd="@id/user_name"
 		android:layout_alignRight="@id/user_name"
 		android:layout_below="@id/user_name"
-		android:layout_marginTop="@dimen/space_normal"
+		android:layout_marginTop="6dp"
 		android:layout_toEndOf="@id/unread_count"
 		android:layout_toRightOf="@id/unread_count"
 		android:lines="1"

@@ -11,6 +11,8 @@ import com.livae.ff.api.ff.model.CollectionResponseComment;
 import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.api.ff.model.Conversation;
 import com.livae.ff.api.ff.model.Numbers;
+import com.livae.ff.app.AppUser;
+import com.livae.ff.app.Application;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.provider.ConversationsProvider;
@@ -232,7 +234,8 @@ public class Model {
 			Comment comment = new Comment();
 			String commentText = nc.getComment();
 			comment.setComment(commentText);
-			comment.setConversationId(nc.getConversationId());
+			Long conversationId = nc.getConversationId();
+			comment.setConversationId(conversationId);
 			comment.setUserMark(nc.getUserMark());
 			comment.setDate(new DateTime(nc.getDate()));
 			comment.setIsMe(nc.getIsMe());
@@ -241,12 +244,24 @@ public class Model {
 				Constants.ChatType chatType = Constants.ChatType.valueOf(nc.getConversationType());
 				Conversation conversation = new Conversation();
 				conversation.setType(nc.getConversationType());
-				conversation.setId(nc.getConversationId());
+				conversation.setId(conversationId);
 				switch (chatType) {
 					case FORTHRIGHT:
 					case FLATTER:
 						comment.setAlias(nc.getAlias());
 						comment.setAliasId(nc.getAliasId());
+						Long conversationPhone = nc.getConversationUserId();
+						AppUser appUser = Application.appUser();
+						if (appUser.getUserPhone().equals(conversationPhone)) {
+							switch (chatType) {
+								case FORTHRIGHT:
+									appUser.getChats().setChatForthrightId(conversationId);
+									break;
+								case FLATTER:
+									appUser.getChats().setChatFlatterId(conversationId);
+									break;
+							}
+						}
 						break;
 					case PRIVATE_ANONYMOUS:
 						conversation.setAlias(nc.getAlias());
@@ -261,6 +276,7 @@ public class Model {
 				}
 				parse(conversation, comment.getDate().getValue(), commentText);
 			} catch (IllegalArgumentException ignore) {
+				ignore.printStackTrace();
 			}
 			parse(comment);
 		}

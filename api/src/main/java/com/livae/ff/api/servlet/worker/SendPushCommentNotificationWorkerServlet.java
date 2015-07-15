@@ -59,6 +59,7 @@ public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 		switch (chatType) {
 			case FLATTER:
 			case FORTHRIGHT:
+				notificationComment.setConversationUserId(conversation.getPhone());
 				notificationComment.setAlias(comment.getAlias());
 				notificationComment.setAliasId(comment.getAliasId());
 				break;
