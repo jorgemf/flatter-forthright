@@ -147,8 +147,28 @@ public class SendStatsEmailServlet extends HttpServlet {
 		msgBody += "Total comments flattered:  " + stats.getFlatteredMessages() + "\n";
 		msgBody += "Total comments forthright:  " + stats.getForthrightMessages() + "\n";
 
+		msgBody += dateFormat.format(stats.getDate()) + ";";
+		msgBody += stats.getTotalUsers() + ";";
+		msgBody += stats.getTotalComments() + ";";
+		msgBody += stats.getTotalConversations() + ";";
+		msgBody += stats.getTotalFlags() + ";";
+		msgBody += stats.getActiveUsersLast1Day() + ";";
+		msgBody += stats.getActiveUsersLast7Days() + ";";
+		msgBody += stats.getActiveUsersLast15Days() + ";";
+		msgBody += stats.getActiveUsersLast30Days() + ";";
+		msgBody += stats.getCreatedUsersLast1Day() + ";";
+		msgBody += stats.getCreatedUsersLast7Days() + ";";
+		msgBody += stats.getCreatedUsersLast15Days() + ";";
+		msgBody += stats.getCreatedUsersLast30Days() + ";";
+		msgBody += counterStats.getTotal() + ";";
+		msgBody += stats.getPrivateMessages() + ";";
+		msgBody += stats.getSecretMessages() + ";";
+		msgBody += stats.getAnonymousMessages() + ";";
+		msgBody += stats.getFlatteredMessages() + ";";
+		msgBody += stats.getForthrightMessages() + ";";
+
 		try {
-			ApiEndpoint.sendEmail(session, "thoughts@livae.com", subject, msgBody);
+			ApiEndpoint.sendEmail(session, "pensamientos@livae.com", subject, msgBody);
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
