@@ -155,7 +155,7 @@ public class CloudMessagesService extends IntentService {
 				builder.setContentText(text);
 				NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle(builder);
 				style.setBigContentTitle(title);
-				style.setSummaryText(text);
+				style.bigText(text);
 				builder.setStyle(style);
 				Long conversationId = cursor.getLong(iConversationId);
 				Long lastAccess = cursor.getLong(iLastAccess);
@@ -183,12 +183,11 @@ public class CloudMessagesService extends IntentService {
 												 conversationId != null));
 				int unreadMore = totalComments - Settings.Notifications.MAXIMUM_MESSAGES;
 				if (unreadMore > 0) {
-					style.setSummaryText(res.getString(R.string.notifications_summary_comments,
+					style.setSummaryText(res.getString(R.string.notifications_summary_comments_more,
 													   unreadMore));
 				}
 				builder.setContentText(res.getString(R.string.notifications_summary_comments,
 													 totalComments));
-				builder.setNumber(totalComments);
 				builder.setStyle(style);
 				if (conversationId != null) {
 					cursor.moveToFirst();
@@ -223,9 +222,10 @@ public class CloudMessagesService extends IntentService {
 		final Resources res = context.getResources();
 		final ContentResolver contentResolver = context.getContentResolver();
 		Uri uri = ConversationsProvider.getUriCommentsConversations();
-		final String[] projection = {Table.Comment.COMMENT, Table.LocalUser.CONTACT_NAME,
-									 Table.LocalUser.IMAGE_URI, Table.Conversation.TYPE,
-									 Table.Conversation.ROOM_NAME, Table.Conversation.LAST_ACCESS,
+		final String[] projection = {Table.Comment.COMMENT, Table.Comment.CONVERSATION_ID,
+									 Table.LocalUser.CONTACT_NAME, Table.LocalUser.IMAGE_URI,
+									 Table.Conversation.TYPE, Table.Conversation.ROOM_NAME,
+									 Table.Conversation.LAST_ACCESS,
 									 Table.Conversation.LAST_MESSAGE_DATE, Table.Conversation.PHONE,
 									 Table.Conversation.ALIAS_ID};
 		final String selection =
@@ -299,7 +299,6 @@ public class CloudMessagesService extends IntentService {
 				}
 				builder.setContentText(res.getString(R.string.notifications_summary_comments,
 													 totalComments));
-				builder.setNumber(totalComments);
 				builder.setStyle(style);
 				if (conversationId != null) {
 					cursor.moveToFirst();

@@ -43,7 +43,7 @@ public class Settings {
 
 	public static class Notifications {
 
-		public static final int MAXIMUM_MESSAGES = 5;
+		public static final int MAXIMUM_MESSAGES = 4;
 
 		public static final int ID_CHAT_PRIVATE = 1;
 

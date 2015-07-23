@@ -28,7 +28,7 @@
 		\n\n• <b>Normal</b> chat: as you do in other apps.
 		\n\n• <b>Secret</b> chat: the conversation is deleted after you leave it.
 		\n\n• <b>Anonymous</b> chat: pick a nick name and start a conversation, they wont know who you are.
-		\n\n← <b>Flatter</b> your friends publicly and anonymously, they are the best and everybody should know it.
+		\n\n← <b>Flatter</b> your friends public and anonymously, they are the best and everybody should know it.
 		\n\n→ Be <b>Forthright</b> and share anonymously what you don\'t dare to say in person.
 	</string>
 	<string name="no_conversations">There are no conversation with the current search terms.</string>
@@ -40,7 +40,8 @@
 	<string name="notifications_flatter_title">Pensamientos Flattered</string>
 	<string name="notifications_forthright_title">Pensamientos Forthright</string>
 	<string name="notifications_chat_private_title">Pensamientos Chat</string>
-	<string name="notifications_summary_comments">+%d unread comments</string>
+	<string name="notifications_summary_comments_more">+%d unread comments</string>
+	<string name="notifications_summary_comments">%d unread comments</string>
 	<string name="notifications_secret_content">«secret content»</string>
 
 	<string name="provider_contacts">Contacts</string>
@@ -101,7 +102,7 @@
 	<string name="on_boarding_welcome_title">Welcome to Pensamientos</string>
 	<string name="on_boarding_welcome">
 		Pensamientos is an anonymous, public, social network.\n\nYou can flatter openly your
-		friends, be forthright about something they should know but you don\'t want to say in
+		friends or to be forthright about something they should know but you don\'t want to say in
 		person, or even having a private anonymous chat if the other person wants.
 	</string>
 	<string name="on_boarding_validate_number_title">Verify your number</string>

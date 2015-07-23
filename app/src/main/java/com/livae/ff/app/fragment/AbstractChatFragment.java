@@ -272,9 +272,14 @@ public abstract class AbstractChatFragment
 
 			@Override
 			public void onError(CustomAsyncTask<Long, Void> task, Long aLong, Exception e) {
-				if (isResumed()) {
-					AbstractActivity activity = (AbstractActivity) getActivity();
-					activity.showSnackBarException(e);
+				switch (chatType) {
+					case FLATTER:
+					case FORTHRIGHT:
+						if (isResumed()) {
+							AbstractActivity activity = (AbstractActivity) getActivity();
+							activity.showSnackBarException(e);
+						}
+						break;
 				}
 			}
 		});
