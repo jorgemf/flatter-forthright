@@ -113,6 +113,7 @@
       <excludeFolder url="file:///tmp/gradlebuild/flatter-forthright/app/intermediates/rs" />
       <excludeFolder url="file:///tmp/gradlebuild/flatter-forthright/app/intermediates/symbols" />
       <excludeFolder url="file:///tmp/gradlebuild/flatter-forthright/app/outputs" />
+      <excludeFolder url="file:///tmp/gradlebuild/flatter-forthright/app/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -120,8 +121,8 @@
     <orderEntry type="library" exported="" name="google-http-client-android-1.20.0" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-22.2.0" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
-    <orderEntry type="library" exported="" name="okhttp-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-analytics-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="libphonenumber-7.0.7" level="project" />
     <orderEntry type="library" exported="" name="google-api-client-android-1.20.0" level="project" />

@@ -12,7 +12,6 @@ import com.livae.ff.app.activity.AbstractChatActivity;
 import com.livae.ff.app.activity.ChatPrivateActivity;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
-import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.app.dialog.EditTextDialogFragment;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.task.ConversationParams;
@@ -33,7 +32,6 @@ public class ChatPrivateFragment extends AbstractChatFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		endPreviousMessages = false;
 		firstTimeLoad = savedInstanceState == null;
 	}
 
@@ -89,11 +87,21 @@ public class ChatPrivateFragment extends AbstractChatFragment {
 	}
 
 	@Override
-	protected NetworkAsyncTask<QueryId, ListResult> getLoaderTask() {
-		return new NetworkAsyncTask<QueryId, ListResult>() {
+	protected CustomAsyncTask<QueryId, ListResult> getLoaderTask() {
+		endPreviousMessages = false;
+		return new CustomAsyncTask<QueryId, ListResult>() {
+
 			@Override
-			protected ListResult doInBackground(QueryId queryId) throws Exception {
-				return new ListResult(null, endPreviousMessages ? 0 : 100);
+			public CustomAsyncTask<QueryId, ListResult> execute(QueryId queryId,
+																Callback<QueryId, ListResult> callback) {
+				callback.onComplete(this, queryId, doInBackground(queryId));
+				return this;
+			}
+
+			@Override
+			protected ListResult doInBackground(QueryId queryId) {
+				return new ListResult(endPreviousMessages ? null : "",
+									  endPreviousMessages ? 0 : 100);
 			}
 		};
 	}

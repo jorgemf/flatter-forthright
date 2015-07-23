@@ -252,10 +252,22 @@ public abstract class AbstractChatFragment
 	}
 
 	private void joinConversation() {
+		switch (chatType) {
+			case PRIVATE_ANONYMOUS:
+			case SECRET:
+			case PRIVATE:
+				startLoading();
+				break;
+		}
 		new TaskConversationJoin().execute(conversationId, new Callback<Long, Void>() {
 			@Override
 			public void onComplete(CustomAsyncTask<Long, Void> task, Long aLong, Void aVoid) {
-				startLoading();
+				switch (chatType) {
+					case FLATTER:
+					case FORTHRIGHT:
+						startLoading();
+						break;
+				}
 			}
 
 			@Override

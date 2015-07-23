@@ -2,6 +2,7 @@ package com.livae.ff.app.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,8 +16,8 @@ import javax.annotation.Nonnull;
 
 public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 
-	public static final String[] PROJECTION = {Table.LocalUser.T_ID, Table.LocalUser.CONTACT_NAME,
-											   Table.LocalUser.PHONE, Table.LocalUser.IMAGE_URI};
+	public static final String[] PROJECTION = {Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
+											   Table.LocalUser.IMAGE_URI};
 
 	protected String search;
 
@@ -45,6 +46,18 @@ public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 		iContact = cursor.getColumnIndex(Table.LocalUser.CONTACT_NAME);
 		iPhone = cursor.getColumnIndex(Table.LocalUser.PHONE);
 		iImageUri = cursor.getColumnIndex(Table.LocalUser.IMAGE_URI);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		int size = getItemCount();
+		if (position >= 0 && position < size) {
+			Cursor cursor = getCursor();
+			cursor.moveToPosition(position);
+			return cursor.getLong(iPhone);
+		} else {
+			return RecyclerView.NO_ID;
+		}
 	}
 
 	@Override

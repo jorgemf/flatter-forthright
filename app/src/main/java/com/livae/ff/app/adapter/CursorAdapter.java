@@ -61,7 +61,7 @@ public abstract class CursorAdapter<k extends RecyclerView.ViewHolder>
 
 	public void setCursor(Cursor cursor) {
 		if (cursor != null) {
-			iId = cursor.getColumnIndexOrThrow(BaseColumns._ID);
+			iId = cursor.getColumnIndex(BaseColumns._ID);
 			findIndexes(cursor);
 		}
 		if (this.cursor != null && this.cursor != cursor) {

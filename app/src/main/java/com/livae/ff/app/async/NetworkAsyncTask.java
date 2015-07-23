@@ -11,7 +11,7 @@ public abstract class NetworkAsyncTask<Param, Result> extends CustomAsyncTask<Pa
 														Callback<Param, Result> callback) {
 		if (DeviceUtils.isNetworkAvailable(Application.getContext())) {
 			super.execute(param, callback);
-		} else {
+		} else if (callback != null) {
 			callback.onError(this, param, new NoNetworkException());
 		}
 		return this;

@@ -22,7 +22,6 @@ import com.livae.ff.app.activity.AbstractActivity;
 import com.livae.ff.app.activity.AbstractChatActivity;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
-import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.app.dialog.EditTextDialogFragment;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.sql.Table;
@@ -188,7 +187,7 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	}
 
 	@Override
-	protected NetworkAsyncTask<QueryId, ListResult> getLoaderTask() {
+	protected CustomAsyncTask<QueryId, ListResult> getLoaderTask() {
 		return new TaskCommentsGet();
 	}
 

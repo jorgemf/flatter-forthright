@@ -24,9 +24,9 @@ import com.livae.ff.common.model.Notification;
 
 public class NotificationUtil {
 
-	private static final StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+	private static final StyleSpan BOLD_SPAN = new StyleSpan(Typeface.BOLD);
 
-	private static final StyleSpan italicSpan = new StyleSpan(Typeface.ITALIC);
+	private static final StyleSpan ITALIC_SPAN = new StyleSpan(Typeface.ITALIC);
 
 	public static PushNotificationType getNotificationType(Bundle extras) {
 		PushNotificationType notificationType = null;
@@ -60,7 +60,7 @@ public class NotificationUtil {
 		if (title != null && title.length() > 0) {
 			spannableString = new SpannableString(String.format("%s  %s%s", title, text,
 																italicText));
-			spannableString.setSpan(boldSpan, 0, title.length(),
+			spannableString.setSpan(BOLD_SPAN, 0, title.length(),
 									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			if (italicText.length() > 0) {
 				int length = spannableString.length();
@@ -78,7 +78,7 @@ public class NotificationUtil {
 		if (boldText != null && boldText.length() > 0) {
 			int pos = text.indexOf(boldText);
 			if (pos >= 0) {
-				spannableString.setSpan(boldSpan, pos, pos + boldText.length(),
+				spannableString.setSpan(BOLD_SPAN, pos, pos + boldText.length(),
 										Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
 		}

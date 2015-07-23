@@ -26,7 +26,6 @@ import com.livae.ff.app.activity.AbstractActivity;
 import com.livae.ff.app.adapter.EndlessCursorAdapter;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
-import com.livae.ff.app.async.NetworkAsyncTask;
 import com.livae.ff.app.task.ListResult;
 import com.livae.ff.app.task.QueryParam;
 import com.livae.ff.app.utils.Debug;
@@ -55,7 +54,7 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 
 	private int totalLoaded;
 
-	private NetworkAsyncTask<QUERY, ListResult> loaderTask;
+	private CustomAsyncTask<QUERY, ListResult> loaderTask;
 
 	private String selection;
 
@@ -253,7 +252,7 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		onScrollListener = listener;
 	}
 
-	protected abstract NetworkAsyncTask<QUERY, ListResult> getLoaderTask();
+	protected abstract CustomAsyncTask<QUERY, ListResult> getLoaderTask();
 
 	protected abstract Uri getUriCursor();
 

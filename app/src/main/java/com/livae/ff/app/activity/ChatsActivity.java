@@ -42,6 +42,7 @@ import com.livae.ff.app.settings.Chats;
 import com.livae.ff.app.settings.Settings;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.utils.IntentUtils;
+import com.livae.ff.app.utils.SyncUtils;
 import com.livae.ff.common.Constants;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.model.Notification;
@@ -135,9 +136,11 @@ public class ChatsActivity extends AbstractActivity
 			NotificationComment nc = (NotificationComment) notification;
 			// increase unread count of conversation
 			Long conversationId = nc.getConversationId();
-			Uri uriConversation = ConversationsProvider
-									.getUriConversationIncreaseUnread(conversationId);
-			getContentResolver().update(uriConversation, null, null, null);
+			if (!nc.getIsMe()) {
+				Uri uriConversation = ConversationsProvider
+										.getUriConversationIncreaseUnread(conversationId);
+				getContentResolver().update(uriConversation, null, null, null);
+			}
 			// notify to listeners
 			ChatType chatType = ChatType.valueOf(nc.getConversationType());
 			Fragment fragment;
@@ -188,6 +191,9 @@ public class ChatsActivity extends AbstractActivity
 		switch (menuItem.getItemId()) {
 //			case R.id.menu_settings:
 //				break;
+			case R.id.menu_refresh_contacts:
+				SyncUtils.syncContactsNow();
+				break;
 			case R.id.menu_share:
 				IntentUtils.shareApp(this);
 				break;
