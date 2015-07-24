@@ -57,7 +57,7 @@ import static com.livae.ff.api.OfyService.ofy;
 @Api(
 	  name = "ff",
 	  version = "v1",
-	  backendRoot = "https://ff.livae.com/api",
+	  backendRoot = "https://pensamientos.livae.com/api",
 	  namespace = @ApiNamespace(
 								 ownerDomain = "ff.livae.com",
 								 ownerName = "livae",

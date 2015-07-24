@@ -30,7 +30,13 @@
 		android:layout_above="@id/button"
 		android:layout_below="@id/bar_layout">
 
-		<LinearLayout
+		<android.support.v7.widget.CardView
+			android:id="@+id/card_view"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/space_large">
+
+			<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
@@ -40,30 +46,29 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginBottom="@dimen/space_large"
-				android:layout_marginLeft="@dimen/space_huge"
-				android:layout_marginRight="@dimen/space_huge"
-				android:layout_marginTop="@dimen/space_on_boarding"
+				android:layout_marginLeft="@dimen/space_large"
+				android:layout_marginRight="@dimen/space_large"
+				android:layout_marginTop="@dimen/space_large"
 				android:lineSpacingMultiplier="1.2"
 				android:shadowColor="@color/white"
 				android:text="@string/on_boarding_validate_number"
-				android:textAppearance="?android:attr/textAppearanceLarge"
-				android:typeface="serif"/>
+				android:textAppearance="?android:attr/textAppearanceLarge"/>
 
 			<Spinner
 				android:id="@+id/spinner_country"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:gravity="start"
-				android:layout_marginLeft="@dimen/space_huge"
-				android:layout_marginRight="@dimen/space_huge"
+				android:layout_marginLeft="@dimen/space_large"
+				android:layout_marginRight="@dimen/space_large"
 				tools:listitem="@layout/item_country_selected"/>
 
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginBottom="@dimen/space_huge"
-				android:layout_marginLeft="@dimen/space_huge"
-				android:layout_marginRight="@dimen/space_huge"
+				android:layout_marginBottom="@dimen/space_normal"
+				android:layout_marginLeft="@dimen/space_large"
+				android:layout_marginRight="@dimen/space_large"
 				android:layout_marginTop="@dimen/space_small">
 
 				<TextView
@@ -83,6 +88,8 @@
 			</LinearLayout>
 
 		</LinearLayout>
+
+		</android.support.v7.widget.CardView>
 
 	</ScrollView>
 

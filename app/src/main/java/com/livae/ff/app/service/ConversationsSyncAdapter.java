@@ -67,7 +67,8 @@ public class ConversationsSyncAdapter extends AbstractThreadedSyncAdapter {
 				Model model = Application.model();
 				model.parse(commentPosted);
 				model.save();
-			} catch (IOException ignore) {
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 			final Uri uriCommentSync = ConversationsProvider.getUriCommentSync(comment.id);
 			contentResolver.delete(uriCommentSync, null, null);

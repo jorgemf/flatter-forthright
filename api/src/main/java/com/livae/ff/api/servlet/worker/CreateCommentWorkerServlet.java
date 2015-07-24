@@ -3,21 +3,17 @@ package com.livae.ff.api.servlet.worker;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import com.livae.ff.api.Settings;
 import com.livae.ff.api.model.Comment;
 import com.livae.ff.api.model.Conversation;
 import com.livae.ff.api.model.PhoneUser;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import static com.livae.ff.api.OfyService.ofy;
 
 public class CreateCommentWorkerServlet extends HttpServlet {
 
@@ -72,6 +68,7 @@ public class CreateCommentWorkerServlet extends HttpServlet {
 		}
 	}
 
+	@SuppressWarnings("MethodWithMultipleLoops")
 	private void createNotificationsPublic(Comment comment, Conversation conversation) {
 		Set<Long> usersToNotify = new HashSet<>();
 		for (Long phone : conversation.getUsersNotification()) {
@@ -82,12 +79,13 @@ public class CreateCommentWorkerServlet extends HttpServlet {
 		if (conversationUser != null) {
 			usersToNotify.add(conversationUser.getPhone());
 		}
-		List<Comment> latest;
-		latest = ofy().load().type(Comment.class).filter("conversationId", conversation.getId())
-					  .order("-date").limit(Settings.NOTIFY_PUBLIC_COMMENTS_LAST_COMMENTERS).list();
-		for (Comment latestComment : latest) {
-			usersToNotify.add(latestComment.getUserId());
-		}
+// do not notify to last commenters
+//		List<Comment> latest;
+//		latest = ofy().load().type(Comment.class).filter("conversationId", conversation.getId())
+//					  .order("-date").limit(Settings.NOTIFY_PUBLIC_COMMENTS_LAST_COMMENTERS).list();
+//		for (Comment latestComment : latest) {
+//			usersToNotify.add(latestComment.getUserId());
+//		}
 		final Long commentId = comment.getId();
 		for (Long phone : usersToNotify) {
 			notify(phone, commentId);

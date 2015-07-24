@@ -223,16 +223,16 @@ public class AbstractChatActivity extends AbstractActivity {
 						setSubtitle(res.getString(R.string.chat_anonymous_me_subtitle,
 												  displayName));
 					}
-					if (imageUri != null) {
-						setImageUri(imageUri);
+					if (roomName != null) {
+						setRandomImageSeed(roomName);
 					}
 				} else {
 					// someone started the chat
-					if (displayName != null) {
+					if (displayName == null) {
 						setSubtitle(R.string.chat_anonymous_other_subtitle);
 					}
-					if (imageSeed != null) {
-						setRandomImageSeed(imageSeed);
+					if (roomName != null) {
+						setRandomImageSeed(roomName);
 					}
 				}
 				break;
@@ -321,6 +321,12 @@ public class AbstractChatActivity extends AbstractActivity {
 	}
 
 	public void setRandomImageSeed(long imageSeed) {
+		this.imageAnonymous.setSeed(imageSeed);
+		this.imageAnonymous.setVisibility(View.VISIBLE);
+		this.imageUser.setVisibility(View.GONE);
+	}
+
+	public void setRandomImageSeed(String imageSeed) {
 		this.imageAnonymous.setSeed(imageSeed);
 		this.imageAnonymous.setVisibility(View.VISIBLE);
 		this.imageUser.setVisibility(View.GONE);

@@ -53,7 +53,7 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		isMyPublicChat = Application.appUser().getUserPhone().equals(conversationPhone);
-		setHasOptionsMenu(true);
+		setHasOptionsMenu(!isMyPublicChat);
 	}
 
 	@Override

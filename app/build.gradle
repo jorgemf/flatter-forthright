@@ -18,6 +18,7 @@ android {
 		versionName "0.9"
 		buildConfigField "int", "BUILD_DATE", getBuildDate()
 		buildConfigField "boolean", "DEV", "false"
+		resConfigs "en"
 	}
 	signingConfigs {
 		release {

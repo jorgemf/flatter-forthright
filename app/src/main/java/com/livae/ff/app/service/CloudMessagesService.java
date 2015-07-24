@@ -122,7 +122,7 @@ public class CloudMessagesService extends IntentService {
 									 Table.Conversation.LAST_MESSAGE_DATE};
 		final String selection =
 		  Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS + " AND " +
-		  Table.Conversation.TYPE + "=?";
+		  Table.Conversation.TYPE + "=? AND " + Table.Comment.IS_ME + "=0";
 		final String[] selectionArgs = {chatType.name()};
 		final String order = "-" + Table.Comment.DATE;
 		Cursor cursor = contentResolver.query(uri, projection, selection, selectionArgs, order);
@@ -230,7 +230,7 @@ public class CloudMessagesService extends IntentService {
 									 Table.Conversation.ALIAS_ID};
 		final String selection =
 		  Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS + " AND " +
-		  Table.Conversation.TYPE + " IN (?,?,?)";
+		  Table.Conversation.TYPE + " IN (?,?,?) AND " + Table.Comment.IS_ME + "=0";
 		final String[] selectionArgs = {ChatType.PRIVATE.name(), ChatType.SECRET.name(),
 										ChatType.PRIVATE_ANONYMOUS.name()};
 		final String order = "-" + Table.Comment.DATE;
@@ -261,7 +261,7 @@ public class CloudMessagesService extends IntentService {
 				builder.setContentText(text);
 				NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle(builder);
 				style.setBigContentTitle(title);
-				style.setSummaryText(text);
+				style.bigText(text);
 				builder.setStyle(style);
 				Long conversationId = cursor.getLong(iConversationId);
 				Long lastAccess = cursor.getLong(iLastAccess);
