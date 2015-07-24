@@ -264,12 +264,12 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	}
 
 	private void sendVerificationSMS(final String phoneNumber, int code) {
-		SmsManager sms = SmsManager.getDefault();
 		//noinspection ConstantConditions,PointlessBooleanExpression
 		final String message = getActivity().getString(R.string.verification_sms, code);
 		Log.i(LOG_TAG, "SENT num: " + phoneNumber + " body: " + message);
 		//noinspection PointlessBooleanExpression,PointlessBooleanExpression,ConstantConditions
 		if (!BuildConfig.DEV && !BuildConfig.DEBUG) {
+			SmsManager sms = SmsManager.getDefault();
 			sms.sendTextMessage(phoneNumber, null, message, null, null);
 		} else {
 			final Handler handler = new Handler();

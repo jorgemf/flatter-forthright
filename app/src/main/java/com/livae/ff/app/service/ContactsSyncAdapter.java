@@ -148,7 +148,8 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 			list.addAll(contacts);
 			numbers.setNumbers(list);
 			Numbers validNumbers = API.endpoint().getContacts(numbers).execute();
-			if (validNumbers != null && validNumbers.size() > 0) {
+			if (validNumbers != null && validNumbers.size() > 0 &&
+				validNumbers.getNumbers() != null) {
 				final String selection = Table.LocalUser.PHONE + "=?";
 				final String[] selectionArgs = new String[1];
 				for (Long phone : validNumbers.getNumbers()) {

@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.activity.ContactsActivity;
 import com.livae.ff.app.adapter.UsersAdapter;
@@ -104,20 +105,22 @@ public class ContactsFragment extends AbstractFragment
 				String selection;
 				String[] selectionArgs;
 				String order;
+				String myPhone = Application.appUser().getUserPhone().toString();
 				if (TextUtils.isEmpty(searchText)) {
 					selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND " +
-								Table.LocalUser.ACCEPTS_PRIVATE;
-					selectionArgs = null;
+								Table.LocalUser.ACCEPTS_PRIVATE + " AND " +
+								Table.LocalUser.PHONE + " !=?";
+					selectionArgs = new String[]{myPhone};
 				} else {
 					selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND " +
 								Table.LocalUser.ACCEPTS_PRIVATE + " AND " +
-								Table.LocalUser.CONTACT_NAME + " LIKE ? ";
-					selectionArgs = new String[]{"%" + searchText + "%"};
+								Table.LocalUser.CONTACT_NAME + " LIKE ? AND " +
+								Table.LocalUser.PHONE + " !=?";
+					selectionArgs = new String[]{"%" + searchText + "%", myPhone};
 				}
 				order = Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
 				return new CursorLoader(getActivity(), ContactsProvider.getUriContacts(),
-										UsersAdapter.PROJECTION, selection, selectionArgs,
-										order);
+										UsersAdapter.PROJECTION, selection, selectionArgs, order);
 			// break
 		}
 		return null;
