@@ -15,7 +15,7 @@ android {
 		minSdkVersion 16
 		targetSdkVersion 22
 		versionCode 1
-		versionName "0.9"
+		versionName "0.1"
 		buildConfigField "int", "BUILD_DATE", getBuildDate()
 		buildConfigField "boolean", "DEV", "false"
 		resConfigs "en"
