@@ -61,11 +61,11 @@
 	<!-- Phone users -->
 
 	<!-- for stats -->
-	<datastore-index ancestor="false" kind="PhoneUser" source="manual">
-		<property direction="asc" name="created"/>
-	</datastore-index>
-	<datastore-index ancestor="false" kind="FlagComment" source="manual">
-		<property direction="asc" name="lastAccess"/>
-	</datastore-index>
+	<!--<datastore-index ancestor="false" kind="PhoneUser" source="manual">-->
+		<!--<property direction="asc" name="created"/>-->
+	<!--</datastore-index>-->
+	<!--<datastore-index ancestor="false" kind="FlagComment" source="manual">-->
+		<!--<property direction="asc" name="lastAccess"/>-->
+	<!--</datastore-index>-->
 
 </datastore-indexes>

@@ -44,13 +44,7 @@ public class ChatsPublicFragment extends AbstractFragment
 
 	private TextView emptyView;
 
-	private ContentObserver contentObserver = new ContentObserver(null) {
-
-		@Override
-		public void onChange(boolean selfChange) {
-			getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, ChatsPublicFragment.this);
-		}
-	};
+	private ContentObserver contentObserver;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +53,14 @@ public class ChatsPublicFragment extends AbstractFragment
 			chatType = (Constants.ChatType) savedInstanceState.getSerializable(SAVE_COMMENT_TYPE);
 		}
 		getLoaderManager().initLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
+		contentObserver = new ContentObserver(null) {
+
+			@Override
+			public void onChange(boolean selfChange) {
+				getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY,
+												 ChatsPublicFragment.this);
+			}
+		};
 	}
 
 	@Nullable

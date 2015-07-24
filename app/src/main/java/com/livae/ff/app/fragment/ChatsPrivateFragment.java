@@ -43,18 +43,20 @@ public class ChatsPrivateFragment extends AbstractFragment
 
 	private TextView tutorialView;
 
-	private ContentObserver contentObserver = new ContentObserver(null) {
-
-		@Override
-		public void onChange(boolean selfChange) {
-			getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, ChatsPrivateFragment.this);
-		}
-	};
+	private ContentObserver contentObserver;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLoaderManager().initLoader(LOAD_CHATS, Bundle.EMPTY, this);
+		contentObserver = new ContentObserver(null) {
+
+			@Override
+			public void onChange(boolean selfChange) {
+				getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY,
+												 ChatsPrivateFragment.this);
+			}
+		};
 	}
 
 	@Nullable
