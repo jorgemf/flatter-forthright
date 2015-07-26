@@ -14,8 +14,8 @@ android {
 		applicationId "com.livae.ff.app"
 		minSdkVersion 16
 		targetSdkVersion 22
-		versionCode 1
-		versionName "0.1"
+		versionCode 2
+		versionName "0.2"
 		buildConfigField "int", "BUILD_DATE", getBuildDate()
 		buildConfigField "boolean", "DEV", "false"
 		resConfigs "en"
@@ -82,8 +82,10 @@ buildscript {
 apply plugin: 'com.github.triplet.play'
 
 play {
-	serviceAccountEmail = '912982181540-t4mv71tkl7so07u4pa12tusqggnfnou9@developer.gserviceaccount.com'
-	pk12File = file('../flatter-forthright-853f79f83cc5.p12')
+//	serviceAccountEmail = '912982181540-t4mv71tkl7so07u4pa12tusqggnfnou9@developer.gserviceaccount.com'
+	serviceAccountEmail = '545525739041-e0riq0edug1746n71cnejp2nh43609t7@developer.gserviceaccount.com'
+//	pk12File = file('../flatter-forthright-853f79f83cc5.p12')
+	pk12File = file('../AppHunt-291bdc0e7da7.p12')
 	uploadImages = true
 	track = 'alpha'
 }

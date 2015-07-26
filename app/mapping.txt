@@ -22923,6 +22923,7 @@ com.livae.ff.api.ff.model.Comment -> com.livae.ff.api.ff.model.Comment:
     java.lang.Long id -> id
     java.lang.Boolean isMe -> isMe
     com.google.api.client.util.DateTime lastTimeFlagged -> lastTimeFlagged
+    java.lang.Integer notifyTo -> notifyTo
     java.lang.Integer timesFlagged -> timesFlagged
     java.util.List timesFlaggedType -> timesFlaggedType
     java.lang.String userMark -> userMark
@@ -22948,6 +22949,8 @@ com.livae.ff.api.ff.model.Comment -> com.livae.ff.api.ff.model.Comment:
     com.livae.ff.api.ff.model.Comment setIsMe(java.lang.Boolean) -> setIsMe
     com.google.api.client.util.DateTime getLastTimeFlagged() -> getLastTimeFlagged
     com.livae.ff.api.ff.model.Comment setLastTimeFlagged(com.google.api.client.util.DateTime) -> setLastTimeFlagged
+    java.lang.Integer getNotifyTo() -> getNotifyTo
+    com.livae.ff.api.ff.model.Comment setNotifyTo(java.lang.Integer) -> setNotifyTo
     java.lang.Integer getTimesFlagged() -> getTimesFlagged
     com.livae.ff.api.ff.model.Comment setTimesFlagged(java.lang.Integer) -> setTimesFlagged
     java.util.List getTimesFlaggedType() -> getTimesFlaggedType
@@ -23975,10 +23978,10 @@ com.livae.ff.app.adapter.ChatsPublicAdapter -> com.livae.ff.app.a.c:
     com.livae.ff.app.listener.ChatPublicClickListener chatPublicClickListener -> e
     com.livae.ff.common.Constants$ChatType chatType -> f
     void findIndexes(android.database.Cursor) -> a
+    long getItemId(int) -> getItemId
     void bindCustomViewHolder(com.livae.ff.app.viewholders.UserViewHolder,int,android.database.Cursor) -> a
     com.livae.ff.app.viewholders.UserViewHolder onCreateViewHolder(android.view.ViewGroup,int) -> a
     void onBindViewHolder(com.livae.ff.app.viewholders.UserViewHolder,int) -> a
-    long getItemId(int) -> getItemId
     int getItemCount() -> getItemCount
     void bindCustomViewHolder(android.support.v7.widget.RecyclerView$ViewHolder,int,android.database.Cursor) -> a
     void onBindViewHolder(android.support.v7.widget.RecyclerView$ViewHolder,int) -> onBindViewHolder
@@ -24892,10 +24895,11 @@ com.livae.ff.app.utils.TextUtils -> com.livae.ff.app.j.q:
     android.text.style.StyleSpan boldSpan -> a
     android.text.SpannableString setBoldText(java.lang.CharSequence,java.lang.CharSequence,boolean) -> a
 com.livae.ff.app.utils.UnitUtils -> com.livae.ff.app.j.r:
-    java.text.DateFormat DATE_FORMAT_THIS_YEAR -> a
-    java.text.DateFormat DATE_FORMAT -> b
-    java.text.DateFormat TIME_FORMAT -> c
-    java.lang.CharSequence getAgoTime(android.content.Context,long) -> a
+    java.text.DateFormat DATE_FORMAT -> a
+    java.text.DateFormat TIME_FORMAT -> b
+    java.lang.CharSequence getTime(android.content.Context,long) -> a
+    java.lang.CharSequence getDate(android.content.Context,long) -> b
+    boolean isItSameDay(long,long) -> a
 com.livae.ff.app.view.AnonymousImage -> com.livae.ff.app.view.AnonymousImage:
     int[] COLOR_PALETTE -> a
     long seed -> b
@@ -24956,15 +24960,16 @@ com.livae.ff.app.viewholders.CommentViewHolder -> com.livae.ff.app.k.c:
     android.widget.TextView userAlias -> d
     android.widget.TextView comment -> e
     android.widget.TextView date -> f
-    com.livae.ff.app.listener.CommentActionListener commentActionListener -> g
-    android.view.View extraPadding -> h
-    android.view.View arrow -> i
-    android.view.View progressBar -> j
+    android.widget.TextView dayDate -> g
+    com.livae.ff.app.listener.CommentActionListener commentActionListener -> h
+    android.view.View extraPadding -> i
+    android.view.View arrow -> j
+    android.view.View progressBar -> k
     void clear() -> a
     void setCommentId(java.lang.Long) -> a
     void setAnonymousImageSeed(long) -> a
     void setAnonymousNick(java.lang.String) -> a
-    void setComment(java.lang.String,long) -> a
+    void setComment(java.lang.String,long,java.lang.Long) -> a
     void setVotes(int,int) -> a
     void onClick(android.view.View) -> onClick
     void setVoteType(com.livae.ff.common.Constants$CommentVoteType) -> a
@@ -25045,7 +25050,7 @@ com.livae.ff.common.model.NotificationComment -> com.livae.ff.common.model.Notif
     java.lang.Long userId -> userId
     java.lang.Long aliasId -> aliasId
     java.lang.String alias -> alias
-    java.util.Date date -> date
+    java.lang.Long date -> date
     java.lang.String comment -> comment
     java.lang.Boolean isMe -> isMe
     java.lang.String userMark -> userMark
@@ -25060,8 +25065,8 @@ com.livae.ff.common.model.NotificationComment -> com.livae.ff.common.model.Notif
     void setAliasId(java.lang.Long) -> setAliasId
     java.lang.String getAlias() -> getAlias
     void setAlias(java.lang.String) -> setAlias
-    java.util.Date getDate() -> getDate
-    void setDate(java.util.Date) -> setDate
+    java.lang.Long getDate() -> getDate
+    void setDate(java.lang.Long) -> setDate
     java.lang.String getComment() -> getComment
     void setComment(java.lang.String) -> setComment
     java.lang.Boolean getIsMe() -> getIsMe
