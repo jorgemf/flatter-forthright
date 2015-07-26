@@ -49,14 +49,6 @@ public class ChatsPrivateFragment extends AbstractFragment
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLoaderManager().initLoader(LOAD_CHATS, Bundle.EMPTY, this);
-		contentObserver = new ContentObserver(null) {
-
-			@Override
-			public void onChange(boolean selfChange) {
-				getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY,
-												 ChatsPrivateFragment.this);
-			}
-		};
 	}
 
 	@Nullable
@@ -81,8 +73,18 @@ public class ChatsPrivateFragment extends AbstractFragment
 	public void onResume() {
 		super.onResume();
 		getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, this);
-		final ContentResolver resolver = getActivity().getContentResolver();
-		resolver.registerContentObserver(ContactsProvider.getUriContacts(), true, contentObserver);
+		if (contentObserver == null) {
+			contentObserver = new ContentObserver(null) {
+
+				@Override
+				public void onChange(boolean selfChange) {
+					getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY,
+													 ChatsPrivateFragment.this);
+				}
+			};
+		}
+		final ContentResolver cr = getActivity().getContentResolver();
+		cr.registerContentObserver(ContactsProvider.getUriContacts(), true, contentObserver);
 	}
 
 	@Override

@@ -67,6 +67,9 @@ public class Comment implements Serializable {
 
 	private UserMark userMark;
 
+	@Ignore
+	private Integer notifyTo;
+
 	public Comment() {
 	}
 
@@ -235,5 +238,28 @@ public class Comment implements Serializable {
 
 	public void setUserMark(UserMark userMark) {
 		this.userMark = userMark;
+	}
+
+	public Integer getNotifyTo() {
+		return notifyTo;
+	}
+
+	public void setNotifyTo(Integer notifyTo) {
+		this.notifyTo = notifyTo;
+	}
+
+	public void increaseNotifyTo() {
+		if (notifyTo == null) {
+			notifyTo = 1;
+		}
+	}
+
+	public void decreaseNotifyTo() {
+		if (notifyTo != null) {
+			notifyTo--;
+			if (notifyTo <= 0) {
+				notifyTo = null;
+			}
+		}
 	}
 }

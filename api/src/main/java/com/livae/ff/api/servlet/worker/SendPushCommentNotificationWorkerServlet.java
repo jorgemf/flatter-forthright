@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static com.livae.ff.api.OfyService.ofy;
+
 public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 
 	@Override
@@ -37,6 +39,18 @@ public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 			Conversation conversation = Conversation.get(comment.getConversationId());
 			NotificationsUtil.sendPushNotification(user, createNotification(comment, conversation),
 												   PushNotificationType.COMMENT);
+			switch (conversation.getType()) {
+				case PRIVATE:
+				case PRIVATE_ANONYMOUS:
+				case SECRET:
+					comment.decreaseNotifyTo();
+					if (comment.getNotifyTo() == null) {
+						ofy().delete().entity(comment);
+					} else {
+						ofy().save().entity(comment);
+					}
+					break;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -49,7 +63,7 @@ public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 		notificationComment.setId(comment.getId());
 		notificationComment.setIsMe(comment.getIsMe());
 		notificationComment.setComment(comment.getComment());
-		notificationComment.setDate(comment.getDate());
+		notificationComment.setDate(comment.getDate().getTime());
 		if (comment.getUserMark() != null) {
 			notificationComment.setUserMark(comment.getUserMark().name());
 		}

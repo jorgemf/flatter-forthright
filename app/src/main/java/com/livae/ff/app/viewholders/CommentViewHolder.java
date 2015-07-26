@@ -31,6 +31,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 
 	private TextView date;
 
+	private TextView dayDate;
+
 	private CommentActionListener commentActionListener;
 
 	private View extraPadding;
@@ -47,6 +49,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		userAlias = (TextView) itemView.findViewById(R.id.anonymous_name);
 		comment = (TextView) itemView.findViewById(R.id.comment);
 		date = (TextView) itemView.findViewById(R.id.comment_date);
+		dayDate = (TextView) itemView.findViewById(R.id.day_date);
 		extraPadding = itemView.findViewById(R.id.extra_padding);
 		arrow = itemView.findViewById(R.id.comment_arrow);
 		progressBar = itemView.findViewById(R.id.progress_bar);
@@ -82,6 +85,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		comment.setText(null);
 		date.setText(null);
 		date.setVisibility(View.VISIBLE);
+		dayDate.setVisibility(View.GONE);
+		dayDate.setText(null);
 //		comment.setOnLongClickListener(null);
 	}
 
@@ -117,8 +122,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		}
 	}
 
-	public void setComment(String comment, long date) {
-		final CharSequence dateString = UnitUtils.getAgoTime(this.date.getContext(), date);
+	public void setComment(String comment, long date, Long previousDate) {
+		final CharSequence dateString = UnitUtils.getTime(this.date.getContext(), date);
 		this.date.setText(dateString);
 		final String sufix = " " + dateString;
 		comment = comment + sufix;
@@ -126,6 +131,10 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		span.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), comment.length() - sufix.length(),
 					 comment.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		this.comment.setText(span);
+		if (previousDate == null || !UnitUtils.isItSameDay(date, previousDate)) {
+			dayDate.setVisibility(View.VISIBLE);
+			dayDate.setText(UnitUtils.getDate(dayDate.getContext(), date));
+		}
 	}
 
 	public void setVotes(int upVotes, int downVotes) {

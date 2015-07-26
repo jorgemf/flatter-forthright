@@ -1,5 +1,6 @@
 package com.livae.ff.app.fragment;
 
+import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -53,14 +54,6 @@ public class ChatsPublicFragment extends AbstractFragment
 			chatType = (Constants.ChatType) savedInstanceState.getSerializable(SAVE_COMMENT_TYPE);
 		}
 		getLoaderManager().initLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
-		contentObserver = new ContentObserver(null) {
-
-			@Override
-			public void onChange(boolean selfChange) {
-				getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY,
-												 ChatsPublicFragment.this);
-			}
-		};
 	}
 
 	@Nullable
@@ -84,9 +77,18 @@ public class ChatsPublicFragment extends AbstractFragment
 	public void onResume() {
 		super.onResume();
 		getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
-		getActivity().getContentResolver().registerContentObserver(ContactsProvider
-																	 .getUriContacts(), true,
-																   contentObserver);
+		if (contentObserver == null) {
+			contentObserver = new ContentObserver(null) {
+
+				@Override
+				public void onChange(boolean selfChange) {
+					getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY,
+													 ChatsPublicFragment.this);
+				}
+			};
+		}
+		final ContentResolver cr = getActivity().getContentResolver();
+		cr.registerContentObserver(ContactsProvider.getUriContacts(), true, contentObserver);
 	}
 
 	@Override

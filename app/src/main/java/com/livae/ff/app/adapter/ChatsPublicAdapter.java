@@ -61,6 +61,16 @@ public class ChatsPublicAdapter extends UsersAdapter {
 	}
 
 	@Override
+	public long getItemId(int position) {
+		if (position > 0 || !TextUtils.isEmpty(search)) {
+			position--;
+			return super.getItemId(position);
+		} else {
+			return RecyclerView.NO_ID;
+		}
+	}
+
+	@Override
 	protected void bindCustomViewHolder(UserViewHolder userHolder, int position, Cursor cursor) {
 		ChatPublicViewHolder holder = (ChatPublicViewHolder) userHolder;
 		if (position > 0 || !TextUtils.isEmpty(search)) {
@@ -76,7 +86,7 @@ public class ChatsPublicAdapter extends UsersAdapter {
 				holder.setRoomName(cursor.getString(iRoomName));
 			}
 			if (!cursor.isNull(iUnreadCount)) {
-			holder.setUnreadCount(cursor.getInt(iUnreadCount));
+				holder.setUnreadCount(cursor.getInt(iUnreadCount));
 			}
 		} else {
 			holder.clear();
@@ -119,16 +129,6 @@ public class ChatsPublicAdapter extends UsersAdapter {
 		int size = getItemCount();
 		if (position >= 0 && position < size) {
 			bindCustomViewHolder(viewHolder, position, getCursor());
-		}
-	}
-
-	@Override
-	public long getItemId(int position) {
-		if (position > 0 || !TextUtils.isEmpty(search)) {
-			position--;
-			return super.getItemId(position);
-		} else {
-			return RecyclerView.NO_ID;
 		}
 	}
 

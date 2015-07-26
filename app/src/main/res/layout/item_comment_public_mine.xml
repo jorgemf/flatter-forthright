@@ -13,13 +13,30 @@
 		android:layout_height="@dimen/space_normal"
 		android:layout_alignParentTop="true"/>
 
+	<TextView
+		android:id="@+id/day_date"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/white_circle"
+		android:layout_below="@id/extra_padding"
+		android:layout_centerHorizontal="true"
+		android:layout_margin="@dimen/space_normal"
+		android:lines="1"
+		android:paddingBottom="@dimen/space_small"
+		android:paddingLeft="@dimen/space_normal"
+		android:paddingRight="@dimen/space_normal"
+		android:paddingTop="@dimen/space_small"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="@color/black_light"
+		tools:text="24 Jul 2015"/>
+
 	<com.livae.ff.app.view.AnonymousImage
 		android:id="@+id/anonymous_image"
 		android:layout_width="@dimen/item_comment_user_image_size"
 		android:layout_height="@dimen/item_comment_user_image_size"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:layout_below="@id/extra_padding"
+		android:layout_below="@id/day_date"
 		android:layout_marginEnd="@dimen/space_small"
 		android:layout_marginRight="@dimen/space_small"
 		tools:background="@drawable/me_drawable"/>
@@ -30,7 +47,7 @@
 		android:layout_height="@dimen/item_comment_user_image_size"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:layout_below="@id/extra_padding"
+		android:layout_below="@id/day_date"
 		android:layout_marginEnd="@dimen/space_small"
 		android:layout_marginRight="@dimen/space_small"
 		android:src="@drawable/ic_account_circle_white_48dp"/>
@@ -46,7 +63,7 @@
 		android:id="@+id/comment_arrow"
 		android:layout_width="@dimen/space_large"
 		android:layout_height="@dimen/space_medium"
-		android:layout_below="@id/extra_padding"
+		android:layout_below="@id/day_date"
 		android:layout_marginTop="@dimen/space_tiniest"
 		android:layout_toLeftOf="@id/anonymous_image"
 		android:layout_toStartOf="@id/anonymous_image"
@@ -57,7 +74,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:elevation="@dimen/space_small"
-		android:layout_below="@id/extra_padding"
+		android:layout_below="@id/day_date"
 		android:layout_marginBottom="@dimen/space_tiniest"
 		android:layout_marginEnd="@dimen/space_normal"
 		android:layout_marginLeft="@dimen/item_comment_user_image_size_padding"

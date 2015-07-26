@@ -154,7 +154,11 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder {
 			chatPrivateModel.conversationSubtitleView.setText(message);
 		}
 		if (dateTextView != null) {
-			dateTextView.setText(UnitUtils.getAgoTime(dateTextView.getContext(), date));
+			if (UnitUtils.isItSameDay(System.currentTimeMillis(), date)) {
+				dateTextView.setText(UnitUtils.getTime(dateTextView.getContext(), date));
+			} else {
+				dateTextView.setText(UnitUtils.getDate(dateTextView.getContext(), date));
+			}
 		}
 		chatPrivateModel.lastMessage = date;
 	}

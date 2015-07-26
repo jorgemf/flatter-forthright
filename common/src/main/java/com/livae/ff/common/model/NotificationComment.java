@@ -2,8 +2,6 @@ package com.livae.ff.common.model;
 
 import com.livae.ff.common.Constants;
 
-import java.util.Date;
-
 public class NotificationComment implements Notification {
 
 	private Long id;
@@ -18,7 +16,7 @@ public class NotificationComment implements Notification {
 
 	private String alias;
 
-	private Date date;
+	private Long date;
 
 	private String comment;
 
@@ -68,11 +66,11 @@ public class NotificationComment implements Notification {
 		this.alias = alias;
 	}
 
-	public Date getDate() {
+	public Long getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(Long date) {
 		this.date = date;
 	}
 

@@ -52,8 +52,9 @@ public class NotificationDisabledReceiver extends BroadcastReceiver {
 	public void unregister(Context context) {
 		try {
 			context.unregisterReceiver(this);
-		} catch (IllegalArgumentException ignore) {
+		} catch (IllegalArgumentException e) {
 			// it happens when the theme changes
+			e.printStackTrace();
 		}
 	}
 

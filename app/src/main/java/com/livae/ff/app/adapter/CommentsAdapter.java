@@ -214,7 +214,13 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		}
 		holder.setCommentId(commentId);
 		long date = cursor.getLong(iDate);
-		holder.setComment(cursor.getString(iComment), date);
+		Long previousDate = null;
+		if (!cursor.isLast()) {
+			cursor.moveToNext();
+			previousDate = cursor.getLong(iDate);
+			cursor.moveToPrevious();
+		}
+		holder.setComment(cursor.getString(iComment), date, previousDate);
 		int agreeVotes = cursor.getInt(iAgreeVotes);
 		int disagreeVotes = cursor.getInt(iDisagreeVotes);
 		CommentVoteType voteType = null;

@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static com.livae.ff.api.OfyService.ofy;
+
 public class CreateCommentWorkerServlet extends HttpServlet {
 
 	@Override
@@ -47,24 +49,36 @@ public class CreateCommentWorkerServlet extends HttpServlet {
 	}
 
 	private void createNotificationsPrivate(Comment comment, Conversation conversation) {
+		boolean updateComment = false;
 		Long userPhone = comment.getUserId();
 		final Long commentId = comment.getId();
 		for (Long phone : conversation.getUsers()) {
 			PhoneUser user = PhoneUser.get(phone);
 			if (!user.isBlockedPhone(userPhone)) {
 				notify(user.getPhone(), commentId);
+				comment.increaseNotifyTo();
+				updateComment = true;
 			}
+		}
+		if (updateComment) {
+			ofy().save().entity(comment).now();
 		}
 	}
 
 	private void createNotificationsPrivateAnonymous(Comment comment, Conversation conversation) {
+		boolean updateComment = false;
 		Long userPhone = comment.getUserId();
 		final Long commentId = comment.getId();
 		for (Long phone : conversation.getUsers()) {
 			PhoneUser user = PhoneUser.get(phone);
 			if (!user.isBlockedAnonymousPhone(userPhone)) {
 				notify(user.getPhone(), commentId);
+				comment.increaseNotifyTo();
+				updateComment = true;
 			}
+		}
+		if (updateComment) {
+			ofy().save().entity(comment).now();
 		}
 	}
 

@@ -61,11 +61,11 @@
 		<activity
 			android:name="com.livae.ff.app.activity.ChatPublicActivity"
 			android:screenOrientation="portrait"
-			android:windowSoftInputMode="adjustResize"/>
+			android:windowSoftInputMode="adjustResize|stateHidden"/>
 		<activity
 			android:name="com.livae.ff.app.activity.ChatPrivateActivity"
 			android:screenOrientation="portrait"
-			android:windowSoftInputMode="adjustResize"/>
+			android:windowSoftInputMode="adjustResize|stateHidden"/>
 		<activity
 			android:name="com.livae.ff.app.activity.WebViewActivity"
 			android:screenOrientation="portrait"/>

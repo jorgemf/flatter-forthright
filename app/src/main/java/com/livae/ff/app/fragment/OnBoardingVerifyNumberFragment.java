@@ -1,5 +1,7 @@
 package com.livae.ff.app.fragment;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -168,13 +170,13 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	@Override
 	public void onResume() {
 		super.onResume();
-		smsReceiver = new IncomingSms();
 		IntentFilter intentFilter;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			intentFilter = new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
 		} else {
 			intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 		}
+		smsReceiver = new IncomingSms();
 		getActivity().registerReceiver(smsReceiver, intentFilter);
 		PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
 		final Long date = phoneVerification.getDate();
@@ -194,6 +196,7 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	public void onPause() {
 		super.onPause();
 		getActivity().unregisterReceiver(smsReceiver);
+		smsReceiver = null;
 	}
 
 	@Override
@@ -270,7 +273,12 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		//noinspection PointlessBooleanExpression,PointlessBooleanExpression,ConstantConditions
 		if (!BuildConfig.DEV && !BuildConfig.DEBUG) {
 			SmsManager sms = SmsManager.getDefault();
-			sms.sendTextMessage(phoneNumber, null, message, null, null);
+			// not sure why some mobiles need this to work
+			String sent = "android.telephony.SmsManager.STATUS_ON_ICC_SENT";
+			PendingIntent sentIntent;
+			sentIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(sent), 0);
+
+			sms.sendTextMessage(phoneNumber, null, message, sentIntent, null);
 		} else {
 			final Handler handler = new Handler();
 			handler.postDelayed(new Runnable() {
@@ -428,6 +436,30 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 						Analytics.logAndReport(e);
 					}
 				}
+			}
+		}
+	}
+
+	class SmsBroadscastReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			switch (getResultCode()) {
+				case Activity.RESULT_OK:
+					Log.i(LOG_TAG, "SMS sent");
+					break;
+				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+					Log.e(LOG_TAG, "Generic failure");
+					break;
+				case SmsManager.RESULT_ERROR_NO_SERVICE:
+					Log.e(LOG_TAG, "No service");
+					break;
+				case SmsManager.RESULT_ERROR_NULL_PDU:
+					Log.e(LOG_TAG, "PDU NULL");
+					break;
+				case SmsManager.RESULT_ERROR_RADIO_OFF:
+					Log.e(LOG_TAG, "Radio off");
+					break;
 			}
 		}
 	}

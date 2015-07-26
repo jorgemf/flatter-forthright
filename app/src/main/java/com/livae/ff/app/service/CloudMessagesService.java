@@ -50,47 +50,51 @@ public class CloudMessagesService extends IntentService {
 			switch (type) {
 				case COMMENT:
 					NotificationComment notificationComment = (NotificationComment) notification;
-					String conversationType = notificationComment.getConversationType();
-					// increase unread count of conversation
-					Long conversationId = notificationComment.getConversationId();
-					Uri uriConversation = ConversationsProvider
-											.getUriConversationIncreaseUnread(conversationId);
-					context.getContentResolver().update(uriConversation, null, null, null);
-					// notify
-					try {
-						ChatType chatType = ChatType.valueOf(conversationType);
+					if (!notificationComment.getIsMe()) {
+						String conversationType = notificationComment.getConversationType();
+						// increase unread count of conversation
+						Long conversationId = notificationComment.getConversationId();
+						Uri uriConversation = ConversationsProvider
+												.getUriConversationIncreaseUnread(conversationId);
+						context.getContentResolver().update(uriConversation, null, null, null);
+						// notify
+						try {
+							ChatType chatType = ChatType.valueOf(conversationType);
 
-						switch (chatType) {
-							case FORTHRIGHT:
-								if (conversationId.equals(Application.appUser().getChats()
-																	 .getChatForthrightId())) {
-									Application.appUser().getChats().increaseChatForthrightUnread();
-								}
-								if (notifications.isCommentsForthrightMe()) {
-									notifyChatsPublic(context, ChatType.FORTHRIGHT);
-								}
-								break;
-							case FLATTER:
-								if (conversationId.equals(Application.appUser().getChats()
-																	 .getChatFlatterId())) {
-									Application.appUser().getChats().increaseChatFlatterUnread();
-								}
-								if (notifications.isCommentsFlatteredMe()) {
-									notifyChatsPublic(context, ChatType.FLATTER);
-								}
-								break;
-							case PRIVATE:
-							case SECRET:
-							case PRIVATE_ANONYMOUS:
-								if (notifications.isCommentsChat()) {
-									notifyChatsPrivate(context);
-								}
-								break;
+							switch (chatType) {
+								case FORTHRIGHT:
+									if (conversationId.equals(Application.appUser().getChats()
+																		 .getChatForthrightId())) {
+										Application.appUser().getChats()
+												   .increaseChatForthrightUnread();
+									}
+									if (notifications.isCommentsForthrightMe()) {
+										notifyChatsPublic(context, ChatType.FORTHRIGHT);
+									}
+									break;
+								case FLATTER:
+									if (conversationId.equals(Application.appUser().getChats()
+																		 .getChatFlatterId())) {
+										Application.appUser().getChats()
+												   .increaseChatFlatterUnread();
+									}
+									if (notifications.isCommentsFlatteredMe()) {
+										notifyChatsPublic(context, ChatType.FLATTER);
+									}
+									break;
+								case PRIVATE:
+								case SECRET:
+								case PRIVATE_ANONYMOUS:
+									if (notifications.isCommentsChat()) {
+										notifyChatsPrivate(context);
+									}
+									break;
+							}
+						} catch (IllegalArgumentException ignore) {
+
 						}
-					} catch (IllegalArgumentException ignore) {
-
+						break;
 					}
-					break;
 			}
 		}
 	}

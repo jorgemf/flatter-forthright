@@ -97,14 +97,6 @@ public abstract class AbstractChatFragment
 			lastMessage = extras.getLong(AbstractChatActivity.EXTRA_LAST_MESSAGE_DATE);
 		}
 		super.onCreate(savedInstanceState);
-
-		contentObserver = new ContentObserver(new Handler()) {
-
-			@Override
-			public void onChange(boolean selfChange) {
-				reloadCursor();
-			}
-		};
 		notificationDisabledReceiver = new NotificationDisabledReceiver();
 		notificationDisabledReceiver.setListener(this);
 
@@ -145,7 +137,9 @@ public abstract class AbstractChatFragment
 		super.onPause();
 		notificationDisabledReceiver.unregister(getActivity());
 		final ContentResolver cr = getActivity().getContentResolver();
-		cr.unregisterContentObserver(contentObserver);
+		if (contentObserver != null) {
+			cr.unregisterContentObserver(contentObserver);
+		}
 		if (conversationId != null) {
 			leaveConversation();
 		}
@@ -245,6 +239,16 @@ public abstract class AbstractChatFragment
 
 	private void registerContentObserver() {
 		if (conversationId != null) {
+
+			if (contentObserver == null) {
+				contentObserver = new ContentObserver(new Handler()) {
+
+					@Override
+					public void onChange(boolean selfChange) {
+						reloadCursor();
+					}
+				};
+			}
 			final ContentResolver cr = getActivity().getContentResolver();
 			cr.registerContentObserver(ConversationsProvider.getUriConversation(conversationId),
 									   true, contentObserver);
