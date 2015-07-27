@@ -31,7 +31,8 @@ public class ChatPublicActivity extends AbstractChatActivity {
 							  String anonymousName, String imageUri) {
 		Intent intent = new Intent(activity, ChatPublicActivity.class);
 		AbstractChatActivity.startIntent(intent, activity, chatType, conversationId, phoneNumber,
-										 displayName, anonymousName, imageUri, null, null, null);
+										 displayName, anonymousName, imageUri, null, null, null,
+										 null);
 	}
 
 	@Override

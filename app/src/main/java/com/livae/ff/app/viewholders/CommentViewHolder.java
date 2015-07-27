@@ -269,6 +269,13 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 	public void setExtraPadding(boolean extra) {
 		if (extra) {
 			extraPadding.setVisibility(View.VISIBLE);
+		} else {
+			extraPadding.setVisibility(View.GONE);
+		}
+	}
+
+	public void setFirstCommentOfPerson(boolean first) {
+		if (first) {
 			arrow.setVisibility(View.VISIBLE);
 			if (anonymousImage != null) {
 				anonymousImage.setVisibility(View.VISIBLE);
@@ -277,7 +284,6 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 				userAlias.setVisibility(View.VISIBLE);
 			}
 		} else {
-			extraPadding.setVisibility(View.GONE);
 			arrow.setVisibility(View.GONE);
 			if (anonymousImage != null) {
 				anonymousImage.setVisibility(View.INVISIBLE);

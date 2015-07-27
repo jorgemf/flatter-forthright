@@ -45,30 +45,8 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 		setHasStableIds(true);
 	}
 
-	public void setHeaderView(View headerView) {
-		if (this.headerView != null) {
-			notifyItemRemoved(0);
-		}
-		this.headerView = headerView;
-		notifyItemInserted(0);
-	}
-
-	public void setFooterView(View footerView) {
-		int size = getCursorItemCount();
-		if (headerView != null) {
-			size++;
-		}
-		if (isError) {
-			size++;
-		}
-		if (isLoading) {
-			size++;
-		}
-		if (this.footerView != null) {
-			notifyItemRemoved(size);
-		}
-		this.footerView = footerView;
-		notifyItemInserted(size);
+	protected Cursor getCursor() {
+		return cursor;
 	}
 
 	public void setCursor(Cursor cursor) {
@@ -97,6 +75,32 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 		notifyDataSetChanged();
 		setIsLoading(false);
 		setIsError(false);
+	}
+
+	public void setHeaderView(View headerView) {
+		if (this.headerView != null) {
+			notifyItemRemoved(0);
+		}
+		this.headerView = headerView;
+		notifyItemInserted(0);
+	}
+
+	public void setFooterView(View footerView) {
+		int size = getCursorItemCount();
+		if (headerView != null) {
+			size++;
+		}
+		if (isError) {
+			size++;
+		}
+		if (isLoading) {
+			size++;
+		}
+		if (this.footerView != null) {
+			notifyItemRemoved(size);
+		}
+		this.footerView = footerView;
+		notifyItemInserted(size);
 	}
 
 	protected abstract void findIndexes(@Nonnull Cursor cursor);
@@ -265,6 +269,18 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	public boolean isError() {
 		return isError;
+	}
+
+	public int getCursorPosition(int position) {
+		int size = getCursorItemCount();
+		if (headerView != null) {
+			position--;
+		}
+		if (position >= 0 && position < size) {
+			return position;
+		} else {
+			return -1;
+		}
 	}
 
 	public interface ViewCreator {

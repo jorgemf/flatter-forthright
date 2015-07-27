@@ -29,4 +29,6 @@
 	<dimen name="item_user_image_time_margin">36dp</dimen>
 	<dimen name="item_flag_size">24dp</dimen>
 
+	<dimen name="date_comment_width">100dp</dimen>
+
 </resources>

@@ -3,17 +3,22 @@ package com.livae.ff.app.fragment;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.livae.ff.api.ff.model.Comment;
@@ -35,6 +40,7 @@ import com.livae.ff.app.task.TaskConversationLeave;
 import com.livae.ff.app.task.TaskPostComment;
 import com.livae.ff.app.task.TextId;
 import com.livae.ff.app.utils.AnimUtils;
+import com.livae.ff.app.utils.UnitUtils;
 import com.livae.ff.app.viewholders.CommentViewHolder;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.model.Notification;
@@ -65,6 +71,8 @@ public abstract class AbstractChatFragment
 
 	protected Long lastMessage;
 
+	protected Integer unreadMessages;
+
 	private FloatingActionButton buttonPostComment;
 
 	private EditText commentText;
@@ -73,7 +81,11 @@ public abstract class AbstractChatFragment
 
 	private TaskPostComment taskPostComment;
 
+	private ContentObserver contentObserver;
+
 	private NotificationDisabledReceiver notificationDisabledReceiver;
+
+	private TextView dateText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +103,9 @@ public abstract class AbstractChatFragment
 		}
 		if (extras.containsKey(AbstractChatActivity.EXTRA_LAST_MESSAGE_DATE)) {
 			lastMessage = extras.getLong(AbstractChatActivity.EXTRA_LAST_MESSAGE_DATE);
+		}
+		if (extras.containsKey(AbstractChatActivity.EXTRA_UNREAD_MESSAGES)) {
+			unreadMessages = extras.getInt(AbstractChatActivity.EXTRA_UNREAD_MESSAGES);
 		}
 		super.onCreate(savedInstanceState);
 		notificationDisabledReceiver = new NotificationDisabledReceiver();
@@ -112,9 +127,28 @@ public abstract class AbstractChatFragment
 		buttonPostComment = (FloatingActionButton) view.findViewById(R.id.button_post_comment);
 		commentText = (EditText) view.findViewById(R.id.comment_text);
 		commentPostContainer = view.findViewById(R.id.comment_post);
+		dateText = (TextView) view.findViewById(R.id.day_date);
 		buttonPostComment.setOnClickListener(this);
 		commentPostContainer.setVisibility(View.GONE);
 		buttonPostComment.setVisibility(View.GONE);
+		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				if (commentsAdapter.getCursorItemCount() > 1) {
+					LinearLayoutManager layoutManager;
+					layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+					int lastComplete = layoutManager.findLastCompletelyVisibleItemPosition();
+					lastComplete = commentsAdapter.getCursorPosition(lastComplete);
+					if (lastComplete > 0 && lastComplete < commentsAdapter.getCursorItemCount()) {
+						long dateLastVisible = commentsAdapter.getDate(lastComplete);
+						dateText.setVisibility(View.VISIBLE);
+						dateText.setText(UnitUtils.getDate(getActivity(), dateLastVisible));
+					} else {
+						dateText.setVisibility(View.GONE);
+					}
+				}
+			}
+		});
 	}
 
 	@Override
@@ -133,6 +167,9 @@ public abstract class AbstractChatFragment
 		super.onPause();
 		notificationDisabledReceiver.unregister(getActivity());
 		final ContentResolver cr = getActivity().getContentResolver();
+		if (contentObserver != null) {
+			cr.unregisterContentObserver(contentObserver);
+		}
 		if (conversationId != null) {
 			leaveConversation();
 		}
@@ -226,7 +263,26 @@ public abstract class AbstractChatFragment
 	protected void startConversation() {
 		getLoaderManager().restartLoader(LOADER_CONVERSATION_ID, Bundle.EMPTY,
 										 AbstractChatFragment.this);
+		registerContentObserver();
 		joinConversation();
+	}
+
+	private void registerContentObserver() {
+		if (conversationId != null) {
+
+			if (contentObserver == null) {
+				contentObserver = new ContentObserver(new Handler()) {
+
+					@Override
+					public void onChange(boolean selfChange) {
+						reloadCursor();
+					}
+				};
+			}
+			final ContentResolver cr = getActivity().getContentResolver();
+			cr.registerContentObserver(ConversationsProvider.getUriConversation(conversationId),
+									   true, contentObserver);
+		}
 	}
 
 	private void joinConversation() {

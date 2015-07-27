@@ -46,6 +46,8 @@ public class AbstractChatActivity extends AbstractActivity {
 
 	public static final String EXTRA_LAST_MESSAGE_DATE = "EXTRA_LAST_MESSAGE_DATE";
 
+	public static final String EXTRA_UNREAD_MESSAGES = "EXTRA_UNREAD_MESSAGES";
+
 	private ChatType chatType;
 
 	private TextView title;
@@ -59,7 +61,8 @@ public class AbstractChatActivity extends AbstractActivity {
 	public static Intent createIntent(@Nonnull Context context, @Nonnull ChatType chatType,
 									  @Nonnull Long conversationId, Long phoneNumber,
 									  String displayName, String roomName, String imageUri,
-									  Long imageSeed, Long lastAccess, Long lastMessage) {
+									  Long imageSeed, Long lastAccess, Long lastMessage,
+									  Integer unreadMessages) {
 		Intent intent = null;
 		switch (chatType) {
 			case SECRET:
@@ -73,7 +76,7 @@ public class AbstractChatActivity extends AbstractActivity {
 				break;
 		}
 		fillIntent(intent, chatType, conversationId, phoneNumber, displayName, roomName, imageUri,
-				   imageSeed, lastAccess, lastMessage);
+				   imageSeed, lastAccess, lastMessage, unreadMessages);
 		return intent;
 	}
 
@@ -81,12 +84,12 @@ public class AbstractChatActivity extends AbstractActivity {
 									  @Nonnull ChatType chatType, Long conversationId,
 									  Long phoneNumber, String displayName, String roomName,
 									  String imageUri, Long imageSeed, Long lastAccess,
-									  Long lastMessage) {
+									  Long lastMessage, Integer unreadMessages) {
 		if (conversationId == null && phoneNumber == null) {
 			throw new RuntimeException("Not enough data to start the conversation");
 		}
 		fillIntent(intent, chatType, conversationId, phoneNumber, displayName, roomName, imageUri,
-				   imageSeed, lastAccess, lastMessage);
+				   imageSeed, lastAccess, lastMessage, unreadMessages);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity)
 														  .toBundle());
@@ -98,7 +101,7 @@ public class AbstractChatActivity extends AbstractActivity {
 	private static void fillIntent(@Nonnull Intent intent, @Nonnull ChatType chatType,
 								   Long conversationId, Long phoneNumber, String displayName,
 								   String roomName, String imageUri, Long imageSeed,
-								   Long lastAccess, Long lastMessage) {
+								   Long lastAccess, Long lastMessage, Integer unreadMessages) {
 		if (conversationId != null) {
 			intent.putExtra(EXTRA_CONVERSATION_ID, conversationId);
 		}
@@ -123,6 +126,9 @@ public class AbstractChatActivity extends AbstractActivity {
 		}
 		if (lastMessage != null) {
 			intent.putExtra(EXTRA_LAST_MESSAGE_DATE, lastMessage);
+		}
+		if (unreadMessages != null) {
+			intent.putExtra(EXTRA_UNREAD_MESSAGES, unreadMessages);
 		}
 	}
 

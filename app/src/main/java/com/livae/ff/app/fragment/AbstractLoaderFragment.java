@@ -46,6 +46,8 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 
 	private final String KEY_SAVED_FINISH_LOADING = "KEY_SAVED_FINISH_LOADING";
 
+	protected RecyclerView recyclerView;
+
 	private View emptyView;
 
 	private EndlessCursorAdapter<VH> adapter;
@@ -59,8 +61,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 	private String selection;
 
 	private String[] selectionArgs;
-
-	private RecyclerView recyclerView;
 
 	private RecyclerView.OnScrollListener onScrollListener;
 

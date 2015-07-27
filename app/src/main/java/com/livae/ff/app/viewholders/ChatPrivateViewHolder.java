@@ -76,6 +76,18 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder
 		}
 	}
 
+	@Override
+	public void setUnreadCount(int count) {
+		super.setUnreadCount(count);
+		chatPrivateModel.unreadMessages = count;
+	}
+
+	@Override
+	public void setUnreadCount(int count) {
+		super.setUnreadCount(count);
+		chatPrivateModel.unreadMessages = count;
+	}
+
 	public void setUserName(String name, String boldText) {
 		super.setUserName(name, boldText);
 		if (chatPrivateModel.displayNameTextView != null) {

@@ -23,6 +23,8 @@ public class ChatPrivateModel extends ChatPublicModel implements ContextMenu.Con
 
 	public Long lastMessage;
 
+	public Integer unreadMessages;
+
 	public void clear() {
 		super.clear();
 		conversationSubtitle = null;

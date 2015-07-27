@@ -166,7 +166,7 @@ public class CloudMessagesService extends IntentService {
 				Long lastMessageDate = cursor.getLong(iLastMessageDate);
 				intent = AbstractChatActivity.createIntent(context, chatType, conversationId, null,
 														   null, null, null, null, lastAccess,
-														   lastMessageDate);
+														   lastMessageDate, totalComments);
 			} else {
 				NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(builder);
 				int index = 0;
@@ -199,7 +199,8 @@ public class CloudMessagesService extends IntentService {
 					Long lastMessageDate = cursor.getLong(iLastMessageDate);
 					intent = AbstractChatActivity.createIntent(context, chatType, conversationId,
 															   null, null, null, null, null,
-															   lastAccess, lastMessageDate);
+															   lastAccess, lastMessageDate,
+															   totalComments);
 				} else {
 					intent = new Intent(context, ChatsActivity.class);
 				}
@@ -275,7 +276,8 @@ public class CloudMessagesService extends IntentService {
 				String imageUri = cursor.getString(iImageUri);
 				intent = AbstractChatActivity.createIntent(context, chatType, conversationId, phone,
 														   displayName, roomName, imageUri, aliasId,
-														   lastAccess, lastMessageDate);
+														   lastAccess, lastMessageDate,
+														   totalComments);
 			} else {
 				NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(builder);
 				int index = 0;
@@ -317,7 +319,7 @@ public class CloudMessagesService extends IntentService {
 					intent = AbstractChatActivity.createIntent(context, chatType, conversationId,
 															   phone, displayName, roomName,
 															   imageUri, aliasId, lastAccess,
-															   lastMessageDate);
+															   lastMessageDate, totalComments);
 				} else {
 					intent = new Intent(context, ChatsActivity.class);
 				}

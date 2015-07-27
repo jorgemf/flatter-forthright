@@ -272,7 +272,51 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 			isSyncTemp = cursor.getInt(iSyncTemp) != 0;
 			holder.setSending(isSyncTemp);
 		}
-		if (cursor.moveToNext()) {
+		if (!cursor.isFirst()) {
+			cursor.moveToPrevious();
+			boolean previousIsMe = cursor.getInt(iIsMe) != 0;
+			Long previousAnonymousId = null;
+			if (!cursor.isNull(iUserAnonymousId)) {
+				previousAnonymousId = cursor.getLong(iUserAnonymousId);
+			}
+			String previousAlias = null;
+			if (!cursor.isNull(iUserAlias)) {
+				previousAlias = cursor.getString(iUserAlias);
+			}
+			boolean previousIsTheUser = isPublicChat && previousAlias == null;
+			if (isTheUser && previousIsTheUser) {
+				holder.setExtraPadding(false);
+			} else if (isMe && previousIsMe) {
+				switch (chatType) {
+					case FLATTER:
+					case FORTHRIGHT:
+						holder.setExtraPadding(!(alias != null && alias.equals(previousAlias)));
+						break;
+					case PRIVATE:
+					case PRIVATE_ANONYMOUS:
+					case SECRET:
+						holder.setExtraPadding(false);
+				}
+			} else {
+				switch (chatType) {
+					case FLATTER:
+					case FORTHRIGHT:
+						holder.setExtraPadding(!(anonymousId != null &&
+												 anonymousId.equals(previousAnonymousId)));
+						break;
+					case PRIVATE_ANONYMOUS:
+					case PRIVATE:
+					case SECRET:
+						holder.setExtraPadding(isMe || previousIsMe);
+						break;
+				}
+			}
+			cursor.moveToNext();
+		}
+		if (cursor.isLast()) {
+			holder.setFirstCommentOfPerson(true);
+		} else {
+			cursor.moveToNext();
 			boolean nextIsMe = cursor.getInt(iIsMe) != 0;
 			Long nextAnonymousId = null;
 			if (!cursor.isNull(iUserAnonymousId)) {
@@ -289,28 +333,34 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 				switch (chatType) {
 					case FLATTER:
 					case FORTHRIGHT:
-						holder.setExtraPadding(!(alias != null && alias.equals(nextAlias)));
+						holder.setFirstCommentOfPerson(!(alias != null && alias.equals(nextAlias)));
 						break;
 					case PRIVATE:
 					case PRIVATE_ANONYMOUS:
 					case SECRET:
-						holder.setExtraPadding(false);
+						holder.setFirstCommentOfPerson(false);
 				}
 			} else {
 				switch (chatType) {
 					case FLATTER:
 					case FORTHRIGHT:
-						holder.setExtraPadding(!(anonymousId != null &&
-												 anonymousId.equals(nextAnonymousId)));
+						holder.setFirstCommentOfPerson(!(anonymousId != null &&
+														 anonymousId.equals(nextAnonymousId)));
 						break;
 					case PRIVATE_ANONYMOUS:
 					case PRIVATE:
 					case SECRET:
-						holder.setExtraPadding(isMe || nextIsMe);
+						holder.setFirstCommentOfPerson(isMe || nextIsMe);
 						break;
 				}
 			}
 			cursor.moveToPrevious();
 		}
+	}
+
+	public long getDate(int position) {
+		Cursor cursor = getCursor();
+		cursor.moveToPosition(position);
+		return cursor.getLong(iDate);
 	}
 }

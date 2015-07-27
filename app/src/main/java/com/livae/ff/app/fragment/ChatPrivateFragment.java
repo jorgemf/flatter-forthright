@@ -13,7 +13,6 @@ import com.livae.ff.app.activity.ChatPrivateActivity;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.dialog.EditTextDialogFragment;
-import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.task.ConversationParams;
 import com.livae.ff.app.task.ListResult;
 import com.livae.ff.app.task.QueryId;
@@ -43,19 +42,11 @@ public class ChatPrivateFragment extends AbstractChatFragment {
 				if (cursor.getCount() < getTotalLoaded()) {
 					endPreviousMessages = true;
 				}
-				if (firstTimeLoad && lastAccess != null) {
+				if (firstTimeLoad && unreadMessages != null) {
 					firstTimeLoad = false;
-					int pos = 0;
-					int iDate = cursor.getColumnIndex(Table.Comment.DATE);
-					if (cursor.moveToFirst()) {
-						pos = -1;
-						long date = 0;
-						do {
-							date = cursor.getLong(iDate);
-							pos++;
-						} while (cursor.moveToNext() && date < lastAccess);
+					if (unreadMessages > 0) {
+						scrollToPosition(unreadMessages - 1, false);
 					}
-					scrollToPosition(pos, false);
 				}
 				break;
 			default:
@@ -100,8 +91,13 @@ public class ChatPrivateFragment extends AbstractChatFragment {
 
 			@Override
 			protected ListResult doInBackground(QueryId queryId) {
-				return new ListResult(endPreviousMessages ? null : "",
-									  endPreviousMessages ? 0 : 100);
+				int toLoad = 100;
+				if (endPreviousMessages) {
+					toLoad = 0;
+				} else if (firstTimeLoad) {
+					toLoad = Math.max(unreadMessages + 20, toLoad);
+				}
+				return new ListResult(endPreviousMessages ? null : "", toLoad);
 			}
 		};
 	}
