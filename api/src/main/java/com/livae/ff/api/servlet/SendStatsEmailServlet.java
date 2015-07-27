@@ -46,35 +46,45 @@ public class SendStatsEmailServlet extends HttpServlet {
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
 												  PhoneUser.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
-		stats.setTotalUsers((Long) entityStat.getProperty("count"));
+		if (entityStat.hasProperty("count")) {
+			stats.setTotalUsers((Long) entityStat.getProperty("count"));
+		}
 
 		// total comments
 		query = new Query("__Stat_Kind__");
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
 												  Comment.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
-		stats.setTotalComments((Long) entityStat.getProperty("count"));
+		if (entityStat.hasProperty("count")) {
+			stats.setTotalComments((Long) entityStat.getProperty("count"));
+		}
 
 		// total conversations
 		query = new Query("__Stat_Kind__");
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
 												  Conversation.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
-		stats.setTotalConversations((Long) entityStat.getProperty("count"));
+		if (entityStat.hasProperty("count")) {
+			stats.setTotalConversations((Long) entityStat.getProperty("count"));
+		}
 
 		// total comment votes
 		query = new Query("__Stat_Kind__");
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
 												  CommentVote.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
-		stats.setTotalCommentVotes((Long) entityStat.getProperty("count"));
+		if (entityStat.hasProperty("count")) {
+			stats.setTotalCommentVotes((Long) entityStat.getProperty("count"));
+		}
 
 		// total flags
 		query = new Query("__Stat_Kind__");
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
 												  FlagComment.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
-		stats.setTotalFlags((Long) entityStat.getProperty("count"));
+		if (entityStat.hasProperty("count")) {
+			stats.setTotalFlags((Long) entityStat.getProperty("count"));
+		}
 
 		// active users of the last 1 days
 		date.setTime(now - TimeUnit.DAYS.toMillis(1));

@@ -53,6 +53,24 @@ public class Stats {
 
 	public Stats() {
 		date = new Date();
+		totalUsers = 0L;
+		totalComments = 0L;
+		totalConversations = 0L;
+		totalCommentVotes = 0L;
+		totalFlags = 0L;
+		activeUsersLast1Day = 0L;
+		activeUsersLast7Days = 0L;
+		activeUsersLast15Days = 0L;
+		activeUsersLast30Days = 0L;
+		createdUsersLast1Day = 0L;
+		createdUsersLast7Days = 0L;
+		createdUsersLast15Days = 0L;
+		createdUsersLast30Days = 0L;
+		privateMessages = 0L;
+		secretMessages = 0L;
+		anonymousMessages = 0L;
+		flatteredMessages = 0L;
+		forthrightMessages = 0L;
 	}
 
 	public Long getId() {
