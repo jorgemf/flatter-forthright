@@ -69,7 +69,7 @@ public class CloudMessagesService extends IntentService {
 												   .increaseChatForthrightUnread();
 									}
 									if (notifications.isCommentsForthrightMe()) {
-										notifyChatsPublic(context, ChatType.FORTHRIGHT);
+										notifyChatsPublic(context, ChatType.FORTHRIGHT, true);
 									}
 									break;
 								case FLATTER:
@@ -79,14 +79,14 @@ public class CloudMessagesService extends IntentService {
 												   .increaseChatFlatterUnread();
 									}
 									if (notifications.isCommentsFlatteredMe()) {
-										notifyChatsPublic(context, ChatType.FLATTER);
+										notifyChatsPublic(context, ChatType.FLATTER, true);
 									}
 									break;
 								case PRIVATE:
 								case SECRET:
 								case PRIVATE_ANONYMOUS:
 									if (notifications.isCommentsChat()) {
-										notifyChatsPrivate(context);
+										notifyChatsPrivate(context, true);
 									}
 									break;
 							}
@@ -116,7 +116,7 @@ public class CloudMessagesService extends IntentService {
 		manager.notify(Settings.Notifications.ID_MESSAGE, builder.build());
 	}
 
-	private static void notifyChatsPublic(Context context, ChatType chatType) {
+	public static void notifyChatsPublic(Context context, ChatType chatType, boolean sound) {
 		final Resources res = context.getResources();
 		final ContentResolver contentResolver = context.getContentResolver();
 		Uri uri = ConversationsProvider.getUriCommentsConversations();
@@ -130,9 +130,14 @@ public class CloudMessagesService extends IntentService {
 		final String[] selectionArgs = {chatType.name()};
 		final String order = "-" + Table.Comment.DATE;
 		Cursor cursor = contentResolver.query(uri, projection, selection, selectionArgs, order);
+		NotificationManager manager;
+		manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		if (cursor.moveToFirst()) {
 			NotificationCompat.Builder builder;
 			builder = NotificationUtil.getDefaultNotificationBuilder(context);
+			if (!sound) {
+				builder.setSound(null);
+			}
 			CharSequence title = "";
 			switch (chatType) {
 				case FORTHRIGHT:
@@ -208,8 +213,6 @@ public class CloudMessagesService extends IntentService {
 			PendingIntent pending = PendingIntent.getActivity(context, 0, intent,
 															  PendingIntent.FLAG_UPDATE_CURRENT);
 			builder.setContentIntent(pending);
-			NotificationManager manager;
-			manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 			switch (chatType) {
 				case FORTHRIGHT:
 					manager.notify(Settings.Notifications.ID_CHAT_PUBLIC_FORTHRIGHT,
@@ -219,11 +222,20 @@ public class CloudMessagesService extends IntentService {
 					manager.notify(Settings.Notifications.ID_CHAT_PUBLIC_FLATTER, builder.build());
 					break;
 			}
+		} else {
+			switch (chatType) {
+				case FORTHRIGHT:
+					manager.cancel(Settings.Notifications.ID_CHAT_PUBLIC_FORTHRIGHT);
+					break;
+				case FLATTER:
+					manager.cancel(Settings.Notifications.ID_CHAT_PUBLIC_FLATTER);
+					break;
+			}
 		}
 		cursor.close();
 	}
 
-	private static void notifyChatsPrivate(Context context) {
+	public static void notifyChatsPrivate(Context context, boolean sound) {
 		final Resources res = context.getResources();
 		final ContentResolver contentResolver = context.getContentResolver();
 		Uri uri = ConversationsProvider.getUriCommentsConversations();
@@ -240,9 +252,14 @@ public class CloudMessagesService extends IntentService {
 										ChatType.PRIVATE_ANONYMOUS.name()};
 		final String order = "-" + Table.Comment.DATE;
 		Cursor cursor = contentResolver.query(uri, projection, selection, selectionArgs, order);
+		NotificationManager manager;
+		manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		if (cursor.moveToFirst()) {
 			NotificationCompat.Builder builder;
 			builder = NotificationUtil.getDefaultNotificationBuilder(context);
+			if (!sound) {
+				builder.setSound(null);
+			}
 			CharSequence title = res.getText(R.string.notifications_chat_private_title);
 			builder.setContentTitle(title);
 			int totalComments = cursor.getCount();
@@ -327,9 +344,9 @@ public class CloudMessagesService extends IntentService {
 			PendingIntent pending = PendingIntent.getActivity(context, 0, intent,
 															  PendingIntent.FLAG_UPDATE_CURRENT);
 			builder.setContentIntent(pending);
-			NotificationManager manager;
-			manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 			manager.notify(Settings.Notifications.ID_CHAT_PRIVATE, builder.build());
+		} else {
+			manager.cancel(Settings.Notifications.ID_CHAT_PRIVATE);
 		}
 		cursor.close();
 	}

@@ -1,7 +1,9 @@
 package com.livae.ff.app.fragment;
 
+import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +36,7 @@ import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.listener.CommentActionListener;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
+import com.livae.ff.app.service.CloudMessagesService;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.task.QueryId;
 import com.livae.ff.app.task.TaskConversationJoin;
@@ -250,11 +254,34 @@ public abstract class AbstractChatFragment
 					final ContentValues contentValues = new ContentValues();
 					contentValues.put(Table.Conversation.LAST_ACCESS, System.currentTimeMillis());
 					contentResolver.update(uriConversation, contentValues, null, null);
+					updateNotifications();
 				}
 				break;
 			default:
 				super.onLoadFinished(objectLoader, cursor);
 				break;
+		}
+	}
+
+	private void updateNotifications() {
+
+		if (chatType != null) {
+			final FragmentActivity activity = getActivity();
+			NotificationManager manager;
+			manager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
+			switch (chatType) {
+				case FLATTER:
+					CloudMessagesService.notifyChatsPublic(activity, ChatType.FLATTER, false);
+					break;
+				case FORTHRIGHT:
+					CloudMessagesService.notifyChatsPublic(activity, ChatType.FORTHRIGHT, false);
+					break;
+				case PRIVATE:
+				case PRIVATE_ANONYMOUS:
+				case SECRET:
+					CloudMessagesService.notifyChatsPrivate(activity, false);
+					break;
+			}
 		}
 	}
 
