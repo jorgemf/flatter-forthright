@@ -1,7 +1,5 @@
 package com.livae.ff.app.fragment;
 
-import android.content.ContentResolver;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -45,8 +43,6 @@ public class ChatsPublicFragment extends AbstractFragment
 
 	private TextView emptyView;
 
-	private ContentObserver contentObserver;
-
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,18 +73,6 @@ public class ChatsPublicFragment extends AbstractFragment
 	public void onResume() {
 		super.onResume();
 		getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
-		if (contentObserver == null) {
-			contentObserver = new ContentObserver(null) {
-
-				@Override
-				public void onChange(boolean selfChange) {
-					getLoaderManager().restartLoader(LOAD_CONTACTS, Bundle.EMPTY,
-													 ChatsPublicFragment.this);
-				}
-			};
-		}
-		final ContentResolver cr = getActivity().getContentResolver();
-		cr.registerContentObserver(ContactsProvider.getUriContacts(), true, contentObserver);
 	}
 
 	@Override
@@ -101,7 +85,6 @@ public class ChatsPublicFragment extends AbstractFragment
 	public void onPause() {
 		super.onPause();
 		search(null);
-		getActivity().getContentResolver().unregisterContentObserver(contentObserver);
 	}
 
 	public Constants.ChatType getChatType() {

@@ -3,11 +3,9 @@ package com.livae.ff.app.fragment;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.res.Resources;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.CursorLoader;
@@ -75,8 +73,6 @@ public abstract class AbstractChatFragment
 
 	private TaskPostComment taskPostComment;
 
-	private ContentObserver contentObserver;
-
 	private NotificationDisabledReceiver notificationDisabledReceiver;
 
 	@Override
@@ -137,9 +133,6 @@ public abstract class AbstractChatFragment
 		super.onPause();
 		notificationDisabledReceiver.unregister(getActivity());
 		final ContentResolver cr = getActivity().getContentResolver();
-		if (contentObserver != null) {
-			cr.unregisterContentObserver(contentObserver);
-		}
 		if (conversationId != null) {
 			leaveConversation();
 		}
@@ -233,26 +226,7 @@ public abstract class AbstractChatFragment
 	protected void startConversation() {
 		getLoaderManager().restartLoader(LOADER_CONVERSATION_ID, Bundle.EMPTY,
 										 AbstractChatFragment.this);
-		registerContentObserver();
 		joinConversation();
-	}
-
-	private void registerContentObserver() {
-		if (conversationId != null) {
-
-			if (contentObserver == null) {
-				contentObserver = new ContentObserver(new Handler()) {
-
-					@Override
-					public void onChange(boolean selfChange) {
-						reloadCursor();
-					}
-				};
-			}
-			final ContentResolver cr = getActivity().getContentResolver();
-			cr.registerContentObserver(ConversationsProvider.getUriConversation(conversationId),
-									   true, contentObserver);
-		}
 	}
 
 	private void joinConversation() {

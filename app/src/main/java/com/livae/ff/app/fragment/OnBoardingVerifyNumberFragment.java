@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Telephony;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.SmsManager;
@@ -62,11 +63,19 @@ import java.util.concurrent.TimeUnit;
 public class OnBoardingVerifyNumberFragment extends AbstractFragment
   implements View.OnClickListener {
 
+	private static final String INTENT_SMS_SEND = "com.livae.ff.app.INTENT_SMS_SEND";
+
+	private static final String INTENT_SMS_DELIVER = "com.livae.ff.app.INTENT_SMS_DELIVER";
+
 	private static final String LOG_TAG = "NUMBER_VERIFICATION";
 
 	private static final String CODE_LIMIT = "#";
 
 	private BroadcastReceiver smsReceiver;
+
+	private BroadcastReceiver smsSend;
+
+	private BroadcastReceiver smsDeliver;
 
 	private View validateButton;
 
@@ -177,8 +186,9 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 			intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 		}
 		smsReceiver = new IncomingSms();
-		getActivity().registerReceiver(smsReceiver, intentFilter);
-		PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
+		final FragmentActivity activity = getActivity();
+		activity.registerReceiver(smsReceiver, intentFilter);
+		PhoneVerification phoneVerification = PhoneVerification.instance(activity);
 		final Long date = phoneVerification.getDate();
 		if (phoneVerification.getVerificationToken() != null &&
 			date != null &&
@@ -195,8 +205,23 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	@Override
 	public void onPause() {
 		super.onPause();
-		getActivity().unregisterReceiver(smsReceiver);
+		final FragmentActivity activity = getActivity();
+		activity.unregisterReceiver(smsReceiver);
 		smsReceiver = null;
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		final FragmentActivity activity = getActivity();
+		if (smsSend != null) {
+			activity.unregisterReceiver(smsSend);
+			smsSend = null;
+		}
+		if (smsDeliver != null) {
+			activity.unregisterReceiver(smsDeliver);
+			smsDeliver = null;
+		}
 	}
 
 	@Override
@@ -268,17 +293,31 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 
 	private void sendVerificationSMS(final String phoneNumber, int code) {
 		//noinspection ConstantConditions,PointlessBooleanExpression
-		final String message = getActivity().getString(R.string.verification_sms, code);
+		FragmentActivity context = getActivity();
+		final String message = context.getString(R.string.verification_sms, code);
 		Log.i(LOG_TAG, "SENT num: " + phoneNumber + " body: " + message);
 		//noinspection PointlessBooleanExpression,PointlessBooleanExpression,ConstantConditions
 		if (!BuildConfig.DEV && !BuildConfig.DEBUG) {
+			// register broadcast receivers
+			final FragmentActivity activity = getActivity();
+			if (smsSend == null) {
+				smsSend = new SmsSendBroadcastReceiver();
+				activity.registerReceiver(smsSend, new IntentFilter(INTENT_SMS_SEND));
+			}
+			if (smsDeliver == null) {
+				smsDeliver = new SmsDeliveredBroadcastReceiver();
+				activity.registerReceiver(smsDeliver, new IntentFilter(INTENT_SMS_DELIVER));
+			}
+			// prepare pending intents
+			final Intent sentI = new Intent(INTENT_SMS_SEND);
+			final PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, sentI, 0);
+			final Intent deliveredI = new Intent(INTENT_SMS_DELIVER);
+			final PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, deliveredI, 0);
+			// send sms
 			SmsManager sms = SmsManager.getDefault();
-			// not sure why some mobiles need this to work
-			String sent = "android.telephony.SmsManager.STATUS_ON_ICC_SENT";
-			PendingIntent sentIntent;
-			sentIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(sent), 0);
-
-			sms.sendTextMessage(phoneNumber, null, message, sentIntent, null);
+			Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_VERIFICATION,
+							phoneNumber); // TODO maybe delete phone number in the future
+			sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
 		} else {
 			final Handler handler = new Handler();
 			handler.postDelayed(new Runnable() {
@@ -363,6 +402,7 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 				phoneNumber.equals(phoneToVerify);
 		Log.i(LOG_TAG, "VERIFY SMS: " + phoneNumber + " body: " + message + " result: " + valid);
 		if (valid) {
+			Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_RECEIVED);
 			phoneValidated();
 		}
 		return valid;
@@ -440,25 +480,47 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		}
 	}
 
-	class SmsBroadscastReceiver extends BroadcastReceiver {
+	class SmsSendBroadcastReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			switch (getResultCode()) {
 				case Activity.RESULT_OK:
 					Log.i(LOG_TAG, "SMS sent");
+					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_SENT);
 					break;
 				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
 					Log.e(LOG_TAG, "Generic failure");
+					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_ERROR_GENERIC);
 					break;
 				case SmsManager.RESULT_ERROR_NO_SERVICE:
 					Log.e(LOG_TAG, "No service");
+					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_ERROR_NO_SERVICE);
 					break;
 				case SmsManager.RESULT_ERROR_NULL_PDU:
 					Log.e(LOG_TAG, "PDU NULL");
+					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_ERROR_PDU_NULL);
 					break;
 				case SmsManager.RESULT_ERROR_RADIO_OFF:
 					Log.e(LOG_TAG, "Radio off");
+					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_ERROR_RADIO_OFF);
+					break;
+			}
+		}
+	}
+
+	class SmsDeliveredBroadcastReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			switch (getResultCode()) {
+				case Activity.RESULT_OK:
+					Log.i(LOG_TAG, "SMS delivered");
+					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_DELIVERED);
+					break;
+				case Activity.RESULT_CANCELED:
+					Log.i(LOG_TAG, "SMS not delivered");
+					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_NOT_DELIVERED);
 					break;
 			}
 		}

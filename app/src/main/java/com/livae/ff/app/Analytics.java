@@ -153,6 +153,8 @@ public class Analytics {
 
 		public static final String USER = "USER";
 
+		public static final String SMS = "SMS";
+
 	}
 
 	public static class Action {
@@ -186,6 +188,26 @@ public class Analytics {
 		public static final String VISITED_TERMS = "VISITED_TERMS";
 
 		public static final String SHARED_APP = "SHARED_APP";
+
+		// SMS
+
+		public static final String SMS_VERIFICATION = "SMS_VERIFICATION";
+
+		public static final String SMS_SENT = "SMS_SENT";
+
+		public static final String SMS_RECEIVED = "SMS_RECEIVED";
+
+		public static final String SMS_DELIVERED = "SMS_DELIVERED";
+
+		public static final String SMS_NOT_DELIVERED = "SMS_NOT_DELIVERED";
+
+		public static final String SMS_ERROR_GENERIC = "SMS_ERROR_GENERIC";
+
+		public static final String SMS_ERROR_NO_SERVICE = "SMS_ERROR_NO_SERVICE";
+
+		public static final String SMS_ERROR_PDU_NULL = "SMS_ERROR_PDU_NULL";
+
+		public static final String SMS_ERROR_RADIO_OFF = "SMS_ERROR_RADIO_OFF";
 
 	}
 

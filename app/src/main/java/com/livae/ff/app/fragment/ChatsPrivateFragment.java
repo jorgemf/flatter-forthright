@@ -1,7 +1,5 @@
 package com.livae.ff.app.fragment;
 
-import android.content.ContentResolver;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +20,6 @@ import com.livae.ff.app.adapter.ChatsPrivateAdapter;
 import com.livae.ff.app.listener.ChatPrivateClickListener;
 import com.livae.ff.app.listener.SearchListener;
 import com.livae.ff.app.model.ChatPrivateModel;
-import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.app.sql.Table;
@@ -42,8 +39,6 @@ public class ChatsPrivateFragment extends AbstractFragment
 	private TextView emptyView;
 
 	private TextView tutorialView;
-
-	private ContentObserver contentObserver;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,25 +68,12 @@ public class ChatsPrivateFragment extends AbstractFragment
 	public void onResume() {
 		super.onResume();
 		getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, this);
-		if (contentObserver == null) {
-			contentObserver = new ContentObserver(null) {
-
-				@Override
-				public void onChange(boolean selfChange) {
-					getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY,
-													 ChatsPrivateFragment.this);
-				}
-			};
-		}
-		final ContentResolver cr = getActivity().getContentResolver();
-		cr.registerContentObserver(ContactsProvider.getUriContacts(), true, contentObserver);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 		search(null);
-		getActivity().getContentResolver().unregisterContentObserver(contentObserver);
 	}
 
 	@Override

@@ -146,6 +146,7 @@ public class ConversationsProvider extends AbstractProvider {
 				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +
 							 " ON " + Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
+				c.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
 			case URI_CONVERSATIONS:
 				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +

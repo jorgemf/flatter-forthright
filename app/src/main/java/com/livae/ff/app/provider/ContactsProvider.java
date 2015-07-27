@@ -85,6 +85,8 @@ public class ContactsProvider extends AbstractProvider {
 				qb.setTables(Table.LocalUser.NAME);
 				qb.setDistinct(true);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
+				// loader manager will reload the cursor automatically
+				c.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
 			case URI_CONTACT:
 				where = Table.LocalUser.T_ID + "=?";
