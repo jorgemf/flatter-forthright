@@ -13,7 +13,8 @@ import com.livae.ff.app.utils.UnitUtils;
 import com.livae.ff.app.view.AnonymousImage;
 import com.livae.ff.common.Constants;
 
-public class ChatPrivateViewHolder extends ChatPublicViewHolder {
+public class ChatPrivateViewHolder extends ChatPublicViewHolder
+  implements View.OnLongClickListener {
 
 	private ChatPrivateModel chatPrivateModel;
 
@@ -29,6 +30,7 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder {
 		this(itemView, new ChatPrivateModel());
 		this.chatPrivateClickListener = chatPrivateClickListener;
 		itemView.setOnClickListener(this);
+		itemView.setOnLongClickListener(this);
 	}
 
 	protected ChatPrivateViewHolder(View itemView, ChatPrivateModel chatPrivateModel) {
@@ -167,4 +169,13 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder {
 		chatPrivateModel.lastAccess = date;
 	}
 
+	@Override
+	public boolean onLongClick(View v) {
+		v.showContextMenu();
+		return true;
+	}
+
+	public ChatPrivateModel getModel() {
+		return chatPrivateModel;
+	}
 }

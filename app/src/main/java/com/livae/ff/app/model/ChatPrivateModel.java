@@ -1,12 +1,13 @@
 package com.livae.ff.app.model;
 
+import android.view.ContextMenu;
 import android.view.View;
 import android.widget.TextView;
 
 import com.livae.ff.app.view.AnonymousImage;
 import com.livae.ff.common.Constants.ChatType;
 
-public class ChatPrivateModel extends ChatPublicModel {
+public class ChatPrivateModel extends ChatPublicModel implements ContextMenu.ContextMenuInfo {
 
 	public String conversationSubtitle;
 

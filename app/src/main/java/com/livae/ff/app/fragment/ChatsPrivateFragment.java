@@ -1,6 +1,8 @@
 package com.livae.ff.app.fragment;
 
+import android.content.ContentResolver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -9,7 +11,10 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -23,6 +28,8 @@ import com.livae.ff.app.model.ChatPrivateModel;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.app.sql.Table;
+import com.livae.ff.app.view.ContextMenuRecyclerView.RecyclerContextMenuInfo;
+import com.livae.ff.app.viewholders.ChatPrivateViewHolder;
 import com.livae.ff.common.Constants;
 import com.livae.ff.common.model.Notification;
 
@@ -62,6 +69,7 @@ public class ChatsPrivateFragment extends AbstractFragment
 		conversationsAdapter = new ChatsPrivateAdapter(getActivity(), this);
 		recyclerView.setAdapter(conversationsAdapter);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		registerForContextMenu(recyclerView);
 	}
 
 	@Override
@@ -74,6 +82,35 @@ public class ChatsPrivateFragment extends AbstractFragment
 	public void onPause() {
 		super.onPause();
 		search(null);
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+									ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		RecyclerContextMenuInfo recyclerInfo = (RecyclerContextMenuInfo) menuInfo;
+		ChatPrivateViewHolder viewHolder = (ChatPrivateViewHolder) recyclerInfo.viewHolder;
+		ChatPrivateModel model = viewHolder.getModel();
+		menu.setHeaderTitle(model.roomName);
+		menu.add(Menu.NONE, R.id.action_private_chat_delete, 0, R.string.delete);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_private_chat_delete:
+				ContextMenu.ContextMenuInfo menuInfo = item.getMenuInfo();
+				RecyclerContextMenuInfo recyclerInfo = (RecyclerContextMenuInfo) menuInfo;
+				ChatPrivateViewHolder viewHolder = (ChatPrivateViewHolder) recyclerInfo.viewHolder;
+				ChatPrivateModel model = viewHolder.getModel();
+				final ContentResolver cr = getActivity().getContentResolver();
+				final Uri uri = ConversationsProvider.getUriConversation(model.conversationId);
+				cr.delete(uri, null, null);
+				getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, this);
+				return true;
+			default:
+				return super.onContextItemSelected(item);
+		}
 	}
 
 	@Override
