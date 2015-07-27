@@ -23064,6 +23064,7 @@ com.livae.ff.api.ff.model.Version -> com.livae.ff.api.ff.model.Version:
 com.livae.ff.app.Analytics -> com.livae.ff.app.a:
     void screen(java.lang.String) -> a
     void screen(com.google.android.gms.analytics.Tracker,java.lang.String) -> a
+    void event(java.lang.String,java.lang.String,java.lang.String) -> a
     void event(java.lang.String,java.lang.String) -> a
     void event(com.google.android.gms.analytics.Tracker,java.lang.String,java.lang.String,java.lang.String,java.lang.Long) -> a
     void logAndReport(java.lang.Throwable) -> a
@@ -23821,9 +23822,9 @@ com.livae.ff.app.activity.AbstractChatActivity -> com.livae.ff.app.activity.b:
     com.livae.ff.app.view.AnonymousImage imageAnonymous -> e
     android.widget.ImageView imageUser -> f
     boolean $assertionsDisabled -> a
-    android.content.Intent createIntent(android.content.Context,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long) -> a
-    void startIntent(android.content.Intent,android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long) -> a
-    void fillIntent(android.content.Intent,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long) -> a
+    android.content.Intent createIntent(android.content.Context,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer) -> a
+    void startIntent(android.content.Intent,android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer) -> a
+    void fillIntent(android.content.Intent,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer) -> a
     void onCreated() -> e
     void setTitle(java.lang.CharSequence) -> setTitle
     void bindToolbar(java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long) -> a
@@ -23841,7 +23842,7 @@ com.livae.ff.app.activity.ChatPrivateActivity -> com.livae.ff.app.activity.ChatP
     void startChatPrivate(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String) -> a
     void startChatAnonymous(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String) -> b
     void startChatSecret(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String) -> c
-    void start(android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long) -> a
+    void start(android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Integer) -> a
     void onCreate(android.os.Bundle) -> onCreate
     void setSecretConversationId(java.lang.Long) -> a
     void onDestroy() -> onDestroy
@@ -24019,6 +24020,7 @@ com.livae.ff.app.adapter.CommentsAdapter -> com.livae.ff.app.a.e:
     int getCustomItemViewType(int,android.database.Cursor) -> a
     com.livae.ff.app.viewholders.CommentViewHolder createCustomViewHolder(android.view.ViewGroup,int) -> a
     void bindCustomViewHolder(com.livae.ff.app.viewholders.CommentViewHolder,int,android.database.Cursor) -> a
+    long getDate(int) -> a
     void bindCustomViewHolder(android.support.v7.widget.RecyclerView$ViewHolder,int,android.database.Cursor) -> a
     android.support.v7.widget.RecyclerView$ViewHolder createCustomViewHolder(android.view.ViewGroup,int) -> b
 com.livae.ff.app.adapter.CommentsAdapter$1 -> com.livae.ff.app.a.f:
@@ -24053,9 +24055,10 @@ com.livae.ff.app.adapter.EndlessCursorAdapter -> com.livae.ff.app.a.i:
     android.database.Cursor cursor -> f
     com.livae.ff.app.adapter.EndlessCursorAdapter$ViewCreator viewCreator -> g
     int iId -> h
+    android.database.Cursor getCursor() -> a
+    void setCursor(android.database.Cursor) -> a
     void setHeaderView(android.view.View) -> a
     void setFooterView(android.view.View) -> b
-    void setCursor(android.database.Cursor) -> a
     void findIndexes(android.database.Cursor) -> b
     void setIsLoading(boolean) -> a
     void setIsError(boolean) -> b
@@ -24064,12 +24067,13 @@ com.livae.ff.app.adapter.EndlessCursorAdapter -> com.livae.ff.app.a.i:
     int getItemViewType(int) -> getItemViewType
     long getItemId(int) -> getItemId
     int getItemCount() -> getItemCount
-    int getCursorItemCount() -> a
+    int getCursorItemCount() -> b
     int getCustomItemViewType(int,android.database.Cursor) -> a
     android.support.v7.widget.RecyclerView$ViewHolder createCustomViewHolder(android.view.ViewGroup,int) -> b
     void bindCustomViewHolder(android.support.v7.widget.RecyclerView$ViewHolder,int,android.database.Cursor) -> a
-    boolean isLoading() -> b
-    boolean isError() -> c
+    boolean isLoading() -> c
+    boolean isError() -> d
+    int getCursorPosition(int) -> b
 com.livae.ff.app.adapter.EndlessCursorAdapter$EndlessViewHolder -> com.livae.ff.app.a.j:
     com.livae.ff.app.adapter.EndlessCursorAdapter this$0 -> a
 com.livae.ff.app.adapter.EndlessCursorAdapter$ViewCreator -> com.livae.ff.app.a.k:
@@ -24191,12 +24195,14 @@ com.livae.ff.app.fragment.AbstractChatFragment -> com.livae.ff.app.fragment.a:
     java.lang.String userName -> g
     java.lang.Long lastAccess -> h
     java.lang.Long lastMessage -> i
-    android.support.design.widget.FloatingActionButton buttonPostComment -> j
-    android.widget.EditText commentText -> k
-    android.view.View commentPostContainer -> l
-    com.livae.ff.app.task.TaskPostComment taskPostComment -> m
-    android.database.ContentObserver contentObserver -> n
-    com.livae.ff.app.receiver.NotificationDisabledReceiver notificationDisabledReceiver -> o
+    java.lang.Integer unreadMessages -> j
+    android.support.design.widget.FloatingActionButton buttonPostComment -> l
+    android.widget.EditText commentText -> m
+    android.view.View commentPostContainer -> n
+    com.livae.ff.app.task.TaskPostComment taskPostComment -> o
+    android.database.ContentObserver contentObserver -> p
+    com.livae.ff.app.receiver.NotificationDisabledReceiver notificationDisabledReceiver -> q
+    android.widget.TextView dateText -> r
     void onCreate(android.os.Bundle) -> onCreate
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
@@ -24209,53 +24215,58 @@ com.livae.ff.app.fragment.AbstractChatFragment -> com.livae.ff.app.fragment.a:
     java.lang.String getOrderString() -> e
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    void updateNotifications() -> r
     void getConversation() -> f
     void startConversation() -> g
-    void registerContentObserver() -> r
-    void joinConversation() -> s
-    void leaveConversation() -> t
+    void registerContentObserver() -> s
+    void joinConversation() -> t
+    void leaveConversation() -> u
     void postComment(java.lang.String) -> a
     void onClick(android.view.View) -> onClick
     boolean onNotificationReceived(com.livae.ff.common.model.Notification) -> a
     void showSendMessagesPanel() -> h
     com.livae.ff.app.task.QueryParam getBaseQueryParams() -> i
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-    android.widget.EditText access$000(com.livae.ff.app.fragment.AbstractChatFragment) -> a
-    android.support.design.widget.FloatingActionButton access$100(com.livae.ff.app.fragment.AbstractChatFragment) -> b
+    android.widget.TextView access$000(com.livae.ff.app.fragment.AbstractChatFragment) -> a
+    android.widget.EditText access$100(com.livae.ff.app.fragment.AbstractChatFragment) -> b
+    android.support.design.widget.FloatingActionButton access$200(com.livae.ff.app.fragment.AbstractChatFragment) -> c
 com.livae.ff.app.fragment.AbstractChatFragment$1 -> com.livae.ff.app.fragment.b:
     com.livae.ff.app.fragment.AbstractChatFragment this$0 -> a
-    void onChange(boolean) -> onChange
+    void onScrolled(android.support.v7.widget.RecyclerView,int,int) -> onScrolled
 com.livae.ff.app.fragment.AbstractChatFragment$2 -> com.livae.ff.app.fragment.c:
+    com.livae.ff.app.fragment.AbstractChatFragment this$0 -> a
+    void onChange(boolean) -> onChange
+com.livae.ff.app.fragment.AbstractChatFragment$3 -> com.livae.ff.app.fragment.d:
     com.livae.ff.app.fragment.AbstractChatFragment this$0 -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Long,java.lang.Void) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Long,java.lang.Exception) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
-com.livae.ff.app.fragment.AbstractChatFragment$3 -> com.livae.ff.app.fragment.d:
+com.livae.ff.app.fragment.AbstractChatFragment$4 -> com.livae.ff.app.fragment.e:
     com.livae.ff.app.fragment.AbstractChatFragment this$0 -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.TextId,com.livae.ff.api.ff.model.Comment) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.TextId,java.lang.Exception) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
-com.livae.ff.app.fragment.AbstractChatFragment$4 -> com.livae.ff.app.fragment.e:
+com.livae.ff.app.fragment.AbstractChatFragment$5 -> com.livae.ff.app.fragment.f:
     int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
-com.livae.ff.app.fragment.AbstractFragment -> com.livae.ff.app.fragment.f:
+com.livae.ff.app.fragment.AbstractFragment -> com.livae.ff.app.fragment.g:
     android.view.View createLoadingView(android.view.LayoutInflater,android.view.ViewGroup) -> a
     android.view.View createErrorView(android.view.LayoutInflater,android.view.ViewGroup) -> b
-com.livae.ff.app.fragment.AbstractLoaderFragment -> com.livae.ff.app.fragment.g:
+com.livae.ff.app.fragment.AbstractLoaderFragment -> com.livae.ff.app.fragment.h:
     java.lang.String KEY_SAVED_NEXT_CURSOR -> a
     java.lang.String KEY_SAVED_TOTAL_LOADED -> b
     java.lang.String KEY_SAVED_SELECTION -> c
     java.lang.String KEY_SAVED_SELECTION_ARGS -> d
     java.lang.String KEY_SAVED_FINISH_LOADING -> e
+    android.support.v7.widget.RecyclerView recyclerView -> k
     android.view.View emptyView -> f
     com.livae.ff.app.adapter.EndlessCursorAdapter adapter -> g
     java.lang.String nextCursor -> h
     int totalLoaded -> i
     com.livae.ff.app.async.CustomAsyncTask loaderTask -> j
-    java.lang.String selection -> k
-    java.lang.String[] selectionArgs -> l
-    android.support.v7.widget.RecyclerView recyclerView -> m
+    java.lang.String selection -> l
+    java.lang.String[] selectionArgs -> m
     android.support.v7.widget.RecyclerView$OnScrollListener onScrollListener -> n
     int preloadAhead -> o
     android.widget.ProgressBar loading -> p
@@ -24297,29 +24308,29 @@ com.livae.ff.app.fragment.AbstractLoaderFragment -> com.livae.ff.app.fragment.g:
     void access$100(com.livae.ff.app.fragment.AbstractLoaderFragment) -> b
     com.livae.ff.app.adapter.EndlessCursorAdapter access$200(com.livae.ff.app.fragment.AbstractLoaderFragment) -> c
     android.widget.ProgressBar access$400(com.livae.ff.app.fragment.AbstractLoaderFragment) -> d
-com.livae.ff.app.fragment.AbstractLoaderFragment$1 -> com.livae.ff.app.fragment.h:
+com.livae.ff.app.fragment.AbstractLoaderFragment$1 -> com.livae.ff.app.fragment.i:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onScrollStateChanged(android.support.v7.widget.RecyclerView,int) -> onScrollStateChanged
     void onScrolled(android.support.v7.widget.RecyclerView,int,int) -> onScrolled
-com.livae.ff.app.fragment.AbstractLoaderFragment$2 -> com.livae.ff.app.fragment.i:
+com.livae.ff.app.fragment.AbstractLoaderFragment$2 -> com.livae.ff.app.fragment.j:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-com.livae.ff.app.fragment.AbstractLoaderFragment$3 -> com.livae.ff.app.fragment.j:
+com.livae.ff.app.fragment.AbstractLoaderFragment$3 -> com.livae.ff.app.fragment.k:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.livae.ff.app.fragment.AbstractLoaderFragment$5 -> com.livae.ff.app.fragment.k:
+com.livae.ff.app.fragment.AbstractLoaderFragment$5 -> com.livae.ff.app.fragment.l:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onAnimationStart(android.animation.Animator) -> onAnimationStart
-com.livae.ff.app.fragment.AbstractLoaderFragment$6 -> com.livae.ff.app.fragment.l:
+com.livae.ff.app.fragment.AbstractLoaderFragment$6 -> com.livae.ff.app.fragment.m:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
 com.livae.ff.app.fragment.ChatPrivateFragment -> com.livae.ff.app.fragment.ChatPrivateFragment:
-    boolean endPreviousMessages -> j
-    com.livae.ff.app.dialog.EditTextDialogFragment dialogRoomName -> k
-    boolean firstTimeLoad -> l
+    boolean endPreviousMessages -> l
+    com.livae.ff.app.dialog.EditTextDialogFragment dialogRoomName -> m
+    boolean firstTimeLoad -> n
     void onCreate(android.os.Bundle) -> onCreate
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void getConversation() -> f
@@ -24329,33 +24340,34 @@ com.livae.ff.app.fragment.ChatPrivateFragment -> com.livae.ff.app.fragment.ChatP
     void startChat(com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.String) -> a
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
     boolean access$000(com.livae.ff.app.fragment.ChatPrivateFragment) -> a
-    void access$100(com.livae.ff.app.fragment.ChatPrivateFragment,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.String) -> a
-    com.livae.ff.app.dialog.EditTextDialogFragment access$202(com.livae.ff.app.fragment.ChatPrivateFragment,com.livae.ff.app.dialog.EditTextDialogFragment) -> a
-com.livae.ff.app.fragment.ChatPrivateFragment$1 -> com.livae.ff.app.fragment.m:
+    boolean access$100(com.livae.ff.app.fragment.ChatPrivateFragment) -> b
+    void access$200(com.livae.ff.app.fragment.ChatPrivateFragment,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.String) -> a
+    com.livae.ff.app.dialog.EditTextDialogFragment access$302(com.livae.ff.app.fragment.ChatPrivateFragment,com.livae.ff.app.dialog.EditTextDialogFragment) -> a
+com.livae.ff.app.fragment.ChatPrivateFragment$1 -> com.livae.ff.app.fragment.n:
     com.livae.ff.app.fragment.ChatPrivateFragment this$0 -> a
     com.livae.ff.app.async.CustomAsyncTask execute(com.livae.ff.app.task.QueryId,com.livae.ff.app.async.Callback) -> a
     com.livae.ff.app.task.ListResult doInBackground(com.livae.ff.app.task.QueryId) -> a
     java.lang.Object doInBackground(java.lang.Object) -> a
     com.livae.ff.app.async.CustomAsyncTask execute(java.lang.Object,com.livae.ff.app.async.Callback) -> a
-com.livae.ff.app.fragment.ChatPrivateFragment$2 -> com.livae.ff.app.fragment.n:
+com.livae.ff.app.fragment.ChatPrivateFragment$2 -> com.livae.ff.app.fragment.o:
     com.livae.ff.app.fragment.ChatPrivateFragment this$0 -> a
     void performAction(com.livae.ff.app.dialog.EditTextDialogFragment,java.lang.String) -> a
     void onCancel(android.content.DialogInterface) -> onCancel
-com.livae.ff.app.fragment.ChatPrivateFragment$3 -> com.livae.ff.app.fragment.o:
+com.livae.ff.app.fragment.ChatPrivateFragment$3 -> com.livae.ff.app.fragment.p:
     com.livae.ff.app.fragment.ChatPrivateFragment this$0 -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.ConversationParams,com.livae.ff.api.ff.model.Conversation) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.ConversationParams,java.lang.Exception) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
-com.livae.ff.app.fragment.ChatPrivateFragment$4 -> com.livae.ff.app.fragment.p:
+com.livae.ff.app.fragment.ChatPrivateFragment$4 -> com.livae.ff.app.fragment.q:
     int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
 com.livae.ff.app.fragment.ChatPublicFragment -> com.livae.ff.app.fragment.ChatPublicFragment:
-    com.livae.ff.app.task.TaskCommentVoteAgree taskVoteAgreeComment -> j
-    com.livae.ff.app.task.TaskCommentVoteDisagree taskVoteDisagreeComment -> k
-    com.livae.ff.app.task.TaskCommentVoteDelete taskNoVoteComment -> l
-    boolean isMyPublicChat -> m
-    android.view.MenuItem editMenuItem -> n
-    com.livae.ff.app.dialog.EditTextDialogFragment dialog -> o
+    com.livae.ff.app.task.TaskCommentVoteAgree taskVoteAgreeComment -> l
+    com.livae.ff.app.task.TaskCommentVoteDisagree taskVoteDisagreeComment -> m
+    com.livae.ff.app.task.TaskCommentVoteDelete taskNoVoteComment -> n
+    boolean isMyPublicChat -> o
+    android.view.MenuItem editMenuItem -> p
+    com.livae.ff.app.dialog.EditTextDialogFragment dialog -> q
     void onCreate(android.os.Bundle) -> onCreate
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onResume() -> onResume
@@ -24372,32 +24384,33 @@ com.livae.ff.app.fragment.ChatPublicFragment -> com.livae.ff.app.fragment.ChatPu
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
     void access$000(com.livae.ff.app.fragment.ChatPublicFragment) -> a
     com.livae.ff.app.dialog.EditTextDialogFragment access$102(com.livae.ff.app.fragment.ChatPublicFragment,com.livae.ff.app.dialog.EditTextDialogFragment) -> a
-com.livae.ff.app.fragment.ChatPublicFragment$1 -> com.livae.ff.app.fragment.q:
+com.livae.ff.app.fragment.ChatPublicFragment$1 -> com.livae.ff.app.fragment.r:
     com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
     void run() -> run
-com.livae.ff.app.fragment.ChatPublicFragment$2 -> com.livae.ff.app.fragment.r:
+com.livae.ff.app.fragment.ChatPublicFragment$2 -> com.livae.ff.app.fragment.s:
     com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.ConversationParams,com.livae.ff.api.ff.model.Conversation) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.ConversationParams,java.lang.Exception) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
-com.livae.ff.app.fragment.ChatPublicFragment$6 -> com.livae.ff.app.fragment.s:
+com.livae.ff.app.fragment.ChatPublicFragment$6 -> com.livae.ff.app.fragment.t:
     com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
     void performAction(com.livae.ff.app.dialog.EditTextDialogFragment,java.lang.String) -> a
     void onCancel(android.content.DialogInterface) -> onCancel
-com.livae.ff.app.fragment.ChatPublicFragment$7 -> com.livae.ff.app.fragment.t:
+com.livae.ff.app.fragment.ChatPublicFragment$7 -> com.livae.ff.app.fragment.u:
     int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
-com.livae.ff.app.fragment.ChatsPrivateFragment -> com.livae.ff.app.fragment.u:
+com.livae.ff.app.fragment.ChatsPrivateFragment -> com.livae.ff.app.fragment.v:
     com.livae.ff.app.adapter.ChatsPrivateAdapter conversationsAdapter -> a
     java.lang.String searchText -> b
     android.widget.TextView emptyView -> c
     android.widget.TextView tutorialView -> d
-    android.database.ContentObserver contentObserver -> e
     void onCreate(android.os.Bundle) -> onCreate
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onResume() -> onResume
     void onPause() -> onPause
+    void onCreateContextMenu(android.view.ContextMenu,android.view.View,android.view.ContextMenu$ContextMenuInfo) -> onCreateContextMenu
+    boolean onContextItemSelected(android.view.MenuItem) -> onContextItemSelected
     void chatClicked(com.livae.ff.app.model.ChatPrivateModel) -> a
     boolean onNotificationReceived(com.livae.ff.common.model.Notification) -> a
     void search(java.lang.String) -> a
@@ -24405,15 +24418,11 @@ com.livae.ff.app.fragment.ChatsPrivateFragment -> com.livae.ff.app.fragment.u:
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-com.livae.ff.app.fragment.ChatsPrivateFragment$1 -> com.livae.ff.app.fragment.v:
-    com.livae.ff.app.fragment.ChatsPrivateFragment this$0 -> a
-    void onChange(boolean) -> onChange
 com.livae.ff.app.fragment.ChatsPublicFragment -> com.livae.ff.app.fragment.w:
     com.livae.ff.app.adapter.ChatsPublicAdapter publicChatsAdapter -> a
     com.livae.ff.common.Constants$ChatType chatType -> b
     java.lang.String searchText -> c
     android.widget.TextView emptyView -> d
-    android.database.ContentObserver contentObserver -> e
     void onCreate(android.os.Bundle) -> onCreate
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
@@ -24429,9 +24438,6 @@ com.livae.ff.app.fragment.ChatsPublicFragment -> com.livae.ff.app.fragment.w:
     void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
 com.livae.ff.app.fragment.ChatsPublicFragment$1 -> com.livae.ff.app.fragment.x:
-    com.livae.ff.app.fragment.ChatsPublicFragment this$0 -> a
-    void onChange(boolean) -> onChange
-com.livae.ff.app.fragment.ChatsPublicFragment$2 -> com.livae.ff.app.fragment.y:
     int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
 com.livae.ff.app.fragment.ContactsFragment -> com.livae.ff.app.fragment.ContactsFragment:
     com.livae.ff.app.adapter.UsersAdapter usersAdapter -> a
@@ -24449,23 +24455,26 @@ com.livae.ff.app.fragment.ContactsFragment -> com.livae.ff.app.fragment.Contacts
     void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
     void userClicked(com.livae.ff.app.model.UserModel) -> a
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-com.livae.ff.app.fragment.OnBoardingPaymentFragment -> com.livae.ff.app.fragment.z:
+com.livae.ff.app.fragment.OnBoardingPaymentFragment -> com.livae.ff.app.fragment.y:
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onClick(android.view.View) -> onClick
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment -> com.livae.ff.app.fragment.aa:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment -> com.livae.ff.app.fragment.z:
     android.content.BroadcastReceiver smsReceiver -> a
-    android.view.View validateButton -> b
-    android.widget.EditText phoneNumberEditText -> c
-    android.widget.TextView phonePrefixEditText -> d
-    android.widget.Spinner countryCodeSpinner -> e
-    com.livae.ff.app.adapter.CountriesArrayAdapter countriesAdapter -> f
-    com.livae.ff.app.dialog.CountdownDialogFragment countdownDialogFragment -> g
-    com.livae.ff.app.dialog.ProgressDialogFragment progressDialogFragment -> h
+    android.content.BroadcastReceiver smsSend -> b
+    android.content.BroadcastReceiver smsDeliver -> c
+    android.view.View validateButton -> d
+    android.widget.EditText phoneNumberEditText -> e
+    android.widget.TextView phonePrefixEditText -> f
+    android.widget.Spinner countryCodeSpinner -> g
+    com.livae.ff.app.adapter.CountriesArrayAdapter countriesAdapter -> h
+    com.livae.ff.app.dialog.CountdownDialogFragment countdownDialogFragment -> i
+    com.livae.ff.app.dialog.ProgressDialogFragment progressDialogFragment -> j
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onResume() -> onResume
     void onPause() -> onPause
+    void onDestroy() -> onDestroy
     void onClick(android.view.View) -> onClick
     void pressedContinue() -> a
     void verifyNumber() -> b
@@ -24482,41 +24491,47 @@ com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment -> com.livae.ff.app.fra
     com.livae.ff.app.dialog.ProgressDialogFragment access$400(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> d
     void access$500(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> e
     boolean access$600(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment,java.lang.String,java.lang.String) -> a
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$1 -> com.livae.ff.app.fragment.ab:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$1 -> com.livae.ff.app.fragment.aa:
     java.util.HashMap val$countryNames -> a
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> b
     int compare(com.livae.ff.app.Constants$COUNTRY,com.livae.ff.app.Constants$COUNTRY) -> a
     int compare(java.lang.Object,java.lang.Object) -> compare
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$2 -> com.livae.ff.app.fragment.ac:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$2 -> com.livae.ff.app.fragment.ab:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void onItemSelected(android.widget.AdapterView,android.view.View,int,long) -> onItemSelected
     void onNothingSelected(android.widget.AdapterView) -> onNothingSelected
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$3 -> com.livae.ff.app.fragment.ad:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$3 -> com.livae.ff.app.fragment.ac:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
     void afterTextChanged(android.text.Editable) -> afterTextChanged
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$4 -> com.livae.ff.app.fragment.ae:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$4 -> com.livae.ff.app.fragment.ad:
     com.google.i18n.phonenumbers.Phonenumber$PhoneNumber val$phoneNumber -> a
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6 -> com.livae.ff.app.fragment.af:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6 -> com.livae.ff.app.fragment.ae:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Long,java.lang.Void) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Long,java.lang.Exception) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6$1 -> com.livae.ff.app.fragment.ag:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6$1 -> com.livae.ff.app.fragment.af:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6 this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$IncomingSms -> com.livae.ff.app.fragment.ah:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$IncomingSms -> com.livae.ff.app.fragment.ag:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
-com.livae.ff.app.fragment.OnBoardingWarningFragment -> com.livae.ff.app.fragment.ai:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SmsDeliveredBroadcastReceiver -> com.livae.ff.app.fragment.ah:
+    com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SmsSendBroadcastReceiver -> com.livae.ff.app.fragment.ai:
+    com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.livae.ff.app.fragment.OnBoardingWarningFragment -> com.livae.ff.app.fragment.aj:
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onClick(android.view.View) -> onClick
-com.livae.ff.app.fragment.OnBoardingWelcomeFragment -> com.livae.ff.app.fragment.aj:
+com.livae.ff.app.fragment.OnBoardingWelcomeFragment -> com.livae.ff.app.fragment.ak:
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onClick(android.view.View) -> onClick
@@ -24537,18 +24552,19 @@ com.livae.ff.app.model.ChatPrivateModel -> com.livae.ff.app.f.a:
     android.widget.TextView conversationSubtitleView -> e
     java.lang.Long lastAccess -> f
     java.lang.Long lastMessage -> g
+    java.lang.Integer unreadMessages -> h
     void clear() -> a
 com.livae.ff.app.model.ChatPublicModel -> com.livae.ff.app.f.b:
-    java.lang.Long conversationId -> h
-    java.lang.String roomName -> i
+    java.lang.Long conversationId -> i
+    java.lang.String roomName -> j
     void clear() -> a
 com.livae.ff.app.model.UserModel -> com.livae.ff.app.f.c:
-    java.lang.Long userId -> j
-    java.lang.String userDisplayName -> k
-    java.lang.String userImageUri -> l
-    android.widget.TextView displayNameTextView -> m
-    android.widget.TextView phoneTextView -> n
-    android.widget.ImageView userImageView -> o
+    java.lang.Long userId -> k
+    java.lang.String userDisplayName -> l
+    java.lang.String userImageUri -> m
+    android.widget.TextView displayNameTextView -> n
+    android.widget.TextView phoneTextView -> o
+    android.widget.ImageView userImageView -> p
     void clear() -> a
 com.livae.ff.app.provider.AbstractProvider -> com.livae.ff.app.provider.a:
     android.content.UriMatcher uriMatcher -> a
@@ -24617,8 +24633,8 @@ com.livae.ff.app.service.AuthenticatorService -> com.livae.ff.app.service.Authen
     android.os.IBinder onBind(android.content.Intent) -> onBind
 com.livae.ff.app.service.CloudMessagesService -> com.livae.ff.app.service.CloudMessagesService:
     void processNotification(android.content.Context,android.os.Bundle) -> a
-    void notifyChatsPublic(android.content.Context,com.livae.ff.common.Constants$ChatType) -> a
-    void notifyChatsPrivate(android.content.Context) -> a
+    void notifyChatsPublic(android.content.Context,com.livae.ff.common.Constants$ChatType,boolean) -> a
+    void notifyChatsPrivate(android.content.Context,boolean) -> a
     android.text.Spannable createCommentLine(android.content.res.Resources,com.livae.ff.common.Constants$ChatType,java.lang.String,java.lang.String,java.lang.String) -> a
     void onHandleIntent(android.content.Intent) -> onHandleIntent
 com.livae.ff.app.service.CloudMessagesService$1 -> com.livae.ff.app.service.b:
@@ -24922,6 +24938,12 @@ com.livae.ff.app.view.AnonymousImage$SHAPE -> com.livae.ff.app.view.b:
     com.livae.ff.app.view.AnonymousImage$SHAPE[] $VALUES -> d
     com.livae.ff.app.view.AnonymousImage$SHAPE[] values() -> values
     com.livae.ff.app.view.AnonymousImage$SHAPE valueOf(java.lang.String) -> valueOf
+com.livae.ff.app.view.ContextMenuRecyclerView -> com.livae.ff.app.view.ContextMenuRecyclerView:
+    com.livae.ff.app.view.ContextMenuRecyclerView$RecyclerContextMenuInfo contextMenuInfo -> a
+    android.view.ContextMenu$ContextMenuInfo getContextMenuInfo() -> getContextMenuInfo
+    boolean showContextMenuForChild(android.view.View) -> showContextMenuForChild
+com.livae.ff.app.view.ContextMenuRecyclerView$RecyclerContextMenuInfo -> com.livae.ff.app.view.c:
+    android.support.v7.widget.RecyclerView$ViewHolder viewHolder -> a
 com.livae.ff.app.view.Triangle -> com.livae.ff.app.view.Triangle:
     android.graphics.Paint paint -> a
     android.graphics.Path path -> b
@@ -24935,6 +24957,7 @@ com.livae.ff.app.viewholders.ChatPrivateViewHolder -> com.livae.ff.app.k.a:
     android.view.View secretChatMark -> e
     void clear() -> a
     void onClick(android.view.View) -> onClick
+    void setUnreadCount(int) -> a
     void setUserName(java.lang.String,java.lang.String) -> a
     void setUserImage(java.lang.String) -> a
     void setChatType(com.livae.ff.common.Constants$ChatType) -> a
@@ -24944,6 +24967,8 @@ com.livae.ff.app.viewholders.ChatPrivateViewHolder -> com.livae.ff.app.k.a:
     void setImageAnonymous(java.lang.String) -> b
     void setLastMessage(java.lang.String,long) -> a
     void setLastAccessDate(long) -> a
+    boolean onLongClick(android.view.View) -> onLongClick
+    com.livae.ff.app.model.ChatPrivateModel getModel() -> b
 com.livae.ff.app.viewholders.ChatPublicViewHolder -> com.livae.ff.app.k.b:
     com.livae.ff.app.model.ChatPublicModel chatPublicModel -> a
     android.widget.TextView unreadCount -> b
@@ -24976,6 +25001,7 @@ com.livae.ff.app.viewholders.CommentViewHolder -> com.livae.ff.app.k.c:
     boolean onLongClick(android.view.View) -> onLongClick
     void setSending(boolean) -> a
     void setExtraPadding(boolean) -> b
+    void setFirstCommentOfPerson(boolean) -> c
     void setUserImageUri(java.lang.String) -> b
 com.livae.ff.app.viewholders.CountryViewHolder -> com.livae.ff.app.k.d:
     android.widget.ImageView flag -> a
