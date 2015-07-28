@@ -19,8 +19,9 @@ public class NotificationsUtil {
 	  throws IOException, InternalServerErrorException {
 		// find devices
 		Sender sender = new Sender(Settings.Google.API_KEY);
-		Message msg = new Message.Builder().addData("m", message).addData("t", type.name())
-										   .timeToLive(Settings.NOTIFICATIONS_TIME_TO_LIFE).build();
+		Message msg = new Message.Builder().addData("m", message).addData("t", type.name()).build();
+//		default time to live is 4 weeks
+//		.timeToLive(Settings.NOTIFICATIONS_TIME_TO_LIFE)
 		String deviceId = user.getDeviceId();
 		Result result = sender.send(msg, deviceId, Settings.GCM_NOTIFICATION_RETRIES);
 		if (result.getMessageId() != null) {

@@ -237,7 +237,7 @@ public class ChatsActivity extends AbstractActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (Application.appUser().getUserPhone() == null) {
+		if (android.text.TextUtils.isEmpty(Application.appUser().getAccessToken())) {
 			OnBoardingActivity.start(this);
 			finish();
 		} else {

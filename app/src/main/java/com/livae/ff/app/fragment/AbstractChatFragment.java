@@ -186,7 +186,7 @@ public abstract class AbstractChatFragment
 
 	@Override
 	protected EndlessCursorAdapter<CommentViewHolder> getAdapter() {
-		commentsAdapter = new CommentsAdapter(this, this, this, chatType, userName, userImageUri);
+		commentsAdapter = new CommentsAdapter(this, this, chatType, userName, userImageUri);
 		return commentsAdapter;
 	}
 

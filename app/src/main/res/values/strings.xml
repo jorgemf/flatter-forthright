@@ -38,6 +38,16 @@
 	<string name="edit">Edit</string>
 	<string name="select_contact">Select Contact</string>
 	<string name="sending_comment">Sending comment</string>
+	<string name="user_agree">%s agree</string>
+	<string name="user_disagree">%s disagree</string>
+	<string name="flagged_comment_other">Controversial comment</string>
+	<string name="flagged_comment_lie">It might be a lie</string>
+	<string name="flagged_comment_insult">Offensive language</string>
+	<string name="flagged_comment_abuse">Possible abuse</string>
+	<string name="flagged_user_other">Controversial</string>
+	<string name="flagged_user_lie">Liar</string>
+	<string name="flagged_user_insult">Offensive</string>
+	<string name="flagged_user_abuse">Bully</string>
 
 	<string name="notifications_flatter_title">Pensamientos Flattered</string>
 	<string name="notifications_forthright_title">Pensamientos Forthright</string>

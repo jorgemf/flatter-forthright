@@ -30,11 +30,12 @@ public class Settings {
 
 	public static final long FLAG_FORGET_TIME = TimeUnit.DAYS.toMillis(30);
 
-	public static final long MIN_FLAG_TO_MARK_USER = 3;
+	public static final int MIN_FLAG_TO_MARK_USER = 5;
 
 	public static final int NOTIFY_PUBLIC_COMMENTS_LAST_COMMENTERS = 20;
 
-	public static final int NOTIFICATIONS_TIME_TO_LIFE = (int) TimeUnit.DAYS.toSeconds(10);
+	// default time is 4 weeks
+//	public static final int NOTIFICATIONS_TIME_TO_LIFE = (int) TimeUnit.DAYS.toSeconds(28);
 
 	public static class Google {
 

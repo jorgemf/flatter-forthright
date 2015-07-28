@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.livae.ff.app.R;
-import com.livae.ff.app.listener.CommentActionListener;
+import com.livae.ff.app.settings.Settings;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.viewholders.CommentViewHolder;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.CommentVoteType;
+import com.livae.ff.common.Constants.FlagReason;
+import com.livae.ff.common.Constants.UserMark;
 
 import java.util.HashMap;
 
@@ -78,8 +80,6 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
 	private int iSyncTemp;
 
-	private CommentActionListener commentActionListener;
-
 	private LayoutInflater layoutInflater;
 
 	private ChatType chatType;
@@ -93,11 +93,9 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 	private String userName;
 
 	public CommentsAdapter(@Nonnull Fragment fragment, @Nonnull ViewCreator viewCreator,
-						   @Nonnull CommentActionListener commentActionListener,
 						   @Nonnull ChatType chatType, String userName, String userImageUri) {
 		super(fragment.getActivity(), viewCreator);
 		layoutInflater = fragment.getActivity().getLayoutInflater();
-		this.commentActionListener = commentActionListener;
 		commentVoteTypeHashMap = new HashMap<>();
 		this.chatType = chatType;
 		isPublicChat = chatType == ChatType.FORTHRIGHT || chatType == ChatType.FLATTER;
@@ -186,13 +184,12 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 				view = layoutInflater.inflate(R.layout.item_comment_public_user, viewGroup, false);
 				break;
 		}
-		return new CommentViewHolder(view, commentActionListener);
+		return new CommentViewHolder(view);
 	}
 
 	@Override
 	protected void bindCustomViewHolder(CommentViewHolder holder, int position, Cursor cursor) {
 		holder.clear();
-		// TODO set information about the votes
 		long commentId = cursor.getLong(iId);
 		Long anonymousId = null;
 		if (!cursor.isNull(iUserAnonymousId)) {
@@ -221,6 +218,68 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 			cursor.moveToPrevious();
 		}
 		holder.setComment(cursor.getString(iComment), date, previousDate);
+
+		bindVotes(holder, cursor, commentId);
+		bindUserVoteType(holder, cursor);
+		bindUserMark(holder, cursor);
+		bindCommentFlag(holder, cursor);
+
+		boolean isSyncTemp = false;
+		if (iSyncTemp >= 0) {
+			isSyncTemp = cursor.getInt(iSyncTemp) != 0;
+			holder.setSending(isSyncTemp);
+		}
+		bindCommentPadding(holder, cursor, anonymousId, alias, isMe, isTheUser);
+		bindCommentHeader(holder, cursor, anonymousId, alias, isMe, isTheUser);
+	}
+
+	private void bindCommentFlag(CommentViewHolder holder, Cursor cursor) {
+		int timesFlagged = cursor.getInt(iTimesFlagged);
+		if (timesFlagged > Settings.MIN_FLAG_TO_MARK_COMMENT) {
+			int[] flaggedType = new int[FlagReason.values().length];
+			flaggedType[FlagReason.ABUSE.ordinal()] = cursor.getInt(iTimesFlaggedAbuse);
+			flaggedType[FlagReason.INSULT.ordinal()] = cursor.getInt(iTimesFlaggedInsult);
+			flaggedType[FlagReason.LIE.ordinal()] = cursor.getInt(iTimesFlaggedLie);
+			flaggedType[FlagReason.OTHER.ordinal()] = cursor.getInt(iTimesFlaggedOther);
+			int maxPos = 0;
+			int maxValue = flaggedType[0];
+			for (int i = 1; i < flaggedType.length; i++) {
+				if (maxValue < flaggedType[i]) {
+					maxPos = i;
+					maxValue = flaggedType[i];
+				}
+			}
+			holder.setCommentFlag(FlagReason.values()[maxPos]);
+		} else {
+			holder.setCommentFlag(null);
+		}
+	}
+
+	private void bindUserMark(CommentViewHolder holder, Cursor cursor) {
+		UserMark userMark = null;
+		String userMarkString = cursor.getString(iUserMark);
+		if (userMarkString != null) {
+			try {
+				userMark = UserMark.valueOf(userMarkString);
+			} catch (Exception ignore) {
+			}
+		}
+		holder.setUserMark(userMark);
+	}
+
+	private void bindUserVoteType(CommentViewHolder holder, Cursor cursor) {
+		CommentVoteType userVoteType = null;
+		String userVoteTypeString = cursor.getString(iUserVoteType);
+		if (userVoteTypeString != null) {
+			try {
+				userVoteType = CommentVoteType.valueOf(userVoteTypeString);
+			} catch (Exception ignore) {
+			}
+		}
+		holder.setUserVoteType(userVoteType, userName);
+	}
+
+	private void bindVotes(CommentViewHolder holder, Cursor cursor, long commentId) {
 		int agreeVotes = cursor.getInt(iAgreeVotes);
 		int disagreeVotes = cursor.getInt(iDisagreeVotes);
 		CommentVoteType voteType = null;
@@ -267,11 +326,10 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		}
 		holder.setVotes(agreeVotes, disagreeVotes);
 		holder.setVoteType(voteType);
-		boolean isSyncTemp = false;
-		if (iSyncTemp >= 0) {
-			isSyncTemp = cursor.getInt(iSyncTemp) != 0;
-			holder.setSending(isSyncTemp);
-		}
+	}
+
+	private void bindCommentPadding(CommentViewHolder holder, Cursor cursor, Long anonymousId,
+									String alias, boolean isMe, boolean isTheUser) {
 		if (!cursor.isFirst()) {
 			cursor.moveToPrevious();
 			boolean previousIsMe = cursor.getInt(iIsMe) != 0;
@@ -313,6 +371,10 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 			}
 			cursor.moveToNext();
 		}
+	}
+
+	private void bindCommentHeader(CommentViewHolder holder, Cursor cursor, Long anonymousId,
+								   String alias, boolean isMe, boolean isTheUser) {
 		if (cursor.isLast()) {
 			holder.setFirstCommentOfPerson(true);
 		} else {

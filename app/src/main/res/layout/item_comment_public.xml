@@ -11,9 +11,27 @@
 	android:paddingTop="@dimen/space_small">
 
 	<TextView
+		android:id="@+id/user_flagged"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:drawableLeft="@drawable/ic_flag_terciary_14px"
+		android:drawablePadding="@dimen/space_tiny"
+		android:drawableStart="@drawable/ic_flag_terciary_14px"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:visibility="gone"
+		tools:text="@string/flagged_user_other"
+		tools:visibility="visible"/>
+
+	<TextView
 		android:id="@+id/anonymous_name"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:layout_toLeftOf="@id/user_flagged"
+		android:layout_toStartOf="@id/user_flagged"
 		android:lines="1"
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:textColor="@color/black_light"
@@ -60,18 +78,67 @@
 		android:visibility="gone"
 		tools:visibility="visible"/>
 
-	<!--<TextView
-		android:id="@+id/sending_comment_text"
+	<TextView
+		android:id="@+id/text_agree"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/comment"
-		android:layout_marginLeft="@dimen/space_small"
-		android:layout_marginStart="@dimen/space_small"
-		android:layout_marginTop="@dimen/space_small"
-		android:layout_toEndOf="@id/progress_bar"
-		android:layout_toRightOf="@id/progress_bar"
-		android:text="@string/sending_comment"
+		android:drawableEnd="@drawable/ic_thumb_up_terciary_14px"
+		android:drawablePadding="@dimen/space_tiny"
+		android:drawableRight="@drawable/ic_thumb_up_terciary_14px"
+		android:layout_below="@id/comment_date"
+		android:layout_marginEnd="@dimen/space_small"
+		android:layout_marginRight="@dimen/space_small"
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:visibility="gone"
-		tools:visibility="visible"/>-->
+		tools:text="10"
+		tools:visibility="visible"/>
+
+	<TextView
+		android:id="@+id/text_disagree"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:drawableEnd="@drawable/ic_thumb_down_terciary_14px"
+		android:drawablePadding="@dimen/space_tiny"
+		android:drawableRight="@drawable/ic_thumb_down_terciary_14px"
+		android:layout_below="@id/comment_date"
+		android:layout_marginEnd="@dimen/space_medium"
+		android:layout_marginRight="@dimen/space_medium"
+		android:layout_toEndOf="@id/text_agree"
+		android:layout_toRightOf="@id/text_agree"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:visibility="gone"
+		tools:text="10"
+		tools:visibility="visible"/>
+
+	<TextView
+		android:id="@+id/text_user_agree_disagree"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:drawableLeft="@drawable/ic_thumb_up_terciary_14px"
+		android:drawablePadding="@dimen/space_tiny"
+		android:drawableStart="@drawable/ic_thumb_up_terciary_14px"
+		android:layout_below="@id/comment_date"
+		android:layout_marginEnd="@dimen/space_normal"
+		android:layout_marginRight="@dimen/space_normal"
+		android:layout_toEndOf="@id/text_disagree"
+		android:layout_toRightOf="@id/text_disagree"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:visibility="gone"
+		tools:text="@string/user_agree"
+		tools:visibility="visible"/>
+
+	<TextView
+		android:id="@+id/comment_flagged"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:drawableLeft="@drawable/ic_flag_terciary_14px"
+		android:drawablePadding="@dimen/space_tiny"
+		android:drawableStart="@drawable/ic_flag_terciary_14px"
+		android:layout_below="@id/comment_date"
+		android:layout_toEndOf="@id/text_user_agree_disagree"
+		android:layout_toRightOf="@id/text_user_agree_disagree"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:visibility="gone"
+		tools:text="@string/flagged_comment_other"
+		tools:visibility="visible"/>
 </RelativeLayout>

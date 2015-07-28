@@ -29,6 +29,8 @@ public class Settings {
 
 	public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
+	public static final int MIN_FLAG_TO_MARK_COMMENT = 2;
+
 	public static class Google {
 
 		public static final String SENDER_ID = Application.getProperty(R.string.google_sender_id);
