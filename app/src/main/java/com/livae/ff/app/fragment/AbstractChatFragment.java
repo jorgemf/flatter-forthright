@@ -1,9 +1,7 @@
 package com.livae.ff.app.fragment;
 
-import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -33,7 +31,7 @@ import com.livae.ff.app.adapter.CommentsAdapter;
 import com.livae.ff.app.adapter.EndlessCursorAdapter;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
-import com.livae.ff.app.listener.CommentActionListener;
+import com.livae.ff.app.listener.CommentClickListener;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.app.service.CloudMessagesService;
@@ -52,8 +50,8 @@ import com.livae.ff.common.model.NotificationComment;
 
 public abstract class AbstractChatFragment
   extends AbstractLoaderFragment<CommentViewHolder, QueryId>
-  implements CommentActionListener, View.OnClickListener,
-			 NotificationDisabledReceiver.CloudMessagesDisabledListener {
+  implements View.OnClickListener, NotificationDisabledReceiver.CloudMessagesDisabledListener,
+			 CommentClickListener {
 
 	protected static final int LOADER_CONVERSATION_ID = 2;
 
@@ -186,7 +184,7 @@ public abstract class AbstractChatFragment
 
 	@Override
 	protected EndlessCursorAdapter<CommentViewHolder> getAdapter() {
-		commentsAdapter = new CommentsAdapter(this, this, chatType, userName, userImageUri);
+		commentsAdapter = new CommentsAdapter(this, this, this, chatType, userName, userImageUri);
 		return commentsAdapter;
 	}
 
@@ -264,11 +262,8 @@ public abstract class AbstractChatFragment
 	}
 
 	private void updateNotifications() {
-
 		if (chatType != null) {
 			final FragmentActivity activity = getActivity();
-			NotificationManager manager;
-			manager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
 			switch (chatType) {
 				case FLATTER:
 					CloudMessagesService.notifyChatsPublic(activity, ChatType.FLATTER, false);

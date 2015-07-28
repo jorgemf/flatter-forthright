@@ -67,4 +67,7 @@ public class ChatPublicViewHolder extends UserViewHolder {
 		chatPublicModel.roomName = roomName;
 	}
 
+	public ChatPublicModel getModel() {
+		return chatPublicModel;
+	}
 }

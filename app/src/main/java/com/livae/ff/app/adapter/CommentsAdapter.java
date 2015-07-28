@@ -2,11 +2,13 @@ package com.livae.ff.app.adapter;
 
 import android.database.Cursor;
 import android.support.v4.app.Fragment;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.livae.ff.app.R;
+import com.livae.ff.app.listener.CommentClickListener;
 import com.livae.ff.app.settings.Settings;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.viewholders.CommentViewHolder;
@@ -15,7 +17,9 @@ import com.livae.ff.common.Constants.CommentVoteType;
 import com.livae.ff.common.Constants.FlagReason;
 import com.livae.ff.common.Constants.UserMark;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -92,8 +96,13 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
 	private String userName;
 
+	private CommentClickListener commentClickListener;
+
+	private SparseBooleanArray selectedItems;
+
 	public CommentsAdapter(@Nonnull Fragment fragment, @Nonnull ViewCreator viewCreator,
-						   @Nonnull ChatType chatType, String userName, String userImageUri) {
+						   CommentClickListener commentClickListener, @Nonnull ChatType chatType,
+						   String userName, String userImageUri) {
 		super(fragment.getActivity(), viewCreator);
 		layoutInflater = fragment.getActivity().getLayoutInflater();
 		commentVoteTypeHashMap = new HashMap<>();
@@ -101,6 +110,8 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		isPublicChat = chatType == ChatType.FORTHRIGHT || chatType == ChatType.FLATTER;
 		this.userName = userName;
 		this.userImageUri = userImageUri;
+		this.commentClickListener = commentClickListener;
+		selectedItems = new SparseBooleanArray();
 	}
 
 	public void votedComment(Long commentId, CommentVoteType voteType) {
@@ -184,7 +195,7 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 				view = layoutInflater.inflate(R.layout.item_comment_public_user, viewGroup, false);
 				break;
 		}
-		return new CommentViewHolder(view);
+		return new CommentViewHolder(view, commentClickListener);
 	}
 
 	@Override
@@ -424,5 +435,62 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		Cursor cursor = getCursor();
 		cursor.moveToPosition(position);
 		return cursor.getLong(iDate);
+	}
+
+	public void toggleSelection(int pos) {
+		if (selectedItems.get(pos, false)) {
+			selectedItems.delete(pos);
+		} else {
+			selectedItems.put(pos, true);
+		}
+		notifyItemChanged(pos);
+	}
+
+	public void clearSelections() {
+		selectedItems.clear();
+		notifyDataSetChanged();
+	}
+
+	public int getSelectedItemCount() {
+		return selectedItems.size();
+	}
+
+	public List<Integer> getSelectedItems() {
+		List<Integer> items = new ArrayList<Integer>(selectedItems.size());
+		for (int i = 0; i < selectedItems.size(); i++) {
+			items.add(selectedItems.keyAt(i));
+		}
+		return items;
+	}
+
+	public String getComment(int position) {
+		Cursor cursor = getCursor();
+		cursor.moveToPosition(position);
+		return cursor.getString(iComment);
+	}
+
+	public boolean isMe(int position) {
+		Cursor cursor = getCursor();
+		cursor.moveToPosition(position);
+		return cursor.getInt(iIsMe) != 0;
+	}
+
+	public CommentVoteType getVote(int position) {
+		CommentVoteType voteType = null;
+		Cursor cursor = getCursor();
+		cursor.moveToPosition(position);
+		Long commentId = cursor.getLong(iId);
+		if (commentVoteTypeHashMap.containsKey(commentId)) {
+			voteType = commentVoteTypeHashMap.get(commentId);
+		} else {
+			String voteTypeString = cursor.getString(iVoteType);
+			if (voteTypeString != null) {
+				try {
+					voteType = CommentVoteType.valueOf(voteTypeString);
+				} catch (Exception ignore) {
+				}
+			}
+		}
+		return voteType;
 	}
 }

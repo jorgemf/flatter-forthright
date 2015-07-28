@@ -38,6 +38,10 @@
 	<string name="edit">Edit</string>
 	<string name="select_contact">Select Contact</string>
 	<string name="sending_comment">Sending comment</string>
+	<string name="selected_count">%d selected</string>
+	<string name="copy">Copy</string>
+	<string name="copy_conversation_label">Pensamientos Conversation</string>
+
 	<string name="user_agree">%s agree</string>
 	<string name="user_disagree">%s disagree</string>
 	<string name="flagged_comment_other">Controversial comment</string>
@@ -135,4 +139,12 @@
 		future we hope to fix all the bugs but we will probably move some features to only premium
 		users of the app.
 	</string>
+	<string name="menu_agree">Agree</string>
+	<string name="menu_disagree">Disagree</string>
+	<string name="menu_indifferent">Indifferent</string>
+	<string name="menu_flag_comment">Flag comment</string>
+	<string name="menu_flag_comment_abuse">Abuse or Bulling</string>
+	<string name="menu_flag_comment_insult">Swearing or insults</string>
+	<string name="menu_flag_comment_lie">Lie</string>
+	<string name="menu_flag_comment_other">Other</string>
 </resources>

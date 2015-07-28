@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,13 +27,18 @@ import com.livae.ff.app.dialog.EditTextDialogFragment;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.task.ConversationParams;
+import com.livae.ff.app.task.FlagComment;
 import com.livae.ff.app.task.ListResult;
 import com.livae.ff.app.task.QueryId;
+import com.livae.ff.app.task.TaskCommentFlag;
 import com.livae.ff.app.task.TaskCommentVoteAgree;
 import com.livae.ff.app.task.TaskCommentVoteDelete;
 import com.livae.ff.app.task.TaskCommentVoteDisagree;
 import com.livae.ff.app.task.TaskCommentsGet;
 import com.livae.ff.app.task.TaskConversationCreate;
+import com.livae.ff.app.view.ContextMenuRecyclerView;
+import com.livae.ff.app.viewholders.CommentViewHolder;
+import com.livae.ff.common.Constants;
 import com.livae.ff.common.Constants.CommentVoteType;
 
 public class ChatPublicFragment extends AbstractChatFragment {
@@ -67,6 +73,7 @@ public class ChatPublicFragment extends AbstractChatFragment {
 				setEmptyViewText(R.string.empty_chat_forthright);
 				break;
 		}
+		registerForContextMenu(recyclerView);
 	}
 
 	@Override
@@ -165,7 +172,7 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.edit_menu, menu);
+		inflater.inflate(R.menu.menu_edit, menu);
 	}
 
 	@Override
@@ -187,12 +194,110 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	}
 
 	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+									ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		ContextMenuRecyclerView.RecyclerContextMenuInfo recyclerInfo = (ContextMenuRecyclerView.RecyclerContextMenuInfo) menuInfo;
+		CommentViewHolder viewHolder = (CommentViewHolder) recyclerInfo.viewHolder;
+		String comment = viewHolder.getComment();
+		if (comment.length() > 50) {
+			comment = comment.substring(0, 49) + "…";
+		}
+		menu.setHeaderTitle(comment);
+		MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.menu_comment, menu);
+		int cursorPosition = commentsAdapter.getCursorPosition(viewHolder.getAdapterPosition());
+		MenuItem menuItem = menu.findItem(R.id.action_flag);
+		menuItem.setVisible(!commentsAdapter.isMe(cursorPosition));
+		CommentVoteType commentVoteType = commentsAdapter.getVote(cursorPosition);
+		if (commentVoteType == null) {
+			menu.findItem(R.id.action_indifferent).setEnabled(false);
+		} else {
+			switch (commentVoteType) {
+				case AGREE:
+					menu.findItem(R.id.action_agree).setEnabled(false);
+					break;
+				case DISAGREE:
+					menu.findItem(R.id.action_disagree).setEnabled(false);
+					break;
+			}
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		ContextMenu.ContextMenuInfo menuInfo = item.getMenuInfo();
+		ContextMenuRecyclerView.RecyclerContextMenuInfo recyclerInfo = (ContextMenuRecyclerView.RecyclerContextMenuInfo) menuInfo;
+		CommentViewHolder viewHolder = (CommentViewHolder) recyclerInfo.viewHolder;
+		if (viewHolder != null) {
+			Long commentId = viewHolder.getCommentId();
+			int adapterPosition = viewHolder.getAdapterPosition();
+			switch (item.getItemId()) {
+				case R.id.action_agree:
+					commentVotedAgree(commentId, adapterPosition);
+					break;
+				case R.id.action_disagree:
+					commentVotedDisagree(commentId, adapterPosition);
+					break;
+				case R.id.action_indifferent:
+					commentNoVoted(commentId, adapterPosition);
+					break;
+				case R.id.action_flag_abuse:
+					commentFlag(commentId, adapterPosition, Constants.FlagReason.ABUSE, null);
+					break;
+				case R.id.action_flag_insult:
+					commentFlag(commentId, adapterPosition, Constants.FlagReason.INSULT, null);
+					break;
+				case R.id.action_flag_lie:
+					commentFlag(commentId, adapterPosition, Constants.FlagReason.LIE, null);
+					break;
+				case R.id.action_flag_other:
+					commentFlag(commentId, adapterPosition, Constants.FlagReason.OTHER, null);
+					break;
+				default:
+					return super.onContextItemSelected(item);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	protected CustomAsyncTask<QueryId, ListResult> getLoaderTask() {
 		return new TaskCommentsGet();
 	}
 
-	@Override
-	public void commentVotedAgree(Long commentId, Long userCommentId, int adapterPosition) {
+	private void commentFlag(Long commentId, int adapterPosition, Constants.FlagReason flagReason,
+							 String comment) {
+		TaskCommentFlag taskCommentFlag = new TaskCommentFlag();
+		FlagComment flagComment = new FlagComment();
+		flagComment.setCommentId(commentId);
+		flagComment.setComment(comment);
+		flagComment.setReason(flagReason);
+		Pair<FlagComment, Integer> param = new Pair<>(flagComment, adapterPosition);
+		taskCommentFlag.execute(param, new Callback<Pair<FlagComment, Integer>, Void>() {
+			@Override
+			public void onComplete(CustomAsyncTask<Pair<FlagComment, Integer>, Void> task,
+								   Pair<FlagComment, Integer> param, Void aVoid) {
+				Analytics.event(Analytics.Category.CONTENT, Analytics.Action.COMMENT_FLAGGED,
+								param.first.getReason().name());
+				if (isResumed()) {
+					commentsAdapter.notifyItemChanged(param.second);
+				}
+			}
+
+			@Override
+			public void onError(CustomAsyncTask<Pair<FlagComment, Integer>, Void> task,
+								Pair<FlagComment, Integer> param, Exception e) {
+				if (isResumed()) {
+					AbstractActivity activity = (AbstractActivity) getActivity();
+					activity.showSnackBarException(e);
+				}
+			}
+		});
+	}
+
+	private void commentVotedAgree(Long commentId, int adapterPosition) {
 		if (taskVoteAgreeComment == null) {
 			taskVoteAgreeComment = new TaskCommentVoteAgree();
 		}
@@ -219,8 +324,7 @@ public class ChatPublicFragment extends AbstractChatFragment {
 		});
 	}
 
-	@Override
-	public void commentVotedDisagree(Long commentId, Long userCommentId, int adapterPosition) {
+	private void commentVotedDisagree(Long commentId, int adapterPosition) {
 		if (taskVoteDisagreeComment == null) {
 			taskVoteDisagreeComment = new TaskCommentVoteDisagree();
 		}
@@ -248,8 +352,7 @@ public class ChatPublicFragment extends AbstractChatFragment {
 		});
 	}
 
-	@Override
-	public void commentNoVoted(Long commentId, Long userCommentId, int adapterPosition) {
+	public void commentNoVoted(Long commentId, int adapterPosition) {
 		if (taskNoVoteComment == null) {
 			taskNoVoteComment = new TaskCommentVoteDelete();
 		}
@@ -313,4 +416,13 @@ public class ChatPublicFragment extends AbstractChatFragment {
 		}
 	}
 
+	@Override
+	public boolean onLongClick(CommentViewHolder holder) {
+		return holder.itemView.showContextMenu();
+	}
+
+	@Override
+	public void onClick(CommentViewHolder holder) {
+		// nothing
+	}
 }

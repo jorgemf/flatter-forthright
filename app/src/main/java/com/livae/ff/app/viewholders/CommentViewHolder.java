@@ -14,15 +14,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.livae.ff.app.R;
+import com.livae.ff.app.listener.CommentClickListener;
 import com.livae.ff.app.utils.ImageUtils;
 import com.livae.ff.app.utils.UnitUtils;
 import com.livae.ff.app.view.AnonymousImage;
 import com.livae.ff.common.Constants;
 import com.livae.ff.common.Constants.CommentVoteType;
 
-public class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+public class CommentViewHolder extends RecyclerView.ViewHolder
+  implements View.OnLongClickListener, View.OnClickListener {
 
 	private Long commentId;
+
+	private String commentText;
 
 	private AnonymousImage anonymousImage;
 
@@ -52,7 +56,9 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
 	private View progressBar;
 
-	public CommentViewHolder(View itemView) {
+	private CommentClickListener longClickListener;
+
+	public CommentViewHolder(View itemView, CommentClickListener longClickListener) {
 		super(itemView);
 		anonymousImage = (AnonymousImage) itemView.findViewById(R.id.anonymous_image);
 		userImage = (ImageView) itemView.findViewById(R.id.user_image);
@@ -68,6 +74,9 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 		userOpinion = (TextView) itemView.findViewById(R.id.text_user_agree_disagree);
 		commentFlag = (TextView) itemView.findViewById(R.id.user_flagged);
 		userFlag = (TextView) itemView.findViewById(R.id.comment_flagged);
+		this.longClickListener = longClickListener;
+		itemView.setOnLongClickListener(this);
+		itemView.setOnClickListener(this);
 	}
 
 	public void clear() {
@@ -98,10 +107,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 		userOpinion.setVisibility(View.GONE);
 		commentFlag.setVisibility(View.GONE);
 		userFlag.setVisibility(View.GONE);
-	}
-
-	public void setCommentId(Long commentId) {
-		this.commentId = commentId;
+		this.commentText = null;
+		this.commentId = null;
 	}
 
 	public void setAnonymousImageSeed(String seed) {
@@ -134,6 +141,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
 	public void setComment(String comment, long date, Long previousDate) {
 		final CharSequence dateString = UnitUtils.getTime(this.date.getContext(), date);
+		this.commentText = comment;
 		this.date.setText(dateString);
 		final String sufix = " " + dateString;
 		comment = comment + sufix;
@@ -292,10 +300,17 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 
 	@Override
 	public boolean onLongClick(View v) {
-//		commentActionListener.commentUpdate(commentId, comment.getText().toString(),
-//											getAdapterPosition());
-		// TODO either context menu o copy comment
+		if (longClickListener != null) {
+			return longClickListener.onLongClick(this);
+		}
 		return true;
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (longClickListener != null) {
+			longClickListener.onClick(this);
+		}
 	}
 
 	public void setSending(boolean sending) {
@@ -398,5 +413,17 @@ public class CommentViewHolder extends RecyclerView.ViewHolder implements View.O
 					break;
 			}
 		}
+	}
+
+	public Long getCommentId() {
+		return commentId;
+	}
+
+	public void setCommentId(Long commentId) {
+		this.commentId = commentId;
+	}
+
+	public String getComment() {
+		return commentText;
 	}
 }

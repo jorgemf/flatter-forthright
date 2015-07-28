@@ -1,9 +1,18 @@
 package com.livae.ff.app.fragment;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.Loader;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.livae.ff.api.ff.model.Conversation;
 import com.livae.ff.app.R;
@@ -17,10 +26,15 @@ import com.livae.ff.app.task.ConversationParams;
 import com.livae.ff.app.task.ListResult;
 import com.livae.ff.app.task.QueryId;
 import com.livae.ff.app.task.TaskConversationCreate;
+import com.livae.ff.app.viewholders.CommentViewHolder;
 import com.livae.ff.common.Constants;
 import com.livae.ff.common.Constants.ChatType;
 
-public class ChatPrivateFragment extends AbstractChatFragment {
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
+
+public class ChatPrivateFragment extends AbstractChatFragment implements ActionMode.Callback {
 
 	private boolean endPreviousMessages;
 
@@ -28,10 +42,18 @@ public class ChatPrivateFragment extends AbstractChatFragment {
 
 	private boolean firstTimeLoad;
 
+	private ActionMode actionMode;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		firstTimeLoad = savedInstanceState == null;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		registerForContextMenu(recyclerView);
 	}
 
 	@Override
@@ -163,17 +185,82 @@ public class ChatPrivateFragment extends AbstractChatFragment {
 	}
 
 	@Override
-	public void commentVotedAgree(Long commentId, Long userCommentId, int adapterPosition) {
-		// nothing
+	public boolean onLongClick(CommentViewHolder holder) {
+		if (actionMode == null) {
+			actionMode = getActivity().startActionMode(this);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public void commentVotedDisagree(Long commentId, Long userCommentId, int adapterPosition) {
-		// nothing
+	public void onClick(CommentViewHolder holder) {
+		if (actionMode != null) {
+			toggleSelection(holder.getAdapterPosition());
+		}
 	}
 
 	@Override
-	public void commentNoVoted(Long commentId, Long userCommentId, int adapterPosition) {
-		// nothing
+	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+		MenuInflater inflater = actionMode.getMenuInflater();
+		inflater.inflate(R.menu.menu_copy, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+		return false;
+	}
+
+	@Override
+	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_copy:
+				ClipboardManager clipboard;
+				FragmentActivity activity = getActivity();
+				clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+				int selected = commentsAdapter.getSelectedItemCount();
+				List<Integer> selectedItems = commentsAdapter.getSelectedItems();
+				String title = getResources().getString(R.string.copy_conversation_label);
+				if (selected == 1) {
+					int pos = commentsAdapter.getCursorPosition(selectedItems.get(0));
+					String text = commentsAdapter.getComment(pos);
+					ClipData data = ClipData.newPlainText(title, text);
+					clipboard.setPrimaryClip(data);
+				} else if (selected > 1) {
+					String text = "";
+					String me = getResources().getString(R.string.me);
+					DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,
+																		   DateFormat.SHORT);
+					for (Integer position : selectedItems) {
+						int pos = commentsAdapter.getCursorPosition(position);
+						text += dateFormat.format(new Date(commentsAdapter.getDate(pos))) + "\t";
+						if (commentsAdapter.isMe(pos)) {
+							text += me;
+						} else {
+							text += me;
+						}
+						text += ": ";
+						text += commentsAdapter.getComment(pos);
+					}
+					ClipData data = ClipData.newPlainText(title, text);
+					clipboard.setPrimaryClip(data);
+				}
+				actionMode.finish();
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onDestroyActionMode(ActionMode mode) {
+		actionMode = null;
+		commentsAdapter.clearSelections();
+	}
+
+	private void toggleSelection(int index) {
+		commentsAdapter.toggleSelection(index);
+		String title = getString(R.string.selected_count, commentsAdapter.getSelectedItemCount());
+		actionMode.setTitle(title);
 	}
 }

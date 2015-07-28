@@ -82,6 +82,10 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder
 		chatPrivateModel.unreadMessages = count;
 	}
 
+	public ChatPrivateModel getModel() {
+		return chatPrivateModel;
+	}
+
 	public void setUserName(String name, String boldText) {
 		super.setUserName(name, boldText);
 		if (chatPrivateModel.displayNameTextView != null) {
@@ -177,11 +181,6 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder
 
 	@Override
 	public boolean onLongClick(View v) {
-		v.showContextMenu();
-		return true;
-	}
-
-	public ChatPrivateModel getModel() {
-		return chatPrivateModel;
+		return v.showContextMenu();
 	}
 }

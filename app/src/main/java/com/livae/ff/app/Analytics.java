@@ -177,6 +177,8 @@ public class Analytics {
 
 		public static final String COMMENT_VOTE_REMOVED = "COMMENT_VOTE_REMOVED";
 
+		public static final String COMMENT_FLAGGED      = "COMMENT_FLAGGED";
+
 		// USER
 
 		public static final String EDITED_PROFILE = "EDITED_PROFILE";

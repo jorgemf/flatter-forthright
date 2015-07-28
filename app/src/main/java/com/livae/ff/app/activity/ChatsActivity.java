@@ -120,8 +120,8 @@ public class ChatsActivity extends AbstractActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		final MenuInflater menuInflater = getMenuInflater();
-		menuInflater.inflate(R.menu.chats_menu, menu);
-		menuInflater.inflate(R.menu.search_menu, menu);
+		menuInflater.inflate(R.menu.menu_chats, menu);
+		menuInflater.inflate(R.menu.menu_search, menu);
 
 		searchMenuItem = menu.findItem(R.id.action_search);
 		SearchView searchView = (SearchView) searchMenuItem.getActionView();
