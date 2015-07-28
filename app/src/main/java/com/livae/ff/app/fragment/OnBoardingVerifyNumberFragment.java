@@ -22,6 +22,7 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.livae.ff.app.Analytics;
+import com.livae.ff.app.Application;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.R;
@@ -90,6 +92,23 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	private CountdownDialogFragment countdownDialogFragment;
 
 	private ProgressDialogFragment progressDialogFragment;
+
+	public static boolean alternativeVerifyNumber(Context context) {
+		TelephonyManager tel;
+		tel = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		boolean unknownNetwork = tel.getNetworkType() != TelephonyManager.NETWORK_TYPE_UNKNOWN;
+		boolean emptyOperator = TextUtils.isEmpty(tel.getNetworkOperator());
+		boolean hasNetwork = unknownNetwork || emptyOperator;
+		if (hasNetwork) {
+			// maybe the operator does not send sms to the own number
+			String phone = "+" + Application.appUser().getUserPhone().toString();
+			// check with the mobile in sim card
+
+			String telNumber = tel.getLine1Number();
+
+		}
+		return false;
+	}
 
 	@Nullable
 	@Override
@@ -368,20 +387,20 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		cursor = contentResolver.query(uri, null, columnDate + ">? AND " + columnType + "=?",
 									   new String[]{oldestDate, typeInbox}, null);
 		if (cursor.moveToFirst()) {
+			String columnBody;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				columnBody = Telephony.Sms.BODY;
+			} else {
+				columnBody = "body";
+			}
+			String columnPhone;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				columnPhone = Telephony.Sms.ADDRESS;
+			} else {
+				columnPhone = "address";
+			}
 			int counter = 0;
 			do {
-				String columnBody;
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-					columnBody = Telephony.Sms.BODY;
-				} else {
-					columnBody = "body";
-				}
-				String columnPhone;
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-					columnPhone = Telephony.Sms.ADDRESS;
-				} else {
-					columnPhone = "address";
-				}
 				String message = cursor.getString(cursor.getColumnIndex(columnBody));
 				String phoneNumber = cursor.getString(cursor.getColumnIndex(columnPhone));
 				validated = checkSmsConfirmation(phoneNumber, message);
@@ -492,6 +511,47 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
 					Log.e(LOG_TAG, "Generic failure");
 					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_ERROR_GENERIC);
+					// TODO get all info from here
+//					if (alternativeVerifyNumber(context)) {
+//						phoneValidated();
+//					}
+					Bundle bundle = intent.getExtras();
+					if (bundle != null) {
+						Analytics.event("EVIL", "KEYSET=" + bundle.keySet().size()); // TODO
+						for (String key : bundle.keySet()) {
+							String value = bundle.getString(key);
+							Analytics.event("EVIL", key, value); // TODO
+							Analytics.event(Analytics.Category.SMS,
+											Analytics.Action.SMS_ERROR_GENERIC, key + "=" +
+																				value);
+						}
+					} else {
+						Analytics.event("EVIL", "BUNDLE_NULL"); // TODO
+					}
+
+					String oldestDate = Long.toString(System.currentTimeMillis() -
+													  TimeUnit.HOURS.toMillis(1));
+					ContentResolver cr = context.getContentResolver();
+					Uri uri = Uri.parse("content://sms");
+					Cursor cursor;
+					cursor = cr.query(uri, null, "date>?", new String[]{oldestDate}, "-date");
+					if (cursor.moveToFirst()) {
+						int iAddress = cursor.getColumnIndex("address");
+						int iFailureCause = cursor.getColumnIndex("failure_cause");
+						int iErrorCode = cursor.getColumnIndex("error_code");
+						do {
+							String address = cursor.getString(iAddress);
+							String failure = cursor.getString(iFailureCause);
+							String errorCode = cursor.getString(iErrorCode);
+							Analytics.event("EVIL", address, failure); // TODO
+							Analytics.event("EVIL", address, errorCode); // TODO
+							Analytics.event(Analytics.Category.SMS,
+											Analytics.Action.SMS_ERROR_GENERIC,
+											address + ";" + failure + ";" + errorCode);
+						} while (cursor.moveToNext());
+					}
+					cursor.close();
+
 					break;
 				case SmsManager.RESULT_ERROR_NO_SERVICE:
 					Log.e(LOG_TAG, "No service");
