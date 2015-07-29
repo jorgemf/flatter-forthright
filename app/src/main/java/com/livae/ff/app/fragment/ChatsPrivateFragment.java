@@ -117,7 +117,8 @@ public class ChatsPrivateFragment extends AbstractFragment
 	public void chatClicked(ChatPrivateModel model) {
 		ChatPrivateActivity.start(getActivity(), model.chatType, model.conversationId, model.userId,
 								  model.userDisplayName, model.roomName, model.userImageUri,
-								  model.lastAccess, model.lastMessage, model.unreadMessages);
+								  model.lastAccess, model.lastMessage, model.unreadMessages,
+								  model.userBlocked);
 	}
 
 	@Override

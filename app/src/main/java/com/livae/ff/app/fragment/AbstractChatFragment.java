@@ -1,5 +1,7 @@
 package com.livae.ff.app.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.res.Resources;
@@ -448,13 +450,32 @@ public abstract class AbstractChatFragment
 			Resources res = getResources();
 			int height = commentPostContainer.getHeight();
 			int margin = res.getDimensionPixelSize(R.dimen.space_normal) * 2;
-			AnimUtils.build(commentPostContainer).alpha(0.2f, 1).translateY(height + margin, 0)
+			AnimUtils.build(commentPostContainer).alpha(0.2f, 1f).translateY(height + margin, 0)
 					 .accelerateDecelerate().start();
 			height = buttonPostComment.getHeight();
-			AnimUtils.build(buttonPostComment).alpha(0.2f, 1).translateY(height + margin, 0)
+			AnimUtils.build(buttonPostComment).alpha(0.2f, 1f).translateY(height + margin, 0)
 					 .accelerateDecelerate().start();
 			commentPostContainer.setVisibility(View.VISIBLE);
 			buttonPostComment.setVisibility(View.VISIBLE);
+		}
+	}
+
+	protected void hideSendMessagesPanel() {
+		if (commentPostContainer.getVisibility() == View.VISIBLE) {
+			Resources res = getResources();
+			int height = commentPostContainer.getHeight();
+			int margin = res.getDimensionPixelSize(R.dimen.space_normal) * 2;
+			AnimUtils.build(commentPostContainer).alpha(1f, 0.2f).translateY(0, height + margin)
+					 .accelerateDecelerate().start();
+			height = buttonPostComment.getHeight();
+			AnimUtils.build(buttonPostComment).alpha(1f, 0.2f).translateY(0, height + margin)
+					 .accelerateDecelerate().setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					commentPostContainer.setVisibility(View.GONE);
+					buttonPostComment.setVisibility(View.GONE);
+				}
+			}).start();
 		}
 	}
 }

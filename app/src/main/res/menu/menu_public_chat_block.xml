@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+	<item
+		android:id="@+id/action_public_block"
+		android:title="@string/menu_public_block"
+		app:showAsAction="never"/>
+	<item
+		android:id="@+id/action_public_unblock"
+		android:title="@string/menu_public_unblock"
+		app:showAsAction="never"/>
+</menu>

@@ -6,8 +6,10 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AlertDialog;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +38,8 @@ import com.livae.ff.app.task.TaskCommentVoteDelete;
 import com.livae.ff.app.task.TaskCommentVoteDisagree;
 import com.livae.ff.app.task.TaskCommentsGet;
 import com.livae.ff.app.task.TaskConversationCreate;
+import com.livae.ff.app.task.TaskForthrightBlock;
+import com.livae.ff.app.task.TaskForthrightUnblock;
 import com.livae.ff.app.view.ContextMenuRecyclerView;
 import com.livae.ff.app.viewholders.CommentViewHolder;
 import com.livae.ff.common.Constants;
@@ -54,6 +58,10 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	private MenuItem editMenuItem;
 
 	private EditTextDialogFragment dialog;
+
+	private MenuItem menuBlock;
+
+	private MenuItem menuUnblock;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -173,6 +181,9 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.menu_edit, menu);
+		if (isMyPublicChat && chatType == Constants.ChatType.FORTHRIGHT) {
+			inflater.inflate(R.menu.menu_public_chat_block, menu);
+		}
 	}
 
 	@Override
@@ -182,15 +193,26 @@ public class ChatPublicFragment extends AbstractChatFragment {
 		if (anonymousNick == null) {
 			editMenuItem.setVisible(false);
 		}
+		menuBlock = menu.findItem(R.id.action_public_block);
+		menuUnblock = menu.findItem(R.id.action_public_unblock);
+		adjustBlockMenu();
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_edit) {
-			requestNickName();
-			return true;
+		switch (item.getItemId()) {
+			case R.id.action_edit:
+				requestNickName();
+				return true;
+			case R.id.action_public_block:
+				confirmationBlockForthrightChat();
+				return true;
+			case R.id.action_public_unblock:
+				confirmationUnblockForthrightChat();
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
+
 	}
 
 	@Override
@@ -260,6 +282,89 @@ public class ChatPublicFragment extends AbstractChatFragment {
 			return true;
 		}
 		return false;
+	}
+
+	private void adjustBlockMenu() {
+		if (isMyPublicChat && chatType == Constants.ChatType.FORTHRIGHT) {
+			Long blockedForthRightChats = Application.appUser().getBlockedForthRightChats();
+			if (blockedForthRightChats != null) {
+				menuBlock.setVisible(true);
+				menuUnblock.setVisible(false);
+			} else {
+				menuBlock.setVisible(false);
+				menuUnblock.setVisible(true);
+			}
+		}
+	}
+
+	private void confirmationBlockForthrightChat() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setMessage(R.string.confirmation_block_forthright_chat)
+			   .setPositiveButton(R.string.button_block, new DialogInterface.OnClickListener() {
+				   @Override
+				   public void onClick(DialogInterface dialog, int which) {
+					   blockChat();
+					   dialog.dismiss();
+				   }
+			   }).setNegativeButton(R.string.cancel, null).show();
+	}
+
+	private void confirmationUnblockForthrightChat() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setMessage(R.string.confirmation_unblock_forthright_chat)
+			   .setPositiveButton(R.string.button_unblock, new DialogInterface.OnClickListener() {
+				   @Override
+				   public void onClick(DialogInterface dialog, int which) {
+					   unblockChat();
+					   dialog.dismiss();
+				   }
+			   }).setNegativeButton(R.string.cancel, null).show();
+	}
+
+	private void unblockChat() {
+		TaskForthrightUnblock task = new TaskForthrightUnblock();
+		task.execute(null, new Callback<Void, Void>() {
+			@Override
+			public void onComplete(CustomAsyncTask<Void, Void> task, Void params, Void result) {
+				if (isResumed()) {
+					adjustBlockMenu();
+					Snackbar.make(getActivity().findViewById(R.id.container),
+								  R.string.confirmation_forthright_unblocked, Snackbar.LENGTH_SHORT)
+							.show();
+				}
+			}
+
+			@Override
+			public void onError(CustomAsyncTask<Void, Void> task, Void params, Exception e) {
+				if (isResumed()) {
+					AbstractActivity activity = (AbstractActivity) getActivity();
+					activity.showSnackBarException(e);
+				}
+			}
+		});
+	}
+
+	private void blockChat() {
+		TaskForthrightBlock task = new TaskForthrightBlock();
+		task.execute(null, new Callback<Void, Void>() {
+			@Override
+			public void onComplete(CustomAsyncTask<Void, Void> task, Void params, Void result) {
+				if (isResumed()) {
+					adjustBlockMenu();
+					Snackbar.make(getActivity().findViewById(R.id.container),
+								  R.string.confirmation_forthright_blocked, Snackbar.LENGTH_SHORT)
+							.show();
+				}
+			}
+
+			@Override
+			public void onError(CustomAsyncTask<Void, Void> task, Void params, Exception e) {
+				if (isResumed()) {
+					AbstractActivity activity = (AbstractActivity) getActivity();
+					activity.showSnackBarException(e);
+				}
+			}
+		});
 	}
 
 	@Override

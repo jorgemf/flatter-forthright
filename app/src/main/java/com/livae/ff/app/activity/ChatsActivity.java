@@ -413,15 +413,17 @@ public class ChatsActivity extends AbstractActivity
 			hideChatsButtonsContainer();
 			final long phone = data.getLongExtra(ContactsActivity.SELECTED_PHONE, 0);
 			final String name = data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME);
+			final boolean blocked = data.getBooleanExtra(ContactsActivity.SELECTED_USER_BLOCKED,
+														 false);
 			switch (requestCode) {
 				case REQUEST_CONTACT_PRIVATE:
-					ChatPrivateActivity.startChatPrivate(this, phone, name);
+					ChatPrivateActivity.startChatPrivate(this, phone, name, blocked);
 					break;
 				case REQUEST_CONTACT_SECRET:
-					ChatPrivateActivity.startChatSecret(this, phone, name);
+					ChatPrivateActivity.startChatSecret(this, phone, name, blocked);
 					break;
 				case REQUEST_CONTACT_ANONYMOUS:
-					ChatPrivateActivity.startChatAnonymous(this, phone, name);
+					ChatPrivateActivity.startChatAnonymous(this, phone, name, blocked);
 					break;
 			}
 		}

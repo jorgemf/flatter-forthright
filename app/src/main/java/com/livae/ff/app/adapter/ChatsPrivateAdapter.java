@@ -18,7 +18,8 @@ import javax.annotation.Nonnull;
 public class ChatsPrivateAdapter extends UsersAdapter {
 
 	public static final String[] PROJECTION = {Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
-											   Table.LocalUser.IMAGE_URI, Table.Conversation.T_ID,
+											   Table.LocalUser.IMAGE_URI, Table.LocalUser.BLOCKED,
+											   Table.Conversation.T_ID,
 											   Table.Conversation.ROOM_NAME,
 											   Table.Conversation.TYPE,
 											   Table.Conversation.LAST_MESSAGE,

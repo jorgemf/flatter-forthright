@@ -46,7 +46,7 @@ public class SendStatsEmailServlet extends HttpServlet {
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
 												  PhoneUser.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
-		if (entityStat.hasProperty("count")) {
+		if (entityStat != null && entityStat.hasProperty("count")) {
 			stats.setTotalUsers((Long) entityStat.getProperty("count"));
 		}
 
@@ -55,7 +55,7 @@ public class SendStatsEmailServlet extends HttpServlet {
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
 												  Comment.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
-		if (entityStat.hasProperty("count")) {
+		if (entityStat != null && entityStat.hasProperty("count")) {
 			stats.setTotalComments((Long) entityStat.getProperty("count"));
 		}
 
@@ -64,7 +64,7 @@ public class SendStatsEmailServlet extends HttpServlet {
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
 												  Conversation.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
-		if (entityStat.hasProperty("count")) {
+		if (entityStat != null && entityStat.hasProperty("count")) {
 			stats.setTotalConversations((Long) entityStat.getProperty("count"));
 		}
 
@@ -73,7 +73,7 @@ public class SendStatsEmailServlet extends HttpServlet {
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
 												  CommentVote.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
-		if (entityStat.hasProperty("count")) {
+		if (entityStat != null && entityStat.hasProperty("count")) {
 			stats.setTotalCommentVotes((Long) entityStat.getProperty("count"));
 		}
 
@@ -82,7 +82,7 @@ public class SendStatsEmailServlet extends HttpServlet {
 		query.setFilter(new Query.FilterPredicate("kind_name", Query.FilterOperator.EQUAL,
 												  FlagComment.class.getSimpleName()));
 		entityStat = datastore.prepare(query).asSingleEntity();
-		if (entityStat.hasProperty("count")) {
+		if (entityStat != null && entityStat.hasProperty("count")) {
 			stats.setTotalFlags((Long) entityStat.getProperty("count"));
 		}
 

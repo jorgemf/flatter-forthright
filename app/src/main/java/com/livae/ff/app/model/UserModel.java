@@ -19,10 +19,13 @@ public class UserModel {
 
 	public ImageView userImageView;
 
+	public Boolean userBlocked;
+
 	public void clear() {
 		userId = null;
 		userDisplayName = null;
 		userImageUri = null;
+		userBlocked = null;
 		if (displayNameTextView != null) {
 			displayNameTextView.setText(null);
 		}

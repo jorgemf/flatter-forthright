@@ -155,6 +155,7 @@ public class ContactsFragment extends AbstractFragment
 		Intent data = new Intent();
 		data.putExtra(ContactsActivity.SELECTED_DISPLAY_NAME, userModel.userDisplayName);
 		data.putExtra(ContactsActivity.SELECTED_PHONE, userModel.userId);
+		data.putExtra(ContactsActivity.SELECTED_USER_BLOCKED, userModel.userBlocked);
 		activity.setResult(Activity.RESULT_OK, data);
 		activity.finish();
 	}

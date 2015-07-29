@@ -100,4 +100,8 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 			}
 		}
 	}
+
+	public void setUserBlocked(boolean userBlocked) {
+		userModel.userBlocked = userBlocked;
+	}
 }

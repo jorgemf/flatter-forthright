@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import javax.mail.Address;
@@ -650,14 +651,15 @@ public class ApiEndpoint {
 	@ApiMethod(path = "conversation/{conversationId}/blockUser",
 				httpMethod = ApiMethod.HttpMethod.GET)
 	public void conversationBlockUser(@Named("conversationId") Long conversationId,
-									  @Named("time") Long time, User gUser)
+									  @Named("timeHours") Long timeHours, User gUser)
 	  throws UnauthorizedException, NotFoundException, BadRequestException {
 		if (gUser == null) {
 			throw new UnauthorizedException("User not authorized");
 		}
-		if (time == null || time < 0) {
+		if (timeHours == null || timeHours < 0) {
 			throw new BadRequestException("Positive time required");
 		}
+		long time = TimeUnit.HOURS.toMillis(timeHours);
 		if (time > Settings.MAX_TIME_BLOCK_ANONYMOUS_USER) {
 			time = Settings.MAX_TIME_BLOCK_ANONYMOUS_USER;
 		}

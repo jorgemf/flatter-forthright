@@ -91,6 +91,18 @@
 	<string name="menu_feedback">Send feedback</string>
 	<string name="menu_share">Share Pensamientos</string>
 	<string name="menu_rate">Rate</string>
+	<string name="menu_agree">Agree</string>
+	<string name="menu_disagree">Disagree</string>
+	<string name="menu_indifferent">Indifferent</string>
+	<string name="menu_flag_comment">Flag comment</string>
+	<string name="menu_flag_comment_abuse">Abuse or Bulling</string>
+	<string name="menu_flag_comment_insult">Swearing or insults</string>
+	<string name="menu_flag_comment_lie">Lie</string>
+	<string name="menu_flag_comment_other">Other</string>
+	<string name="menu_user_block">Block user</string>
+	<string name="menu_user_unblock">Unblock user</string>
+	<string name="menu_public_block">Block chat</string>
+	<string name="menu_public_unblock">Unblock chat</string>
 
 	<string name="button_about_terms_conditions">Terms and conditions</string>
 	<string name="button_about_rate_app">Rate this App</string>
@@ -105,6 +117,24 @@
 	<string name="button_anonymous">Anonymous</string>
 	<string name="button_secret">Secret</string>
 	<string name="button_normal">Normal</string>
+	<string name="button_block">Block</string>
+	<string name="button_unblock">Unblock</string>
+
+	<string name="confirmation_block_user">Do you want to block the user?</string>
+	<string name="confirmation_block_anonymous_user">Do you want to block this user for private conversations? The block it is temporary as it is impossible to unblock.</string>
+	<array name="block_anonymous_user_time">
+		<item>100 days</item>
+		<item>30 days</item>
+		<item>7 days</item>
+		<item>1 day</item>
+		<item>Do not block</item>
+	</array>
+	<string name="confirmation_user_blocked">User blocked</string>
+	<string name="confirmation_user_unblocked">User unblocked</string>
+	<string name="confirmation_forthright_blocked">Public forthright messages blocked since now</string>
+	<string name="confirmation_forthright_unblocked">Public forthright messages unblocked</string>
+	<string name="confirmation_block_forthright_chat">When you block this public chat only the new messages from others users are hidden. The old messages can still be read.</string>
+	<string name="confirmation_unblock_forthright_chat">If you unblock this public chat all messages will be visible for everyone.</string>
 
 	<string name="error_loading_elements">Error loading the elements</string>
 	<string name="error_network_no_api_connection">Connection with server failed.</string>
@@ -139,12 +169,4 @@
 		future we hope to fix all the bugs but we will probably move some features to only premium
 		users of the app.
 	</string>
-	<string name="menu_agree">Agree</string>
-	<string name="menu_disagree">Disagree</string>
-	<string name="menu_indifferent">Indifferent</string>
-	<string name="menu_flag_comment">Flag comment</string>
-	<string name="menu_flag_comment_abuse">Abuse or Bulling</string>
-	<string name="menu_flag_comment_insult">Swearing or insults</string>
-	<string name="menu_flag_comment_lie">Lie</string>
-	<string name="menu_flag_comment_other">Other</string>
 </resources>

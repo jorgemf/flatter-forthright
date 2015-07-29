@@ -19,31 +19,31 @@ public class ChatPrivateActivity extends AbstractChatActivity {
 	private Long secretConversationId;
 
 	public static void startChatPrivate(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
-										@Nonnull String displayName) {
+										@Nonnull String displayName, boolean userBlocked) {
 		start(chatsActivity, ChatType.PRIVATE, null, phone, displayName, null, null, null, null,
-			  null);
+			  null, userBlocked);
 	}
 
 	public static void startChatAnonymous(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
-										  @Nonnull String displayName) {
+										  @Nonnull String displayName, boolean userBlocked) {
 		start(chatsActivity, ChatType.PRIVATE_ANONYMOUS, null, phone, displayName, null, null, null,
-			  null, null);
+			  null, null, userBlocked);
 	}
 
 	public static void startChatSecret(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
-									   @Nonnull String displayName) {
+									   @Nonnull String displayName, boolean userBlocked) {
 		start(chatsActivity, ChatType.SECRET, null, phone, displayName, null, null, null, null,
-			  null);
+			  null, userBlocked);
 	}
 
 	public static void start(@Nonnull Activity activity, @Nonnull ChatType chatType,
 							 Long conversationId, @Nonnull Long phoneNumber, String displayName,
 							 String anonymousName, String imageUri, Long lastAccess,
-							 Long lastMessage, Integer unreadMessages) {
+							 Long lastMessage, Integer unreadMessages, boolean userBlocked) {
 		Intent intent = new Intent(activity, ChatPrivateActivity.class);
 		AbstractChatActivity.startIntent(intent, activity, chatType, conversationId, phoneNumber,
 										 displayName, anonymousName, imageUri, null, lastAccess,
-										 lastMessage, unreadMessages);
+										 lastMessage, unreadMessages, userBlocked);
 	}
 
 	@Override

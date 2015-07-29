@@ -17,6 +17,8 @@ public class ContactsActivity extends AbstractActivity {
 
 	public static final String SELECTED_DISPLAY_NAME = "SELECTED_DISPLAY_NAME";
 
+	public static final String SELECTED_USER_BLOCKED = "SELECTED_USER_BLOCKED";
+
 	public static void start(Activity activity) {
 		Intent intent = new Intent(activity, ContactsActivity.class);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
