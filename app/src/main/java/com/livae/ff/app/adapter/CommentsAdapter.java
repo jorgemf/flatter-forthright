@@ -230,10 +230,12 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		}
 		holder.setComment(cursor.getString(iComment), date, previousDate);
 
-		bindVotes(holder, cursor, commentId);
-		bindUserVoteType(holder, cursor);
-		bindUserMark(holder, cursor);
-		bindCommentFlag(holder, cursor);
+		if (chatType == ChatType.FLATTER || chatType == ChatType.FORTHRIGHT) {
+			bindVotes(holder, cursor, commentId);
+			bindUserVoteType(holder, cursor);
+			bindUserMark(holder, cursor);
+			bindCommentFlag(holder, cursor);
+		}
 
 		boolean isSyncTemp = false;
 		if (iSyncTemp >= 0) {

@@ -67,7 +67,7 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		isMyPublicChat = Application.appUser().getUserPhone().equals(conversationPhone);
-		setHasOptionsMenu(!isMyPublicChat);
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -180,7 +180,9 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_edit, menu);
+		if (!isMyPublicChat) {
+			inflater.inflate(R.menu.menu_edit, menu);
+		}
 		if (isMyPublicChat && chatType == Constants.ChatType.FORTHRIGHT) {
 			inflater.inflate(R.menu.menu_public_chat_block, menu);
 		}

@@ -102,11 +102,21 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		date.setVisibility(View.VISIBLE);
 		dayDate.setVisibility(View.GONE);
 		dayDate.setText(null);
-		agree.setVisibility(View.GONE);
-		disagree.setVisibility(View.GONE);
-		userOpinion.setVisibility(View.GONE);
-		commentFlag.setVisibility(View.GONE);
-		userFlag.setVisibility(View.GONE);
+		if (agree != null) {
+			agree.setVisibility(View.GONE);
+		}
+		if (disagree != null) {
+			disagree.setVisibility(View.GONE);
+		}
+		if (userOpinion != null) {
+			userOpinion.setVisibility(View.GONE);
+		}
+		if (commentFlag != null) {
+			commentFlag.setVisibility(View.GONE);
+		}
+		if (userFlag != null) {
+			userFlag.setVisibility(View.GONE);
+		}
 		this.commentText = null;
 		this.commentId = null;
 	}

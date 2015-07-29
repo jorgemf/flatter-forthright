@@ -70,8 +70,8 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 
 	@Override
 	protected void bindCustomViewHolder(UserViewHolder userHolder, int position, Cursor cursor) {
+		super.bindCustomViewHolder(userHolder, position, cursor);
 		ChatPrivateViewHolder holder = (ChatPrivateViewHolder) userHolder;
-		holder.clear();
 		holder.setConversationId(cursor.getLong(iConversationId));
 		final Constants.ChatType chatType = Constants.ChatType.valueOf(cursor.getString(iType));
 		holder.setChatType(chatType);

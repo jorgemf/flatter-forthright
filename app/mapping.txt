@@ -8182,6 +8182,7 @@ android.support.v7.app.AlertDialog$Builder -> android.support.v7.app.r:
     android.content.Context getContext() -> a
     android.support.v7.app.AlertDialog$Builder setTitle(java.lang.CharSequence) -> a
     android.support.v7.app.AlertDialog$Builder setCustomTitle(android.view.View) -> a
+    android.support.v7.app.AlertDialog$Builder setMessage(int) -> a
     android.support.v7.app.AlertDialog$Builder setMessage(java.lang.CharSequence) -> b
     android.support.v7.app.AlertDialog$Builder setIcon(android.graphics.drawable.Drawable) -> a
     android.support.v7.app.AlertDialog$Builder setPositiveButton(int,android.content.DialogInterface$OnClickListener) -> a
@@ -8189,7 +8190,8 @@ android.support.v7.app.AlertDialog$Builder -> android.support.v7.app.r:
     android.support.v7.app.AlertDialog$Builder setCancelable(boolean) -> a
     android.support.v7.app.AlertDialog$Builder setOnKeyListener(android.content.DialogInterface$OnKeyListener) -> a
     android.support.v7.app.AlertDialog$Builder setAdapter(android.widget.ListAdapter,android.content.DialogInterface$OnClickListener) -> a
-    android.support.v7.app.AlertDialog$Builder setView(int) -> a
+    android.support.v7.app.AlertDialog$Builder setSingleChoiceItems(int,int,android.content.DialogInterface$OnClickListener) -> a
+    android.support.v7.app.AlertDialog$Builder setView(int) -> b
     android.support.v7.app.AlertDialog$Builder setView(android.view.View) -> b
     android.support.v7.app.AlertDialog create() -> b
     android.support.v7.app.AlertDialog show() -> c
@@ -22758,16 +22760,22 @@ com.livae.ff.api.ff.Ff -> com.livae.ff.api.ff.a:
 com.livae.ff.api.ff.Ff$ApiEndpoint -> com.livae.ff.api.ff.b:
     com.livae.ff.api.ff.Ff this$0 -> a
     com.livae.ff.api.ff.Ff$ApiEndpoint$AgreeComment agreeComment(java.lang.Long) -> a
-    com.livae.ff.api.ff.Ff$ApiEndpoint$DisagreeComment disagreeComment(java.lang.Long) -> b
-    com.livae.ff.api.ff.Ff$ApiEndpoint$GetComments getComments(java.lang.Long) -> c
+    com.livae.ff.api.ff.Ff$ApiEndpoint$BlockForthright blockForthright() -> a
+    com.livae.ff.api.ff.Ff$ApiEndpoint$BlockUser blockUser(java.lang.Long) -> b
+    com.livae.ff.api.ff.Ff$ApiEndpoint$ConversationBlockUser conversationBlockUser(java.lang.Long,java.lang.Long) -> a
+    com.livae.ff.api.ff.Ff$ApiEndpoint$DisagreeComment disagreeComment(java.lang.Long) -> c
+    com.livae.ff.api.ff.Ff$ApiEndpoint$FlagComment flagComment(java.lang.Long,com.livae.ff.api.ff.model.FlagText) -> a
+    com.livae.ff.api.ff.Ff$ApiEndpoint$GetComments getComments(java.lang.Long) -> d
     com.livae.ff.api.ff.Ff$ApiEndpoint$GetContacts getContacts(com.livae.ff.api.ff.model.Numbers) -> a
     com.livae.ff.api.ff.Ff$ApiEndpoint$GetPhoneConversation getPhoneConversation(java.lang.Long,java.lang.String) -> a
-    com.livae.ff.api.ff.Ff$ApiEndpoint$JoinConversation joinConversation(java.lang.Long) -> d
-    com.livae.ff.api.ff.Ff$ApiEndpoint$LeaveConversation leaveConversation(java.lang.Long) -> e
-    com.livae.ff.api.ff.Ff$ApiEndpoint$NoVoteComment noVoteComment(java.lang.Long) -> f
+    com.livae.ff.api.ff.Ff$ApiEndpoint$JoinConversation joinConversation(java.lang.Long) -> e
+    com.livae.ff.api.ff.Ff$ApiEndpoint$LeaveConversation leaveConversation(java.lang.Long) -> f
+    com.livae.ff.api.ff.Ff$ApiEndpoint$NoVoteComment noVoteComment(java.lang.Long) -> g
     com.livae.ff.api.ff.Ff$ApiEndpoint$PostComment postComment(java.lang.Long,com.livae.ff.api.ff.model.Text) -> a
-    com.livae.ff.api.ff.Ff$ApiEndpoint$Register register(java.lang.Long) -> g
-    com.livae.ff.api.ff.Ff$ApiEndpoint$Wakeup wakeup() -> a
+    com.livae.ff.api.ff.Ff$ApiEndpoint$Register register(java.lang.Long) -> h
+    com.livae.ff.api.ff.Ff$ApiEndpoint$UnblockForthright unblockForthright() -> b
+    com.livae.ff.api.ff.Ff$ApiEndpoint$UnblockUser unblockUser(java.lang.Long) -> i
+    com.livae.ff.api.ff.Ff$ApiEndpoint$Wakeup wakeup() -> c
 com.livae.ff.api.ff.Ff$ApiEndpoint$AgreeComment -> com.livae.ff.api.ff.c:
     java.lang.Long commentId -> commentId
     com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
@@ -22776,7 +22784,31 @@ com.livae.ff.api.ff.Ff$ApiEndpoint$AgreeComment -> com.livae.ff.api.ff.c:
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.Ff$ApiEndpoint$DisagreeComment -> com.livae.ff.api.ff.d:
+com.livae.ff.api.ff.Ff$ApiEndpoint$BlockForthright -> com.livae.ff.api.ff.d:
+    com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
+    com.livae.ff.api.ff.Ff$ApiEndpoint$BlockForthright set(java.lang.String,java.lang.Object) -> c
+    com.livae.ff.api.ff.FfRequest set(java.lang.String,java.lang.Object) -> d
+    com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
+    com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
+    com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
+com.livae.ff.api.ff.Ff$ApiEndpoint$BlockUser -> com.livae.ff.api.ff.e:
+    java.lang.Long phone -> phone
+    com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
+    com.livae.ff.api.ff.Ff$ApiEndpoint$BlockUser set(java.lang.String,java.lang.Object) -> c
+    com.livae.ff.api.ff.FfRequest set(java.lang.String,java.lang.Object) -> d
+    com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
+    com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
+    com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
+com.livae.ff.api.ff.Ff$ApiEndpoint$ConversationBlockUser -> com.livae.ff.api.ff.f:
+    java.lang.Long conversationId -> conversationId
+    java.lang.Long timeHours -> timeHours
+    com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
+    com.livae.ff.api.ff.Ff$ApiEndpoint$ConversationBlockUser set(java.lang.String,java.lang.Object) -> c
+    com.livae.ff.api.ff.FfRequest set(java.lang.String,java.lang.Object) -> d
+    com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
+    com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
+    com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
+com.livae.ff.api.ff.Ff$ApiEndpoint$DisagreeComment -> com.livae.ff.api.ff.g:
     java.lang.Long commentId -> commentId
     com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
     com.livae.ff.api.ff.Ff$ApiEndpoint$DisagreeComment set(java.lang.String,java.lang.Object) -> c
@@ -22784,7 +22816,15 @@ com.livae.ff.api.ff.Ff$ApiEndpoint$DisagreeComment -> com.livae.ff.api.ff.d:
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.Ff$ApiEndpoint$GetComments -> com.livae.ff.api.ff.e:
+com.livae.ff.api.ff.Ff$ApiEndpoint$FlagComment -> com.livae.ff.api.ff.h:
+    java.lang.Long commentId -> commentId
+    com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
+    com.livae.ff.api.ff.Ff$ApiEndpoint$FlagComment set(java.lang.String,java.lang.Object) -> c
+    com.livae.ff.api.ff.FfRequest set(java.lang.String,java.lang.Object) -> d
+    com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
+    com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
+    com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
+com.livae.ff.api.ff.Ff$ApiEndpoint$GetComments -> com.livae.ff.api.ff.i:
     java.lang.Long conversationId -> conversationId
     java.lang.String cursor -> cursor
     java.lang.Long date -> date
@@ -22797,14 +22837,14 @@ com.livae.ff.api.ff.Ff$ApiEndpoint$GetComments -> com.livae.ff.api.ff.e:
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.Ff$ApiEndpoint$GetContacts -> com.livae.ff.api.ff.f:
+com.livae.ff.api.ff.Ff$ApiEndpoint$GetContacts -> com.livae.ff.api.ff.j:
     com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
     com.livae.ff.api.ff.Ff$ApiEndpoint$GetContacts set(java.lang.String,java.lang.Object) -> c
     com.livae.ff.api.ff.FfRequest set(java.lang.String,java.lang.Object) -> d
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.Ff$ApiEndpoint$GetPhoneConversation -> com.livae.ff.api.ff.g:
+com.livae.ff.api.ff.Ff$ApiEndpoint$GetPhoneConversation -> com.livae.ff.api.ff.k:
     java.lang.Long phoneNumber -> phoneNumber
     java.lang.String type -> type
     java.lang.String roomName -> roomName
@@ -22815,7 +22855,7 @@ com.livae.ff.api.ff.Ff$ApiEndpoint$GetPhoneConversation -> com.livae.ff.api.ff.g
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.Ff$ApiEndpoint$JoinConversation -> com.livae.ff.api.ff.h:
+com.livae.ff.api.ff.Ff$ApiEndpoint$JoinConversation -> com.livae.ff.api.ff.l:
     java.lang.Long conversationId -> conversationId
     com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
     com.livae.ff.api.ff.Ff$ApiEndpoint$JoinConversation set(java.lang.String,java.lang.Object) -> c
@@ -22823,7 +22863,7 @@ com.livae.ff.api.ff.Ff$ApiEndpoint$JoinConversation -> com.livae.ff.api.ff.h:
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.Ff$ApiEndpoint$LeaveConversation -> com.livae.ff.api.ff.i:
+com.livae.ff.api.ff.Ff$ApiEndpoint$LeaveConversation -> com.livae.ff.api.ff.m:
     java.lang.Long conversationId -> conversationId
     com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
     com.livae.ff.api.ff.Ff$ApiEndpoint$LeaveConversation set(java.lang.String,java.lang.Object) -> c
@@ -22831,7 +22871,7 @@ com.livae.ff.api.ff.Ff$ApiEndpoint$LeaveConversation -> com.livae.ff.api.ff.i:
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.Ff$ApiEndpoint$NoVoteComment -> com.livae.ff.api.ff.j:
+com.livae.ff.api.ff.Ff$ApiEndpoint$NoVoteComment -> com.livae.ff.api.ff.n:
     java.lang.Long commentId -> commentId
     com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
     com.livae.ff.api.ff.Ff$ApiEndpoint$NoVoteComment set(java.lang.String,java.lang.Object) -> c
@@ -22839,7 +22879,7 @@ com.livae.ff.api.ff.Ff$ApiEndpoint$NoVoteComment -> com.livae.ff.api.ff.j:
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.Ff$ApiEndpoint$PostComment -> com.livae.ff.api.ff.k:
+com.livae.ff.api.ff.Ff$ApiEndpoint$PostComment -> com.livae.ff.api.ff.o:
     java.lang.Long conversationId -> conversationId
     java.lang.String alias -> alias
     com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
@@ -22849,7 +22889,7 @@ com.livae.ff.api.ff.Ff$ApiEndpoint$PostComment -> com.livae.ff.api.ff.k:
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.Ff$ApiEndpoint$Register -> com.livae.ff.api.ff.l:
+com.livae.ff.api.ff.Ff$ApiEndpoint$Register -> com.livae.ff.api.ff.p:
     java.lang.Long number -> number
     java.lang.String deviceId -> deviceId
     com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
@@ -22859,7 +22899,22 @@ com.livae.ff.api.ff.Ff$ApiEndpoint$Register -> com.livae.ff.api.ff.l:
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.Ff$ApiEndpoint$Wakeup -> com.livae.ff.api.ff.m:
+com.livae.ff.api.ff.Ff$ApiEndpoint$UnblockForthright -> com.livae.ff.api.ff.q:
+    com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
+    com.livae.ff.api.ff.Ff$ApiEndpoint$UnblockForthright set(java.lang.String,java.lang.Object) -> c
+    com.livae.ff.api.ff.FfRequest set(java.lang.String,java.lang.Object) -> d
+    com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
+    com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
+    com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
+com.livae.ff.api.ff.Ff$ApiEndpoint$UnblockUser -> com.livae.ff.api.ff.r:
+    java.lang.Long phone -> phone
+    com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
+    com.livae.ff.api.ff.Ff$ApiEndpoint$UnblockUser set(java.lang.String,java.lang.Object) -> c
+    com.livae.ff.api.ff.FfRequest set(java.lang.String,java.lang.Object) -> d
+    com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
+    com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
+    com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
+com.livae.ff.api.ff.Ff$ApiEndpoint$Wakeup -> com.livae.ff.api.ff.s:
     java.lang.String deviceId -> deviceId
     com.livae.ff.api.ff.Ff$ApiEndpoint this$1 -> a
     com.livae.ff.api.ff.Ff$ApiEndpoint$Wakeup setDeviceId(java.lang.String) -> a
@@ -22868,7 +22923,7 @@ com.livae.ff.api.ff.Ff$ApiEndpoint$Wakeup -> com.livae.ff.api.ff.m:
     com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest set(java.lang.String,java.lang.Object) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.Ff$Builder -> com.livae.ff.api.ff.n:
+com.livae.ff.api.ff.Ff$Builder -> com.livae.ff.api.ff.t:
     com.livae.ff.api.ff.Ff build() -> a
     com.livae.ff.api.ff.Ff$Builder setRootUrl(java.lang.String) -> e
     com.livae.ff.api.ff.Ff$Builder setServicePath(java.lang.String) -> f
@@ -22880,7 +22935,7 @@ com.livae.ff.api.ff.Ff$Builder -> com.livae.ff.api.ff.n:
     com.google.api.client.googleapis.services.AbstractGoogleClient$Builder setGoogleClientRequestInitializer(com.google.api.client.googleapis.services.GoogleClientRequestInitializer) -> a
     com.google.api.client.googleapis.services.AbstractGoogleClient$Builder setServicePath(java.lang.String) -> b
     com.google.api.client.googleapis.services.AbstractGoogleClient$Builder setRootUrl(java.lang.String) -> a
-com.livae.ff.api.ff.FfRequest -> com.livae.ff.api.ff.o:
+com.livae.ff.api.ff.FfRequest -> com.livae.ff.api.ff.u:
     java.lang.String alt -> alt
     java.lang.String fields -> fields
     java.lang.String key -> key
@@ -22895,7 +22950,7 @@ com.livae.ff.api.ff.FfRequest -> com.livae.ff.api.ff.o:
     com.google.api.client.googleapis.services.AbstractGoogleClientRequest set(java.lang.String,java.lang.Object) -> a
     com.google.api.client.googleapis.services.AbstractGoogleClient getAbstractGoogleClient() -> a
     com.google.api.client.util.GenericData set(java.lang.String,java.lang.Object) -> set
-com.livae.ff.api.ff.FfRequestInitializer -> com.livae.ff.api.ff.p:
+com.livae.ff.api.ff.FfRequestInitializer -> com.livae.ff.api.ff.v:
     void initializeJsonRequest(com.google.api.client.googleapis.services.json.AbstractGoogleJsonClientRequest) -> a
     void initializeFfRequest(com.livae.ff.api.ff.FfRequest) -> a
 com.livae.ff.api.ff.model.CollectionResponseComment -> com.livae.ff.api.ff.model.CollectionResponseComment:
@@ -23089,16 +23144,18 @@ com.livae.ff.app.AppUser -> com.livae.ff.app.b:
     void setAppVersion(java.lang.Integer) -> a
     java.lang.String getAccessToken() -> b
     void setAccessToken(java.lang.String) -> a
-    java.lang.Long getUserPhone() -> c
-    void setUserPhone(java.lang.Long) -> a
-    boolean isDeviceConnected() -> d
-    com.livae.ff.common.Constants$Profile getProfile() -> e
+    java.lang.Long getBlockedForthRightChats() -> c
+    void setBlockedForthRightChats(java.lang.Long) -> a
+    java.lang.Long getUserPhone() -> d
+    void setUserPhone(java.lang.Long) -> b
+    boolean isDeviceConnected() -> e
+    com.livae.ff.common.Constants$Profile getProfile() -> f
     void setProfile(com.livae.ff.common.Constants$Profile) -> a
     void setProfile(java.lang.String) -> b
-    java.lang.String getCloudMessagesId() -> f
+    java.lang.String getCloudMessagesId() -> g
     void setCloudMessagesId(java.lang.String) -> c
-    com.livae.ff.app.settings.Notifications getNotifications() -> g
-    com.livae.ff.app.settings.Chats getChats() -> h
+    com.livae.ff.app.settings.Notifications getNotifications() -> h
+    com.livae.ff.app.settings.Chats getChats() -> i
     java.lang.String toString() -> toString
 com.livae.ff.app.Application -> com.livae.ff.app.Application:
     com.livae.ff.app.Application instance -> a
@@ -23822,9 +23879,9 @@ com.livae.ff.app.activity.AbstractChatActivity -> com.livae.ff.app.activity.b:
     com.livae.ff.app.view.AnonymousImage imageAnonymous -> e
     android.widget.ImageView imageUser -> f
     boolean $assertionsDisabled -> a
-    android.content.Intent createIntent(android.content.Context,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer) -> a
-    void startIntent(android.content.Intent,android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer) -> a
-    void fillIntent(android.content.Intent,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer) -> a
+    android.content.Intent createIntent(android.content.Context,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer,java.lang.Boolean) -> a
+    void startIntent(android.content.Intent,android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer,java.lang.Boolean) -> a
+    void fillIntent(android.content.Intent,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer,java.lang.Boolean) -> a
     void onCreated() -> e
     void setTitle(java.lang.CharSequence) -> setTitle
     void bindToolbar(java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long) -> a
@@ -23839,10 +23896,10 @@ com.livae.ff.app.activity.AbstractChatActivity$1 -> com.livae.ff.app.activity.c:
     int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
 com.livae.ff.app.activity.ChatPrivateActivity -> com.livae.ff.app.activity.ChatPrivateActivity:
     java.lang.Long secretConversationId -> b
-    void startChatPrivate(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String) -> a
-    void startChatAnonymous(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String) -> b
-    void startChatSecret(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String) -> c
-    void start(android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Integer) -> a
+    void startChatPrivate(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String,boolean) -> a
+    void startChatAnonymous(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String,boolean) -> b
+    void startChatSecret(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String,boolean) -> c
+    void start(android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Integer,boolean) -> a
     void onCreate(android.os.Bundle) -> onCreate
     void setSecretConversationId(java.lang.Long) -> a
     void onDestroy() -> onDestroy
@@ -23965,7 +24022,7 @@ com.livae.ff.app.adapter.ChatsPrivateAdapter -> com.livae.ff.app.a.b:
     int iLastAccess -> g
     int iUnreadCount -> h
     int iConversationPhone -> i
-    com.livae.ff.app.listener.ChatPrivateClickListener chatPrivateClickListener -> q
+    com.livae.ff.app.listener.ChatPrivateClickListener chatPrivateClickListener -> r
     void findIndexes(android.database.Cursor) -> a
     void bindCustomViewHolder(com.livae.ff.app.viewholders.UserViewHolder,int,android.database.Cursor) -> a
     com.livae.ff.app.viewholders.UserViewHolder onCreateViewHolder(android.view.ViewGroup,int) -> a
@@ -24008,19 +24065,34 @@ com.livae.ff.app.adapter.CommentsAdapter -> com.livae.ff.app.a.e:
     int iTimesFlaggedLie -> q
     int iTimesFlaggedOther -> r
     int iSyncTemp -> s
-    com.livae.ff.app.listener.CommentActionListener commentActionListener -> t
-    android.view.LayoutInflater layoutInflater -> u
-    com.livae.ff.common.Constants$ChatType chatType -> v
-    java.util.HashMap commentVoteTypeHashMap -> w
-    boolean isPublicChat -> x
-    java.lang.String userImageUri -> y
-    java.lang.String userName -> z
+    android.view.LayoutInflater layoutInflater -> t
+    com.livae.ff.common.Constants$ChatType chatType -> u
+    java.util.HashMap commentVoteTypeHashMap -> v
+    boolean isPublicChat -> w
+    java.lang.String userImageUri -> x
+    java.lang.String userName -> y
+    com.livae.ff.app.listener.CommentClickListener commentClickListener -> z
+    android.util.SparseBooleanArray selectedItems -> A
+    void votedComment(java.lang.Long,com.livae.ff.common.Constants$CommentVoteType) -> a
     void setCursor(android.database.Cursor) -> a
     void findIndexes(android.database.Cursor) -> b
     int getCustomItemViewType(int,android.database.Cursor) -> a
     com.livae.ff.app.viewholders.CommentViewHolder createCustomViewHolder(android.view.ViewGroup,int) -> a
     void bindCustomViewHolder(com.livae.ff.app.viewholders.CommentViewHolder,int,android.database.Cursor) -> a
+    void bindCommentFlag(com.livae.ff.app.viewholders.CommentViewHolder,android.database.Cursor) -> a
+    void bindUserMark(com.livae.ff.app.viewholders.CommentViewHolder,android.database.Cursor) -> b
+    void bindUserVoteType(com.livae.ff.app.viewholders.CommentViewHolder,android.database.Cursor) -> c
+    void bindVotes(com.livae.ff.app.viewholders.CommentViewHolder,android.database.Cursor,long) -> a
+    void bindCommentPadding(com.livae.ff.app.viewholders.CommentViewHolder,android.database.Cursor,java.lang.Long,java.lang.String,boolean,boolean) -> a
+    void bindCommentHeader(com.livae.ff.app.viewholders.CommentViewHolder,android.database.Cursor,java.lang.Long,java.lang.String,boolean,boolean) -> b
     long getDate(int) -> a
+    void toggleSelection(int) -> b
+    void clearSelections() -> a
+    int getSelectedItemCount() -> b
+    java.util.List getSelectedItems() -> c
+    java.lang.String getComment(int) -> c
+    boolean isMe(int) -> d
+    com.livae.ff.common.Constants$CommentVoteType getVote(int) -> e
     void bindCustomViewHolder(android.support.v7.widget.RecyclerView$ViewHolder,int,android.database.Cursor) -> a
     android.support.v7.widget.RecyclerView$ViewHolder createCustomViewHolder(android.view.ViewGroup,int) -> b
 com.livae.ff.app.adapter.CommentsAdapter$1 -> com.livae.ff.app.a.f:
@@ -24055,7 +24127,7 @@ com.livae.ff.app.adapter.EndlessCursorAdapter -> com.livae.ff.app.a.i:
     android.database.Cursor cursor -> f
     com.livae.ff.app.adapter.EndlessCursorAdapter$ViewCreator viewCreator -> g
     int iId -> h
-    android.database.Cursor getCursor() -> a
+    android.database.Cursor getCursor() -> d
     void setCursor(android.database.Cursor) -> a
     void setHeaderView(android.view.View) -> a
     void setFooterView(android.view.View) -> b
@@ -24067,13 +24139,13 @@ com.livae.ff.app.adapter.EndlessCursorAdapter -> com.livae.ff.app.a.i:
     int getItemViewType(int) -> getItemViewType
     long getItemId(int) -> getItemId
     int getItemCount() -> getItemCount
-    int getCursorItemCount() -> b
+    int getCursorItemCount() -> e
     int getCustomItemViewType(int,android.database.Cursor) -> a
     android.support.v7.widget.RecyclerView$ViewHolder createCustomViewHolder(android.view.ViewGroup,int) -> b
     void bindCustomViewHolder(android.support.v7.widget.RecyclerView$ViewHolder,int,android.database.Cursor) -> a
-    boolean isLoading() -> c
-    boolean isError() -> d
-    int getCursorPosition(int) -> b
+    boolean isLoading() -> f
+    boolean isError() -> g
+    int getCursorPosition(int) -> f
 com.livae.ff.app.adapter.EndlessCursorAdapter$EndlessViewHolder -> com.livae.ff.app.a.j:
     com.livae.ff.app.adapter.EndlessCursorAdapter this$0 -> a
 com.livae.ff.app.adapter.EndlessCursorAdapter$ViewCreator -> com.livae.ff.app.a.k:
@@ -24086,6 +24158,7 @@ com.livae.ff.app.adapter.UsersAdapter -> com.livae.ff.app.a.l:
     int iContact -> n
     int iPhone -> o
     int iImageUri -> p
+    int iBlocked -> q
     com.livae.ff.app.listener.UserClickListener userClickListener -> a
     void findIndexes(android.database.Cursor) -> a
     long getItemId(int) -> getItemId
@@ -24116,6 +24189,7 @@ com.livae.ff.app.api.Model -> com.livae.ff.app.b.d:
     void parse(com.livae.ff.api.ff.model.CollectionResponseComment) -> a
     void parse(java.lang.Long,java.lang.Long,java.lang.String) -> a
     void parse(com.livae.ff.api.ff.model.Conversation,java.lang.Long,java.lang.String) -> a
+    void parseBlocked(java.lang.Long,boolean) -> a
     void parse(com.livae.ff.common.model.Notification) -> a
 com.livae.ff.app.api.Model$1 -> com.livae.ff.app.b.e:
     int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
@@ -24215,21 +24289,23 @@ com.livae.ff.app.fragment.AbstractChatFragment -> com.livae.ff.app.fragment.a:
     java.lang.String getOrderString() -> e
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    void updateNotifications() -> r
+    void updateNotifications() -> s
     void getConversation() -> f
     void startConversation() -> g
-    void registerContentObserver() -> s
-    void joinConversation() -> t
-    void leaveConversation() -> u
+    void registerContentObserver() -> t
+    void joinConversation() -> u
+    void leaveConversation() -> v
     void postComment(java.lang.String) -> a
     void onClick(android.view.View) -> onClick
     boolean onNotificationReceived(com.livae.ff.common.model.Notification) -> a
     void showSendMessagesPanel() -> h
-    com.livae.ff.app.task.QueryParam getBaseQueryParams() -> i
+    void hideSendMessagesPanel() -> i
+    com.livae.ff.app.task.QueryParam getBaseQueryParams() -> j
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
     android.widget.TextView access$000(com.livae.ff.app.fragment.AbstractChatFragment) -> a
     android.widget.EditText access$100(com.livae.ff.app.fragment.AbstractChatFragment) -> b
     android.support.design.widget.FloatingActionButton access$200(com.livae.ff.app.fragment.AbstractChatFragment) -> c
+    android.view.View access$300(com.livae.ff.app.fragment.AbstractChatFragment) -> d
 com.livae.ff.app.fragment.AbstractChatFragment$1 -> com.livae.ff.app.fragment.b:
     com.livae.ff.app.fragment.AbstractChatFragment this$0 -> a
     void onScrolled(android.support.v7.widget.RecyclerView,int,int) -> onScrolled
@@ -24249,11 +24325,14 @@ com.livae.ff.app.fragment.AbstractChatFragment$4 -> com.livae.ff.app.fragment.e:
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
 com.livae.ff.app.fragment.AbstractChatFragment$5 -> com.livae.ff.app.fragment.f:
+    com.livae.ff.app.fragment.AbstractChatFragment this$0 -> a
+    void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
+com.livae.ff.app.fragment.AbstractChatFragment$6 -> com.livae.ff.app.fragment.g:
     int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
-com.livae.ff.app.fragment.AbstractFragment -> com.livae.ff.app.fragment.g:
+com.livae.ff.app.fragment.AbstractFragment -> com.livae.ff.app.fragment.h:
     android.view.View createLoadingView(android.view.LayoutInflater,android.view.ViewGroup) -> a
     android.view.View createErrorView(android.view.LayoutInflater,android.view.ViewGroup) -> b
-com.livae.ff.app.fragment.AbstractLoaderFragment -> com.livae.ff.app.fragment.h:
+com.livae.ff.app.fragment.AbstractLoaderFragment -> com.livae.ff.app.fragment.i:
     java.lang.String KEY_SAVED_NEXT_CURSOR -> a
     java.lang.String KEY_SAVED_TOTAL_LOADED -> b
     java.lang.String KEY_SAVED_SELECTION -> c
@@ -24277,26 +24356,26 @@ com.livae.ff.app.fragment.AbstractLoaderFragment -> com.livae.ff.app.fragment.h:
     void onResume() -> onResume
     void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
     void onPause() -> onPause
-    void startLoading() -> j
+    void startLoading() -> k
     void checkLoadNext() -> d
-    com.livae.ff.app.async.CustomAsyncTask getLoaderTask() -> k
+    com.livae.ff.app.async.CustomAsyncTask getLoaderTask() -> l
     android.net.Uri getUriCursor() -> a
     com.livae.ff.app.adapter.EndlessCursorAdapter getAdapter() -> b
     java.lang.String[] getProjection() -> c
-    com.livae.ff.app.task.QueryParam getBaseQueryParams() -> i
+    com.livae.ff.app.task.QueryParam getBaseQueryParams() -> j
     java.lang.String getOrderString() -> e
-    void loadNext() -> l
-    void reloadCursor() -> m
+    void loadNext() -> m
+    void reloadCursor() -> n
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.QueryParam,com.livae.ff.app.task.ListResult) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.QueryParam,java.lang.Exception) -> a
     android.view.View createErrorView(android.view.LayoutInflater,android.view.ViewGroup) -> b
-    void restart() -> n
+    void restart() -> o
     void setEmptyViewText(int) -> a
-    void setEmptyView() -> o
+    void setEmptyView() -> p
     void showLoading() -> f
     void hideLoading() -> g
-    int getTotalLoaded() -> p
-    void increaseTotalLoaded() -> q
+    int getTotalLoaded() -> q
+    void increaseTotalLoaded() -> r
     void scrollToPosition(int,boolean) -> a
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
@@ -24308,58 +24387,109 @@ com.livae.ff.app.fragment.AbstractLoaderFragment -> com.livae.ff.app.fragment.h:
     void access$100(com.livae.ff.app.fragment.AbstractLoaderFragment) -> b
     com.livae.ff.app.adapter.EndlessCursorAdapter access$200(com.livae.ff.app.fragment.AbstractLoaderFragment) -> c
     android.widget.ProgressBar access$400(com.livae.ff.app.fragment.AbstractLoaderFragment) -> d
-com.livae.ff.app.fragment.AbstractLoaderFragment$1 -> com.livae.ff.app.fragment.i:
+com.livae.ff.app.fragment.AbstractLoaderFragment$1 -> com.livae.ff.app.fragment.j:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onScrollStateChanged(android.support.v7.widget.RecyclerView,int) -> onScrollStateChanged
     void onScrolled(android.support.v7.widget.RecyclerView,int,int) -> onScrolled
-com.livae.ff.app.fragment.AbstractLoaderFragment$2 -> com.livae.ff.app.fragment.j:
+com.livae.ff.app.fragment.AbstractLoaderFragment$2 -> com.livae.ff.app.fragment.k:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-com.livae.ff.app.fragment.AbstractLoaderFragment$3 -> com.livae.ff.app.fragment.k:
+com.livae.ff.app.fragment.AbstractLoaderFragment$3 -> com.livae.ff.app.fragment.l:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onClick(android.view.View) -> onClick
-com.livae.ff.app.fragment.AbstractLoaderFragment$5 -> com.livae.ff.app.fragment.l:
+com.livae.ff.app.fragment.AbstractLoaderFragment$5 -> com.livae.ff.app.fragment.m:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onAnimationStart(android.animation.Animator) -> onAnimationStart
-com.livae.ff.app.fragment.AbstractLoaderFragment$6 -> com.livae.ff.app.fragment.m:
+com.livae.ff.app.fragment.AbstractLoaderFragment$6 -> com.livae.ff.app.fragment.n:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
 com.livae.ff.app.fragment.ChatPrivateFragment -> com.livae.ff.app.fragment.ChatPrivateFragment:
     boolean endPreviousMessages -> l
     com.livae.ff.app.dialog.EditTextDialogFragment dialogRoomName -> m
     boolean firstTimeLoad -> n
+    android.view.ActionMode actionMode -> o
+    android.view.MenuItem menuBlock -> p
+    android.view.MenuItem menuUnblock -> q
+    boolean userBlocked -> r
+    java.lang.Long userId -> s
     void onCreate(android.os.Bundle) -> onCreate
+    void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void getConversation() -> f
     void startConversation() -> g
-    com.livae.ff.app.async.CustomAsyncTask getLoaderTask() -> k
-    void requestRoomName() -> r
+    void showSendMessagesPanel() -> h
+    com.livae.ff.app.async.CustomAsyncTask getLoaderTask() -> l
+    void requestRoomName() -> s
     void startChat(com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.String) -> a
+    boolean onLongClick(com.livae.ff.app.viewholders.CommentViewHolder) -> a
+    void onClick(com.livae.ff.app.viewholders.CommentViewHolder) -> b
+    void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    void onPrepareOptionsMenu(android.view.Menu) -> onPrepareOptionsMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void confirmationBlockAnonymousUser() -> t
+    void confirmationBlockUser() -> u
+    void unblockUser() -> v
+    void blockUser() -> w
+    void blockUser(int) -> b
+    void adjustBlockMenu() -> x
+    boolean onCreateActionMode(android.view.ActionMode,android.view.Menu) -> onCreateActionMode
+    boolean onPrepareActionMode(android.view.ActionMode,android.view.Menu) -> onPrepareActionMode
+    boolean onActionItemClicked(android.view.ActionMode,android.view.MenuItem) -> onActionItemClicked
+    void onDestroyActionMode(android.view.ActionMode) -> onDestroyActionMode
+    void toggleSelection(int) -> c
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
     boolean access$000(com.livae.ff.app.fragment.ChatPrivateFragment) -> a
     boolean access$100(com.livae.ff.app.fragment.ChatPrivateFragment) -> b
     void access$200(com.livae.ff.app.fragment.ChatPrivateFragment,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.String) -> a
     com.livae.ff.app.dialog.EditTextDialogFragment access$302(com.livae.ff.app.fragment.ChatPrivateFragment,com.livae.ff.app.dialog.EditTextDialogFragment) -> a
-com.livae.ff.app.fragment.ChatPrivateFragment$1 -> com.livae.ff.app.fragment.n:
+    void access$400(com.livae.ff.app.fragment.ChatPrivateFragment,int) -> a
+    void access$500(com.livae.ff.app.fragment.ChatPrivateFragment) -> c
+    boolean access$602(com.livae.ff.app.fragment.ChatPrivateFragment,boolean) -> a
+    void access$700(com.livae.ff.app.fragment.ChatPrivateFragment) -> d
+com.livae.ff.app.fragment.ChatPrivateFragment$1 -> com.livae.ff.app.fragment.o:
     com.livae.ff.app.fragment.ChatPrivateFragment this$0 -> a
     com.livae.ff.app.async.CustomAsyncTask execute(com.livae.ff.app.task.QueryId,com.livae.ff.app.async.Callback) -> a
     com.livae.ff.app.task.ListResult doInBackground(com.livae.ff.app.task.QueryId) -> a
     java.lang.Object doInBackground(java.lang.Object) -> a
     com.livae.ff.app.async.CustomAsyncTask execute(java.lang.Object,com.livae.ff.app.async.Callback) -> a
-com.livae.ff.app.fragment.ChatPrivateFragment$2 -> com.livae.ff.app.fragment.o:
+com.livae.ff.app.fragment.ChatPrivateFragment$2 -> com.livae.ff.app.fragment.p:
     com.livae.ff.app.fragment.ChatPrivateFragment this$0 -> a
     void performAction(com.livae.ff.app.dialog.EditTextDialogFragment,java.lang.String) -> a
     void onCancel(android.content.DialogInterface) -> onCancel
-com.livae.ff.app.fragment.ChatPrivateFragment$3 -> com.livae.ff.app.fragment.p:
+com.livae.ff.app.fragment.ChatPrivateFragment$3 -> com.livae.ff.app.fragment.q:
     com.livae.ff.app.fragment.ChatPrivateFragment this$0 -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.ConversationParams,com.livae.ff.api.ff.model.Conversation) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.ConversationParams,java.lang.Exception) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
-com.livae.ff.app.fragment.ChatPrivateFragment$4 -> com.livae.ff.app.fragment.q:
+com.livae.ff.app.fragment.ChatPrivateFragment$4 -> com.livae.ff.app.fragment.r:
+    com.livae.ff.app.fragment.ChatPrivateFragment this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.livae.ff.app.fragment.ChatPrivateFragment$5 -> com.livae.ff.app.fragment.s:
+    com.livae.ff.app.fragment.ChatPrivateFragment this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.livae.ff.app.fragment.ChatPrivateFragment$6 -> com.livae.ff.app.fragment.t:
+    com.livae.ff.app.fragment.ChatPrivateFragment this$0 -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Long,java.lang.Void) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Long,java.lang.Exception) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
+com.livae.ff.app.fragment.ChatPrivateFragment$7 -> com.livae.ff.app.fragment.u:
+    com.livae.ff.app.fragment.ChatPrivateFragment this$0 -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Long,java.lang.Void) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Long,java.lang.Exception) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
+com.livae.ff.app.fragment.ChatPrivateFragment$8 -> com.livae.ff.app.fragment.v:
+    com.livae.ff.app.fragment.ChatPrivateFragment this$0 -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.FlagConversation,java.lang.Void) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.FlagConversation,java.lang.Exception) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
+com.livae.ff.app.fragment.ChatPrivateFragment$9 -> com.livae.ff.app.fragment.w:
     int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
 com.livae.ff.app.fragment.ChatPublicFragment -> com.livae.ff.app.fragment.ChatPublicFragment:
     com.livae.ff.app.task.TaskCommentVoteAgree taskVoteAgreeComment -> l
@@ -24368,6 +24498,8 @@ com.livae.ff.app.fragment.ChatPublicFragment -> com.livae.ff.app.fragment.ChatPu
     boolean isMyPublicChat -> o
     android.view.MenuItem editMenuItem -> p
     com.livae.ff.app.dialog.EditTextDialogFragment dialog -> q
+    android.view.MenuItem menuBlock -> r
+    android.view.MenuItem menuUnblock -> s
     void onCreate(android.os.Bundle) -> onCreate
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onResume() -> onResume
@@ -24379,27 +24511,86 @@ com.livae.ff.app.fragment.ChatPublicFragment -> com.livae.ff.app.fragment.ChatPu
     void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
     void onPrepareOptionsMenu(android.view.Menu) -> onPrepareOptionsMenu
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    com.livae.ff.app.async.CustomAsyncTask getLoaderTask() -> k
-    void requestNickName() -> r
+    void onCreateContextMenu(android.view.ContextMenu,android.view.View,android.view.ContextMenu$ContextMenuInfo) -> onCreateContextMenu
+    boolean onContextItemSelected(android.view.MenuItem) -> onContextItemSelected
+    void adjustBlockMenu() -> s
+    void confirmationBlockForthrightChat() -> t
+    void confirmationUnblockForthrightChat() -> u
+    void unblockChat() -> v
+    void blockChat() -> w
+    com.livae.ff.app.async.CustomAsyncTask getLoaderTask() -> l
+    void commentFlag(java.lang.Long,int,com.livae.ff.common.Constants$FlagReason,java.lang.String) -> a
+    void commentVotedAgree(java.lang.Long,int) -> b
+    void commentVotedDisagree(java.lang.Long,int) -> c
+    void commentNoVoted(java.lang.Long,int) -> a
+    void requestNickName() -> x
+    boolean onLongClick(com.livae.ff.app.viewholders.CommentViewHolder) -> a
+    void onClick(com.livae.ff.app.viewholders.CommentViewHolder) -> b
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
     void access$000(com.livae.ff.app.fragment.ChatPublicFragment) -> a
-    com.livae.ff.app.dialog.EditTextDialogFragment access$102(com.livae.ff.app.fragment.ChatPublicFragment,com.livae.ff.app.dialog.EditTextDialogFragment) -> a
-com.livae.ff.app.fragment.ChatPublicFragment$1 -> com.livae.ff.app.fragment.r:
+    void access$100(com.livae.ff.app.fragment.ChatPublicFragment) -> b
+    void access$200(com.livae.ff.app.fragment.ChatPublicFragment) -> c
+    void access$300(com.livae.ff.app.fragment.ChatPublicFragment) -> d
+    com.livae.ff.app.dialog.EditTextDialogFragment access$402(com.livae.ff.app.fragment.ChatPublicFragment,com.livae.ff.app.dialog.EditTextDialogFragment) -> a
+com.livae.ff.app.fragment.ChatPublicFragment$1 -> com.livae.ff.app.fragment.x:
     com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
     void run() -> run
-com.livae.ff.app.fragment.ChatPublicFragment$2 -> com.livae.ff.app.fragment.s:
+com.livae.ff.app.fragment.ChatPublicFragment$10 -> com.livae.ff.app.fragment.y:
+    com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,android.support.v4.util.Pair,com.livae.ff.api.ff.model.Comment) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,android.support.v4.util.Pair,java.lang.Exception) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
+com.livae.ff.app.fragment.ChatPublicFragment$11 -> com.livae.ff.app.fragment.z:
+    com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
+    void performAction(com.livae.ff.app.dialog.EditTextDialogFragment,java.lang.String) -> a
+    void onCancel(android.content.DialogInterface) -> onCancel
+com.livae.ff.app.fragment.ChatPublicFragment$12 -> com.livae.ff.app.fragment.aa:
+    int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
+    int[] $SwitchMap$com$livae$ff$common$Constants$CommentVoteType -> b
+com.livae.ff.app.fragment.ChatPublicFragment$2 -> com.livae.ff.app.fragment.ab:
     com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.ConversationParams,com.livae.ff.api.ff.model.Conversation) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.ConversationParams,java.lang.Exception) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
-com.livae.ff.app.fragment.ChatPublicFragment$6 -> com.livae.ff.app.fragment.t:
+com.livae.ff.app.fragment.ChatPublicFragment$3 -> com.livae.ff.app.fragment.ac:
     com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
-    void performAction(com.livae.ff.app.dialog.EditTextDialogFragment,java.lang.String) -> a
-    void onCancel(android.content.DialogInterface) -> onCancel
-com.livae.ff.app.fragment.ChatPublicFragment$7 -> com.livae.ff.app.fragment.u:
-    int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
-com.livae.ff.app.fragment.ChatsPrivateFragment -> com.livae.ff.app.fragment.v:
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.livae.ff.app.fragment.ChatPublicFragment$4 -> com.livae.ff.app.fragment.ad:
+    com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.livae.ff.app.fragment.ChatPublicFragment$5 -> com.livae.ff.app.fragment.ae:
+    com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Void,java.lang.Void) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Void,java.lang.Exception) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
+com.livae.ff.app.fragment.ChatPublicFragment$6 -> com.livae.ff.app.fragment.af:
+    com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Void,java.lang.Void) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Void,java.lang.Exception) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
+com.livae.ff.app.fragment.ChatPublicFragment$7 -> com.livae.ff.app.fragment.ag:
+    com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,android.support.v4.util.Pair,java.lang.Void) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,android.support.v4.util.Pair,java.lang.Exception) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
+com.livae.ff.app.fragment.ChatPublicFragment$8 -> com.livae.ff.app.fragment.ah:
+    com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,android.support.v4.util.Pair,com.livae.ff.api.ff.model.Comment) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,android.support.v4.util.Pair,java.lang.Exception) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
+com.livae.ff.app.fragment.ChatPublicFragment$9 -> com.livae.ff.app.fragment.ai:
+    com.livae.ff.app.fragment.ChatPublicFragment this$0 -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,android.support.v4.util.Pair,com.livae.ff.api.ff.model.Comment) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,android.support.v4.util.Pair,java.lang.Exception) -> a
+    void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
+    void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
+com.livae.ff.app.fragment.ChatsPrivateFragment -> com.livae.ff.app.fragment.aj:
     com.livae.ff.app.adapter.ChatsPrivateAdapter conversationsAdapter -> a
     java.lang.String searchText -> b
     android.widget.TextView emptyView -> c
@@ -24418,7 +24609,7 @@ com.livae.ff.app.fragment.ChatsPrivateFragment -> com.livae.ff.app.fragment.v:
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-com.livae.ff.app.fragment.ChatsPublicFragment -> com.livae.ff.app.fragment.w:
+com.livae.ff.app.fragment.ChatsPublicFragment -> com.livae.ff.app.fragment.ak:
     com.livae.ff.app.adapter.ChatsPublicAdapter publicChatsAdapter -> a
     com.livae.ff.common.Constants$ChatType chatType -> b
     java.lang.String searchText -> c
@@ -24437,7 +24628,7 @@ com.livae.ff.app.fragment.ChatsPublicFragment -> com.livae.ff.app.fragment.w:
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-com.livae.ff.app.fragment.ChatsPublicFragment$1 -> com.livae.ff.app.fragment.x:
+com.livae.ff.app.fragment.ChatsPublicFragment$1 -> com.livae.ff.app.fragment.al:
     int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
 com.livae.ff.app.fragment.ContactsFragment -> com.livae.ff.app.fragment.ContactsFragment:
     com.livae.ff.app.adapter.UsersAdapter usersAdapter -> a
@@ -24455,11 +24646,11 @@ com.livae.ff.app.fragment.ContactsFragment -> com.livae.ff.app.fragment.Contacts
     void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
     void userClicked(com.livae.ff.app.model.UserModel) -> a
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-com.livae.ff.app.fragment.OnBoardingPaymentFragment -> com.livae.ff.app.fragment.y:
+com.livae.ff.app.fragment.OnBoardingPaymentFragment -> com.livae.ff.app.fragment.am:
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onClick(android.view.View) -> onClick
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment -> com.livae.ff.app.fragment.z:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment -> com.livae.ff.app.fragment.an:
     android.content.BroadcastReceiver smsReceiver -> a
     android.content.BroadcastReceiver smsSend -> b
     android.content.BroadcastReceiver smsDeliver -> c
@@ -24491,47 +24682,47 @@ com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment -> com.livae.ff.app.fra
     com.livae.ff.app.dialog.ProgressDialogFragment access$400(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> d
     void access$500(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> e
     boolean access$600(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment,java.lang.String,java.lang.String) -> a
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$1 -> com.livae.ff.app.fragment.aa:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$1 -> com.livae.ff.app.fragment.ao:
     java.util.HashMap val$countryNames -> a
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> b
     int compare(com.livae.ff.app.Constants$COUNTRY,com.livae.ff.app.Constants$COUNTRY) -> a
     int compare(java.lang.Object,java.lang.Object) -> compare
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$2 -> com.livae.ff.app.fragment.ab:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$2 -> com.livae.ff.app.fragment.ap:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void onItemSelected(android.widget.AdapterView,android.view.View,int,long) -> onItemSelected
     void onNothingSelected(android.widget.AdapterView) -> onNothingSelected
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$3 -> com.livae.ff.app.fragment.ac:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$3 -> com.livae.ff.app.fragment.aq:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
     void afterTextChanged(android.text.Editable) -> afterTextChanged
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$4 -> com.livae.ff.app.fragment.ad:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$4 -> com.livae.ff.app.fragment.ar:
     com.google.i18n.phonenumbers.Phonenumber$PhoneNumber val$phoneNumber -> a
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6 -> com.livae.ff.app.fragment.ae:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6 -> com.livae.ff.app.fragment.as:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Long,java.lang.Void) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Long,java.lang.Exception) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Exception) -> a
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,java.lang.Object,java.lang.Object) -> a
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6$1 -> com.livae.ff.app.fragment.af:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6$1 -> com.livae.ff.app.fragment.at:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6 this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$IncomingSms -> com.livae.ff.app.fragment.ag:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$IncomingSms -> com.livae.ff.app.fragment.au:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SmsDeliveredBroadcastReceiver -> com.livae.ff.app.fragment.ah:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SmsDeliveredBroadcastReceiver -> com.livae.ff.app.fragment.av:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SmsSendBroadcastReceiver -> com.livae.ff.app.fragment.ai:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SmsSendBroadcastReceiver -> com.livae.ff.app.fragment.aw:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
-com.livae.ff.app.fragment.OnBoardingWarningFragment -> com.livae.ff.app.fragment.aj:
+com.livae.ff.app.fragment.OnBoardingWarningFragment -> com.livae.ff.app.fragment.ax:
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onClick(android.view.View) -> onClick
-com.livae.ff.app.fragment.OnBoardingWelcomeFragment -> com.livae.ff.app.fragment.ak:
+com.livae.ff.app.fragment.OnBoardingWelcomeFragment -> com.livae.ff.app.fragment.ay:
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onClick(android.view.View) -> onClick
@@ -24539,7 +24730,9 @@ com.livae.ff.app.listener.ChatPrivateClickListener -> com.livae.ff.app.e.a:
     void chatClicked(com.livae.ff.app.model.ChatPrivateModel) -> a
 com.livae.ff.app.listener.ChatPublicClickListener -> com.livae.ff.app.e.b:
     void chatClicked(com.livae.ff.app.model.ChatPublicModel) -> a
-com.livae.ff.app.listener.CommentActionListener -> com.livae.ff.app.e.c:
+com.livae.ff.app.listener.CommentClickListener -> com.livae.ff.app.e.c:
+    boolean onLongClick(com.livae.ff.app.viewholders.CommentViewHolder) -> a
+    void onClick(com.livae.ff.app.viewholders.CommentViewHolder) -> b
 com.livae.ff.app.listener.SearchListener -> com.livae.ff.app.e.d:
     void search(java.lang.String) -> a
 com.livae.ff.app.listener.UserClickListener -> com.livae.ff.app.e.e:
@@ -24565,6 +24758,7 @@ com.livae.ff.app.model.UserModel -> com.livae.ff.app.f.c:
     android.widget.TextView displayNameTextView -> n
     android.widget.TextView phoneTextView -> o
     android.widget.ImageView userImageView -> p
+    java.lang.Boolean userBlocked -> q
     void clear() -> a
 com.livae.ff.app.provider.AbstractProvider -> com.livae.ff.app.provider.a:
     android.content.UriMatcher uriMatcher -> a
@@ -24749,55 +24943,88 @@ com.livae.ff.app.task.ConversationParams -> com.livae.ff.app.i.a:
     com.livae.ff.common.Constants$ChatType getChatType() -> a
     java.lang.Long getPhoneNumber() -> b
     java.lang.String getRoomName() -> c
-com.livae.ff.app.task.ListResult -> com.livae.ff.app.i.b:
+com.livae.ff.app.task.FlagComment -> com.livae.ff.app.i.b:
+    java.lang.Long commentId -> a
+    com.livae.ff.common.Constants$FlagReason reason -> b
+    java.lang.String comment -> c
+    java.lang.Long getCommentId() -> a
+    void setCommentId(java.lang.Long) -> a
+    com.livae.ff.common.Constants$FlagReason getReason() -> b
+    void setReason(com.livae.ff.common.Constants$FlagReason) -> a
+    java.lang.String getComment() -> c
+    void setComment(java.lang.String) -> a
+com.livae.ff.app.task.FlagConversation -> com.livae.ff.app.i.c:
+    java.lang.Long conversationId -> a
+    java.lang.Long time -> b
+    java.lang.Long getConversationId() -> a
+    java.lang.Long getTime() -> b
+com.livae.ff.app.task.ListResult -> com.livae.ff.app.i.d:
     java.lang.String nextCursor -> a
     int size -> b
     java.lang.String getNextCursor() -> a
     int getSize() -> b
     java.lang.String toString() -> toString
-com.livae.ff.app.task.QueryId -> com.livae.ff.app.i.c:
+com.livae.ff.app.task.QueryId -> com.livae.ff.app.i.e:
     java.lang.Long id -> a
     java.lang.Long getId() -> a
     java.lang.String toString() -> toString
-com.livae.ff.app.task.QueryParam -> com.livae.ff.app.i.d:
+com.livae.ff.app.task.QueryParam -> com.livae.ff.app.i.f:
     java.lang.String cursor -> a
     java.lang.Integer limit -> b
     java.lang.String getCursor() -> b
     void setCursor(java.lang.String) -> a
     java.lang.Integer getLimit() -> c
     java.lang.String toString() -> toString
-com.livae.ff.app.task.TaskCommentVoteAgree -> com.livae.ff.app.i.e:
+com.livae.ff.app.task.TaskCommentFlag -> com.livae.ff.app.i.g:
+    java.lang.Void doInBackground(android.support.v4.util.Pair) -> a
+    java.lang.Object doInBackground(java.lang.Object) -> a
+com.livae.ff.app.task.TaskCommentVoteAgree -> com.livae.ff.app.i.h:
     com.livae.ff.api.ff.model.Comment doInBackground(android.support.v4.util.Pair) -> a
     java.lang.Object doInBackground(java.lang.Object) -> a
-com.livae.ff.app.task.TaskCommentVoteDelete -> com.livae.ff.app.i.f:
+com.livae.ff.app.task.TaskCommentVoteDelete -> com.livae.ff.app.i.i:
     com.livae.ff.api.ff.model.Comment doInBackground(android.support.v4.util.Pair) -> a
     java.lang.Object doInBackground(java.lang.Object) -> a
-com.livae.ff.app.task.TaskCommentVoteDisagree -> com.livae.ff.app.i.g:
+com.livae.ff.app.task.TaskCommentVoteDisagree -> com.livae.ff.app.i.j:
     com.livae.ff.api.ff.model.Comment doInBackground(android.support.v4.util.Pair) -> a
     java.lang.Object doInBackground(java.lang.Object) -> a
-com.livae.ff.app.task.TaskCommentsGet -> com.livae.ff.app.i.h:
+com.livae.ff.app.task.TaskCommentsGet -> com.livae.ff.app.i.k:
     com.livae.ff.app.task.ListResult doInBackground(com.livae.ff.app.task.QueryId) -> a
     java.lang.Object doInBackground(java.lang.Object) -> a
-com.livae.ff.app.task.TaskConversationCreate -> com.livae.ff.app.i.i:
+com.livae.ff.app.task.TaskConversationCreate -> com.livae.ff.app.i.l:
     com.livae.ff.api.ff.model.Conversation doInBackground(com.livae.ff.app.task.ConversationParams) -> a
     java.lang.Object doInBackground(java.lang.Object) -> a
-com.livae.ff.app.task.TaskConversationJoin -> com.livae.ff.app.i.j:
+com.livae.ff.app.task.TaskConversationJoin -> com.livae.ff.app.i.m:
     java.lang.Void doInBackground(java.lang.Long) -> a
     java.lang.Object doInBackground(java.lang.Object) -> a
-com.livae.ff.app.task.TaskConversationLeave -> com.livae.ff.app.i.k:
+com.livae.ff.app.task.TaskConversationLeave -> com.livae.ff.app.i.n:
     java.lang.Void doInBackground(java.lang.Long) -> a
     java.lang.Object doInBackground(java.lang.Object) -> a
-com.livae.ff.app.task.TaskPostComment -> com.livae.ff.app.i.l:
+com.livae.ff.app.task.TaskConversationUserBlock -> com.livae.ff.app.i.o:
+    java.lang.Void doInBackground(com.livae.ff.app.task.FlagConversation) -> a
+    java.lang.Object doInBackground(java.lang.Object) -> a
+com.livae.ff.app.task.TaskForthrightBlock -> com.livae.ff.app.i.p:
+    java.lang.Void doInBackground(java.lang.Void) -> a
+    java.lang.Object doInBackground(java.lang.Object) -> a
+com.livae.ff.app.task.TaskForthrightUnblock -> com.livae.ff.app.i.q:
+    java.lang.Void doInBackground(java.lang.Void) -> a
+    java.lang.Object doInBackground(java.lang.Object) -> a
+com.livae.ff.app.task.TaskPostComment -> com.livae.ff.app.i.r:
     com.livae.ff.api.ff.model.Comment doInBackground(com.livae.ff.app.task.TextId) -> a
     com.livae.ff.api.ff.model.Comment saveCommentForSync(com.livae.ff.app.task.TextId) -> b
     java.lang.Object doInBackground(java.lang.Object) -> a
-com.livae.ff.app.task.TaskRegister -> com.livae.ff.app.i.m:
+com.livae.ff.app.task.TaskRegister -> com.livae.ff.app.i.s:
     java.lang.Void doInBackground(java.lang.Long) -> a
     java.lang.Object doInBackground(java.lang.Object) -> a
-com.livae.ff.app.task.TaskWakeup -> com.livae.ff.app.i.n:
+com.livae.ff.app.task.TaskUserBlock -> com.livae.ff.app.i.t:
+    java.lang.Void doInBackground(java.lang.Long) -> a
+    java.lang.Object doInBackground(java.lang.Object) -> a
+com.livae.ff.app.task.TaskUserUnblock -> com.livae.ff.app.i.u:
+    java.lang.Void doInBackground(java.lang.Long) -> a
+    java.lang.Object doInBackground(java.lang.Object) -> a
+com.livae.ff.app.task.TaskWakeup -> com.livae.ff.app.i.v:
     java.lang.Void doInBackground(java.lang.Void) -> a
     java.lang.Object doInBackground(java.lang.Object) -> a
-com.livae.ff.app.task.TextId -> com.livae.ff.app.i.o:
+com.livae.ff.app.task.TextId -> com.livae.ff.app.i.w:
     java.lang.String text -> a
     long id -> b
     java.lang.String alias -> c
@@ -24834,6 +25061,7 @@ com.livae.ff.app.utils.AnimUtils$Builder -> com.livae.ff.app.j.d:
     android.view.ViewPropertyAnimator animator -> m
     com.livae.ff.app.utils.AnimUtils$Builder alpha(float,float) -> a
     com.livae.ff.app.utils.AnimUtils$Builder translateY(int,int) -> a
+    com.livae.ff.app.utils.AnimUtils$Builder setListener(android.animation.Animator$AnimatorListener) -> a
     com.livae.ff.app.utils.AnimUtils$Builder accelerateDecelerate() -> a
     void start() -> b
     void start(long) -> a
@@ -24958,6 +25186,7 @@ com.livae.ff.app.viewholders.ChatPrivateViewHolder -> com.livae.ff.app.k.a:
     void clear() -> a
     void onClick(android.view.View) -> onClick
     void setUnreadCount(int) -> a
+    com.livae.ff.app.model.ChatPrivateModel getModel() -> b
     void setUserName(java.lang.String,java.lang.String) -> a
     void setUserImage(java.lang.String) -> a
     void setChatType(com.livae.ff.common.Constants$ChatType) -> a
@@ -24968,7 +25197,6 @@ com.livae.ff.app.viewholders.ChatPrivateViewHolder -> com.livae.ff.app.k.a:
     void setLastMessage(java.lang.String,long) -> a
     void setLastAccessDate(long) -> a
     boolean onLongClick(android.view.View) -> onLongClick
-    com.livae.ff.app.model.ChatPrivateModel getModel() -> b
 com.livae.ff.app.viewholders.ChatPublicViewHolder -> com.livae.ff.app.k.b:
     com.livae.ff.app.model.ChatPublicModel chatPublicModel -> a
     android.widget.TextView unreadCount -> b
@@ -24980,35 +25208,50 @@ com.livae.ff.app.viewholders.ChatPublicViewHolder -> com.livae.ff.app.k.b:
     void setRoomName(java.lang.String) -> c
 com.livae.ff.app.viewholders.CommentViewHolder -> com.livae.ff.app.k.c:
     java.lang.Long commentId -> a
-    com.livae.ff.app.view.AnonymousImage anonymousImage -> b
-    android.widget.ImageView userImage -> c
-    android.widget.TextView userAlias -> d
-    android.widget.TextView comment -> e
-    android.widget.TextView date -> f
-    android.widget.TextView dayDate -> g
-    com.livae.ff.app.listener.CommentActionListener commentActionListener -> h
-    android.view.View extraPadding -> i
-    android.view.View arrow -> j
-    android.view.View progressBar -> k
+    java.lang.String commentText -> b
+    com.livae.ff.app.view.AnonymousImage anonymousImage -> c
+    android.widget.ImageView userImage -> d
+    android.widget.TextView userAlias -> e
+    android.widget.TextView comment -> f
+    android.widget.TextView date -> g
+    android.widget.TextView dayDate -> h
+    android.widget.TextView agree -> i
+    android.widget.TextView disagree -> j
+    android.widget.TextView userOpinion -> k
+    android.widget.TextView commentFlag -> l
+    android.widget.TextView userFlag -> m
+    android.view.View extraPadding -> n
+    android.view.View arrow -> o
+    android.view.View progressBar -> p
+    com.livae.ff.app.listener.CommentClickListener longClickListener -> q
     void clear() -> a
-    void setCommentId(java.lang.Long) -> a
     void setAnonymousImageSeed(long) -> a
     void setAnonymousNick(java.lang.String) -> a
     void setComment(java.lang.String,long,java.lang.Long) -> a
     void setVotes(int,int) -> a
-    void onClick(android.view.View) -> onClick
+    void setUserVoteType(com.livae.ff.common.Constants$CommentVoteType,java.lang.String) -> a
     void setVoteType(com.livae.ff.common.Constants$CommentVoteType) -> a
     boolean onLongClick(android.view.View) -> onLongClick
+    void onClick(android.view.View) -> onClick
     void setSending(boolean) -> a
     void setExtraPadding(boolean) -> b
     void setFirstCommentOfPerson(boolean) -> c
     void setUserImageUri(java.lang.String) -> b
-com.livae.ff.app.viewholders.CountryViewHolder -> com.livae.ff.app.k.d:
+    void setUserMark(com.livae.ff.common.Constants$UserMark) -> a
+    void setCommentFlag(com.livae.ff.common.Constants$FlagReason) -> a
+    java.lang.Long getCommentId() -> b
+    void setCommentId(java.lang.Long) -> a
+    java.lang.String getComment() -> c
+com.livae.ff.app.viewholders.CommentViewHolder$1 -> com.livae.ff.app.k.d:
+    int[] $SwitchMap$com$livae$ff$common$Constants$CommentVoteType -> a
+    int[] $SwitchMap$com$livae$ff$common$Constants$UserMark -> b
+    int[] $SwitchMap$com$livae$ff$common$Constants$FlagReason -> c
+com.livae.ff.app.viewholders.CountryViewHolder -> com.livae.ff.app.k.e:
     android.widget.ImageView flag -> a
     android.widget.TextView countryName -> b
     com.livae.ff.app.Constants$COUNTRY country -> c
     void setCountry(com.livae.ff.app.Constants$COUNTRY,boolean) -> a
-com.livae.ff.app.viewholders.UserViewHolder -> com.livae.ff.app.k.e:
+com.livae.ff.app.viewholders.UserViewHolder -> com.livae.ff.app.k.f:
     com.livae.ff.app.model.UserModel userModel -> a
     com.livae.ff.app.listener.UserClickListener userClickListener -> b
     void clear() -> a
@@ -25020,6 +25263,7 @@ com.livae.ff.app.viewholders.UserViewHolder -> com.livae.ff.app.k.e:
     void setUserName(java.lang.String) -> d
     void setUserImageRes(int) -> c
     void setUserImage(java.lang.String) -> a
+    void setUserBlocked(boolean) -> c
 com.livae.ff.common.Constants -> com.livae.ff.common.Constants:
 com.livae.ff.common.Constants$ChatType -> com.livae.ff.common.Constants$ChatType:
     com.livae.ff.common.Constants$ChatType FLATTER -> FLATTER
