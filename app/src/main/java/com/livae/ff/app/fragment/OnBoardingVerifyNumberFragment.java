@@ -519,11 +519,18 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 					if (bundle != null) {
 						Analytics.event("EVIL", "KEYSET=" + bundle.keySet().size()); // TODO
 						for (String key : bundle.keySet()) {
-							String value = bundle.getString(key);
-							Analytics.event("EVIL", key, value); // TODO
-							Analytics.event(Analytics.Category.SMS,
-											Analytics.Action.SMS_ERROR_GENERIC, key + "=" +
-																				value);
+							Object value = bundle.get(key);
+							if (value != null) {
+								Analytics.event("EVIL", key,
+												value.getClass().getSimpleName() + ":" +
+												value.toString()); // TODO
+								Analytics.event(Analytics.Category.SMS,
+												Analytics.Action.SMS_ERROR_GENERIC, key + "=" +
+																					value
+																					  .toString());
+							} else {
+								Analytics.event("EVIL", key, "null"); // TODO
+							}
 						}
 					} else {
 						Analytics.event("EVIL", "BUNDLE_NULL"); // TODO
@@ -535,6 +542,8 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 					Uri uri = Uri.parse("content://sms");
 					Cursor cursor;
 					cursor = cr.query(uri, null, "date>?", new String[]{oldestDate}, "-date");
+					Analytics.event("EVIL", "SMS_COUNT", Integer.toString(cursor
+																			.getCount())); // TODO
 					if (cursor.moveToFirst()) {
 						int iAddress = cursor.getColumnIndex("address");
 						int iFailureCause = cursor.getColumnIndex("failure_cause");
@@ -543,8 +552,8 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 							String address = cursor.getString(iAddress);
 							String failure = cursor.getString(iFailureCause);
 							String errorCode = cursor.getString(iErrorCode);
-							Analytics.event("EVIL", address, failure); // TODO
-							Analytics.event("EVIL", address, errorCode); // TODO
+							Analytics.event("EVIL", address, "failure=" + failure); // TODO
+							Analytics.event("EVIL", address, "errorCode=" + errorCode); // TODO
 							Analytics.event(Analytics.Category.SMS,
 											Analytics.Action.SMS_ERROR_GENERIC,
 											address + ";" + failure + ";" + errorCode);
