@@ -73,9 +73,9 @@ public class ApiEndpoint {
 
 		String fromEmail = String.format("noreply@%s.appspotmail.com",
 										 SystemProperty.applicationId.get());
-		InternetAddress fromAddress = new InternetAddress(fromEmail, "Thoughts");
+		InternetAddress fromAddress = new InternetAddress(fromEmail, "Pensamientos");
 		Address[] replyToAddress = new Address[1];
-		replyToAddress[0] = new InternetAddress("thoughts@livae.com", "Thoughts");
+		replyToAddress[0] = new InternetAddress("pensamientos@livae.com", "Pensamientos");
 		javax.mail.Message msg = new MimeMessage(session);
 		msg.setFrom(fromAddress);
 		msg.setReplyTo(replyToAddress);
