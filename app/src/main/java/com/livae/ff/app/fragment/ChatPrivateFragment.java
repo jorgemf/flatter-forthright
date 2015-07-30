@@ -142,7 +142,7 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 				int toLoad = 100;
 				if (endPreviousMessages) {
 					toLoad = 0;
-				} else if (firstTimeLoad) {
+				} else if (firstTimeLoad && unreadMessages != null) {
 					toLoad = Math.max(unreadMessages + 20, toLoad);
 				}
 				return new ListResult(endPreviousMessages ? null : "", toLoad);
@@ -214,6 +214,7 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 	public boolean onLongClick(CommentViewHolder holder) {
 		if (actionMode == null) {
 			actionMode = getActivity().startActionMode(this);
+			toggleSelection(holder.getAdapterPosition());
 			return true;
 		}
 		return false;
@@ -260,29 +261,30 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 	private void confirmationBlockAnonymousUser() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(anonymousNick).setMessage(R.string.confirmation_block_anonymous_user)
-			   .setSingleChoiceItems(R.array.block_anonymous_user_time, -1,
-									 new DialogInterface.OnClickListener() {
+										  // TODO message and single choice is mutually excluyent
+		  .setSingleChoiceItems(R.array.block_anonymous_user_time, -1,
+								new DialogInterface.OnClickListener() {
 
-										 @Override
-										 public void onClick(DialogInterface dialog, int which) {
-											 switch (which) {
-												 case 0:
-													 blockUser(100);
-													 break;
-												 case 1:
-													 blockUser(30);
-													 break;
-												 case 2:
-													 blockUser(7);
-													 break;
-												 case 3:
-													 blockUser(1);
-													 break;
-											 }
-											 dialog.dismiss();
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										switch (which) {
+											case 0:
+												blockUser(100);
+												break;
+											case 1:
+												blockUser(30);
+												break;
+											case 2:
+												blockUser(7);
+												break;
+											case 3:
+												blockUser(1);
+												break;
+										}
+										dialog.dismiss();
 
-										 }
-									 }).show();
+									}
+								}).show();
 	}
 
 	private void confirmationBlockUser() {
@@ -386,7 +388,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 
 	@Override
 	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-		MenuInflater inflater = actionMode.getMenuInflater();
+		actionMode = mode;
+		MenuInflater inflater = mode.getMenuInflater();
 		inflater.inflate(R.menu.menu_copy, menu);
 		return true;
 	}
@@ -418,7 +421,7 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 																		   DateFormat.SHORT);
 					for (Integer position : selectedItems) {
 						int pos = commentsAdapter.getCursorPosition(position);
-						text += dateFormat.format(new Date(commentsAdapter.getDate(pos))) + "\t";
+						text += dateFormat.format(new Date(commentsAdapter.getDate(pos))) + " \t";
 						if (commentsAdapter.isMe(pos)) {
 							text += me;
 						} else {
@@ -426,6 +429,7 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 						}
 						text += ": ";
 						text += commentsAdapter.getComment(pos);
+						text += "\n";
 					}
 					ClipData data = ClipData.newPlainText(title, text);
 					clipboard.setPrimaryClip(data);
@@ -444,7 +448,11 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 
 	private void toggleSelection(int index) {
 		commentsAdapter.toggleSelection(index);
-		String title = getString(R.string.selected_count, commentsAdapter.getSelectedItemCount());
+		int selectedItemCount = commentsAdapter.getSelectedItemCount();
+		String title = getString(R.string.selected_count, selectedItemCount);
 		actionMode.setTitle(title);
+		if (selectedItemCount == 0) {
+			actionMode.finish();
+		}
 	}
 }

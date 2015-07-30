@@ -81,7 +81,7 @@ public class Model {
 			ContentValues contentValues = new ContentValues();
 			contentValues.put(Table.LocalUser.ACCEPTS_PRIVATE, false);
 			contentResolver.update(ContactsProvider.getUriContacts(), contentValues, null, null);
-			contentResolver.bulkInsert(ConversationsProvider.getUriComments(),
+			contentResolver.bulkInsert(ContactsProvider.getUriContacts(),
 									   phonesList.toArray(new ContentValues[phonesList.size()]));
 			phonesList.clear();
 		}

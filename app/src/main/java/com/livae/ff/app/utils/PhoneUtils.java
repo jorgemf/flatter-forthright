@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.livae.ff.app.Analytics;
 import com.livae.ff.app.BuildConfig;
 
 public class PhoneUtils {
@@ -70,7 +71,12 @@ public class PhoneUtils {
 		}
 		Phonenumber.PhoneNumber phoneNumber = getPhoneNumber("+" + phone.toString(), null);
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		return phoneUtil.formatOutOfCountryKeepingAlphaChars(phoneNumber, countryISO);
+		try {
+			return phoneUtil.formatOutOfCountryKeepingAlphaChars(phoneNumber, countryISO);
+		} catch (Exception e) {
+			Analytics.logAndReport(e, false);
+			return null;
+		}
 	}
 
 	public static String getCountryISO(Context context) {

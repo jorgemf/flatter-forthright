@@ -237,10 +237,8 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 			bindCommentFlag(holder, cursor);
 		}
 
-		boolean isSyncTemp = false;
 		if (iSyncTemp >= 0) {
-			isSyncTemp = cursor.getInt(iSyncTemp) != 0;
-			holder.setSending(isSyncTemp);
+			holder.setSending(cursor.getInt(iSyncTemp) != 0);
 		}
 		bindCommentPadding(holder, cursor, anonymousId, alias, isMe, isTheUser);
 		bindCommentHeader(holder, cursor, anonymousId, alias, isMe, isTheUser);
@@ -459,7 +457,7 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
 	public List<Integer> getSelectedItems() {
 		List<Integer> items = new ArrayList<Integer>(selectedItems.size());
-		for (int i = 0; i < selectedItems.size(); i++) {
+		for (int i = selectedItems.size() - 1; i >= 0; i--) {
 			items.add(selectedItems.keyAt(i));
 		}
 		return items;

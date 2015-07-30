@@ -56,7 +56,8 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 	public void setUserPhone(Long userPhone, String countryISO) {
 		userModel.userId = userPhone;
 		if (userModel.phoneTextView != null) {
-			userModel.phoneTextView.setText(PhoneUtils.getPrettyPrint(userPhone, countryISO));
+			String phoneString = PhoneUtils.getPrettyPrint(userPhone, countryISO);
+			userModel.phoneTextView.setText(phoneString);
 		}
 	}
 

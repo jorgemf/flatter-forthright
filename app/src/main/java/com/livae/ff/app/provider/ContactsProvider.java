@@ -54,16 +54,19 @@ public class ContactsProvider extends AbstractProvider {
 	public int bulkInsert(Uri uri, @Nonnull ContentValues[] values) {
 		final int uriId = uriMatcher.match(uri);
 		final int numValues = values.length;
-//		String query;
 		String table;
-//		String[] args = new String[1];
 		final SQLiteDatabase db = getWritableDatabase();
 		db.beginTransaction();
 		switch (uriId) {
 			case URI_CONTACTS:
 				table = Table.LocalUser.NAME;
+				String query = Table.LocalUser.PHONE + "=?";
+				String[] args = new String[1];
 				for (ContentValues value : values) {
-					db.insert(table, null, value);
+					args[0] = value.getAsString(Table.LocalUser.PHONE);
+					if (db.update(Table.LocalUser.NAME, value, query, args) == 0) {
+						db.insert(table, null, value);
+					}
 				}
 				break;
 			default:

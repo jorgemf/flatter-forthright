@@ -191,9 +191,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		editMenuItem = menu.findItem(R.id.action_edit);
-		if (anonymousNick == null) {
-			editMenuItem.setVisible(false);
+		if (!isMyPublicChat) {
+			editMenuItem = menu.findItem(R.id.action_edit);
 		}
 		menuBlock = menu.findItem(R.id.action_public_block);
 		menuUnblock = menu.findItem(R.id.action_public_unblock);
