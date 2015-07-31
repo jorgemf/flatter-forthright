@@ -93,21 +93,47 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 
 	private ProgressDialogFragment progressDialogFragment;
 
-	public static boolean alternativeVerifyNumber(Context context) {
-		TelephonyManager tel;
-		tel = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		boolean unknownNetwork = tel.getNetworkType() != TelephonyManager.NETWORK_TYPE_UNKNOWN;
-		boolean emptyOperator = TextUtils.isEmpty(tel.getNetworkOperator());
-		boolean hasNetwork = unknownNetwork || emptyOperator;
-		if (hasNetwork) {
-			// maybe the operator does not send sms to the own number
-			String phone = "+" + Application.appUser().getUserPhone().toString();
-			// check with the mobile in sim card
-
-			String telNumber = tel.getLine1Number();
-
+	public static boolean alternativeVerifyNumber(Context context, Intent intent,
+												  TelephonyManager tel) {
+		String phone = "+" + Application.appUser().getUserPhone().toString();
+		String carrier = tel.getNetworkOperator() + "_" + tel.getNetworkOperatorName();
+		Bundle bundle = intent.getExtras();
+		String simCountry = tel.getSimCountryIso().toUpperCase();
+		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+		Phonenumber.PhoneNumber phoneNumber = phoneUtil.getPhoneNumber(phone, "");
+		int phonePrefix = phoneNumber.getCountryCode();
+		String bundleKeySet = "[";
+		if (bundle != null) {
+			for (String key : bundle.keySet()) {
+				Object value = bundle.get(key);
+				if (value != null) {
+					bundleKeySet += key + "=" + value.toString();
+				}
+			}
 		}
-		return false;
+		String phoneInfo = carrier + ":" + simCountry + ":" + phonePrefix;
+		boolean verified = false;
+		if (bundle != null) {
+			Integer errorCode = null;
+			Boolean lastSendMsg = null;
+			if (bundle.containsKey("errorCode")) {
+				errorCode = bundle.getInt("errorCode", -1);
+			}
+			if (bundle.containsKey("LastSendMsg")) {
+				lastSendMsg = bundle.getBoolean("LastSendMsg", false);
+			}
+			switch (phonePrefix) {
+				case 593: // ecuador
+					// Telefónica movistar ecuador does not send sms to the own numbers
+					verified = tel.getNetworkOperator().equals("00") && simCountry.equals("EC") &&
+							   errorCode != null && errorCode == 0 && lastSendMsg != null &&
+							   lastSendMsg;
+					break;
+			}
+		}
+		Analytics.event(Analytics.Category.SMS_VERIFICATION_ERROR, phoneInfo,
+						bundleKeySet + "=" + verified);
+		return verified;
 	}
 
 	@Nullable
@@ -511,56 +537,15 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
 					Log.e(LOG_TAG, "Generic failure");
 					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_ERROR_GENERIC);
-					// TODO get all info from here
-//					if (alternativeVerifyNumber(context)) {
-//						phoneValidated();
-//					}
-					Bundle bundle = intent.getExtras();
-					if (bundle != null) {
-						Analytics.event("EVIL", "KEYSET=" + bundle.keySet().size()); // TODO
-						for (String key : bundle.keySet()) {
-							Object value = bundle.get(key);
-							if (value != null) {
-								Analytics.event("EVIL", key,
-												value.getClass().getSimpleName() + ":" +
-												value.toString()); // TODO
-								Analytics.event(Analytics.Category.SMS,
-												Analytics.Action.SMS_ERROR_GENERIC, key + "=" +
-																					value
-																					  .toString());
-							} else {
-								Analytics.event("EVIL", key, "null"); // TODO
-							}
-						}
-					} else {
-						Analytics.event("EVIL", "BUNDLE_NULL"); // TODO
+					// check network
+					TelephonyManager tel;
+					tel = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+					boolean network = !TextUtils.isEmpty(tel.getNetworkOperatorName()) ||
+									  tel.getNetworkType() != TelephonyManager.NETWORK_TYPE_UNKNOWN;
+					if (network && alternativeVerifyNumber(context, intent, tel)) {
+						// an error happened with network but still a valid number
+						phoneValidated();
 					}
-
-					String oldestDate = Long.toString(System.currentTimeMillis() -
-													  TimeUnit.HOURS.toMillis(1));
-					ContentResolver cr = context.getContentResolver();
-					Uri uri = Uri.parse("content://sms");
-					Cursor cursor;
-					cursor = cr.query(uri, null, "date>?", new String[]{oldestDate}, "-date");
-					Analytics.event("EVIL", "SMS_COUNT", Integer.toString(cursor
-																			.getCount())); // TODO
-					if (cursor.moveToFirst()) {
-						int iAddress = cursor.getColumnIndex("address");
-						int iFailureCause = cursor.getColumnIndex("failure_cause");
-						int iErrorCode = cursor.getColumnIndex("error_code");
-						do {
-							String address = cursor.getString(iAddress);
-							String failure = cursor.getString(iFailureCause);
-							String errorCode = cursor.getString(iErrorCode);
-							Analytics.event("EVIL", address, "failure=" + failure); // TODO
-							Analytics.event("EVIL", address, "errorCode=" + errorCode); // TODO
-							Analytics.event(Analytics.Category.SMS,
-											Analytics.Action.SMS_ERROR_GENERIC,
-											address + ";" + failure + ";" + errorCode);
-						} while (cursor.moveToNext());
-					}
-					cursor.close();
-
 					break;
 				case SmsManager.RESULT_ERROR_NO_SERVICE:
 					Log.e(LOG_TAG, "No service");

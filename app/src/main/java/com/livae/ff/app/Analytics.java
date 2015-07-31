@@ -155,6 +155,8 @@ public class Analytics {
 
 		public static final String SMS = "SMS";
 
+		public static final String SMS_VERIFICATION_ERROR = "SMS_VERIFICATION_ERROR";
+
 	}
 
 	public static class Action {
