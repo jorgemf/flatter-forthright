@@ -100,9 +100,11 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
 	private SparseBooleanArray selectedItems;
 
+	private boolean isMyPublicChat;
+
 	public CommentsAdapter(@Nonnull Fragment fragment, @Nonnull ViewCreator viewCreator,
 						   CommentClickListener commentClickListener, @Nonnull ChatType chatType,
-						   String userName, String userImageUri) {
+						   String userName, String userImageUri, boolean myPublicChat) {
 		super(fragment.getActivity(), viewCreator);
 		layoutInflater = fragment.getActivity().getLayoutInflater();
 		commentVoteTypeHashMap = new HashMap<>();
@@ -112,6 +114,7 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		this.userImageUri = userImageUri;
 		this.commentClickListener = commentClickListener;
 		selectedItems = new SparseBooleanArray();
+		isMyPublicChat = myPublicChat;
 	}
 
 	public void votedComment(Long commentId, CommentVoteType voteType) {
@@ -201,6 +204,7 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 	@Override
 	protected void bindCustomViewHolder(CommentViewHolder holder, int position, Cursor cursor) {
 		holder.clear();
+		holder.setSelected(selectedItems.get(holder.getAdapterPosition()));
 		long commentId = cursor.getLong(iId);
 		Long anonymousId = null;
 		if (!cursor.isNull(iUserAnonymousId)) {
@@ -232,7 +236,7 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
 		if (chatType == ChatType.FLATTER || chatType == ChatType.FORTHRIGHT) {
 			bindVotes(holder, cursor, commentId);
-			bindUserVoteType(holder, cursor);
+			bindUserVoteType(holder, cursor, commentId);
 			bindUserMark(holder, cursor);
 			bindCommentFlag(holder, cursor);
 		}
@@ -278,13 +282,17 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		holder.setUserMark(userMark);
 	}
 
-	private void bindUserVoteType(CommentViewHolder holder, Cursor cursor) {
+	private void bindUserVoteType(CommentViewHolder holder, Cursor cursor, long commentId) {
 		CommentVoteType userVoteType = null;
-		String userVoteTypeString = cursor.getString(iUserVoteType);
-		if (userVoteTypeString != null) {
-			try {
-				userVoteType = CommentVoteType.valueOf(userVoteTypeString);
-			} catch (Exception ignore) {
+		if (isMyPublicChat && commentVoteTypeHashMap.containsKey(commentId)) {
+			userVoteType = commentVoteTypeHashMap.get(commentId);
+		} else {
+			String userVoteTypeString = cursor.getString(iUserVoteType);
+			if (userVoteTypeString != null) {
+				try {
+					userVoteType = CommentVoteType.valueOf(userVoteTypeString);
+				} catch (Exception ignore) {
+				}
 			}
 		}
 		holder.setUserVoteType(userVoteType, userName);
@@ -437,11 +445,14 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		return cursor.getLong(iDate);
 	}
 
-	public void toggleSelection(int pos) {
+	public void toggleSelection(CommentViewHolder holder) {
+		int pos = holder.getAdapterPosition();
 		if (selectedItems.get(pos, false)) {
 			selectedItems.delete(pos);
+			holder.setSelected(false);
 		} else {
 			selectedItems.put(pos, true);
+			holder.setSelected(true);
 		}
 		notifyItemChanged(pos);
 	}

@@ -63,6 +63,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 
 	private MenuItem menuUnblock;
 
+	private Pair<Long, Integer> savedContextMenuInfo;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -250,11 +252,20 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		ContextMenu.ContextMenuInfo menuInfo = item.getMenuInfo();
-		ContextMenuRecyclerView.RecyclerContextMenuInfo recyclerInfo = (ContextMenuRecyclerView.RecyclerContextMenuInfo) menuInfo;
-		CommentViewHolder viewHolder = (CommentViewHolder) recyclerInfo.viewHolder;
-		if (viewHolder != null) {
-			Long commentId = viewHolder.getCommentId();
-			int adapterPosition = viewHolder.getAdapterPosition();
+		ContextMenuRecyclerView.RecyclerContextMenuInfo recyclerInfo;
+		recyclerInfo = (ContextMenuRecyclerView.RecyclerContextMenuInfo) menuInfo;
+		Long commentId = null;
+		int adapterPosition = 0;
+		if (recyclerInfo == null) {
+			commentId = savedContextMenuInfo.first;
+			adapterPosition = savedContextMenuInfo.second;
+		} else {
+			CommentViewHolder viewHolder;
+			viewHolder = (CommentViewHolder) recyclerInfo.viewHolder;
+			commentId = viewHolder.getCommentId();
+			adapterPosition = viewHolder.getAdapterPosition();
+		}
+		if (commentId != null) {
 			switch (item.getItemId()) {
 				case R.id.action_agree:
 					commentVotedAgree(commentId, adapterPosition);
@@ -277,6 +288,9 @@ public class ChatPublicFragment extends AbstractChatFragment {
 				case R.id.action_flag_other:
 					commentFlag(commentId, adapterPosition, Constants.FlagReason.OTHER, null);
 					break;
+				case R.id.action_flag:
+					savedContextMenuInfo = new Pair<>(commentId, adapterPosition);
+					// no break
 				default:
 					return super.onContextItemSelected(item);
 			}

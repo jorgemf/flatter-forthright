@@ -436,9 +436,10 @@ public class ApiEndpoint {
 		if (cursor != null) {
 			query = query.startAt(Cursor.fromWebSafeString(cursor));
 		}
+		Long conversationUserPhone = conversation.getPhone();
 		Long dateBlocked = null;
 		if (conversation.getType() == ChatType.FORTHRIGHT) {
-			PhoneUser conversationUser = PhoneUser.get(conversation.getPhone());
+			PhoneUser conversationUser = PhoneUser.get(conversationUserPhone);
 			if (conversationUser != null &&
 				conversationUser.getForthrightChatsDateBlocked() != null) {
 				dateBlocked = conversationUser.getForthrightChatsDateBlocked().getTime();
@@ -458,6 +459,12 @@ public class ApiEndpoint {
 							   .filter("commentId", comment.getId()).first().now();
 			if (commentVote != null) {
 				comment.setVoteType(commentVote.getType());
+			}
+			commentVote = ofy().load().type(CommentVote.class).filter("userId",
+																	  conversationUserPhone)
+							   .filter("commentId", comment.getId()).first().now();
+			if (commentVote != null) {
+				comment.setUserVoteType(commentVote.getType());
 			}
 			if (!isMe && dateBlocked != null && dateBlocked > comment.getDate().getTime()) {
 				// hide comments since the user blocked the list
@@ -511,9 +518,10 @@ public class ApiEndpoint {
 			comment.setAgreeVotes(comment.getAgreeVotes() + 1);
 			commentUser.setTimesAgreed(commentUser.getTimesAgreed() + 1);
 		}
-		if (user.getPhone().equals(comment.getUserId())) {
+		if (conversation.getPhone().equals(user.getPhone())) {
 			comment.setUserVoteType(CommentVoteType.AGREE);
 		}
+		comment.setVoteType(CommentVoteType.AGREE);
 		ofy().save().entity(commentVote);
 		ofy().save().entity(comment);
 		ofy().save().entity(commentUser);
@@ -561,9 +569,10 @@ public class ApiEndpoint {
 			comment.setDisagreeVotes(comment.getDisagreeVotes() + 1);
 			commentUser.setTimesDisagreed(commentUser.getTimesDisagreed() + 1);
 		}
-		if (user.getPhone().equals(comment.getUserId())) {
+		if (conversation.getPhone().equals(user.getPhone())) {
 			comment.setUserVoteType(CommentVoteType.DISAGREE);
 		}
+		comment.setVoteType(CommentVoteType.DISAGREE);
 		ofy().save().entity(commentVote);
 		ofy().save().entity(comment);
 		ofy().save().entity(commentUser);
@@ -609,9 +618,10 @@ public class ApiEndpoint {
 		} else {
 			throw new NotFoundException("Comment was never voted");
 		}
-		if (user.getPhone().equals(comment.getUserId())) {
+		if (conversation.getPhone().equals(user.getPhone())) {
 			comment.setUserVoteType(null);
 		}
+		comment.setVoteType(null);
 		ofy().delete().entity(commentVote);
 		ofy().save().entity(comment);
 		ofy().save().entity(commentUser);

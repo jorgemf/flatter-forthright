@@ -9,38 +9,6 @@
 	<string name="time_yesterday">Yesterday</string>
 	<string name="time_today">Today</string>
 	<string name="app_version">Thoughts %s - livae</string>
-	<string name="ok">OK</string>
-	<string name="cancel">Cancel</string>
-	<string name="yes">Yes</string>
-	<string name="no">No</string>
-	<string name="me">me</string>
-	<string name="delete">Delete</string>
-	<string name="settings">Settings</string>
-	<string name="signing_in">Signing in…</string>
-	<string name="empty_text">Ops… there is nothing here.</string>
-	<string name="empty_chat_flatter">No compliments here, be the first! \n<i>Message older than 100 days are deleted.</i></string>
-	<string name="empty_chat_forthright">Ops… nothing here. Message older than 100 days are deleted.</string>
-	<string name="phone_number">Phone number</string>
-	<string name="post_comment_hint">Type a message…</string>
-	<string name="no_contacts">You don\'t have any mobile contact.</string>
-	<string name="no_contacts_in_app">None of your contacts has the app installed.</string>
-	<string name="nothing_found">We haven\'t find anything</string>
-	<string name="start_first_conversation_tutorial">
-		Why don\'t you start a new chat?
-		\n\n• <b>Normal</b> chat: as you do in other apps.
-		\n\n• <b>Secret</b> chat: the conversation is deleted after you leave it.
-		\n\n• <b>Anonymous</b> chat: pick a nick name and start a conversation, they wont know who you are.
-		\n\n← <b>Flatter</b> your friends public and anonymously, they are the best and everybody should know it.
-		\n\n→ Be <b>Forthright</b> and share anonymously what you don\'t dare to say in person.
-	</string>
-	<string name="no_conversations">There are no conversation with the current search terms.</string>
-	<string name="search">Search</string>
-	<string name="edit">Edit</string>
-	<string name="select_contact">Select Contact</string>
-	<string name="sending_comment">Sending comment</string>
-	<string name="selected_count">%d selected</string>
-	<string name="copy">Copy</string>
-	<string name="copy_conversation_label">Pensamientos Conversation</string>
 
 	<string name="user_agree">%s agree</string>
 	<string name="user_disagree">%s disagree</string>
@@ -169,4 +137,39 @@
 		future we hope to fix all the bugs but we will probably move some features to only premium
 		users of the app.
 	</string>
+
+	<string name="ok">OK</string>
+	<string name="cancel">Cancel</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="me">me</string>
+	<string name="delete">Delete</string>
+	<string name="settings">Settings</string>
+	<string name="signing_in">Signing in…</string>
+	<string name="empty_text">Ops… there is nothing here.</string>
+	<string name="empty_chat_flatter">No compliments here, be the first! \n<i>Message older than 100 days are deleted.</i></string>
+	<string name="empty_chat_forthright">Ops… nothing here. Message older than 100 days are deleted.</string>
+	<string name="phone_number">Phone number</string>
+	<string name="post_comment_hint">Type a message…</string>
+	<string name="no_contacts">You don\'t have any mobile contact.</string>
+	<string name="no_contacts_in_app">None of your contacts has the app installed.</string>
+	<string name="nothing_found">We haven\'t find anything</string>
+	<string name="start_first_conversation_tutorial">
+		Why don\'t you start a new chat?
+		\n\n• <b>Normal</b> chat: as you do in other apps.
+		\n\n• <b>Secret</b> chat: the conversation is deleted after you leave it.
+		\n\n• <b>Anonymous</b> chat: pick a nick name and start a conversation, they wont know who you are.
+		\n\n← <b>Flatter</b> your friends public and anonymously, they are the best and everybody should know it.
+		\n\n→ Be <b>Forthright</b> and share anonymously what you don\'t dare to say in person.
+	</string>
+	<string name="no_conversations">There are no conversation with the current search terms.</string>
+	<string name="search">Search</string>
+	<string name="edit">Edit</string>
+	<string name="select_contact">Select Contact</string>
+	<string name="sending_comment">Sending comment</string>
+	<string name="selected_count">%d selected</string>
+	<string name="copy">Copy</string>
+	<string name="copy_conversation_label">Pensamientos Conversation</string>
+	<string name="comments_copied">Comments copied</string>
+
 </resources>

@@ -94,13 +94,14 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	private ProgressDialogFragment progressDialogFragment;
 
 	public static boolean alternativeVerifyNumber(Context context, Intent intent,
-												  TelephonyManager tel) {
+												  TelephonyManager tel)
+	  throws NumberParseException {
 		String phone = "+" + Application.appUser().getUserPhone().toString();
 		String carrier = tel.getNetworkOperator() + "_" + tel.getNetworkOperatorName();
 		Bundle bundle = intent.getExtras();
 		String simCountry = tel.getSimCountryIso().toUpperCase();
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		Phonenumber.PhoneNumber phoneNumber = phoneUtil.getPhoneNumber(phone, "");
+		Phonenumber.PhoneNumber phoneNumber = phoneUtil.parse(phone, null);
 		int phonePrefix = phoneNumber.getCountryCode();
 		String bundleKeySet = "[";
 		if (bundle != null) {
@@ -542,9 +543,14 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 					tel = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 					boolean network = !TextUtils.isEmpty(tel.getNetworkOperatorName()) ||
 									  tel.getNetworkType() != TelephonyManager.NETWORK_TYPE_UNKNOWN;
-					if (network && alternativeVerifyNumber(context, intent, tel)) {
-						// an error happened with network but still a valid number
-						phoneValidated();
+
+					try {
+						if (network && alternativeVerifyNumber(context, intent, tel)) {
+							// an error happened with network but still a valid number
+							phoneValidated();
+						}
+					} catch (NumberParseException e) {
+						Analytics.logAndReport(e, false);
 					}
 					break;
 				case SmsManager.RESULT_ERROR_NO_SERVICE:

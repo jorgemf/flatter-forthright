@@ -2,6 +2,7 @@
 <resources>
 	<!-- accent color -->
 	<color name="amber">#FFC107</color>
+	<color name="amber_transparent">#66FFC107</color>
 	<!--<color name="amber_light">#FFFDE7</color>-->
 	<color name="amber_light">#FFECB3</color>
 	<color name="amber_dark">#FFA000</color>

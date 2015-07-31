@@ -214,7 +214,7 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 	public boolean onLongClick(CommentViewHolder holder) {
 		if (actionMode == null) {
 			actionMode = getActivity().startActionMode(this);
-			toggleSelection(holder.getAdapterPosition());
+			toggleSelection(holder);
 			return true;
 		}
 		return false;
@@ -223,7 +223,7 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 	@Override
 	public void onClick(CommentViewHolder holder) {
 		if (actionMode != null) {
-			toggleSelection(holder.getAdapterPosition());
+			toggleSelection(holder);
 		}
 	}
 
@@ -342,6 +342,7 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 
 			@Override
 			public void onError(CustomAsyncTask<Long, Void> task, Long userPhone, Exception e) {
+				userBlocked = false;
 				if (isResumed()) {
 					showSendMessagesPanel();
 					AbstractActivity activity = (AbstractActivity) getActivity();
@@ -372,6 +373,7 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 			@Override
 			public void onError(CustomAsyncTask<FlagConversation, Void> task,
 								FlagConversation flagConversation, Exception e) {
+				userBlocked = false;
 				if (isResumed()) {
 					showSendMessagesPanel();
 					AbstractActivity activity = (AbstractActivity) getActivity();
@@ -435,6 +437,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 					clipboard.setPrimaryClip(data);
 				}
 				actionMode.finish();
+				Snackbar.make(getActivity().findViewById(R.id.container), R.string.comments_copied,
+							  Snackbar.LENGTH_SHORT).show();
 				return true;
 		}
 		return false;
@@ -446,8 +450,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 		commentsAdapter.clearSelections();
 	}
 
-	private void toggleSelection(int index) {
-		commentsAdapter.toggleSelection(index);
+	private void toggleSelection(CommentViewHolder holder) {
+		commentsAdapter.toggleSelection(holder);
 		int selectedItemCount = commentsAdapter.getSelectedItemCount();
 		String title = getString(R.string.selected_count, selectedItemCount);
 		actionMode.setTitle(title);

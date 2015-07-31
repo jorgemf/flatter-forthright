@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.app.Analytics;
+import com.livae.ff.app.Application;
 import com.livae.ff.app.R;
 import com.livae.ff.app.activity.AbstractActivity;
 import com.livae.ff.app.activity.AbstractChatActivity;
@@ -186,7 +187,11 @@ public abstract class AbstractChatFragment
 
 	@Override
 	protected EndlessCursorAdapter<CommentViewHolder> getAdapter() {
-		commentsAdapter = new CommentsAdapter(this, this, this, chatType, userName, userImageUri);
+		Long myPhone = Application.appUser().getUserPhone();
+		boolean isMyPublicChat = conversationPhone != null && conversationPhone.equals(myPhone) &&
+								 (ChatType.FLATTER == chatType || ChatType.FORTHRIGHT == chatType);
+		commentsAdapter = new CommentsAdapter(this, this, this, chatType, userName, userImageUri,
+											  isMyPublicChat);
 		return commentsAdapter;
 	}
 

@@ -25,7 +25,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
     <output url="file:///tmp/gradlebuild/flatter-forthright/api/classes/main" />
     <output-test url="file:///tmp/gradlebuild/flatter-forthright/api/classes/test" />
     <exclude-output />

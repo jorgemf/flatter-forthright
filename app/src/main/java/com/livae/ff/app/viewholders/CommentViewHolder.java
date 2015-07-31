@@ -2,7 +2,6 @@ package com.livae.ff.app.viewholders;
 
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
@@ -77,6 +76,10 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		this.longClickListener = longClickListener;
 		itemView.setOnLongClickListener(this);
 		itemView.setOnClickListener(this);
+	}
+
+	public void setSelected(boolean selected) {
+		itemView.setSelected(selected);
 	}
 
 	public void clear() {
@@ -180,6 +183,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		if (voteType == null) {
 			userOpinion.setVisibility(View.GONE);
 		} else {
+			userOpinion.setVisibility(View.VISIBLE);
 			userName = userName.trim();
 			int space = userName.indexOf(' ');
 			if (space > 0) {
@@ -234,45 +238,48 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		final int colorNormal = resources.getColor(R.color.grey_light);
 		Drawable thumbUp;
 		Drawable thumbDown;
+		Drawable thumbUpAccent;
+		Drawable thumbDownAccent;
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
 			Resources.Theme theme = userOpinion.getContext().getTheme();
 			thumbUp = theme.getDrawable(R.drawable.ic_thumb_up_terciary_14px);
 			thumbDown = theme.getDrawable(R.drawable.ic_thumb_down_terciary_14px);
+			thumbUpAccent = theme.getDrawable(R.drawable.ic_thumb_up_black_14px);
+			thumbDownAccent = theme.getDrawable(R.drawable.ic_thumb_down_black_14px);
 		} else {
 			//noinspection deprecation
 			thumbUp = resources.getDrawable(R.drawable.ic_thumb_up_terciary_14px);
 			//noinspection deprecation
 			thumbDown = resources.getDrawable(R.drawable.ic_thumb_down_terciary_14px);
+			//noinspection deprecation
+			thumbUpAccent = resources.getDrawable(R.drawable.ic_thumb_up_black_14px);
+			//noinspection deprecation
+			thumbDownAccent = resources.getDrawable(R.drawable.ic_thumb_down_black_14px);
 		}
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
 			if (voteType == null) {
 				agree.setTextColor(colorNormal);
-				thumbUp.setColorFilter(null);
 				agree.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbUp, null, null, null);
 				disagree.setTextColor(colorNormal);
-				thumbDown.setColorFilter(null);
 				disagree.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDown, null, null,
 																		 null);
 			} else {
 				switch (voteType) {
 					case AGREE:
 						agree.setTextColor(colorAccent);
-						thumbUp.setColorFilter(colorAccent, PorterDuff.Mode.DST_IN);
-						agree.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbUp, null, null,
-																			  null);
+						agree.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbUpAccent, null,
+																			  null, null);
 						disagree.setTextColor(colorNormal);
-						thumbDown.setColorFilter(null);
 						disagree.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDown, null,
 																				 null, null);
 						break;
 					case DISAGREE:
 						agree.setTextColor(colorNormal);
-						thumbUp.setColorFilter(null);
 						agree.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbUp, null, null,
 																			  null);
 						disagree.setTextColor(colorAccent);
-						thumbDown.setColorFilter(colorAccent, PorterDuff.Mode.DST_IN);
-						disagree.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDown, null,
+						disagree.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDownAccent,
+																				 null,
 																				 null, null);
 						break;
 				}
@@ -287,20 +294,18 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 				switch (voteType) {
 					case AGREE:
 						agree.setTextColor(colorAccent);
-						thumbUp.setColorFilter(colorAccent, PorterDuff.Mode.DST_IN);
-						agree.setCompoundDrawablesWithIntrinsicBounds(thumbUp, null, null, null);
+						agree.setCompoundDrawablesWithIntrinsicBounds(thumbUpAccent, null, null,
+																	  null);
 						disagree.setTextColor(colorNormal);
-						thumbDown.setColorFilter(null);
 						disagree.setCompoundDrawablesWithIntrinsicBounds(thumbDown, null, null,
 																		 null);
 						break;
 					case DISAGREE:
 						agree.setTextColor(colorNormal);
-						thumbUp.setColorFilter(null);
 						agree.setCompoundDrawablesWithIntrinsicBounds(thumbUp, null, null, null);
 						disagree.setTextColor(colorAccent);
-						thumbDown.setColorFilter(colorAccent, PorterDuff.Mode.DST_IN);
-						disagree.setCompoundDrawablesWithIntrinsicBounds(thumbDown, null, null,
+						disagree.setCompoundDrawablesWithIntrinsicBounds(thumbDownAccent, null,
+																		 null,
 																		 null);
 						break;
 				}
