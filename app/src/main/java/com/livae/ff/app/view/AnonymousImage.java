@@ -91,35 +91,37 @@ public class AnonymousImage extends View {
 			int shapesCounter = 0;
 			final SHAPE[] shapes = SHAPE.values();
 			do {
-				SHAPE shape = shapes[random.nextInt(shapes.length)];
+				int shapePos = random.nextInt(shapes.length);
+				SHAPE shape = shapes[shapePos];
 				switch (shape) {
 					case CIRCLE: {
 						int minRadius = Math.max(width, height) / 4;
 						int maxRadius = Math.max(width, height) / 2;
-						int centerX = random.nextInt(width);
-						int centerY = random.nextInt(height);
-						int radius = random.nextInt(maxRadius - minRadius) + minRadius;
+						int centerX = (int) (random.nextDouble() * width);
+						int centerY = (int) (random.nextDouble() * height);
+						int radius = (int) (random.nextDouble() * (maxRadius - minRadius) +
+											minRadius);
 						paint.setColor(getColor());
 						canvas.drawCircle(centerX, centerY, radius, paint);
 					}
 					break;
 					case SQUARE: {
-						int x1 = random.nextInt(width);
-						int x2 = random.nextInt(width);
-						int y1 = random.nextInt(height);
-						int y2 = random.nextInt(height);
+						int x1 = (int) (random.nextDouble() * width);
+						int x2 = (int) (random.nextDouble() * width);
+						int y1 = (int) (random.nextDouble() * height);
+						int y2 = (int) (random.nextDouble() * height);
 						paint.setColor(getColor());
 						canvas.drawRect(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2),
 										Math.max(y1, y2), paint);
 					}
 					break;
 					case TRIANGLE: {
-						int x1 = random.nextInt(width);
-						int y1 = random.nextInt(height);
-						int x2 = random.nextInt(width);
-						int y2 = random.nextInt(height);
-						int x3 = random.nextInt(width);
-						int y3 = random.nextInt(height);
+						int x1 = (int) (random.nextDouble() * width);
+						int y1 = (int) (random.nextDouble() * height);
+						int x2 = (int) (random.nextDouble() * width);
+						int y2 = (int) (random.nextDouble() * height);
+						int x3 = (int) (random.nextDouble() * width);
+						int y3 = (int) (random.nextDouble() * height);
 						path.reset();
 						path.moveTo(x1, y1);
 						path.lineTo(x2, y2);

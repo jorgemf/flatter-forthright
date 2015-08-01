@@ -89,14 +89,11 @@
 	<string name="button_unblock">Unblock</string>
 
 	<string name="confirmation_block_user">Do you want to block the user?</string>
-	<string name="confirmation_block_anonymous_user">Do you want to block this user for private conversations? The block it is temporary as it is impossible to unblock.</string>
-	<array name="block_anonymous_user_time">
-		<item>100 days</item>
-		<item>30 days</item>
-		<item>7 days</item>
-		<item>1 day</item>
-		<item>Do not block</item>
-	</array>
+	<string name="confirmation_block_anonymous_user">Do you want to block this user for private conversations? The conversation will be deleted. The block is temporary as it is impossible to unblock.</string>
+	<string name="button_block_100_days">100 days</string>
+	<string name="button_block_30_days">30 days</string>
+	<string name="button_block_7_days">7 days</string>
+	<string name="button_block_1_day">1 day</string>
 	<string name="confirmation_user_blocked">User blocked</string>
 	<string name="confirmation_user_unblocked">User unblocked</string>
 	<string name="confirmation_forthright_blocked">Public forthright messages blocked since now</string>
@@ -171,5 +168,7 @@
 	<string name="copy">Copy</string>
 	<string name="copy_conversation_label">Pensamientos Conversation</string>
 	<string name="comments_copied">Comments copied</string>
+	<string name="comment_flagged">Comment flagged</string>
+	<string name="hidden_comment">«hidden comment»</string>
 
 </resources>

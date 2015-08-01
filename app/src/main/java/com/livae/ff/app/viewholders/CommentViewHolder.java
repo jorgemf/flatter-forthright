@@ -2,12 +2,14 @@ package com.livae.ff.app.viewholders;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +24,10 @@ import com.livae.ff.common.Constants.CommentVoteType;
 
 public class CommentViewHolder extends RecyclerView.ViewHolder
   implements View.OnLongClickListener, View.OnClickListener {
+
+	private final static ForegroundColorSpan TRANSPARENT_SPAM = new ForegroundColorSpan(Color.TRANSPARENT);
+
+	private static final StyleSpan ITALIC_SPAN = new StyleSpan(Typeface.ITALIC);
 
 	private Long commentId;
 
@@ -155,12 +161,19 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 	public void setComment(String comment, long date, Long previousDate) {
 		final CharSequence dateString = UnitUtils.getTime(this.date.getContext(), date);
 		this.commentText = comment;
+		if (comment == null) {
+			comment = this.comment.getContext().getString(R.string.hidden_comment);
+		}
 		this.date.setText(dateString);
 		final String sufix = " " + dateString;
 		comment = comment + sufix;
 		Spannable span = new SpannableString(comment);
-		span.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), comment.length() - sufix.length(),
-					 comment.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		span.setSpan(TRANSPARENT_SPAM, comment.length() - sufix.length(), comment.length(),
+					 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		if (this.commentText == null) {
+			span.setSpan(ITALIC_SPAN, 0, comment.length() - sufix.length(),
+						 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
 		this.comment.setText(span);
 		if (previousDate == null || !UnitUtils.isItSameDay(date, previousDate)) {
 			dayDate.setVisibility(View.VISIBLE);
@@ -279,8 +292,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 																			  null);
 						disagree.setTextColor(colorAccent);
 						disagree.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDownAccent,
-																				 null,
-																				 null, null);
+																				 null, null, null);
 						break;
 				}
 			}
@@ -305,8 +317,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 						agree.setCompoundDrawablesWithIntrinsicBounds(thumbUp, null, null, null);
 						disagree.setTextColor(colorAccent);
 						disagree.setCompoundDrawablesWithIntrinsicBounds(thumbDownAccent, null,
-																		 null,
-																		 null);
+																		 null, null);
 						break;
 				}
 			}

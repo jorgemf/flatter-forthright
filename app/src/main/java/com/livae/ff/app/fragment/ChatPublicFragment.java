@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -225,26 +226,28 @@ public class ChatPublicFragment extends AbstractChatFragment {
 		ContextMenuRecyclerView.RecyclerContextMenuInfo recyclerInfo = (ContextMenuRecyclerView.RecyclerContextMenuInfo) menuInfo;
 		CommentViewHolder viewHolder = (CommentViewHolder) recyclerInfo.viewHolder;
 		String comment = viewHolder.getComment();
-		if (comment.length() > 50) {
-			comment = comment.substring(0, 49) + "…";
-		}
-		menu.setHeaderTitle(comment);
-		MenuInflater inflater = getActivity().getMenuInflater();
-		inflater.inflate(R.menu.menu_comment, menu);
-		int cursorPosition = commentsAdapter.getCursorPosition(viewHolder.getAdapterPosition());
-		MenuItem menuItem = menu.findItem(R.id.action_flag);
-		menuItem.setVisible(!commentsAdapter.isMe(cursorPosition));
-		CommentVoteType commentVoteType = commentsAdapter.getVote(cursorPosition);
-		if (commentVoteType == null) {
-			menu.findItem(R.id.action_indifferent).setEnabled(false);
-		} else {
-			switch (commentVoteType) {
-				case AGREE:
-					menu.findItem(R.id.action_agree).setEnabled(false);
-					break;
-				case DISAGREE:
-					menu.findItem(R.id.action_disagree).setEnabled(false);
-					break;
+		if (!TextUtils.isEmpty(comment)) { // if it is empty, chat was probably blocked
+			if (comment.length() > 50) {
+				comment = comment.substring(0, 49) + "…";
+			}
+			menu.setHeaderTitle(comment);
+			MenuInflater inflater = getActivity().getMenuInflater();
+			inflater.inflate(R.menu.menu_comment, menu);
+			int cursorPosition = commentsAdapter.getCursorPosition(viewHolder.getAdapterPosition());
+			MenuItem menuItem = menu.findItem(R.id.action_flag);
+			menuItem.setVisible(!commentsAdapter.isMe(cursorPosition));
+			CommentVoteType commentVoteType = commentsAdapter.getVote(cursorPosition);
+			if (commentVoteType == null) {
+				menu.findItem(R.id.action_indifferent).setEnabled(false);
+			} else {
+				switch (commentVoteType) {
+					case AGREE:
+						menu.findItem(R.id.action_agree).setEnabled(false);
+						break;
+					case DISAGREE:
+						menu.findItem(R.id.action_disagree).setEnabled(false);
+						break;
+				}
 			}
 		}
 	}
@@ -302,7 +305,7 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	private void adjustBlockMenu() {
 		if (isMyPublicChat && chatType == Constants.ChatType.FORTHRIGHT) {
 			Long blockedForthRightChats = Application.appUser().getBlockedForthRightChats();
-			if (blockedForthRightChats != null) {
+			if (blockedForthRightChats == null) {
 				menuBlock.setVisible(true);
 				menuUnblock.setVisible(false);
 			} else {
@@ -346,6 +349,7 @@ public class ChatPublicFragment extends AbstractChatFragment {
 					Snackbar.make(getActivity().findViewById(R.id.container),
 								  R.string.confirmation_forthright_unblocked, Snackbar.LENGTH_SHORT)
 							.show();
+					restart();
 				}
 			}
 
@@ -403,6 +407,9 @@ public class ChatPublicFragment extends AbstractChatFragment {
 								param.first.getReason().name());
 				if (isResumed()) {
 					commentsAdapter.notifyItemChanged(param.second);
+					AbstractActivity activity = (AbstractActivity) getActivity();
+					Snackbar.make(activity.findViewById(R.id.container), R.string.comment_flagged,
+								  Snackbar.LENGTH_SHORT);
 				}
 			}
 
@@ -410,6 +417,7 @@ public class ChatPublicFragment extends AbstractChatFragment {
 			public void onError(CustomAsyncTask<Pair<FlagComment, Integer>, Void> task,
 								Pair<FlagComment, Integer> param, Exception e) {
 				if (isResumed()) {
+					commentsAdapter.notifyItemChanged(param.second);
 					AbstractActivity activity = (AbstractActivity) getActivity();
 					activity.showSnackBarException(e);
 				}
@@ -422,12 +430,13 @@ public class ChatPublicFragment extends AbstractChatFragment {
 			taskVoteAgreeComment = new TaskCommentVoteAgree();
 		}
 		Pair<Long, Integer> param = new Pair<>(commentId, adapterPosition);
+		commentsAdapter.votedComment(commentId, CommentVoteType.AGREE);
+		commentsAdapter.notifyItemChanged(adapterPosition);
 		taskVoteAgreeComment.execute(param, new Callback<Pair<Long, Integer>, Comment>() {
 			@Override
 			public void onComplete(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
 								   Pair<Long, Integer> param, Comment result) {
 				Analytics.event(Analytics.Category.CONTENT, Analytics.Action.COMMENT_VOTED_AGREE);
-				commentsAdapter.votedComment(param.first, CommentVoteType.AGREE);
 				if (!task.isCancelled()) {
 					commentsAdapter.notifyItemChanged(param.second);
 				}
@@ -436,7 +445,9 @@ public class ChatPublicFragment extends AbstractChatFragment {
 			@Override
 			public void onError(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
 								Pair<Long, Integer> param, Exception e) {
+				commentsAdapter.removeVote(param.first);
 				if (!task.isCancelled()) {
+					commentsAdapter.notifyItemChanged(param.second);
 					AbstractActivity activity = (AbstractActivity) getActivity();
 					activity.showSnackBarException(e);
 				}
@@ -449,13 +460,14 @@ public class ChatPublicFragment extends AbstractChatFragment {
 			taskVoteDisagreeComment = new TaskCommentVoteDisagree();
 		}
 		Pair<Long, Integer> param = new Pair<>(commentId, adapterPosition);
+		commentsAdapter.votedComment(commentId, CommentVoteType.DISAGREE);
+		commentsAdapter.notifyItemChanged(adapterPosition);
 		taskVoteDisagreeComment.execute(param, new Callback<Pair<Long, Integer>, Comment>() {
 			@Override
 			public void onComplete(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
 								   Pair<Long, Integer> param, Comment result) {
 				Analytics.event(Analytics.Category.CONTENT,
 								Analytics.Action.COMMENT_VOTED_DISAGREE);
-				commentsAdapter.votedComment(param.first, CommentVoteType.DISAGREE);
 				if (!task.isCancelled()) {
 					commentsAdapter.notifyItemChanged(param.second);
 				}
@@ -464,7 +476,9 @@ public class ChatPublicFragment extends AbstractChatFragment {
 			@Override
 			public void onError(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
 								Pair<Long, Integer> param, Exception e) {
+				commentsAdapter.removeVote(param.first);
 				if (!task.isCancelled()) {
+					commentsAdapter.notifyItemChanged(param.second);
 					AbstractActivity activity = (AbstractActivity) getActivity();
 					activity.showSnackBarException(e);
 				}
@@ -476,13 +490,14 @@ public class ChatPublicFragment extends AbstractChatFragment {
 		if (taskNoVoteComment == null) {
 			taskNoVoteComment = new TaskCommentVoteDelete();
 		}
+		commentsAdapter.votedComment(commentId, null);
+		commentsAdapter.notifyItemChanged(adapterPosition);
 		Pair<Long, Integer> param = new Pair<>(commentId, adapterPosition);
 		taskNoVoteComment.execute(param, new Callback<Pair<Long, Integer>, Comment>() {
 			@Override
 			public void onComplete(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
 								   Pair<Long, Integer> param, Comment result) {
 				Analytics.event(Analytics.Category.CONTENT, Analytics.Action.COMMENT_VOTE_REMOVED);
-				commentsAdapter.votedComment(param.first, null);
 				if (!task.isCancelled()) {
 					commentsAdapter.notifyItemChanged(param.second);
 				}
@@ -491,7 +506,9 @@ public class ChatPublicFragment extends AbstractChatFragment {
 			@Override
 			public void onError(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
 								Pair<Long, Integer> param, Exception e) {
+				commentsAdapter.removeVote(param.first);
 				if (!task.isCancelled()) {
+					commentsAdapter.notifyItemChanged(param.second);
 					AbstractActivity activity = (AbstractActivity) getActivity();
 					activity.showSnackBarException(e);
 				}

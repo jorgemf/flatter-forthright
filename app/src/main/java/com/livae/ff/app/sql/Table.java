@@ -125,7 +125,7 @@ public class Table {
 												USER_ANONYMOUS_ID + " INTEGER, " +
 												USER_ALIAS + " TEXT, " +
 												IS_ME + " INTEGER, " +
-												COMMENT + " TEXT NOT NULL, " +
+												COMMENT + " TEXT, " +
 												DATE + " INTEGER NOT NULL, " +
 												AGREE_VOTES + " INTEGER, " +
 												DISAGREE_VOTES + " INTEGER, " +

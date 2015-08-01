@@ -4,14 +4,28 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.livae.ff.app.Analytics;
+import com.livae.ff.app.activity.AbstractActivity;
+import com.livae.ff.app.fragment.AbstractFragment;
+import com.livae.ff.app.listener.OnLifeCycleListener;
 
-public abstract class CustomAsyncTask<Param, Result> {
+public abstract class CustomAsyncTask<Param, Result> implements OnLifeCycleListener {
 
 	public static final String LOG_TAG = "TASK";
 
 	private AsyncTask<Parameter, Void, Results> asyncTask;
 
 	private boolean cancelled;
+
+	public CustomAsyncTask(AbstractActivity abstractActivity) {
+		abstractActivity.addLifeCycleListener(this);
+	}
+
+	public CustomAsyncTask(AbstractFragment abstractFragment) {
+		abstractFragment.addLifeCycleListener(this);
+	}
+
+	public CustomAsyncTask() {
+	}
 
 	public CustomAsyncTask<Param, Result> execute(Param param, Callback<Param, Result> callback) {
 		cancelled = false;
@@ -62,6 +76,21 @@ public abstract class CustomAsyncTask<Param, Result> {
 				Analytics.logAndReport(e);
 			}
 		}
+	}
+
+	@Override
+	public void onPause() {
+		// nothing by no
+	}
+
+	@Override
+	public void onDestroy() {
+		cancel();
+	}
+
+	@Override
+	public void onConfigurationChanges() {
+		cancel();
 	}
 
 	protected abstract Result doInBackground(Param param) throws Exception;

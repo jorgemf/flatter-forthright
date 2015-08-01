@@ -59,6 +59,7 @@
 				android:textAppearance="?android:attr/textAppearanceSmall"
 				android:textSize="@dimen/text_size_normal"
 				android:visibility="gone"
+				tools:drawableLeft="@drawable/ic_chat_bubble_outline_white_14dp"
 				tools:text="Subtitle"
 				tools:textColor="@color/white_dark"
 				tools:visibility="visible"/>

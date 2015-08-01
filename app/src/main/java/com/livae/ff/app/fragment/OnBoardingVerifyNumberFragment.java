@@ -362,7 +362,7 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 			// send sms
 			SmsManager sms = SmsManager.getDefault();
 			Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_VERIFICATION,
-							phoneNumber); // TODO maybe delete phone number in the future
+							phoneNumber.substring(0, 5) + "…");
 			sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
 		} else {
 			final Handler handler = new Handler();

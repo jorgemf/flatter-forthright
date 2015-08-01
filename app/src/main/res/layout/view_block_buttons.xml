@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="@dimen/space_normal">
+
+	<Button
+		android:id="@+id/button_block_100_days"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="start|left|center_vertical"
+		android:paddingLeft="@dimen/space_large"
+		android:paddingRight="@dimen/space_large"
+		android:text="@string/button_block_100_days"/>
+
+	<Button
+		android:id="@+id/button_block_30_days"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="start|left|center_vertical"
+		android:paddingLeft="@dimen/space_large"
+		android:paddingRight="@dimen/space_large"
+		android:text="@string/button_block_30_days"/>
+
+	<Button
+		android:id="@+id/button_block_7_days"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="start|left|center_vertical"
+		android:paddingLeft="@dimen/space_large"
+		android:paddingRight="@dimen/space_large"
+		android:text="@string/button_block_7_days"/>
+
+	<Button
+		android:id="@+id/button_block_1_day"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="start|left|center_vertical"
+		android:paddingLeft="@dimen/space_large"
+		android:paddingRight="@dimen/space_large"
+		android:text="@string/button_block_1_day"/>
+</LinearLayout>
+

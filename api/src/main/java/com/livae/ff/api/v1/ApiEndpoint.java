@@ -466,7 +466,7 @@ public class ApiEndpoint {
 			if (commentVote != null) {
 				comment.setUserVoteType(commentVote.getType());
 			}
-			if (!isMe && dateBlocked != null && dateBlocked > comment.getDate().getTime()) {
+			if (!isMe && dateBlocked != null && comment.getDate().getTime() > dateBlocked) {
 				// hide comments since the user blocked the list
 				comment.setComment(null);
 			}

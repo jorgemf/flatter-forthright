@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -25,6 +26,7 @@ import com.livae.ff.app.activity.ChatPrivateActivity;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.dialog.EditTextDialogFragment;
+import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.task.ConversationParams;
 import com.livae.ff.app.task.FlagConversation;
 import com.livae.ff.app.task.ListResult;
@@ -260,31 +262,41 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 
 	private void confirmationBlockAnonymousUser() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(anonymousNick).setMessage(R.string.confirmation_block_anonymous_user)
-										  // TODO message and single choice is mutually excluyent
-		  .setSingleChoiceItems(R.array.block_anonymous_user_time, -1,
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										switch (which) {
-											case 0:
-												blockUser(100);
-												break;
-											case 1:
-												blockUser(30);
-												break;
-											case 2:
-												blockUser(7);
-												break;
-											case 3:
-												blockUser(1);
-												break;
-										}
-										dialog.dismiss();
-
-									}
-								}).show();
+		final AlertDialog dialog;
+		dialog = builder.setTitle(anonymousNick)
+						.setMessage(R.string.confirmation_block_anonymous_user)
+						.setNegativeButton(R.string.cancel, null)
+						.setView(R.layout.view_block_buttons).create();
+		dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+			@Override
+			public void onShow(final DialogInterface dialogInterface) {
+				View.OnClickListener clickListener = new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						switch (v.getId()) {
+							case R.id.button_block_100_days:
+								blockUser(100);
+								break;
+							case R.id.button_block_30_days:
+								blockUser(30);
+								break;
+							case R.id.button_block_7_days:
+								blockUser(7);
+								break;
+							case R.id.button_block_1_day:
+								blockUser(1);
+								break;
+						}
+						dialogInterface.dismiss();
+					}
+				};
+				dialog.findViewById(R.id.button_block_100_days).setOnClickListener(clickListener);
+				dialog.findViewById(R.id.button_block_30_days).setOnClickListener(clickListener);
+				dialog.findViewById(R.id.button_block_7_days).setOnClickListener(clickListener);
+				dialog.findViewById(R.id.button_block_1_day).setOnClickListener(clickListener);
+			}
+		});
+		dialog.show();
 	}
 
 	private void confirmationBlockUser() {
@@ -362,11 +374,16 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 			public void onComplete(CustomAsyncTask<FlagConversation, Void> task,
 								   FlagConversation flagConversation, Void aVoid) {
 				userBlocked = true;
+				final FragmentActivity activity = getActivity();
+				Uri uriConversation = ConversationsProvider.getUriConversation(conversationId);
+				activity.getContentResolver().delete(uriConversation, null, null);
+				Uri uriComments = ConversationsProvider.getUriConversationComments(conversationId);
+				activity.getContentResolver().delete(uriComments, null, null);
 				if (isResumed()) {
 					adjustBlockMenu();
-					Snackbar.make(getActivity().findViewById(R.id.container),
+					Snackbar.make(activity.findViewById(R.id.container),
 								  R.string.confirmation_user_blocked, Snackbar.LENGTH_SHORT).show();
-
+					activity.finish();
 				}
 			}
 

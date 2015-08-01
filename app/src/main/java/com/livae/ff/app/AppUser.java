@@ -81,7 +81,7 @@ public class AppUser {
 	}
 
 	public Long getBlockedForthRightChats() {
-		return userPhone;
+		return blockedForthRightChats;
 	}
 
 	public void setBlockedForthRightChats(Long blockDate) {
@@ -114,15 +114,6 @@ public class AppUser {
 		return profile;
 	}
 
-	public void setProfile(Profile profile) {
-		this.profile = profile;
-		if (profile == null) {
-			prefs.edit().putString(USER_PROFILE, null).apply();
-		} else {
-			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
-		}
-	}
-
 	public void setProfile(String profile) {
 		try {
 			if (profile == null) {
@@ -132,6 +123,15 @@ public class AppUser {
 			}
 			prefs.edit().putString(USER_PROFILE, profile).apply();
 		} catch (Exception ignore) {
+		}
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+		if (profile == null) {
+			prefs.edit().putString(USER_PROFILE, null).apply();
+		} else {
+			prefs.edit().putString(USER_PROFILE, profile.name()).apply();
 		}
 	}
 

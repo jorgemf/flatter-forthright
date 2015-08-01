@@ -296,21 +296,21 @@ public class AbstractChatActivity extends AbstractActivity {
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 					getWindow().setStatusBarColor(res.getColor(R.color.black));
 				}
-				setSubtitleImage(R.drawable.ic_question_mark_white_18dp);
+				setSubtitleImage(R.drawable.ic_question_mark_white_14dp);
 				break;
 			case SECRET:
 				barLayout.setBackgroundColor(res.getColor(R.color.purple));
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 					getWindow().setStatusBarColor(res.getColor(R.color.purple_dark));
 				}
-				setSubtitleImage(R.drawable.ic_timer_white_18dp);
+				setSubtitleImage(R.drawable.ic_timer_white_14dp);
 				break;
 			case PRIVATE:
 				barLayout.setBackgroundColor(res.getColor(R.color.purple));
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 					getWindow().setStatusBarColor(res.getColor(R.color.purple_dark));
 				}
-				setSubtitleImage(R.drawable.ic_chat_bubble_outline_white_18dp);
+				setSubtitleImage(R.drawable.ic_chat_bubble_outline_white_14dp);
 				break;
 		}
 	}

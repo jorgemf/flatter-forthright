@@ -11,6 +11,7 @@ import com.livae.ff.common.Constants.PushNotificationType;
 import com.livae.ff.common.model.NotificationComment;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +36,8 @@ public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 			return;
 		}
 		try {
-			comment.setIsMe(user.getPhone().equals(comment.getUserId()));
+			boolean isMe = user.getPhone().equals(comment.getUserId());
+			comment.setIsMe(isMe);
 			Conversation conversation = Conversation.get(comment.getConversationId());
 			NotificationsUtil.sendPushNotification(user, createNotification(comment, conversation),
 												   PushNotificationType.COMMENT);
@@ -71,8 +73,17 @@ public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 		notificationComment.setConversationType(chatType.name());
 		notificationComment.setConversationId(conversation.getId());
 		switch (chatType) {
-			case FLATTER:
 			case FORTHRIGHT:
+				final boolean isMe = comment.getIsMe();
+				PhoneUser phoneUser = PhoneUser.get(conversation.getPhone());
+				final Date date = phoneUser.getForthrightChatsDateBlocked();
+				final Long dateBlocked = date == null ? null : date.getTime();
+				if (!isMe && dateBlocked != null && comment.getDate().getTime() > dateBlocked) {
+					// hide comments since the user blocked the list
+					notificationComment.setComment(null);
+				}
+				// no break
+			case FLATTER:
 				notificationComment.setConversationUserId(conversation.getPhone());
 				notificationComment.setAlias(comment.getAlias());
 				notificationComment.setAliasId(comment.getAliasId());

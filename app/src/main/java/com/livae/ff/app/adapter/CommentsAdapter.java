@@ -121,6 +121,10 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		commentVoteTypeHashMap.put(commentId, voteType);
 	}
 
+	public void removeVote(Long commentId) {
+		commentVoteTypeHashMap.remove(commentId);
+	}
+
 	@Override
 	public void setCursor(Cursor cursor) {
 		commentVoteTypeHashMap.clear();

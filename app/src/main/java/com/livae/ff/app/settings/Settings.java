@@ -29,7 +29,7 @@ public class Settings {
 
 	public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
-	public static final int MIN_FLAG_TO_MARK_COMMENT = 0; // TODO maybe 2?
+	public static final int MIN_FLAG_TO_MARK_COMMENT = 2;
 
 	public static class Google {
 

@@ -1,6 +1,7 @@
 package com.livae.ff.app.activity;
 
 import android.accounts.NetworkErrorException;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -11,9 +12,12 @@ import android.view.MenuItem;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.livae.ff.app.R;
+import com.livae.ff.app.listener.OnLifeCycleListener;
 import com.livae.ff.app.utils.SyncUtils;
 
 import java.net.ConnectException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -22,6 +26,8 @@ public abstract class AbstractActivity extends AppCompatActivity {
 	protected static final String LOG_TAG = "ACTIVITY";
 
 	private Toolbar toolbar;
+
+	private List<OnLifeCycleListener> onLifeCycleListenerList;
 
 	private String getExceptionError(@Nonnull Exception e) {
 		if (e instanceof NetworkErrorException) {
@@ -72,6 +78,14 @@ public abstract class AbstractActivity extends AppCompatActivity {
 	}
 
 	@Override
+	protected void onPause() {
+		for (OnLifeCycleListener listener : onLifeCycleListenerList) {
+			listener.onPause();
+		}
+		super.onPause();
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		if (!(this instanceof OnBoardingActivity) && !SyncUtils.isAccountRegistered(this)) {
@@ -85,16 +99,6 @@ public abstract class AbstractActivity extends AppCompatActivity {
 		super.onSaveInstanceState(outState);
 	}
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
-
-	public void setSupportActionBar(Toolbar toolbar) {
-		this.toolbar = toolbar;
-		super.setSupportActionBar(toolbar);
-	}
-
 	public void showSnackBarException(Exception e) {
 		Snackbar.make(findViewById(R.id.container), getExceptionError(e), Snackbar.LENGTH_LONG)
 				.show();
@@ -102,5 +106,42 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
 	public void showSnackBarException(String message) {
 		Snackbar.make(findViewById(R.id.container), message, Snackbar.LENGTH_LONG).show();
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		onLifeCycleListenerList = new ArrayList<>();
+	}
+
+	public void setSupportActionBar(Toolbar toolbar) {
+		this.toolbar = toolbar;
+		super.setSupportActionBar(toolbar);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		for (OnLifeCycleListener listener : onLifeCycleListenerList) {
+			listener.onConfigurationChanges();
+		}
+		super.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	protected void onDestroy() {
+		for (OnLifeCycleListener listener : onLifeCycleListenerList) {
+			listener.onDestroy();
+		}
+		super.onDestroy();
+	}
+
+	public void addLifeCycleListener(OnLifeCycleListener cycleListener) {
+		if (!onLifeCycleListenerList.contains(cycleListener)) {
+			onLifeCycleListenerList.add(cycleListener);
+		}
+	}
+
+	public void removeLifeCycleListener(OnLifeCycleListener cycleListener) {
+		onLifeCycleListenerList.remove(cycleListener);
 	}
 }

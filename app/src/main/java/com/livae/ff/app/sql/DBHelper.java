@@ -9,7 +9,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	private static final String NAME = "ff.sqlite";
 
-	private static final int VERSION = 1;
+	private static final int VERSION = 2;
 
 	private static DBHelper instance;
 
@@ -48,7 +48,11 @@ public class DBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 		switch (oldVersion) {
-			case 1: // current version
+			case 1:
+				// sorry users for losing your old comments
+				sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Comment.NAME);
+				sqLiteDatabase.execSQL(Table.Comment.CREATE_SQL);
+			case 2: // current version
 		}
 	}
 
