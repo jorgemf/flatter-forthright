@@ -171,7 +171,8 @@ public class CloudMessagesService extends IntentService {
 				Long lastMessageDate = cursor.getLong(iLastMessageDate);
 				intent = AbstractChatActivity.createIntent(context, chatType, conversationId, null,
 														   null, null, null, null, lastAccess,
-														   lastMessageDate, totalComments, null);
+														   lastMessageDate, totalComments, null,
+														   null);
 			} else {
 				NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(builder);
 				int index = 0;
@@ -205,7 +206,7 @@ public class CloudMessagesService extends IntentService {
 					intent = AbstractChatActivity.createIntent(context, chatType, conversationId,
 															   null, null, null, null, null,
 															   lastAccess, lastMessageDate,
-															   totalComments, null);
+															   totalComments, null, null);
 				} else {
 					intent = new Intent(context, ChatsActivity.class);
 				}
@@ -241,8 +242,10 @@ public class CloudMessagesService extends IntentService {
 		Uri uri = ConversationsProvider.getUriCommentsConversations();
 		final String[] projection = {Table.Comment.COMMENT, Table.Comment.CONVERSATION_ID,
 									 Table.LocalUser.CONTACT_NAME, Table.LocalUser.IMAGE_URI,
-									 Table.LocalUser.BLOCKED, Table.Conversation.TYPE,
-									 Table.Conversation.ROOM_NAME, Table.Conversation.LAST_ACCESS,
+									 Table.LocalUser.BLOCKED,
+									 Table.LocalUser.ANDROID_RAW_CONTACT_ID,
+									 Table.Conversation.TYPE, Table.Conversation.ROOM_NAME,
+									 Table.Conversation.LAST_ACCESS,
 									 Table.Conversation.LAST_MESSAGE_DATE, Table.Conversation.PHONE,
 									 Table.Conversation.ALIAS_ID};
 		final String selection =
@@ -267,6 +270,7 @@ public class CloudMessagesService extends IntentService {
 			int iDisplayName = cursor.getColumnIndex(Table.LocalUser.CONTACT_NAME);
 			int iImageUri = cursor.getColumnIndex(Table.LocalUser.IMAGE_URI);
 			int iBlocked = cursor.getColumnIndex(Table.LocalUser.BLOCKED);
+			int iRawContactId = cursor.getColumnIndex(Table.LocalUser.ANDROID_RAW_CONTACT_ID);
 			int iConversationType = cursor.getColumnIndex(Table.Conversation.TYPE);
 			int iRoomName = cursor.getColumnIndex(Table.Conversation.ROOM_NAME);
 			int iConversationId = cursor.getColumnIndex(Table.Comment.CONVERSATION_ID);
@@ -293,10 +297,12 @@ public class CloudMessagesService extends IntentService {
 				Long aliasId = cursor.getLong(iAliasId);
 				String imageUri = cursor.getString(iImageUri);
 				boolean blocked = cursor.getInt(iBlocked) != 0;
+				Long rawContactId =
+				  cursor.isNull(iRawContactId) ? null : cursor.getLong(iRawContactId);
 				intent = AbstractChatActivity.createIntent(context, chatType, conversationId, phone,
 														   displayName, roomName, imageUri, aliasId,
 														   lastAccess, lastMessageDate,
-														   totalComments, blocked);
+														   totalComments, blocked, rawContactId);
 			} else {
 				NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(builder);
 				int index = 0;
@@ -336,11 +342,13 @@ public class CloudMessagesService extends IntentService {
 					String displayName = cursor.getString(iDisplayName);
 					String roomName = cursor.getString(iRoomName);
 					boolean blocked = cursor.getInt(iBlocked) != 0;
+					Long rawContactId =
+					  cursor.isNull(iRawContactId) ? null : cursor.getLong(iRawContactId);
 					intent = AbstractChatActivity.createIntent(context, chatType, conversationId,
 															   phone, displayName, roomName,
 															   imageUri, aliasId, lastAccess,
 															   lastMessageDate, totalComments,
-															   blocked);
+															   blocked, rawContactId);
 				} else {
 					intent = new Intent(context, ChatsActivity.class);
 				}

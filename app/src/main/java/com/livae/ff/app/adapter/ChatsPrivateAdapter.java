@@ -19,6 +19,7 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 
 	public static final String[] PROJECTION = {Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
 											   Table.LocalUser.IMAGE_URI, Table.LocalUser.BLOCKED,
+											   Table.LocalUser.ANDROID_RAW_CONTACT_ID,
 											   Table.Conversation.T_ID,
 											   Table.Conversation.ROOM_NAME,
 											   Table.Conversation.TYPE,

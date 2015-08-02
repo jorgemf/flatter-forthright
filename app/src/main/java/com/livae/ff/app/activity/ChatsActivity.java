@@ -219,6 +219,17 @@ public class ChatsActivity extends AbstractActivity
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+		notificationDisabledReceiver.unregister(this);
+		if (searchMenuItem != null) {
+			SearchView searchView = (SearchView) searchMenuItem.getActionView();
+			searchView.setIconified(true);
+		}
+		searchText = null;
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		NotificationManager manager;
@@ -415,29 +426,21 @@ public class ChatsActivity extends AbstractActivity
 			final String name = data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME);
 			final boolean blocked = data.getBooleanExtra(ContactsActivity.SELECTED_USER_BLOCKED,
 														 false);
+			final long rawContactId = data.getLongExtra(ContactsActivity.SELECTED_RAW_CONTACT_ID,
+														0);
 			switch (requestCode) {
 				case REQUEST_CONTACT_PRIVATE:
-					ChatPrivateActivity.startChatPrivate(this, phone, name, blocked);
+					ChatPrivateActivity.startChatPrivate(this, phone, name, blocked, rawContactId);
 					break;
 				case REQUEST_CONTACT_SECRET:
-					ChatPrivateActivity.startChatSecret(this, phone, name, blocked);
+					ChatPrivateActivity.startChatSecret(this, phone, name, blocked, rawContactId);
 					break;
 				case REQUEST_CONTACT_ANONYMOUS:
-					ChatPrivateActivity.startChatAnonymous(this, phone, name, blocked);
+					ChatPrivateActivity.startChatAnonymous(this, phone, name, blocked,
+														   rawContactId);
 					break;
 			}
 		}
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		notificationDisabledReceiver.unregister(this);
-		if (searchMenuItem != null) {
-			SearchView searchView = (SearchView) searchMenuItem.getActionView();
-			searchView.setIconified(true);
-		}
-		searchText = null;
 	}
 
 	@Override

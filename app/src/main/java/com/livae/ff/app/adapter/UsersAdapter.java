@@ -17,7 +17,8 @@ import javax.annotation.Nonnull;
 public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 
 	public static final String[] PROJECTION = {Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
-											   Table.LocalUser.IMAGE_URI, Table.LocalUser.BLOCKED};
+											   Table.LocalUser.IMAGE_URI, Table.LocalUser.BLOCKED,
+											   Table.LocalUser.ANDROID_RAW_CONTACT_ID};
 
 	protected String search;
 
@@ -30,6 +31,8 @@ public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 	protected int iImageUri;
 
 	protected int iBlocked;
+
+	protected int iRawContactId;
 
 	private UserClickListener userClickListener;
 
@@ -49,6 +52,7 @@ public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 		iPhone = cursor.getColumnIndex(Table.LocalUser.PHONE);
 		iImageUri = cursor.getColumnIndex(Table.LocalUser.IMAGE_URI);
 		iBlocked = cursor.getColumnIndex(Table.LocalUser.BLOCKED);
+		iRawContactId = cursor.getColumnIndex(Table.LocalUser.ANDROID_RAW_CONTACT_ID);
 	}
 
 	@Override
@@ -73,6 +77,11 @@ public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 		holder.setUserPhone(phone, countryISO);
 		holder.setUserImage(imageUri);
 		holder.setUserBlocked(cursor.getInt(iBlocked) != 0);
+		if (cursor.isNull(iRawContactId)) {
+			holder.setRawContactId(null);
+		} else {
+			holder.setRawContactId(cursor.getLong(iRawContactId));
+		}
 	}
 
 	@Override

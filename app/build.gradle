@@ -14,11 +14,11 @@ android {
 		applicationId "com.livae.ff.app"
 		minSdkVersion 16
 		targetSdkVersion 22
-		versionCode 6
-		versionName "0.6"
+		versionCode 7
+		versionName "0.7"
 		buildConfigField "int", "BUILD_DATE", getBuildDate()
 		buildConfigField "boolean", "DEV", "false"
-		resConfigs "en"
+		resConfigs "en", "es"
 	}
 	signingConfigs {
 		release {

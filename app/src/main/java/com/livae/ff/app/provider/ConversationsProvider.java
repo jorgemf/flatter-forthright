@@ -205,13 +205,17 @@ public class ConversationsProvider extends AbstractProvider {
 							 " LEFT JOIN " + Table.LocalUser.NAME + " ON " +
 							 Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
 				qb.setDistinct(true);
-				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
+				c = qb.query(getReadableDatabase(), select, where, args, Table.Comment.T_ID, null,
+							 order);
 				break;
 			case URI_CONVERSATIONS_CONTACTS:
 				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +
 							 " ON " + Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
 				qb.setDistinct(true);
-				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
+				c = qb.query(getReadableDatabase(), select, where, args, Table.Conversation.T_ID,
+							 null, order);
+				c.setNotificationUri(getContext().getContentResolver(),
+									 ContactsProvider.getUriContacts());
 				break;
 			case URI_COMMENTS_SYNC:
 				qb.setTables(Table.CommentSync.NAME);

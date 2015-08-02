@@ -1,3 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="activity_about">About Pensamientos</string>
+	<string name="anonymous_name_message">En las conversaciones públicas necesitas un nick. Puedes cambiar más adelante en cualquier momento.</string>
+	<string name="anonymous_name_title">Nick anónimo</string>
+	<string name="anonymous_room_message">La conversación anónima necesita un nombre. No podrás cambiarlo luego.</string>
+	<string name="anonymous_room_title">Nombre de la conversación</string>
+	<string name="button_about_feedback">Enviar comentarios</string>
+	<string name="button_about_rate_app">Valora esta App</string>
+	<string name="button_about_terms_conditions">Términos y condiciones</string>
+	<string name="button_add_contact">Añadir contacto</string>
+	<string name="button_anonymous">Anónimo</string>
+	<string name="button_block">Bloquear</string>
+	<string name="button_block_100_days">100 días</string>
+	<string name="button_block_1_day">1 día</string>
+	<string name="button_block_30_days">30 días</string>
+	<string name="button_block_7_days">7 días</string>
+	<string name="button_continue">Continuar</string>
+	<string name="button_finish">Finalizar</string>
+	<string name="button_got_it">Entendido</string>
+	<string name="button_normal">Normal</string>
+	<string name="button_retry">Reintentar</string>
+	<string name="button_secret">Secreto</string>
+	<string name="button_share_app">Compartir</string>
+	<string name="button_share_this_app">Compartir Pensamientos con tus amigos</string>
+	<string name="button_unblock">Desbloquear</string>
+	<string name="button_update">Actualizar</string>
+	<string name="cancel">Cancelar</string>
+	<string name="chat_anonymous_me_subtitle">Chat anónimo con <b>%s</b></string>
+	<string name="chat_anonymous_other_subtitle">Chat anónimo</string>
+	<string name="chat_flatter_subtitle">Adula como <b>%s</b></string>
+	<string name="chat_forthright_subtitle">Se honesto como <b>%s</b></string>
+	<string name="comment_flagged">Notificat comentario</string>
+	<string name="comments_copied">Comentarios copiados</string>
+	<string name="confirmation_block_anonymous_user">¿Quieres bloquear a este usuario de las conversaciones privadas anónimas? Se eliminara la conversación. El bloque es temporal ya que es imposible de cancelar.</string>
+	<string name="confirmation_block_forthright_chat">Cuando bloqueas este chat público sólo los nuevos mensajes se oculatan. Los mensajes antiguos aún se podrán leer.</string>
+	<string name="confirmation_block_user">¿Quieres bloquear al usuario?</string>
+	<string name="confirmation_forthright_blocked">Mensajes públicos honestos bloquedos desde ahora</string>
+	<string name="confirmation_forthright_unblocked">Todos los mensajes públicos honestos desbloqueados</string>
+	<string name="confirmation_unblock_forthright_chat">Si desbloqueas este chat público todos los mensajes serán visibles para todo el mundo.</string>
+	<string name="confirmation_user_blocked">Usuario bloqueado</string>
+	<string name="confirmation_user_unblocked">Usuario desbloqueado</string>
+	<string name="copy">Copiar</string>
+	<string name="copy_conversation_label">Conversación en Pensamientos</string>
+	<string name="delete">Borrar</string>
+	<string name="edit">Editar</string>
+	<string name="empty_chat_flatter">No hay piropos aquí, se el primero! \n<i>Comentarios con más de 100 días de antigúedad son eliminados.</i></string>
+	<string name="empty_chat_forthright">Ops… nada aquí. Comentarios con más de 100 días de antigúedad son eliminados.</string>
+	<string name="yes">Sí</string>
+	<string name="verification_sms_dialog_confirmation">¿Estas seguro de que %s es tu número?</string>
+	<string name="verification_sms_dialog">Hemos enviado un mensaje, ten paciencia mientras lo recives.</string>
+	<string name="user_agree">%s esta de acuerdo</string>
+	<string name="user_disagree">%s no esta de acuerdo</string>
+	<string name="time_yesterday">Ayer</string>
+	<string name="time_today">Hoy</string>
+	<string name="time_now">Ahora</string>
+	<string name="time_few_minutes_ago">%d m</string>
+	<string name="tab_private">Privado</string>
+	<string name="tab_forthright">Honesto</string>
+	<string name="tab_flatter">Adulador</string>
+	<string name="signing_in">Registrándose…</string>
+	<string name="settings">Configuración</string>
+	<string name="sending_comment">Enviado comntario</string>
+	<string name="send_feedback">Enviar comentarios</string>
+	<string name="selected_count">%d seleccionados</string>
+	<string name="select_contact">Selecciona un contacto</string>
+	<string name="search">Buscar</string>
+	<string name="provider_conversations">Conversaciones</string>
+	<string name="provider_contacts">Contactos</string>
+	<string name="post_comment_hint">Escribe un comentario…</string>
+	<string name="phone_number">Número de teléfono</string>
+	<string name="ok">Ok</string>
+	<string name="notifications_secret_content">«contenido secreto»</string>
+	<string name="notifications_summary_comments">%d comentarios no leidos</string>
+	<string name="notifications_summary_comments_more">+%d comentarios no leidos</string>
+	<string name="notifications_flatter_title">Pensamientos Adulador</string>
+	<string name="notifications_forthright_title">Pensamientos Honesto</string>
+	<string name="notifications_chat_private_title">Pensamientos Chat</string>
+	<string name="nothing_found">No se encontró nada</string>
+	<string name="no_conversations">No hay conversaciones con los términos de busca introducidos.</string>
+	<string name="no_contacts_in_app">Ninguno de tus contactos tiene la App instalada.</string>
+	<string name="no_contacts">No tienes ningún contacto con teléfono móvil.</string>
+	<string name="no">No</string>
+	<string name="menu_user_block">Bloquear usuario</string>
+	<string name="menu_user_unblock">Desbloquear usuario</string>
+	<string name="menu_share">Compartir Pensamientos</string>
+	<string name="menu_settings">Configuración</string>
+	<string name="menu_refresh_contacts">Actualizar contactos</string>
+	<string name="menu_rate">Valorar la App</string>
+	<string name="menu_public_unblock">Desbloquear chat</string>
+	<string name="menu_public_block">Bloquear chat</string>
+	<string name="menu_indifferent">Indiferente</string>
+	<string name="menu_flag_comment_other">Otros</string>
+	<string name="menu_flag_comment_lie">Mentira</string>
+	<string name="menu_flag_comment_insult">Insultos</string>
+	<string name="menu_flag_comment_abuse">Abusador o bulling</string>
+	<string name="menu_flag_comment">Notificar comentario</string>
+	<string name="menu_feedback">Enviar comentarios</string>
+	<string name="menu_disagree">En desacuerdo</string>
+	<string name="menu_agree">Estoy de acuerdo</string>
+	<string name="me">yo</string>
+	<string name="hidden_comment">«comentario oculto»</string>
+	<string name="flagged_user_other">Controvertido</string>
+	<string name="flagged_user_lie">Mentiroso</string>
+	<string name="flagged_user_insult">Ofensivo</string>
+	<string name="flagged_user_abuse">Abusador</string>
+	<string name="flagged_comment_other">Comentario controvertido</string>
+	<string name="flagged_comment_lie">Puede ser mentira</string>
+	<string name="flagged_comment_insult">Lenguaje ofensivo</string>
+	<string name="flagged_comment_abuse">Posible abuso</string>
+	<string name="error_unknown">Error desconocido: %s</string>
+	<string name="error_unexpected">Error inesperado: %s</string>
+	<string name="error_signing_in_retry">Error registrandose (%s).\nReintentar?</string>
+	<string name="error_network_no_api_connection">Fallo en la conexión con el servidor</string>
+	<string name="error_network_error">Error conectandose, verifique su conexión a internet.</string>
+	<string name="error_loading_elements">Error cargando los elementos.</string>
+	<string name="error_cannot_register_new_device">No se puedo registar el dispositivo.</string>
+	<string name="error_api">Error en la API: %s</string>
+	<string name="empty_text">Ops…nada aquí.</string>
+	<string name="start_first_conversation_tutorial">
+		Comienza un nuevo chat:
+		\n\n• <b>Normal</b>: como en otras apps.
+		\n\n• <b>Secreto</b>: los comentarios se borran tras de leerlos.
+		\n\n• <b>Anonimo</b>: la otra persona no sabrá quien eres.
+		\n\n← <b>Adulada</b> a tus amigos publica y anónimamente.
+		\n\n→ Se <b>honesto</b> con tus amigos publica y anónimamente.
+	</string>
+	<string name="on_boarding_welcome_title">Bienvenido a Pensamientos</string>
+	<string name="on_boarding_welcome"> Pesanmientos te permite compartir tus pensamientos sobre
+		otros de forma pública y anónima.
+		\n\nTu escoges si quieres adular a tus amigos con cosas buenas o ser honesto con ellos
+		sobre cosas que deberían saber. También puedes tener conversaciones privadas.
+	</string>
+	<string name="on_boarding_validate_number_title">Verifica tu teléfono</string>
+	<string name="on_boarding_validate_number"> Necesitamos verificar tu número de teléfono para
+		poder responder a comentarios y recibir chats privados. Se enviará un único SMS, tu
+		operador posiblemente te cobre el SMS. Cuando verificas tu número aceptas las
+		<a href="http://pensamientos.livae.com/terms.html">condiciones y términos del servicio</a>.
+	</string>
+	<string name="on_boarding_warning_title">Teléfono verificado</string>
+	<string name="on_boarding_warning">Número verificado!
+		\n\nComentarios ofensivos y no constructivos serán eliminados. Se consciente de lo que
+		dices y, por favor, alertanos de cualquier abuso para poder mantener una buena comunidad.
+	</string>
+	<string name="on_boarding_payments_title">Pagos</string>
+	<string name="on_boarding_payments"> Pensamientos esta en beta, esto significa que la app
+		contiene fallos y es complemtamente gratuita por el momento.
+	</string>
 </resources>

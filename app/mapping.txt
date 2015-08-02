@@ -23438,13 +23438,8 @@ com.livae.ff.app.Constants$COUNTRY -> com.livae.ff.app.f:
     int getCountryStringResId() -> a
     int getCountryFlagResId() -> b
     java.lang.String getPhonePrefix() -> c
-com.livae.ff.app.CustomUncaughtExceptionHandler -> com.livae.ff.app.g:
-    com.livae.ff.app.CustomUncaughtExceptionHandler instance -> a
-    java.lang.Thread$UncaughtExceptionHandler exceptionHandler -> b
-    void configure() -> a
-    void uncaughtException(java.lang.Thread,java.lang.Throwable) -> uncaughtException
-com.livae.ff.app.R -> com.livae.ff.app.h:
-com.livae.ff.app.R$styleable -> com.livae.ff.app.i:
+com.livae.ff.app.R -> com.livae.ff.app.g:
+com.livae.ff.app.R$styleable -> com.livae.ff.app.h:
     int[] ActionBar -> ActionBar
     int ActionBar_background -> ActionBar_background
     int ActionBar_backgroundSplit -> ActionBar_backgroundSplit
@@ -23882,9 +23877,9 @@ com.livae.ff.app.activity.AbstractChatActivity -> com.livae.ff.app.activity.b:
     com.livae.ff.app.view.AnonymousImage imageAnonymous -> e
     android.widget.ImageView imageUser -> f
     boolean $assertionsDisabled -> a
-    android.content.Intent createIntent(android.content.Context,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer,java.lang.Boolean) -> a
-    void startIntent(android.content.Intent,android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer,java.lang.Boolean) -> a
-    void fillIntent(android.content.Intent,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer,java.lang.Boolean) -> a
+    android.content.Intent createIntent(android.content.Context,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer,java.lang.Boolean,java.lang.Long) -> a
+    void startIntent(android.content.Intent,android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer,java.lang.Boolean,java.lang.Long) -> a
+    void fillIntent(android.content.Intent,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Long,java.lang.Integer,java.lang.Boolean,java.lang.Long) -> a
     void onCreated() -> e
     void setTitle(java.lang.CharSequence) -> setTitle
     void bindToolbar(java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long) -> a
@@ -23899,10 +23894,10 @@ com.livae.ff.app.activity.AbstractChatActivity$1 -> com.livae.ff.app.activity.c:
     int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
 com.livae.ff.app.activity.ChatPrivateActivity -> com.livae.ff.app.activity.ChatPrivateActivity:
     java.lang.Long secretConversationId -> b
-    void startChatPrivate(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String,boolean) -> a
-    void startChatAnonymous(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String,boolean) -> b
-    void startChatSecret(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String,boolean) -> c
-    void start(android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Integer,boolean) -> a
+    void startChatPrivate(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String,boolean,long) -> a
+    void startChatAnonymous(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String,boolean,long) -> b
+    void startChatSecret(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String,boolean,long) -> c
+    void start(android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Integer,boolean,java.lang.Long) -> a
     void onCreate(android.os.Bundle) -> onCreate
     void setSecretConversationId(java.lang.Long) -> a
     void onDestroy() -> onDestroy
@@ -24025,7 +24020,7 @@ com.livae.ff.app.adapter.ChatsPrivateAdapter -> com.livae.ff.app.a.b:
     int iLastAccess -> g
     int iUnreadCount -> h
     int iConversationPhone -> i
-    com.livae.ff.app.listener.ChatPrivateClickListener chatPrivateClickListener -> r
+    com.livae.ff.app.listener.ChatPrivateClickListener chatPrivateClickListener -> s
     void findIndexes(android.database.Cursor) -> a
     void bindCustomViewHolder(com.livae.ff.app.viewholders.UserViewHolder,int,android.database.Cursor) -> a
     com.livae.ff.app.viewholders.UserViewHolder onCreateViewHolder(android.view.ViewGroup,int) -> a
@@ -24164,6 +24159,7 @@ com.livae.ff.app.adapter.UsersAdapter -> com.livae.ff.app.a.l:
     int iPhone -> o
     int iImageUri -> p
     int iBlocked -> q
+    int iRawContactId -> r
     com.livae.ff.app.listener.UserClickListener userClickListener -> a
     void findIndexes(android.database.Cursor) -> a
     long getItemId(int) -> getItemId
@@ -24278,13 +24274,14 @@ com.livae.ff.app.fragment.AbstractChatFragment -> com.livae.ff.app.fragment.a:
     java.lang.Long lastAccess -> h
     java.lang.Long lastMessage -> i
     java.lang.Integer unreadMessages -> j
-    android.support.design.widget.FloatingActionButton buttonPostComment -> l
-    android.widget.EditText commentText -> m
-    android.view.View commentPostContainer -> n
-    com.livae.ff.app.task.TaskPostComment taskPostComment -> o
-    android.database.ContentObserver contentObserver -> p
-    com.livae.ff.app.receiver.NotificationDisabledReceiver notificationDisabledReceiver -> q
-    android.widget.TextView dateText -> r
+    java.lang.Long rawContactId -> k
+    android.support.design.widget.FloatingActionButton buttonPostComment -> m
+    android.widget.EditText commentText -> n
+    android.view.View commentPostContainer -> o
+    com.livae.ff.app.task.TaskPostComment taskPostComment -> p
+    android.database.ContentObserver contentObserver -> q
+    com.livae.ff.app.receiver.NotificationDisabledReceiver notificationDisabledReceiver -> r
+    android.widget.TextView dateText -> s
     void onCreate(android.os.Bundle) -> onCreate
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
@@ -24350,13 +24347,13 @@ com.livae.ff.app.fragment.AbstractLoaderFragment -> com.livae.ff.app.fragment.i:
     java.lang.String KEY_SAVED_SELECTION -> c
     java.lang.String KEY_SAVED_SELECTION_ARGS -> d
     java.lang.String KEY_SAVED_FINISH_LOADING -> e
-    android.support.v7.widget.RecyclerView recyclerView -> k
+    android.support.v7.widget.RecyclerView recyclerView -> l
     android.view.View emptyView -> f
     com.livae.ff.app.adapter.EndlessCursorAdapter adapter -> g
     java.lang.String nextCursor -> h
     int totalLoaded -> i
     com.livae.ff.app.async.CustomAsyncTask loaderTask -> j
-    java.lang.String selection -> l
+    java.lang.String selection -> k
     java.lang.String[] selectionArgs -> m
     android.support.v7.widget.RecyclerView$OnScrollListener onScrollListener -> n
     int preloadAhead -> o
@@ -24419,34 +24416,41 @@ com.livae.ff.app.fragment.AbstractLoaderFragment$6 -> com.livae.ff.app.fragment.
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
 com.livae.ff.app.fragment.ChatPrivateFragment -> com.livae.ff.app.fragment.ChatPrivateFragment:
-    boolean endPreviousMessages -> l
-    com.livae.ff.app.dialog.EditTextDialogFragment dialogRoomName -> m
-    boolean firstTimeLoad -> n
-    android.view.ActionMode actionMode -> o
-    android.view.MenuItem menuBlock -> p
-    android.view.MenuItem menuUnblock -> q
-    boolean userBlocked -> r
-    java.lang.Long userId -> s
+    boolean endPreviousMessages -> m
+    com.livae.ff.app.dialog.EditTextDialogFragment dialogRoomName -> n
+    boolean firstTimeLoad -> o
+    android.view.ActionMode actionMode -> p
+    android.view.MenuItem menuBlock -> q
+    android.view.MenuItem menuUnblock -> r
+    boolean userBlocked -> s
+    java.lang.Long userId -> t
+    java.lang.Long rawContactId -> u
+    android.widget.Button addContactButton -> v
+    void addContactActivity() -> s
     void onCreate(android.os.Bundle) -> onCreate
+    android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
+    void onResume() -> onResume
+    android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void getConversation() -> f
     void startConversation() -> g
+    void onClick(android.view.View) -> onClick
     void showSendMessagesPanel() -> h
     com.livae.ff.app.async.CustomAsyncTask getLoaderTask() -> l
-    void requestRoomName() -> s
+    void requestRoomName() -> t
     void startChat(com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.String) -> a
     boolean onLongClick(com.livae.ff.app.viewholders.CommentViewHolder) -> a
     void onClick(com.livae.ff.app.viewholders.CommentViewHolder) -> b
     void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
     void onPrepareOptionsMenu(android.view.Menu) -> onPrepareOptionsMenu
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    void confirmationBlockAnonymousUser() -> t
-    void confirmationBlockUser() -> u
-    void unblockUser() -> v
-    void blockUser() -> w
+    void confirmationBlockAnonymousUser() -> u
+    void confirmationBlockUser() -> v
+    void unblockUser() -> w
+    void blockUser() -> x
     void blockUser(int) -> b
-    void adjustBlockMenu() -> x
+    void adjustBlockMenu() -> y
     boolean onCreateActionMode(android.view.ActionMode,android.view.Menu) -> onCreateActionMode
     boolean onPrepareActionMode(android.view.ActionMode,android.view.Menu) -> onPrepareActionMode
     boolean onActionItemClicked(android.view.ActionMode,android.view.MenuItem) -> onActionItemClicked
@@ -24509,15 +24513,15 @@ com.livae.ff.app.fragment.ChatPrivateFragment$8 -> com.livae.ff.app.fragment.w:
 com.livae.ff.app.fragment.ChatPrivateFragment$9 -> com.livae.ff.app.fragment.x:
     int[] $SwitchMap$com$livae$ff$common$Constants$ChatType -> a
 com.livae.ff.app.fragment.ChatPublicFragment -> com.livae.ff.app.fragment.ChatPublicFragment:
-    com.livae.ff.app.task.TaskCommentVoteAgree taskVoteAgreeComment -> l
-    com.livae.ff.app.task.TaskCommentVoteDisagree taskVoteDisagreeComment -> m
-    com.livae.ff.app.task.TaskCommentVoteDelete taskNoVoteComment -> n
-    boolean isMyPublicChat -> o
-    android.view.MenuItem editMenuItem -> p
-    com.livae.ff.app.dialog.EditTextDialogFragment dialog -> q
-    android.view.MenuItem menuBlock -> r
-    android.view.MenuItem menuUnblock -> s
-    android.support.v4.util.Pair savedContextMenuInfo -> t
+    com.livae.ff.app.task.TaskCommentVoteAgree taskVoteAgreeComment -> m
+    com.livae.ff.app.task.TaskCommentVoteDisagree taskVoteDisagreeComment -> n
+    com.livae.ff.app.task.TaskCommentVoteDelete taskNoVoteComment -> o
+    boolean isMyPublicChat -> p
+    android.view.MenuItem editMenuItem -> q
+    com.livae.ff.app.dialog.EditTextDialogFragment dialog -> r
+    android.view.MenuItem menuBlock -> s
+    android.view.MenuItem menuUnblock -> t
+    android.support.v4.util.Pair savedContextMenuInfo -> u
     void onCreate(android.os.Bundle) -> onCreate
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onResume() -> onResume
@@ -24782,6 +24786,7 @@ com.livae.ff.app.model.UserModel -> com.livae.ff.app.f.c:
     android.widget.TextView phoneTextView -> o
     android.widget.ImageView userImageView -> p
     java.lang.Boolean userBlocked -> q
+    java.lang.Long rawContactId -> r
     void clear() -> a
 com.livae.ff.app.provider.AbstractProvider -> com.livae.ff.app.provider.a:
     android.content.UriMatcher uriMatcher -> a
@@ -25290,6 +25295,7 @@ com.livae.ff.app.viewholders.UserViewHolder -> com.livae.ff.app.k.f:
     void setUserImageRes(int) -> c
     void setUserImage(java.lang.String) -> a
     void setUserBlocked(boolean) -> c
+    void setRawContactId(java.lang.Long) -> c
 com.livae.ff.common.Constants -> com.livae.ff.common.Constants:
 com.livae.ff.common.Constants$ChatType -> com.livae.ff.common.Constants$ChatType:
     com.livae.ff.common.Constants$ChatType FLATTER -> FLATTER

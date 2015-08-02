@@ -53,6 +53,12 @@ public class ChatsPrivateFragment extends AbstractFragment
 		getLoaderManager().initLoader(LOAD_CHATS, Bundle.EMPTY, this);
 	}
 
+	@Override
+	public void onPause() {
+		super.onPause();
+		search(null);
+	}
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -76,12 +82,6 @@ public class ChatsPrivateFragment extends AbstractFragment
 	public void onResume() {
 		super.onResume();
 		getLoaderManager().restartLoader(LOAD_CHATS, Bundle.EMPTY, this);
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		search(null);
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class ChatsPrivateFragment extends AbstractFragment
 		ChatPrivateActivity.start(getActivity(), model.chatType, model.conversationId, model.userId,
 								  model.userDisplayName, model.roomName, model.userImageUri,
 								  model.lastAccess, model.lastMessage, model.unreadMessages,
-								  model.userBlocked);
+								  model.userBlocked, model.rawContactId);
 	}
 
 	@Override

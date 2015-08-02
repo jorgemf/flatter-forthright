@@ -156,6 +156,7 @@ public class ContactsFragment extends AbstractFragment
 		data.putExtra(ContactsActivity.SELECTED_DISPLAY_NAME, userModel.userDisplayName);
 		data.putExtra(ContactsActivity.SELECTED_PHONE, userModel.userId);
 		data.putExtra(ContactsActivity.SELECTED_USER_BLOCKED, userModel.userBlocked);
+		data.putExtra(ContactsActivity.SELECTED_RAW_CONTACT_ID, userModel.rawContactId);
 		activity.setResult(Activity.RESULT_OK, data);
 		activity.finish();
 	}

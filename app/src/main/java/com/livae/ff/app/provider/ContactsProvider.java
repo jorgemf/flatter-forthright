@@ -87,7 +87,8 @@ public class ContactsProvider extends AbstractProvider {
 			case URI_CONTACTS:
 				qb.setTables(Table.LocalUser.NAME);
 				qb.setDistinct(true);
-				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
+				c = qb.query(getReadableDatabase(), select, where, args, Table.LocalUser.PHONE,
+							 null, order);
 				// loader manager will reload the cursor automatically
 				c.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
@@ -97,6 +98,7 @@ public class ContactsProvider extends AbstractProvider {
 				args[0] = uri.getLastPathSegment();
 				qb.setTables(Table.LocalUser.NAME);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
+				c.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
 			case URI_CONTACTS_CONVERSATIONS:
 				String chatType = uri.getLastPathSegment();

@@ -1,14 +1,14 @@
 <resources>
-	<string name="app_name">Pensamientos</string>
+	<string name="app_name" translatable="false">Pensamientos</string>
 
-	<string name="activity_main">Pensamientos</string>
+	<string name="activity_main" translatable="false">Pensamientos</string>
 	<string name="activity_about">About Pensamientos</string>
 
 	<string name="time_now">Now</string>
 	<string name="time_few_minutes_ago">%d m</string>
 	<string name="time_yesterday">Yesterday</string>
 	<string name="time_today">Today</string>
-	<string name="app_version">Thoughts %s - livae</string>
+	<string name="app_version" translatable="false">Pensamientos %s - livae</string>
 
 	<string name="user_agree">%s agree</string>
 	<string name="user_disagree">%s disagree</string>
@@ -41,13 +41,13 @@
 	<string name="anonymous_name_title">Anonymous nick</string>
 	<string name="anonymous_name_message">In public chats you need an anonymous nickname. You can change it later anytime.</string>
 
-	<string name="verification_sms">Pensamientos verification code #%d#</string>
+	<string name="verification_sms" translatable="false">Pensamientos verification code #%d#</string>
 	<string name="verification_sms_dialog_confirmation">Are you sure %s is your number?</string>
 	<string name="verification_sms_dialog">We have sent a message, please be patient while it is delivered.</string>
 
-	<string name="feedback_email">pensamientos@livae.com</string>
-	<string name="feedback_email_subject">Pensamientos Feedback</string>
-	<string name="feedback_email_body"/>
+	<string name="feedback_email" translatable="false">pensamientos@livae.com</string>
+	<string name="feedback_email_subject" translatable="false">Pensamientos Feedback</string>
+	<string name="feedback_email_body" translatable="false"/>
 	<string name="send_feedback">Send feedback</string>
 
 	<string name="tab_flatter">Flatterer</string>
@@ -75,7 +75,7 @@
 	<string name="button_about_terms_conditions">Terms and conditions</string>
 	<string name="button_about_rate_app">Rate this App</string>
 	<string name="button_about_feedback">Give us Feedback</string>
-	<string name="button_share_this_app">Share Thoughts with your friends</string>
+	<string name="button_share_this_app">Share Pensamientos with your friends</string>
 	<string name="button_share_app">Share</string>
 	<string name="button_got_it">Got it</string>
 	<string name="button_update">Update</string>
@@ -89,7 +89,7 @@
 	<string name="button_unblock">Unblock</string>
 
 	<string name="confirmation_block_user">Do you want to block the user?</string>
-	<string name="confirmation_block_anonymous_user">Do you want to block this user for private conversations? The conversation will be deleted. The block is temporary as it is impossible to unblock.</string>
+	<string name="confirmation_block_anonymous_user">Do you want to block this user for private anonymous conversations? The conversation will be deleted. The block is temporary as it is impossible to cancel.</string>
 	<string name="button_block_100_days">100 days</string>
 	<string name="button_block_30_days">30 days</string>
 	<string name="button_block_7_days">7 days</string>
@@ -97,7 +97,7 @@
 	<string name="confirmation_user_blocked">User blocked</string>
 	<string name="confirmation_user_unblocked">User unblocked</string>
 	<string name="confirmation_forthright_blocked">Public forthright messages blocked since now</string>
-	<string name="confirmation_forthright_unblocked">Public forthright messages unblocked</string>
+	<string name="confirmation_forthright_unblocked">All public forthright messages unblocked</string>
 	<string name="confirmation_block_forthright_chat">When you block this public chat only the new messages from others users are hidden. The old messages can still be read.</string>
 	<string name="confirmation_unblock_forthright_chat">If you unblock this public chat all messages will be visible for everyone.</string>
 
@@ -111,28 +111,25 @@
 	<string name="error_signing_in_retry">Error signing in (%s).\nRetry?</string>
 
 	<string name="on_boarding_welcome_title">Welcome to Pensamientos</string>
-	<string name="on_boarding_welcome">
-		Pensamientos is an anonymous, public, social network.\n\nYou can flatter openly your
-		friends or to be forthright about something they should know but you don\'t want to say in
-		person, or even having a private anonymous chat if the other person wants.
+	<string name="on_boarding_welcome"> Pensamientos lets you share your thoughts about others
+		anonymously and public.
+		\n\nYou can either flatter your friends with nice compliments o be forthright and tell them
+		what they need to know. You can also have private conversations.
 	</string>
 	<string name="on_boarding_validate_number_title">Verify your number</string>
-	<string name="on_boarding_validate_number">
-		Pensamientos needs to verify your phone number so you can reply to comments and receive
-		private chats. We will send a one time SMS in order to verify it. Carrier SMS charges may
-		apply. By validating you accept the terms and conditions.
+	<string name="on_boarding_validate_number"> Pensamientos needs to verify your phone number so
+		you can reply to comments and receive private chats. We will send a one time SMS in order
+		to verify it. Carrier SMS charges may apply. By validating you accept the
+		<a href="http://pensamientos.livae.com/terms.html">terms and conditions of the service</a>.
 	</string>
 	<string name="on_boarding_warning_title">Phone verified</string>
-	<string name="on_boarding_warning">
-		Phone number verified!\n\nBe aware offensive and non constructive comments will be deleted
-		from Pensamientos. Mind your words before commenting and please alert us about abuses to
-		keep a good community.
+	<string name="on_boarding_warning">Phone number verified!
+		\n\nOffensive and non constructive comments will be deleted. Mind your words before
+		commenting and please alert us about abuses to keep a good community.
 	</string>
 	<string name="on_boarding_payments_title">Payments</string>
-	<string name="on_boarding_payments">
-		Pensamientos is in beta, it means the app has bugs but it is also completely free. In the
-		future we hope to fix all the bugs but we will probably move some features to only premium
-		users of the app.
+	<string name="on_boarding_payments">Pensamientos is in beta, it means the app has bugs but
+		it is also completely free by now.
 	</string>
 
 	<string name="ok">OK</string>
@@ -144,20 +141,20 @@
 	<string name="settings">Settings</string>
 	<string name="signing_in">Signing in…</string>
 	<string name="empty_text">Ops… there is nothing here.</string>
-	<string name="empty_chat_flatter">No compliments here, be the first! \n<i>Message older than 100 days are deleted.</i></string>
-	<string name="empty_chat_forthright">Ops… nothing here. Message older than 100 days are deleted.</string>
+	<string name="empty_chat_flatter">No compliments here, be the first! \n<i>Comments older than 100 days are deleted.</i></string>
+	<string name="empty_chat_forthright">Ops… nothing here. Comments older than 100 days are deleted.</string>
 	<string name="phone_number">Phone number</string>
-	<string name="post_comment_hint">Type a message…</string>
+	<string name="post_comment_hint">Type a comment…</string>
 	<string name="no_contacts">You don\'t have any mobile contact.</string>
 	<string name="no_contacts_in_app">None of your contacts has the app installed.</string>
 	<string name="nothing_found">We haven\'t find anything</string>
 	<string name="start_first_conversation_tutorial">
-		Why don\'t you start a new chat?
-		\n\n• <b>Normal</b> chat: as you do in other apps.
-		\n\n• <b>Secret</b> chat: the conversation is deleted after you leave it.
-		\n\n• <b>Anonymous</b> chat: pick a nick name and start a conversation, they wont know who you are.
-		\n\n← <b>Flatter</b> your friends public and anonymously, they are the best and everybody should know it.
-		\n\n→ Be <b>Forthright</b> and share anonymously what you don\'t dare to say in person.
+		Start a new chat:
+		\n\n• <b>Normal</b>: as you do in other apps.
+		\n\n• <b>Secret</b>: comments are deleted after read them.
+		\n\n• <b>Anonymous</b>: the other person wont know who you are.
+		\n\n← <b>Flatter</b> your friends public and anonymously.
+		\n\n→ Be <b>Forthright</b> with your friends public and anonymously.
 	</string>
 	<string name="no_conversations">There are no conversation with the current search terms.</string>
 	<string name="search">Search</string>
@@ -170,5 +167,6 @@
 	<string name="comments_copied">Comments copied</string>
 	<string name="comment_flagged">Comment flagged</string>
 	<string name="hidden_comment">«hidden comment»</string>
+	<string name="button_add_contact">Add Contact</string>
 
 </resources>

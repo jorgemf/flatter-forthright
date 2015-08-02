@@ -50,6 +50,8 @@ public class AbstractChatActivity extends AbstractActivity {
 
 	public static final String EXTRA_USER_BLOCKED = "EXTRA_USER_BLOCKED";
 
+	public static final String EXTRA_USER_RAW_CONTACT_ID = "EXTRA_USER_RAW_CONTACT_ID";
+
 	private ChatType chatType;
 
 	private TextView title;
@@ -64,7 +66,8 @@ public class AbstractChatActivity extends AbstractActivity {
 									  @Nonnull Long conversationId, Long phoneNumber,
 									  String displayName, String roomName, String imageUri,
 									  Long imageSeed, Long lastAccess, Long lastMessage,
-									  Integer unreadMessages, Boolean userBlocked) {
+									  Integer unreadMessages, Boolean userBlocked,
+									  Long rawContactId) {
 		Intent intent = null;
 		switch (chatType) {
 			case SECRET:
@@ -78,7 +81,7 @@ public class AbstractChatActivity extends AbstractActivity {
 				break;
 		}
 		fillIntent(intent, chatType, conversationId, phoneNumber, displayName, roomName, imageUri,
-				   imageSeed, lastAccess, lastMessage, unreadMessages, userBlocked);
+				   imageSeed, lastAccess, lastMessage, unreadMessages, userBlocked, rawContactId);
 		return intent;
 	}
 
@@ -86,13 +89,13 @@ public class AbstractChatActivity extends AbstractActivity {
 									  @Nonnull ChatType chatType, Long conversationId,
 									  Long phoneNumber, String displayName, String roomName,
 									  String imageUri, Long imageSeed, Long lastAccess,
-									  Long lastMessage, Integer unreadMessages,
-									  Boolean userBlocked) {
+									  Long lastMessage, Integer unreadMessages, Boolean userBlocked,
+									  Long rawContactId) {
 		if (conversationId == null && phoneNumber == null) {
 			throw new RuntimeException("Not enough data to start the conversation");
 		}
 		fillIntent(intent, chatType, conversationId, phoneNumber, displayName, roomName, imageUri,
-				   imageSeed, lastAccess, lastMessage, unreadMessages, userBlocked);
+				   imageSeed, lastAccess, lastMessage, unreadMessages, userBlocked, rawContactId);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity)
 														  .toBundle());
@@ -105,7 +108,7 @@ public class AbstractChatActivity extends AbstractActivity {
 								   Long conversationId, Long phoneNumber, String displayName,
 								   String roomName, String imageUri, Long imageSeed,
 								   Long lastAccess, Long lastMessage, Integer unreadMessages,
-								   Boolean userBlocked) {
+								   Boolean userBlocked, Long rawContactId) {
 		if (conversationId != null) {
 			intent.putExtra(EXTRA_CONVERSATION_ID, conversationId);
 		}
@@ -136,6 +139,9 @@ public class AbstractChatActivity extends AbstractActivity {
 		}
 		if (userBlocked != null) {
 			intent.putExtra(EXTRA_USER_BLOCKED, userBlocked);
+		}
+		if (rawContactId != null) {
+			intent.putExtra(EXTRA_USER_RAW_CONTACT_ID, rawContactId);
 		}
 	}
 

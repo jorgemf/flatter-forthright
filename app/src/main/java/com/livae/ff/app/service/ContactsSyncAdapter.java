@@ -91,6 +91,8 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 					if (phoneContact.phone != null) {
 						Log.i(LOG_TAG, "Updated user phone: " + phoneContact.phone);
 					}
+					contentResolver.notifyChange(ContactsProvider.getUriContact(localContact.id),
+												 null);
 				}
 			}
 		}
@@ -119,6 +121,7 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 				Analytics.logAndReport(e, false);
 			}
 		}
+		contentResolver.notifyChange(ContactsProvider.getUriContacts(), null);
 	}
 
 	private void checkPhonesWithServer() {

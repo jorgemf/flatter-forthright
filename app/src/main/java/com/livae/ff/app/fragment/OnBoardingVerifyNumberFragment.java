@@ -24,6 +24,7 @@ import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -147,6 +148,8 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		TextView text = (TextView) view.findViewById(R.id.text_content);
+		text.setMovementMethod(LinkMovementMethod.getInstance());
 		validateButton = view.findViewById(R.id.button);
 		validateButton.setOnClickListener(this);
 		phoneNumberEditText = (EditText) view.findViewById(R.id.edit_text_phone);

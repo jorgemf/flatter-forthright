@@ -78,6 +78,8 @@ public abstract class AbstractChatFragment
 
 	protected Integer unreadMessages;
 
+	protected Long rawContactId;
+
 	private FloatingActionButton buttonPostComment;
 
 	private EditText commentText;
@@ -111,6 +113,9 @@ public abstract class AbstractChatFragment
 		}
 		if (extras.containsKey(AbstractChatActivity.EXTRA_UNREAD_MESSAGES)) {
 			unreadMessages = extras.getInt(AbstractChatActivity.EXTRA_UNREAD_MESSAGES);
+		}
+		if (extras.containsKey(AbstractChatActivity.EXTRA_USER_RAW_CONTACT_ID)) {
+			rawContactId = extras.getLong(AbstractChatActivity.EXTRA_USER_RAW_CONTACT_ID);
 		}
 		super.onCreate(savedInstanceState);
 		notificationDisabledReceiver = new NotificationDisabledReceiver();

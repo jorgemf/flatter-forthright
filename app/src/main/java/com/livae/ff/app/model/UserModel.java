@@ -21,11 +21,14 @@ public class UserModel {
 
 	public Boolean userBlocked;
 
+	public Long rawContactId;
+
 	public void clear() {
 		userId = null;
 		userDisplayName = null;
 		userImageUri = null;
 		userBlocked = null;
+		rawContactId = null;
 		if (displayNameTextView != null) {
 			displayNameTextView.setText(null);
 		}

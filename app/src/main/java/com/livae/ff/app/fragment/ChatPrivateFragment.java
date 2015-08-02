@@ -8,15 +8,21 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.livae.ff.api.ff.model.Conversation;
 import com.livae.ff.app.R;
@@ -26,7 +32,9 @@ import com.livae.ff.app.activity.ChatPrivateActivity;
 import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.dialog.EditTextDialogFragment;
+import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.provider.ConversationsProvider;
+import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.task.ConversationParams;
 import com.livae.ff.app.task.FlagConversation;
 import com.livae.ff.app.task.ListResult;
@@ -46,6 +54,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ChatPrivateFragment extends AbstractChatFragment implements ActionMode.Callback {
 
+	protected static final int LOADER_CONTACT = 3;
+
 	private boolean endPreviousMessages;
 
 	private EditTextDialogFragment dialogRoomName;
@@ -62,6 +72,17 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 
 	private Long userId;
 
+	private Long rawContactId;
+
+	private Button addContactButton;
+
+	private void addContactActivity() {
+		Intent intent = new Intent(ContactsContract.Intents.SHOW_OR_CREATE_CONTACT,
+								   Uri.parse("tel:" + conversationPhone));
+		intent.putExtra(ContactsContract.Intents.EXTRA_FORCE_CREATE, true);
+		startActivity(intent);
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,18 +90,66 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 		Intent intent = getActivity().getIntent();
 		userBlocked = intent.getBooleanExtra(AbstractChatActivity.EXTRA_USER_BLOCKED, false);
 		userId = intent.getLongExtra(AbstractChatActivity.EXTRA_PHONE_NUMBER, 0L);
+		if (intent.hasExtra(AbstractChatActivity.EXTRA_USER_RAW_CONTACT_ID)) {
+			rawContactId = intent.getLongExtra(AbstractChatActivity.EXTRA_USER_RAW_CONTACT_ID, 0L);
+		}
+		if (chatType != ChatType.PRIVATE_ANONYMOUS) {
+			getLoaderManager().initLoader(LOADER_CONTACT, null, this);
+		}
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+							 @Nullable Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.fragment_private_comments, container, false);
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		registerForContextMenu(recyclerView);
+		addContactButton = (Button) view.findViewById(R.id.button_add_contact);
+		addContactButton.setOnClickListener(this);
+		if (rawContactId != null || chatType == ChatType.PRIVATE_ANONYMOUS) {
+			addContactButton.setVisibility(View.GONE);
+		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (chatType != ChatType.PRIVATE_ANONYMOUS) {
+			getLoaderManager().restartLoader(LOADER_CONTACT, null, this);
+		}
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+		switch (id) {
+			case LOADER_CONTACT:
+				return new CursorLoader(getActivity(), ContactsProvider.getUriContact(userId),
+										new String[]{Table.LocalUser.ANDROID_RAW_CONTACT_ID}, null,
+										null, null);
+			// break
+		}
+		return super.onCreateLoader(id, bundle);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> objectLoader, Cursor cursor) {
 		super.onLoadFinished(objectLoader, cursor);
 		switch (objectLoader.getId()) {
+			case LOADER_CONTACT:
+				if (cursor.moveToFirst()) {
+					int iRawContactId = cursor
+										  .getColumnIndex(Table.LocalUser.ANDROID_RAW_CONTACT_ID);
+					if (!cursor.isNull(iRawContactId) && rawContactId == null) {
+						addContactButton.setVisibility(View.GONE);
+						rawContactId = cursor.getLong(iRawContactId);
+					}
+				}
+				cursor.close();
+				break;
 			case LOADER_ID:
 				if (cursor.getCount() < getTotalLoaded()) {
 					endPreviousMessages = true;
@@ -117,6 +186,17 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 		if (chatType == ChatType.SECRET) {
 			ChatPrivateActivity activity = (ChatPrivateActivity) getActivity();
 			activity.setSecretConversationId(conversationId);
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.button_add_contact:
+				addContactActivity();
+				break;
+			default:
+				super.onClick(v);
 		}
 	}
 

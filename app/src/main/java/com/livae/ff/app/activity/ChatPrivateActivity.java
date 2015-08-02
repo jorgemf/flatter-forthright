@@ -19,31 +19,35 @@ public class ChatPrivateActivity extends AbstractChatActivity {
 	private Long secretConversationId;
 
 	public static void startChatPrivate(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
-										@Nonnull String displayName, boolean userBlocked) {
+										@Nonnull String displayName, boolean userBlocked,
+										long rawContactId) {
 		start(chatsActivity, ChatType.PRIVATE, null, phone, displayName, null, null, null, null,
-			  null, userBlocked);
+			  null, userBlocked, rawContactId);
 	}
 
 	public static void startChatAnonymous(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
-										  @Nonnull String displayName, boolean userBlocked) {
+										  @Nonnull String displayName, boolean userBlocked,
+										  long rawContactId) {
 		start(chatsActivity, ChatType.PRIVATE_ANONYMOUS, null, phone, displayName, null, null, null,
-			  null, null, userBlocked);
+			  null, null, userBlocked, rawContactId);
 	}
 
 	public static void startChatSecret(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
-									   @Nonnull String displayName, boolean userBlocked) {
+									   @Nonnull String displayName, boolean userBlocked,
+									   long rawContactId) {
 		start(chatsActivity, ChatType.SECRET, null, phone, displayName, null, null, null, null,
-			  null, userBlocked);
+			  null, userBlocked, rawContactId);
 	}
 
 	public static void start(@Nonnull Activity activity, @Nonnull ChatType chatType,
 							 Long conversationId, @Nonnull Long phoneNumber, String displayName,
 							 String anonymousName, String imageUri, Long lastAccess,
-							 Long lastMessage, Integer unreadMessages, boolean userBlocked) {
+							 Long lastMessage, Integer unreadMessages, boolean userBlocked,
+							 Long rawContactId) {
 		Intent intent = new Intent(activity, ChatPrivateActivity.class);
 		AbstractChatActivity.startIntent(intent, activity, chatType, conversationId, phoneNumber,
 										 displayName, anonymousName, imageUri, null, lastAccess,
-										 lastMessage, unreadMessages, userBlocked);
+										 lastMessage, unreadMessages, userBlocked, rawContactId);
 	}
 
 	@Override
@@ -51,10 +55,6 @@ public class ChatPrivateActivity extends AbstractChatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat_private);
 		onCreated();
-	}
-
-	public void setSecretConversationId(Long secretConversationId) {
-		this.secretConversationId = secretConversationId;
 	}
 
 	@Override
@@ -70,5 +70,9 @@ public class ChatPrivateActivity extends AbstractChatActivity {
 			Uri uriConversation = ConversationsProvider.getUriConversation(secretConversationId);
 			cr.update(uriConversation, values, null, null);
 		}
+	}
+
+	public void setSecretConversationId(Long secretConversationId) {
+		this.secretConversationId = secretConversationId;
 	}
 }

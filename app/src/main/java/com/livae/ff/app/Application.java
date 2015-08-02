@@ -96,7 +96,7 @@ public class Application extends android.app.Application {
 		trackers = new HashMap<>();
 		getGoogleTracker(); // maybe fix the problem caught exceptions
 		if (!BuildConfig.DEBUG) {
-			CustomUncaughtExceptionHandler.configure();
+//			CustomUncaughtExceptionHandler.configure(); // TODO uncomment when Jeannhy bug fixed
 		}
 		appUser = new AppUser(getApplicationContext());
 		setAdmin();
