@@ -520,11 +520,12 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 																		   DateFormat.SHORT);
 					for (Integer position : selectedItems) {
 						int pos = commentsAdapter.getCursorPosition(position);
-						text += dateFormat.format(new Date(commentsAdapter.getDate(pos))) + " \t";
+						Date date = new Date(commentsAdapter.getDate(pos));
+						text += "[" + dateFormat.format(date) + "] ";
 						if (commentsAdapter.isMe(pos)) {
 							text += me;
 						} else {
-							text += me;
+							text += userName;
 						}
 						text += ": ";
 						text += commentsAdapter.getComment(pos);

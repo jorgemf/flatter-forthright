@@ -81,6 +81,7 @@
 	<string name="no_contacts_in_app">Ninguno de tus contactos tiene la App instalada.</string>
 	<string name="no_contacts">No tienes ningún contacto con teléfono móvil.</string>
 	<string name="no">No</string>
+	<string name="menu_change_picture">Mi perfil</string>
 	<string name="menu_user_block">Bloquear usuario</string>
 	<string name="menu_user_unblock">Desbloquear usuario</string>
 	<string name="menu_share">Compartir Pensamientos</string>

@@ -6,6 +6,7 @@ import android.animation.ArgbEvaluator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.NotificationManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -13,6 +14,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract.CommonDataKinds;
+import android.provider.ContactsContract.Contacts;
+import android.provider.ContactsContract.Intents;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -36,6 +40,7 @@ import com.livae.ff.app.adapter.ChatsFragmentsAdapter;
 import com.livae.ff.app.fragment.ChatsPrivateFragment;
 import com.livae.ff.app.fragment.ChatsPublicFragment;
 import com.livae.ff.app.listener.SearchListener;
+import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.app.settings.Chats;
@@ -191,6 +196,9 @@ public class ChatsActivity extends AbstractActivity
 		switch (menuItem.getItemId()) {
 //			case R.id.menu_settings:
 //				break;
+			case R.id.menu_open_profile:
+				openProfile();
+				break;
 			case R.id.menu_refresh_contacts:
 				SyncUtils.syncContactsNow();
 				break;
@@ -335,6 +343,48 @@ public class ChatsActivity extends AbstractActivity
 			loaderManager.initLoader(LOADER_UNREAD_FORTHRIGHT, null, this);
 			loaderManager.initLoader(LOADER_UNREAD_PRIVATE, null, this);
 		}
+	}
+
+	private void openProfile() {
+		ContentResolver contentResolver = getContentResolver();
+		Uri uri = ContactsProvider.getUriContacts();
+		String[] projection = {Table.LocalUser.ANDROID_RAW_CONTACT_ID};
+		String selection = Table.LocalUser.PHONE + "=? AND " +
+						   Table.LocalUser.ANDROID_RAW_CONTACT_ID + " IS NOT NULL";
+		String[] selectionArgs = {Application.appUser().getUserPhone().toString()};
+		Cursor cursor = contentResolver.query(uri, projection, selection, selectionArgs, null);
+		if (cursor.getCount() == 0) {
+			cursor.close();
+			createNewProfile();
+		} else {
+			cursor.moveToFirst();
+			long id = cursor.getLong(cursor.getColumnIndex(Table.LocalUser.ANDROID_RAW_CONTACT_ID));
+			cursor.close();
+			uri = CommonDataKinds.Phone.CONTENT_URI;
+			projection = new String[]{CommonDataKinds.Phone.CONTACT_ID};
+			selection = CommonDataKinds.Phone._ID + "=?";
+			selectionArgs = new String[]{String.valueOf(id)};
+			cursor = contentResolver.query(uri, projection, selection, selectionArgs, null);
+			if (cursor.moveToFirst()) {
+				int iContactId = cursor.getColumnIndex(CommonDataKinds.Phone.CONTACT_ID);
+				String contactId = cursor.getString(iContactId);
+				cursor.close();
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				Uri uriContact = Uri.withAppendedPath(Contacts.CONTENT_URI, contactId);
+				intent.setData(uriContact);
+				startActivity(intent);
+			} else {
+				cursor.close();
+				createNewProfile();
+			}
+		}
+	}
+
+	private void createNewProfile() {
+		final Uri uri = Uri.parse("tel:" + Application.appUser().getUserPhone());
+		final Intent intent = new Intent(Intents.SHOW_OR_CREATE_CONTACT, uri);
+		intent.putExtra(Intents.EXTRA_FORCE_CREATE, true);
+		startActivity(intent);
 	}
 
 	@Override
