@@ -1,15 +1,11 @@
 package com.livae.ff.app.fragment;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,10 +15,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.SmsManager;
-import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -39,7 +33,6 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.livae.ff.app.Analytics;
-import com.livae.ff.app.Application;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.R;
@@ -49,6 +42,7 @@ import com.livae.ff.app.async.Callback;
 import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.dialog.CountdownDialogFragment;
 import com.livae.ff.app.dialog.ProgressDialogFragment;
+import com.livae.ff.app.service.SMSVerificationService;
 import com.livae.ff.app.settings.Settings;
 import com.livae.ff.app.task.TaskRegister;
 import com.livae.ff.app.utils.PhoneUtils;
@@ -72,13 +66,13 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 
 	private static final String LOG_TAG = "NUMBER_VERIFICATION";
 
-	private static final String CODE_LIMIT = "#";
-
 	private BroadcastReceiver smsReceiver;
 
 	private BroadcastReceiver smsSend;
 
 	private BroadcastReceiver smsDeliver;
+
+	private BroadcastReceiver smsVerified;
 
 	private View validateButton;
 
@@ -93,50 +87,6 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	private CountdownDialogFragment countdownDialogFragment;
 
 	private ProgressDialogFragment progressDialogFragment;
-
-	public static boolean alternativeVerifyNumber(Context context, Intent intent,
-												  TelephonyManager tel)
-	  throws NumberParseException {
-		String phone = "+" + Application.appUser().getUserPhone().toString();
-		String carrier = tel.getNetworkOperator() + "_" + tel.getNetworkOperatorName();
-		Bundle bundle = intent.getExtras();
-		String simCountry = tel.getSimCountryIso().toUpperCase();
-		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		Phonenumber.PhoneNumber phoneNumber = phoneUtil.parse(phone, null);
-		int phonePrefix = phoneNumber.getCountryCode();
-		String bundleKeySet = "[";
-		if (bundle != null) {
-			for (String key : bundle.keySet()) {
-				Object value = bundle.get(key);
-				if (value != null) {
-					bundleKeySet += key + "=" + value.toString();
-				}
-			}
-		}
-		String phoneInfo = carrier + ":" + simCountry + ":" + phonePrefix;
-		boolean verified = false;
-		if (bundle != null) {
-			Integer errorCode = null;
-			Boolean lastSendMsg = null;
-			if (bundle.containsKey("errorCode")) {
-				errorCode = bundle.getInt("errorCode", -1);
-			}
-			if (bundle.containsKey("LastSendMsg")) {
-				lastSendMsg = bundle.getBoolean("LastSendMsg", false);
-			}
-			switch (phonePrefix) {
-				case 593: // ecuador
-					// Telefónica movistar ecuador does not send sms to the own numbers
-					verified = tel.getNetworkOperator().equals("00") && simCountry.equals("EC") &&
-							   errorCode != null && errorCode == 0 && lastSendMsg != null &&
-							   lastSendMsg;
-					break;
-			}
-		}
-		Analytics.event(Analytics.Category.SMS_VERIFICATION_ERROR, phoneInfo,
-						bundleKeySet + "=" + verified);
-		return verified;
-	}
 
 	@Nullable
 	@Override
@@ -228,35 +178,50 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	@Override
 	public void onResume() {
 		super.onResume();
+		PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
+		final Long date = phoneVerification.getDate();
+		if (phoneVerification.getVerificationToken() != null &&
+			date != null &&
+			date > System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)) {
+			if (SMSVerificationService.checkSmsConfirmation(getActivity())) {
+				phoneValidated();
+			}
+		}
+		if (date != null &&
+			date > System.currentTimeMillis() - Settings.PHONE_VERIFICATION_TRY_AGAIN_DELAY) {
+			showCountDownDialog(System.currentTimeMillis() - date -
+								Settings.PHONE_VERIFICATION_TRY_AGAIN_DELAY);
+			createSMSBroadcastReceivers();
+		}
+	}
+
+	private void createSMSBroadcastReceivers() {
 		IntentFilter intentFilter;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			intentFilter = new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
 		} else {
 			intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 		}
-		smsReceiver = new IncomingSms();
+		smsReceiver = new SMSVerificationService.IncomingSms();
 		final FragmentActivity activity = getActivity();
 		activity.registerReceiver(smsReceiver, intentFilter);
-		PhoneVerification phoneVerification = PhoneVerification.instance(activity);
-		final Long date = phoneVerification.getDate();
-		if (phoneVerification.getVerificationToken() != null &&
-			date != null &&
-			date > System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)) {
-			checkSmsConfirmation();
-		}
-		if (date != null &&
-			date > System.currentTimeMillis() - Settings.PHONE_VERIFICATION_TRY_AGAIN_DELAY) {
-			showCountDownDialog(System.currentTimeMillis() - date -
-								Settings.PHONE_VERIFICATION_TRY_AGAIN_DELAY);
-		}
+		smsVerified = new SMSVerifiedReceiver();
+		activity.registerReceiver(smsVerified,
+								  new IntentFilter(SMSVerificationService.INTENT_SMS_VERIFIED));
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 		final FragmentActivity activity = getActivity();
-		activity.unregisterReceiver(smsReceiver);
-		smsReceiver = null;
+		if (smsReceiver != null) {
+			activity.unregisterReceiver(smsReceiver);
+			smsReceiver = null;
+		}
+		if (smsVerified != null) {
+			activity.unregisterReceiver(smsVerified);
+			smsVerified = null;
+		}
 	}
 
 	@Override
@@ -347,14 +312,16 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		Log.i(LOG_TAG, "SENT num: " + phoneNumber + " body: " + message);
 		//noinspection PointlessBooleanExpression,PointlessBooleanExpression,ConstantConditions
 		if (!BuildConfig.DEV && !BuildConfig.DEBUG) {
+			// register the broadcasts receivers for sms received and sms verified
+			createSMSBroadcastReceivers();
 			// register broadcast receivers
 			final FragmentActivity activity = getActivity();
 			if (smsSend == null) {
-				smsSend = new SmsSendBroadcastReceiver();
+				smsSend = new SMSVerificationService.SmsSendBroadcastReceiver();
 				activity.registerReceiver(smsSend, new IntentFilter(INTENT_SMS_SEND));
 			}
 			if (smsDeliver == null) {
-				smsDeliver = new SmsDeliveredBroadcastReceiver();
+				smsDeliver = new SMSVerificationService.SmsDeliveredBroadcastReceiver();
 				activity.registerReceiver(smsDeliver, new IntentFilter(INTENT_SMS_DELIVER));
 			}
 			// prepare pending intents
@@ -372,9 +339,12 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 			handler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					checkSmsConfirmation(phoneNumber, message);
+					if (SMSVerificationService.checkSmsConfirmation(getActivity(), phoneNumber,
+																	message)) {
+						phoneValidated();
+					}
 				}
-			}, 3000);
+			}, 2000);
 		}
 		showCountDownDialog(Settings.PHONE_VERIFICATION_TRY_AGAIN_DELAY);
 	}
@@ -385,79 +355,8 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		countdownDialogFragment.show(getFragmentManager(), "count_down_dialog");
 	}
 
-	private boolean checkSmsConfirmation() {
-		boolean validated = false;
-		Cursor cursor;
-		final ContentResolver contentResolver = getActivity().getContentResolver();
-		Uri uri;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			uri = Telephony.Sms.CONTENT_URI;
-		} else {
-			uri = Uri.parse("content://sms");
-		}
-		String columnDate;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			columnDate = Telephony.Sms.DATE;
-		} else {
-			columnDate = "date";
-		}
-		String columnType;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			columnType = Telephony.Sms.TYPE;
-		} else {
-			columnType = "type";
-		}
-		String typeInbox;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			typeInbox = Integer.toString(Telephony.Sms.MESSAGE_TYPE_INBOX);
-		} else {
-			typeInbox = "1";
-		}
-		String oldestDate = Long.toString(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
-		cursor = contentResolver.query(uri, null, columnDate + ">? AND " + columnType + "=?",
-									   new String[]{oldestDate, typeInbox}, null);
-		if (cursor.moveToFirst()) {
-			String columnBody;
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				columnBody = Telephony.Sms.BODY;
-			} else {
-				columnBody = "body";
-			}
-			String columnPhone;
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				columnPhone = Telephony.Sms.ADDRESS;
-			} else {
-				columnPhone = "address";
-			}
-			int counter = 0;
-			do {
-				String message = cursor.getString(cursor.getColumnIndex(columnBody));
-				String phoneNumber = cursor.getString(cursor.getColumnIndex(columnPhone));
-				validated = checkSmsConfirmation(phoneNumber, message);
-				counter++;
-			} while (cursor.moveToNext() && counter <= 10 && !validated);
-		}
-		cursor.close();
-		return validated;
-	}
-
-	private boolean checkSmsConfirmation(String phoneNumber, String message) {
-		boolean valid;
-		PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
-		String codeString =
-		  CODE_LIMIT + phoneVerification.getVerificationToken().toString() + CODE_LIMIT;
-		String phoneToVerify = "+" + phoneVerification.getUserPhone();
-		valid = message != null && phoneNumber != null && message.contains(codeString) &&
-				phoneNumber.equals(phoneToVerify);
-		Log.i(LOG_TAG, "VERIFY SMS: " + phoneNumber + " body: " + message + " result: " + valid);
-		if (valid) {
-			Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_RECEIVED);
-			phoneValidated();
-		}
-		return valid;
-	}
-
 	private void phoneValidated() {
+		Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_RECEIVED);
 		if (countdownDialogFragment != null) {
 			countdownDialogFragment.dismiss();
 			countdownDialogFragment = null;
@@ -494,98 +393,16 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		});
 	}
 
-	class IncomingSms extends BroadcastReceiver {
+	class SMSVerifiedReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.i(LOG_TAG, "Received sms");
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				SmsMessage[] messages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
-				for (SmsMessage currentMessage : messages) {
-					String phoneNumber = currentMessage.getOriginatingAddress();
-					String message = currentMessage.getDisplayMessageBody();
-					if (checkSmsConfirmation(phoneNumber, message)) {
-						break;
-					}
-				}
-			} else {
-				final Bundle bundle = intent.getExtras();
-				if (bundle != null) {
-					try {
-						final Object[] pdusObj = (Object[]) bundle.get("pdus");
-						boolean validated = false;
-						for (int i = 0; i < pdusObj.length && !validated; i++) {
-							SmsMessage currentMessage = SmsMessage
-														  .createFromPdu((byte[]) pdusObj[i]);
-							String phoneNumber = currentMessage.getOriginatingAddress();
-							String message = currentMessage.getDisplayMessageBody();
-							validated = checkSmsConfirmation(phoneNumber, message);
-						}
-					} catch (Exception e) {
-						Analytics.logAndReport(e);
-					}
-				}
+			int code = intent.getIntExtra(SMSVerificationService.EXTRA_CODE, -1);
+			PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
+			if (code == phoneVerification.getVerificationToken()) {
+				phoneValidated();
 			}
 		}
 	}
 
-	class SmsSendBroadcastReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			switch (getResultCode()) {
-				case Activity.RESULT_OK:
-					Log.i(LOG_TAG, "SMS sent");
-					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_SENT);
-					break;
-				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-					Log.e(LOG_TAG, "Generic failure");
-					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_ERROR_GENERIC);
-					// check network
-					TelephonyManager tel;
-					tel = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-					boolean network = !TextUtils.isEmpty(tel.getNetworkOperatorName()) ||
-									  tel.getNetworkType() != TelephonyManager.NETWORK_TYPE_UNKNOWN;
-
-					try {
-						if (network && alternativeVerifyNumber(context, intent, tel)) {
-							// an error happened with network but still a valid number
-							phoneValidated();
-						}
-					} catch (NumberParseException e) {
-						Analytics.logAndReport(e, false);
-					}
-					break;
-				case SmsManager.RESULT_ERROR_NO_SERVICE:
-					Log.e(LOG_TAG, "No service");
-					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_ERROR_NO_SERVICE);
-					break;
-				case SmsManager.RESULT_ERROR_NULL_PDU:
-					Log.e(LOG_TAG, "PDU NULL");
-					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_ERROR_PDU_NULL);
-					break;
-				case SmsManager.RESULT_ERROR_RADIO_OFF:
-					Log.e(LOG_TAG, "Radio off");
-					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_ERROR_RADIO_OFF);
-					break;
-			}
-		}
-	}
-
-	class SmsDeliveredBroadcastReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			switch (getResultCode()) {
-				case Activity.RESULT_OK:
-					Log.i(LOG_TAG, "SMS delivered");
-					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_DELIVERED);
-					break;
-				case Activity.RESULT_CANCELED:
-					Log.i(LOG_TAG, "SMS not delivered");
-					Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_NOT_DELIVERED);
-					break;
-			}
-		}
-	}
 }

@@ -73,6 +73,7 @@
 			android:name="com.livae.ff.app.activity.AboutActivity"
 			android:screenOrientation="portrait"/>
 
+
 		<service android:name="com.livae.ff.app.service.AuthenticatorService">
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator"/>
@@ -107,6 +108,7 @@
 		</service>
 
 		<service android:name="com.livae.ff.app.service.CloudMessagesService"/>
+		<service android:name="com.livae.ff.app.service.SMSVerificationService"/>
 
 		<meta-data
 			android:name="com.google.android.gms.version"

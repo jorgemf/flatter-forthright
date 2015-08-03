@@ -1,32 +1,41 @@
 package com.livae.ff.app.task;
 
+import com.livae.ff.api.ff.Ff;
 import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.app.Application;
+import com.livae.ff.app.api.API;
 import com.livae.ff.app.api.Model;
 import com.livae.ff.app.async.CustomAsyncTask;
+import com.livae.ff.app.utils.DeviceUtils;
 import com.livae.ff.app.utils.SyncUtils;
 
 public class TaskPostComment extends CustomAsyncTask<TextId, Comment> {
 
 	@Override
 	protected Comment doInBackground(TextId params) throws Exception {
-		Comment comment;
+		Comment comment = null;
 		Model model = Application.model();
-//		if (DeviceUtils.isNetworkAvailable(Application.getContext())) {
-//			PostComment request;
-//			request = API.endpoint().postComment(params.getId(), params.getText());
-//			request.setAlias(params.getAlias());
-//			comment = request.execute();
-//			comment.setIsMe(true);
-//			model.parse(comment);
-//		} else {
-//			comment = saveCommentForSync(params);
-//			model.parse(comment, true);
-//		}
-		comment = saveCommentForSync(params);
-		model.parse(comment, true);
-		model.save();
-		SyncUtils.syncConversationsNow();
+		if (DeviceUtils.isNetworkAvailable(Application.getContext())) {
+			// try to send the comment now
+			try {
+				Ff.ApiEndpoint.PostComment request;
+				request = API.endpoint().postComment(params.getId(), params.getText());
+				request.setAlias(params.getAlias());
+				comment = request.execute();
+				comment.setIsMe(true);
+				model.parse(comment);
+			} catch (Exception ignore) {
+
+			}
+		}
+		if (comment == null) {
+			// if comment wasn't sent, try now again
+			comment = saveCommentForSync(params);
+			model.parse(comment, true);
+			model.save();
+			SyncUtils.syncConversationsNow();
+		}
+		// TODO verify if this is faster than put the comment in syncConversations
 		return comment;
 	}
 

@@ -48,7 +48,7 @@
 	<string name="empty_chat_forthright">Ops… nada aquí. Comentarios con más de 100 días de antigúedad son eliminados.</string>
 	<string name="yes">Sí</string>
 	<string name="verification_sms_dialog_confirmation">¿Estas seguro de que %s es tu número?</string>
-	<string name="verification_sms_dialog">Hemos enviado un mensaje, ten paciencia mientras lo recives.</string>
+	<string name="verification_sms_dialog">Hemos enviado un mensaje, ten paciencia mientras lo recibes.</string>
 	<string name="user_agree">%s esta de acuerdo</string>
 	<string name="user_disagree">%s no esta de acuerdo</string>
 	<string name="time_yesterday">Ayer</string>
