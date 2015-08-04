@@ -23438,8 +23438,13 @@ com.livae.ff.app.Constants$COUNTRY -> com.livae.ff.app.f:
     int getCountryStringResId() -> a
     int getCountryFlagResId() -> b
     java.lang.String getPhonePrefix() -> c
-com.livae.ff.app.R -> com.livae.ff.app.g:
-com.livae.ff.app.R$styleable -> com.livae.ff.app.h:
+com.livae.ff.app.CustomUncaughtExceptionHandler -> com.livae.ff.app.g:
+    com.livae.ff.app.CustomUncaughtExceptionHandler instance -> a
+    java.lang.Thread$UncaughtExceptionHandler exceptionHandler -> b
+    void configure() -> a
+    void uncaughtException(java.lang.Thread,java.lang.Throwable) -> uncaughtException
+com.livae.ff.app.R -> com.livae.ff.app.h:
+com.livae.ff.app.R$styleable -> com.livae.ff.app.i:
     int[] ActionBar -> ActionBar
     int ActionBar_background -> ActionBar_background
     int ActionBar_backgroundSplit -> ActionBar_backgroundSplit
@@ -23899,8 +23904,8 @@ com.livae.ff.app.activity.ChatPrivateActivity -> com.livae.ff.app.activity.ChatP
     void startChatSecret(com.livae.ff.app.activity.ChatsActivity,java.lang.Long,java.lang.String,boolean,long) -> c
     void start(android.app.Activity,com.livae.ff.common.Constants$ChatType,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String,java.lang.Long,java.lang.Long,java.lang.Integer,boolean,java.lang.Long) -> a
     void onCreate(android.os.Bundle) -> onCreate
-    void setSecretConversationId(java.lang.Long) -> a
     void onDestroy() -> onDestroy
+    void setSecretConversationId(java.lang.Long) -> a
 com.livae.ff.app.activity.ChatPublicActivity -> com.livae.ff.app.activity.ChatPublicActivity:
     void startChatFlatter(android.support.v4.app.FragmentActivity,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String) -> a
     void startChatForthright(android.support.v4.app.FragmentActivity,java.lang.Long,java.lang.Long,java.lang.String,java.lang.String,java.lang.String) -> b
@@ -23933,15 +23938,17 @@ com.livae.ff.app.activity.ChatsActivity -> com.livae.ff.app.activity.ChatsActivi
     boolean onNotificationReceived(com.livae.ff.common.model.Notification) -> a
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     void onBackPressed() -> onBackPressed
+    void onPause() -> onPause
     void onResume() -> onResume
     void onCreate(android.os.Bundle) -> onCreate
+    void openProfile() -> e
+    void createNewProfile() -> f
     boolean onQueryTextSubmit(java.lang.String) -> onQueryTextSubmit
     boolean onQueryTextChange(java.lang.String) -> onQueryTextChange
     void onClick(android.view.View) -> onClick
-    void hideChatsButtonsContainer() -> e
-    void showChatsButtonsContainer() -> f
+    void hideChatsButtonsContainer() -> g
+    void showChatsButtonsContainer() -> h
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    void onPause() -> onPause
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
@@ -24618,10 +24625,10 @@ com.livae.ff.app.fragment.ChatsPrivateFragment -> com.livae.ff.app.fragment.ak:
     android.widget.TextView emptyView -> c
     android.widget.TextView tutorialView -> d
     void onCreate(android.os.Bundle) -> onCreate
+    void onPause() -> onPause
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onResume() -> onResume
-    void onPause() -> onPause
     void onCreateContextMenu(android.view.ContextMenu,android.view.View,android.view.ContextMenu$ContextMenuInfo) -> onCreateContextMenu
     boolean onContextItemSelected(android.view.MenuItem) -> onContextItemSelected
     void chatClicked(com.livae.ff.app.model.ChatPrivateModel) -> a
@@ -24676,27 +24683,26 @@ com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment -> com.livae.ff.app.fra
     android.content.BroadcastReceiver smsReceiver -> a
     android.content.BroadcastReceiver smsSend -> b
     android.content.BroadcastReceiver smsDeliver -> c
-    android.view.View validateButton -> d
-    android.widget.EditText phoneNumberEditText -> e
-    android.widget.TextView phonePrefixEditText -> f
-    android.widget.Spinner countryCodeSpinner -> g
-    com.livae.ff.app.adapter.CountriesArrayAdapter countriesAdapter -> h
-    com.livae.ff.app.dialog.CountdownDialogFragment countdownDialogFragment -> i
-    com.livae.ff.app.dialog.ProgressDialogFragment progressDialogFragment -> j
-    boolean alternativeVerifyNumber(android.content.Context,android.content.Intent,android.telephony.TelephonyManager) -> a
+    android.content.BroadcastReceiver smsVerified -> d
+    android.view.View validateButton -> e
+    android.widget.EditText phoneNumberEditText -> f
+    android.widget.TextView phonePrefixEditText -> g
+    android.widget.Spinner countryCodeSpinner -> h
+    com.livae.ff.app.adapter.CountriesArrayAdapter countriesAdapter -> i
+    com.livae.ff.app.dialog.CountdownDialogFragment countdownDialogFragment -> j
+    com.livae.ff.app.dialog.ProgressDialogFragment progressDialogFragment -> k
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onResume() -> onResume
+    void createSMSBroadcastReceivers() -> a
     void onPause() -> onPause
     void onDestroy() -> onDestroy
     void onClick(android.view.View) -> onClick
-    void pressedContinue() -> a
-    void verifyNumber() -> b
-    com.google.i18n.phonenumbers.Phonenumber$PhoneNumber getPhoneNumber() -> c
+    void pressedContinue() -> b
+    void verifyNumber() -> c
+    com.google.i18n.phonenumbers.Phonenumber$PhoneNumber getPhoneNumber() -> d
     void sendVerificationSMS(java.lang.String,int) -> a
     void showCountDownDialog(long) -> a
-    boolean checkSmsConfirmation() -> d
-    boolean checkSmsConfirmation(java.lang.String,java.lang.String) -> a
     void phoneValidated() -> e
     com.livae.ff.app.adapter.CountriesArrayAdapter access$000(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> a
     android.widget.TextView access$100(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> b
@@ -24704,7 +24710,6 @@ com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment -> com.livae.ff.app.fra
     void access$300(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment,java.lang.String,int) -> a
     com.livae.ff.app.dialog.ProgressDialogFragment access$400(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> d
     void access$500(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> e
-    boolean access$600(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment,java.lang.String,java.lang.String) -> a
 com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$1 -> com.livae.ff.app.fragment.ap:
     java.util.HashMap val$countryNames -> a
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> b
@@ -24732,20 +24737,14 @@ com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6 -> com.livae.ff.app.f
 com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6$1 -> com.livae.ff.app.fragment.au:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6 this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$IncomingSms -> com.livae.ff.app.fragment.av:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SMSVerifiedReceiver -> com.livae.ff.app.fragment.av:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SmsDeliveredBroadcastReceiver -> com.livae.ff.app.fragment.aw:
-    com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
-    void onReceive(android.content.Context,android.content.Intent) -> onReceive
-com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SmsSendBroadcastReceiver -> com.livae.ff.app.fragment.ax:
-    com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
-    void onReceive(android.content.Context,android.content.Intent) -> onReceive
-com.livae.ff.app.fragment.OnBoardingWarningFragment -> com.livae.ff.app.fragment.ay:
+com.livae.ff.app.fragment.OnBoardingWarningFragment -> com.livae.ff.app.fragment.aw:
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onClick(android.view.View) -> onClick
-com.livae.ff.app.fragment.OnBoardingWelcomeFragment -> com.livae.ff.app.fragment.az:
+com.livae.ff.app.fragment.OnBoardingWelcomeFragment -> com.livae.ff.app.fragment.ax:
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onClick(android.view.View) -> onClick
@@ -24910,6 +24909,20 @@ com.livae.ff.app.service.ConversationsSyncService -> com.livae.ff.app.service.Co
     com.livae.ff.app.service.ConversationsSyncAdapter syncAdapter -> b
     void onCreate() -> onCreate
     android.os.IBinder onBind(android.content.Intent) -> onBind
+com.livae.ff.app.service.SMSVerificationService -> com.livae.ff.app.service.SMSVerificationService:
+    boolean checkSmsConfirmation(android.content.Context) -> a
+    boolean alternativeVerifyNumber(android.content.Context,android.content.Intent,android.telephony.TelephonyManager) -> a
+    boolean checkSmsConfirmation(android.content.Context,java.lang.String,java.lang.String) -> a
+    boolean verifySMSGenericError(android.content.Context,android.content.Intent) -> a
+    boolean verifyIncomingSMS(android.content.Context,android.content.Intent) -> b
+    void onHandleIntent(android.content.Intent) -> onHandleIntent
+    void sendSmsVerifiedBroadcast() -> a
+com.livae.ff.app.service.SMSVerificationService$IncomingSms -> com.livae.ff.app.service.h:
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.livae.ff.app.service.SMSVerificationService$SmsDeliveredBroadcastReceiver -> com.livae.ff.app.service.i:
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.livae.ff.app.service.SMSVerificationService$SmsSendBroadcastReceiver -> com.livae.ff.app.service.j:
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
 com.livae.ff.app.settings.Chats -> com.livae.ff.app.g.a:
     android.content.SharedPreferences prefs -> a
     java.lang.String displayName -> b
