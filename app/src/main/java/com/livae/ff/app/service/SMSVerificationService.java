@@ -21,7 +21,6 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.livae.ff.app.Analytics;
-import com.livae.ff.app.Application;
 import com.livae.ff.app.utils.PhoneVerification;
 
 import java.util.concurrent.TimeUnit;
@@ -102,9 +101,10 @@ public class SMSVerificationService extends IntentService {
 		return validated;
 	}
 
-	private static boolean alternativeVerifyNumber(Intent intent, TelephonyManager tel)
+	private static boolean alternativeVerifyNumber(Context context, Intent intent,
+												   TelephonyManager tel)
 	  throws NumberParseException {
-		String phone = "+" + Application.appUser().getUserPhone().toString();
+		String phone = "+" + PhoneVerification.instance(context).getUserPhone().toString();
 		String carrier = tel.getNetworkOperator() + "_" + tel.getNetworkOperatorName();
 		Bundle bundle = intent.getExtras();
 		String simCountry = tel.getSimCountryIso().toUpperCase();
@@ -166,7 +166,7 @@ public class SMSVerificationService extends IntentService {
 						  tel.getNetworkType() != TelephonyManager.NETWORK_TYPE_UNKNOWN;
 
 		try {
-			return network && alternativeVerifyNumber(intent, tel);
+			return network && alternativeVerifyNumber(context, intent, tel);
 		} catch (NumberParseException e) {
 			Analytics.logAndReport(e, false);
 		}
