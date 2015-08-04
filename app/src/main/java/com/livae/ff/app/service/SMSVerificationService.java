@@ -114,29 +114,56 @@ public class SMSVerificationService extends IntentService {
 		String bundleKeySet = "[";
 		if (bundle != null) {
 			for (String key : bundle.keySet()) {
-				Object value = bundle.get(key);
-				if (value != null) {
-					bundleKeySet += key + "=" + value.toString();
+				if (!key.equals(EXTRA_INTENT_TYPE)) {
+					Object value = bundle.get(key);
+					if (value != null) {
+						final String sVal = value.toString();
+						bundleKeySet += key + "=";
+						if (key.equals("uri") && sVal.lastIndexOf('/') > 0) {
+							bundleKeySet += sVal.substring(0, sVal.lastIndexOf('/')) + ",";
+						} else {
+							bundleKeySet += sVal + ",";
+						}
+					}
 				}
 			}
 		}
+		bundleKeySet += "]";
 		String phoneInfo = carrier + ":" + simCountry + ":" + phonePrefix;
 		boolean verified = false;
 		if (bundle != null) {
-			Integer errorCode = null;
+			int errorCode = bundle.getInt("errorCode", 0);
 			Boolean lastSendMsg = null;
-			if (bundle.containsKey("errorCode")) {
-				errorCode = bundle.getInt("errorCode", -1);
-			}
+			String uri = null;
 			if (bundle.containsKey("LastSendMsg")) {
 				lastSendMsg = bundle.getBoolean("LastSendMsg", false);
+			}
+			if (bundle.containsKey("uri")) {
+				uri = bundle.getString("uri");
+			}
+			if (uri != null) {
+				ContentResolver contentResolver = context.getContentResolver();
+				Cursor cursor = contentResolver.query(Uri.parse(uri), null, null, null, null);
+				if (cursor.moveToFirst()) {
+					String columnErrorCode;
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+						columnErrorCode = Telephony.Sms.ERROR_CODE;
+					} else {
+						columnErrorCode = "error_code";
+					}
+					int iErrorCode = cursor.getColumnIndex(columnErrorCode);
+					errorCode = cursor.getInt(iErrorCode);
+					bundleKeySet += "error_code" + "=" + errorCode;
+				}
+				cursor.close();
 			}
 			switch (phonePrefix) {
 				case 593: // ecuador
 					// Telefónica movistar ecuador does not send sms to the own numbers
-					verified = tel.getNetworkOperator().equals("00") && simCountry.equals("EC") &&
-							   errorCode != null && errorCode == 0 && lastSendMsg != null &&
-							   lastSendMsg;
+					verified =
+					  tel.getNetworkOperator().equals("74000") && simCountry.equals("EC") &&
+					  uri != null && uri.startsWith("content://sms/") &&
+					  errorCode == 0 && lastSendMsg != null && lastSendMsg;
 					break;
 			}
 		}
