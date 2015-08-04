@@ -586,6 +586,8 @@ android.support.design.R$layout -> android.support.design.g:
     int design_navigation_menu -> design_navigation_menu
     int layout_snackbar -> layout_snackbar
     int layout_snackbar_include -> layout_snackbar_include
+    int layout_tab_icon -> layout_tab_icon
+    int layout_tab_text -> layout_tab_text
     int notification_media_action -> notification_media_action
     int notification_media_cancel_action -> notification_media_cancel_action
     int notification_template_big_media -> notification_template_big_media
@@ -800,6 +802,7 @@ android.support.design.R$style -> android.support.design.h:
     int TextAppearance_AppCompat_Widget_PopupMenu_Small -> TextAppearance_AppCompat_Widget_PopupMenu_Small
     int TextAppearance_AppCompat_Widget_Switch -> TextAppearance_AppCompat_Widget_Switch
     int TextAppearance_AppCompat_Widget_TextView_SpinnerItem -> TextAppearance_AppCompat_Widget_TextView_SpinnerItem
+    int TextAppearance_Design_CollapsingToolbar_Expanded -> TextAppearance_Design_CollapsingToolbar_Expanded
     int TextAppearance_Design_Error -> TextAppearance_Design_Error
     int TextAppearance_Design_Hint -> TextAppearance_Design_Hint
     int TextAppearance_Design_Snackbar_Action -> TextAppearance_Design_Snackbar_Action
@@ -1346,6 +1349,7 @@ android.support.design.internal.NavigationMenuPresenter -> android.support.desig
     void setItemTextColor(android.content.res.ColorStateList) -> b
     android.graphics.drawable.Drawable getItemBackground() -> c
     void setItemBackground(android.graphics.drawable.Drawable) -> a
+    void setUpdateSuspended(boolean) -> a
     android.view.LayoutInflater access$000(android.support.design.internal.NavigationMenuPresenter) -> a
     android.content.res.ColorStateList access$100(android.support.design.internal.NavigationMenuPresenter) -> b
     android.content.res.ColorStateList access$200(android.support.design.internal.NavigationMenuPresenter) -> c
@@ -1355,6 +1359,7 @@ android.support.design.internal.NavigationMenuPresenter -> android.support.desig
 android.support.design.internal.NavigationMenuPresenter$NavigationMenuAdapter -> android.support.design.internal.b:
     java.util.ArrayList mItems -> b
     android.graphics.drawable.ColorDrawable mTransparentIcon -> c
+    boolean mUpdateSuspended -> d
     android.support.design.internal.NavigationMenuPresenter this$0 -> a
     int getCount() -> getCount
     android.support.design.internal.NavigationMenuPresenter$NavigationMenuItem getItem(int) -> a
@@ -1365,8 +1370,11 @@ android.support.design.internal.NavigationMenuPresenter$NavigationMenuAdapter ->
     boolean areAllItemsEnabled() -> areAllItemsEnabled
     boolean isEnabled(int) -> isEnabled
     void notifyDataSetChanged() -> notifyDataSetChanged
-    void prepareMenuItems() -> a
+    void prepareMenuItems() -> b
     void appendTransparentIconIfMissing(int,int) -> a
+    android.os.Bundle createInstanceState() -> a
+    void restoreInstanceState(android.os.Bundle) -> a
+    void setUpdateSuspended(boolean) -> a
     java.lang.Object getItem(int) -> getItem
 android.support.design.internal.NavigationMenuPresenter$NavigationMenuItem -> android.support.design.internal.c:
     android.support.v7.internal.view.menu.MenuItemImpl mMenuItem -> a
@@ -1541,12 +1549,14 @@ android.support.design.widget.CircularBorderDrawable -> android.support.design.w
     int mTopInnerStrokeColor -> mTopInnerStrokeColor
     int mBottomOuterStrokeColor -> mBottomOuterStrokeColor
     int mBottomInnerStrokeColor -> mBottomInnerStrokeColor
+    int mTintColor -> mTintColor
     boolean mInvalidateShader -> mInvalidateShader
     void setGradientColors(int,int,int,int) -> setGradientColors
     void setBorderWidth(float) -> setBorderWidth
     void draw(android.graphics.Canvas) -> draw
     boolean getPadding(android.graphics.Rect) -> getPadding
     void setAlpha(int) -> setAlpha
+    void setTintColor(int) -> setTintColor
     void setColorFilter(android.graphics.ColorFilter) -> setColorFilter
     int getOpacity() -> getOpacity
     void onBoundsChange(android.graphics.Rect) -> onBoundsChange
@@ -1558,6 +1568,7 @@ android.support.design.widget.CircularBorderDrawableLollipop -> android.support.
     void draw(android.graphics.Canvas) -> draw
     void setTintList(android.content.res.ColorStateList) -> setTintList
     void setTintMode(android.graphics.PorterDuff$Mode) -> setTintMode
+    void getOutline(android.graphics.Outline) -> getOutline
     android.graphics.PorterDuffColorFilter updateTintFilter(android.content.res.ColorStateList,android.graphics.PorterDuff$Mode) -> updateTintFilter
 android.support.design.widget.CollapsingTextHelper -> android.support.design.widget.CollapsingTextHelper:
     boolean USE_SCALING_TEXTURE -> USE_SCALING_TEXTURE
@@ -1578,6 +1589,7 @@ android.support.design.widget.CollapsingTextHelper -> android.support.design.wid
     java.lang.CharSequence mText -> mText
     java.lang.CharSequence mTextToDraw -> mTextToDraw
     float mTextWidth -> mTextWidth
+    boolean mIsRtl -> mIsRtl
     boolean mUseTexture -> mUseTexture
     android.graphics.Bitmap mExpandedTitleTexture -> mExpandedTitleTexture
     android.graphics.Paint mTexturePaint -> mTexturePaint
@@ -1610,13 +1622,13 @@ android.support.design.widget.CollapsingTextHelper -> android.support.design.wid
     void calculateOffsets() -> calculateOffsets
     void calculateBaselines() -> calculateBaselines
     void draw(android.graphics.Canvas) -> draw
+    boolean calculateIsRtl(java.lang.CharSequence) -> calculateIsRtl
     void setInterpolatedTextSize(float) -> setInterpolatedTextSize
     void ensureExpandedTexture() -> ensureExpandedTexture
     void recalculate() -> recalculate
     void setText(java.lang.CharSequence) -> setText
     java.lang.CharSequence getText() -> getText
     void clearTexture() -> clearTexture
-    void onLayout(boolean,int,int,int,int) -> onLayout
     boolean isClose(float,float) -> isClose
     int getExpandedTextColor() -> getExpandedTextColor
     int getCollapsedTextColor() -> getCollapsedTextColor
@@ -1648,12 +1660,14 @@ android.support.design.widget.CollapsingToolbarLayout -> android.support.design.
     boolean drawChild(android.graphics.Canvas,android.view.View,long) -> drawChild
     void onSizeChanged(int,int,int,int) -> onSizeChanged
     void ensureToolbar() -> ensureToolbar
+    void onMeasure(int,int) -> onMeasure
     void onLayout(boolean,int,int,int,int) -> onLayout
     android.support.design.widget.ViewOffsetHelper getViewOffsetHelper(android.view.View) -> getViewOffsetHelper
     void setTitle(java.lang.CharSequence) -> setTitle
     void showScrim() -> showScrim
     void hideScrim() -> hideScrim
     void animateScrim(int) -> animateScrim
+    void setScrimAlpha(int) -> setScrimAlpha
     void setContentScrim(android.graphics.drawable.Drawable) -> setContentScrim
     void setContentScrimColor(int) -> setContentScrimColor
     void setContentScrimResource(int) -> setContentScrimResource
@@ -1676,17 +1690,15 @@ android.support.design.widget.CollapsingToolbarLayout -> android.support.design.
     android.view.ViewGroup$LayoutParams generateDefaultLayoutParams() -> generateDefaultLayoutParams
     android.view.ViewGroup$LayoutParams generateLayoutParams(android.util.AttributeSet) -> generateLayoutParams
     android.support.v4.view.WindowInsetsCompat access$002(android.support.design.widget.CollapsingToolbarLayout,android.support.v4.view.WindowInsetsCompat) -> access$002
-    int access$200(android.support.design.widget.CollapsingToolbarLayout) -> access$200
-    android.graphics.drawable.Drawable access$300(android.support.design.widget.CollapsingToolbarLayout) -> access$300
-    android.support.v7.widget.Toolbar access$400(android.support.design.widget.CollapsingToolbarLayout) -> access$400
-    int access$202(android.support.design.widget.CollapsingToolbarLayout,int) -> access$202
-    int access$502(android.support.design.widget.CollapsingToolbarLayout,int) -> access$502
+    void access$200(android.support.design.widget.CollapsingToolbarLayout,int) -> access$200
+    int access$302(android.support.design.widget.CollapsingToolbarLayout,int) -> access$302
     android.support.v4.view.WindowInsetsCompat access$000(android.support.design.widget.CollapsingToolbarLayout) -> access$000
-    android.support.design.widget.ViewOffsetHelper access$600(android.view.View) -> access$600
-    android.graphics.drawable.Drawable access$700(android.support.design.widget.CollapsingToolbarLayout) -> access$700
+    android.support.design.widget.ViewOffsetHelper access$400(android.view.View) -> access$400
+    android.graphics.drawable.Drawable access$500(android.support.design.widget.CollapsingToolbarLayout) -> access$500
+    android.graphics.drawable.Drawable access$600(android.support.design.widget.CollapsingToolbarLayout) -> access$600
+    void access$700(android.support.design.widget.CollapsingToolbarLayout) -> access$700
     void access$800(android.support.design.widget.CollapsingToolbarLayout) -> access$800
-    void access$900(android.support.design.widget.CollapsingToolbarLayout) -> access$900
-    android.support.design.widget.CollapsingTextHelper access$1000(android.support.design.widget.CollapsingToolbarLayout) -> access$1000
+    android.support.design.widget.CollapsingTextHelper access$900(android.support.design.widget.CollapsingToolbarLayout) -> access$900
 android.support.design.widget.CollapsingToolbarLayout$1 -> android.support.design.widget.CollapsingToolbarLayout$1:
     android.support.design.widget.CollapsingToolbarLayout this$0 -> this$0
     android.support.v4.view.WindowInsetsCompat onApplyWindowInsets(android.view.View,android.support.v4.view.WindowInsetsCompat) -> onApplyWindowInsets
@@ -1733,7 +1745,9 @@ android.support.design.widget.CoordinatorLayout -> android.support.design.widget
     android.support.v4.view.WindowInsetsCompat mLastInsets -> mLastInsets
     boolean mDrawStatusBarBackground -> mDrawStatusBarBackground
     android.graphics.drawable.Drawable mStatusBarBackground -> mStatusBarBackground
+    android.view.ViewGroup$OnHierarchyChangeListener mOnHierarchyChangeListener -> mOnHierarchyChangeListener
     android.support.v4.view.NestedScrollingParentHelper mNestedScrollingParentHelper -> mNestedScrollingParentHelper
+    void setOnHierarchyChangeListener(android.view.ViewGroup$OnHierarchyChangeListener) -> setOnHierarchyChangeListener
     void onAttachedToWindow() -> onAttachedToWindow
     void onDetachedFromWindow() -> onDetachedFromWindow
     void setStatusBarBackground(android.graphics.drawable.Drawable) -> setStatusBarBackground
@@ -1772,6 +1786,7 @@ android.support.design.widget.CoordinatorLayout -> android.support.design.widget
     int resolveAnchoredChildGravity(int) -> resolveAnchoredChildGravity
     boolean drawChild(android.graphics.Canvas,android.view.View,long) -> drawChild
     void dispatchOnDependentViewChanged(boolean) -> dispatchOnDependentViewChanged
+    void dispatchDependentViewRemoved(android.view.View) -> dispatchDependentViewRemoved
     void dispatchDependentViewsChanged(android.view.View) -> dispatchDependentViewsChanged
     java.util.List getDependencies(android.view.View) -> getDependencies
     void ensurePreDrawListener() -> ensurePreDrawListener
@@ -1799,6 +1814,7 @@ android.support.design.widget.CoordinatorLayout -> android.support.design.widget
     android.view.ViewGroup$LayoutParams generateLayoutParams(android.view.ViewGroup$LayoutParams) -> generateLayoutParams
     android.view.ViewGroup$LayoutParams generateLayoutParams(android.util.AttributeSet) -> generateLayoutParams
     void access$000(android.support.design.widget.CoordinatorLayout,android.support.v4.view.WindowInsetsCompat) -> access$000
+    android.view.ViewGroup$OnHierarchyChangeListener access$100(android.support.design.widget.CoordinatorLayout) -> access$100
 android.support.design.widget.CoordinatorLayout$1 -> android.support.design.widget.CoordinatorLayout$1:
     android.support.design.widget.CoordinatorLayout this$0 -> this$0
     int compare(android.view.View,android.view.View) -> compare
@@ -1814,6 +1830,7 @@ android.support.design.widget.CoordinatorLayout$Behavior -> android.support.desi
     boolean blocksInteractionBelow(android.support.design.widget.CoordinatorLayout,android.view.View) -> blocksInteractionBelow
     boolean layoutDependsOn(android.support.design.widget.CoordinatorLayout,android.view.View,android.view.View) -> layoutDependsOn
     boolean onDependentViewChanged(android.support.design.widget.CoordinatorLayout,android.view.View,android.view.View) -> onDependentViewChanged
+    void onDependentViewRemoved(android.support.design.widget.CoordinatorLayout,android.view.View,android.view.View) -> onDependentViewRemoved
     boolean isDirty(android.support.design.widget.CoordinatorLayout,android.view.View) -> isDirty
     boolean onMeasureChild(android.support.design.widget.CoordinatorLayout,android.view.View,int,int,int,int) -> onMeasureChild
     boolean onLayoutChild(android.support.design.widget.CoordinatorLayout,android.view.View,int) -> onLayoutChild
@@ -1831,6 +1848,10 @@ android.support.design.widget.CoordinatorLayout$Behavior -> android.support.desi
     android.os.Parcelable onSaveInstanceState(android.support.design.widget.CoordinatorLayout,android.view.View) -> onSaveInstanceState
 android.support.design.widget.CoordinatorLayout$DefaultBehavior -> android.support.design.widget.CoordinatorLayout$DefaultBehavior:
     java.lang.Class value() -> value
+android.support.design.widget.CoordinatorLayout$HierarchyChangeListener -> android.support.design.widget.CoordinatorLayout$HierarchyChangeListener:
+    android.support.design.widget.CoordinatorLayout this$0 -> this$0
+    void onChildViewAdded(android.view.View,android.view.View) -> onChildViewAdded
+    void onChildViewRemoved(android.view.View,android.view.View) -> onChildViewRemoved
 android.support.design.widget.CoordinatorLayout$LayoutParams -> android.support.design.widget.CoordinatorLayout$LayoutParams:
     android.support.design.widget.CoordinatorLayout$Behavior mBehavior -> mBehavior
     boolean mBehaviorResolved -> mBehaviorResolved
@@ -1904,6 +1925,8 @@ android.support.design.widget.FloatingActionButton -> android.support.design.wid
     android.graphics.PorterDuff$Mode getBackgroundTintMode() -> getBackgroundTintMode
     void setBackgroundTintMode(android.graphics.PorterDuff$Mode) -> setBackgroundTintMode
     void setBackgroundDrawable(android.graphics.drawable.Drawable) -> setBackgroundDrawable
+    void show() -> show
+    void hide() -> hide
     int getSizeDimension() -> getSizeDimension
     void drawableStateChanged() -> drawableStateChanged
     void jumpDrawablesToCurrentState() -> jumpDrawablesToCurrentState
@@ -1920,27 +1943,19 @@ android.support.design.widget.FloatingActionButton$1 -> android.support.design.w
 android.support.design.widget.FloatingActionButton$Behavior -> android.support.design.widget.FloatingActionButton$Behavior:
     boolean SNACKBAR_BEHAVIOR_ENABLED -> SNACKBAR_BEHAVIOR_ENABLED
     android.graphics.Rect mTmpRect -> mTmpRect
-    boolean mIsAnimatingOut -> mIsAnimatingOut
     float mTranslationY -> mTranslationY
     boolean layoutDependsOn(android.support.design.widget.CoordinatorLayout,android.support.design.widget.FloatingActionButton,android.view.View) -> layoutDependsOn
     boolean onDependentViewChanged(android.support.design.widget.CoordinatorLayout,android.support.design.widget.FloatingActionButton,android.view.View) -> onDependentViewChanged
+    void onDependentViewRemoved(android.support.design.widget.CoordinatorLayout,android.support.design.widget.FloatingActionButton,android.view.View) -> onDependentViewRemoved
+    boolean updateFabVisibility(android.support.design.widget.CoordinatorLayout,android.support.design.widget.AppBarLayout,android.support.design.widget.FloatingActionButton) -> updateFabVisibility
     void updateFabTranslationForSnackbar(android.support.design.widget.CoordinatorLayout,android.support.design.widget.FloatingActionButton,android.view.View) -> updateFabTranslationForSnackbar
     float getFabTranslationYForSnackbar(android.support.design.widget.CoordinatorLayout,android.support.design.widget.FloatingActionButton) -> getFabTranslationYForSnackbar
-    void animateIn(android.support.design.widget.FloatingActionButton) -> animateIn
-    void animateOut(android.support.design.widget.FloatingActionButton) -> animateOut
+    boolean onLayoutChild(android.support.design.widget.CoordinatorLayout,android.support.design.widget.FloatingActionButton,int) -> onLayoutChild
+    void offsetIfNeeded(android.support.design.widget.CoordinatorLayout,android.support.design.widget.FloatingActionButton) -> offsetIfNeeded
+    boolean onLayoutChild(android.support.design.widget.CoordinatorLayout,android.view.View,int) -> onLayoutChild
+    void onDependentViewRemoved(android.support.design.widget.CoordinatorLayout,android.view.View,android.view.View) -> onDependentViewRemoved
     boolean onDependentViewChanged(android.support.design.widget.CoordinatorLayout,android.view.View,android.view.View) -> onDependentViewChanged
     boolean layoutDependsOn(android.support.design.widget.CoordinatorLayout,android.view.View,android.view.View) -> layoutDependsOn
-    boolean access$302(android.support.design.widget.FloatingActionButton$Behavior,boolean) -> access$302
-android.support.design.widget.FloatingActionButton$Behavior$1 -> android.support.design.widget.FloatingActionButton$Behavior$1:
-    android.support.design.widget.FloatingActionButton$Behavior this$0 -> this$0
-    void onAnimationStart(android.view.View) -> onAnimationStart
-    void onAnimationCancel(android.view.View) -> onAnimationCancel
-    void onAnimationEnd(android.view.View) -> onAnimationEnd
-android.support.design.widget.FloatingActionButton$Behavior$2 -> android.support.design.widget.FloatingActionButton$Behavior$2:
-    android.support.design.widget.FloatingActionButton val$button -> val$button
-    android.support.design.widget.FloatingActionButton$Behavior this$0 -> this$0
-    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
-    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
 android.support.design.widget.FloatingActionButtonEclairMr1 -> android.support.design.widget.FloatingActionButtonEclairMr1:
     android.graphics.drawable.Drawable mShapeDrawable -> mShapeDrawable
     android.graphics.drawable.Drawable mRippleDrawable -> mRippleDrawable
@@ -1950,6 +1965,7 @@ android.support.design.widget.FloatingActionButtonEclairMr1 -> android.support.d
     int mAnimationDuration -> mAnimationDuration
     android.support.design.widget.StateListAnimator mStateListAnimator -> mStateListAnimator
     android.support.design.widget.ShadowDrawableWrapper mShadowDrawable -> mShadowDrawable
+    boolean mIsHiding -> mIsHiding
     void setBackgroundDrawable(android.graphics.drawable.Drawable,android.content.res.ColorStateList,android.graphics.PorterDuff$Mode,int,int) -> setBackgroundDrawable
     void setBackgroundTintList(android.content.res.ColorStateList) -> setBackgroundTintList
     void setBackgroundTintMode(android.graphics.PorterDuff$Mode) -> setBackgroundTintMode
@@ -1958,12 +1974,18 @@ android.support.design.widget.FloatingActionButtonEclairMr1 -> android.support.d
     void setPressedTranslationZ(float) -> setPressedTranslationZ
     void onDrawableStateChanged(int[]) -> onDrawableStateChanged
     void jumpDrawableToCurrentState() -> jumpDrawableToCurrentState
+    void hide() -> hide
+    void show() -> show
     void updatePadding() -> updatePadding
     android.view.animation.Animation setupAnimation(android.view.animation.Animation) -> setupAnimation
     android.content.res.ColorStateList createColorStateList(int) -> createColorStateList
-    float access$300(android.support.design.widget.FloatingActionButtonEclairMr1) -> access$300
+    boolean access$202(android.support.design.widget.FloatingActionButtonEclairMr1,boolean) -> access$202
     float access$400(android.support.design.widget.FloatingActionButtonEclairMr1) -> access$400
+    float access$500(android.support.design.widget.FloatingActionButtonEclairMr1) -> access$500
 android.support.design.widget.FloatingActionButtonEclairMr1$1 -> android.support.design.widget.FloatingActionButtonEclairMr1$1:
+    android.support.design.widget.FloatingActionButtonEclairMr1 this$0 -> this$0
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
 android.support.design.widget.FloatingActionButtonEclairMr1$BaseShadowAnimation -> android.support.design.widget.FloatingActionButtonEclairMr1$BaseShadowAnimation:
     float mShadowSizeStart -> mShadowSizeStart
     float mShadowSizeDiff -> mShadowSizeDiff
@@ -1977,7 +1999,18 @@ android.support.design.widget.FloatingActionButtonEclairMr1$ElevateToTranslation
 android.support.design.widget.FloatingActionButtonEclairMr1$ResetElevationAnimation -> android.support.design.widget.FloatingActionButtonEclairMr1$ResetElevationAnimation:
     android.support.design.widget.FloatingActionButtonEclairMr1 this$0 -> this$0
     float getTargetShadowSize() -> getTargetShadowSize
+android.support.design.widget.FloatingActionButtonHoneycombMr1 -> android.support.design.widget.FloatingActionButtonHoneycombMr1:
+    boolean mIsHiding -> mIsHiding
+    void hide() -> hide
+    void show() -> show
+    boolean access$002(android.support.design.widget.FloatingActionButtonHoneycombMr1,boolean) -> access$002
+android.support.design.widget.FloatingActionButtonHoneycombMr1$1 -> android.support.design.widget.FloatingActionButtonHoneycombMr1$1:
+    android.support.design.widget.FloatingActionButtonHoneycombMr1 this$0 -> this$0
+    void onAnimationStart(android.animation.Animator) -> onAnimationStart
+    void onAnimationCancel(android.animation.Animator) -> onAnimationCancel
+    void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
 android.support.design.widget.FloatingActionButtonImpl -> android.support.design.widget.FloatingActionButtonImpl:
+    int SHOW_HIDE_ANIM_DURATION -> SHOW_HIDE_ANIM_DURATION
     int[] PRESSED_ENABLED_STATE_SET -> PRESSED_ENABLED_STATE_SET
     int[] FOCUSED_ENABLED_STATE_SET -> FOCUSED_ENABLED_STATE_SET
     int[] EMPTY_STATE_SET -> EMPTY_STATE_SET
@@ -1991,6 +2024,8 @@ android.support.design.widget.FloatingActionButtonImpl -> android.support.design
     void setPressedTranslationZ(float) -> setPressedTranslationZ
     void onDrawableStateChanged(int[]) -> onDrawableStateChanged
     void jumpDrawableToCurrentState() -> jumpDrawableToCurrentState
+    void hide() -> hide
+    void show() -> show
     android.graphics.drawable.Drawable createBorderDrawable(int,android.content.res.ColorStateList) -> createBorderDrawable
     android.support.design.widget.CircularBorderDrawable newCircularDrawable() -> newCircularDrawable
 android.support.design.widget.FloatingActionButtonLollipop -> android.support.design.widget.FloatingActionButtonLollipop:
@@ -2101,6 +2136,7 @@ android.support.design.widget.ShadowViewDelegate -> android.support.design.widge
     void setShadowPadding(int,int,int,int) -> setShadowPadding
     void setBackgroundDrawable(android.graphics.drawable.Drawable) -> setBackgroundDrawable
 android.support.design.widget.Snackbar -> android.support.design.widget.Snackbar:
+    int LENGTH_INDEFINITE -> LENGTH_INDEFINITE
     int LENGTH_SHORT -> LENGTH_SHORT
     int LENGTH_LONG -> LENGTH_LONG
     int ANIMATION_DURATION -> ANIMATION_DURATION
@@ -2350,6 +2386,8 @@ android.support.design.widget.TabLayout -> android.support.design.widget.TabLayo
     int mMode -> mMode
     android.support.design.widget.TabLayout$OnTabSelectedListener mOnTabSelectedListener -> mOnTabSelectedListener
     android.view.View$OnClickListener mTabClickListener -> mTabClickListener
+    android.support.design.widget.ValueAnimatorCompat mScrollAnimator -> mScrollAnimator
+    android.support.design.widget.ValueAnimatorCompat mIndicatorAnimator -> mIndicatorAnimator
     void setScrollPosition(int,float,boolean) -> setScrollPosition
     void addTab(android.support.design.widget.TabLayout$Tab) -> addTab
     void addTab(android.support.design.widget.TabLayout$Tab,int) -> addTab
@@ -2359,6 +2397,7 @@ android.support.design.widget.TabLayout -> android.support.design.widget.TabLayo
     android.support.design.widget.TabLayout$Tab newTab() -> newTab
     int getTabCount() -> getTabCount
     android.support.design.widget.TabLayout$Tab getTabAt(int) -> getTabAt
+    int getSelectedTabPosition() -> getSelectedTabPosition
     void removeTab(android.support.design.widget.TabLayout$Tab) -> removeTab
     void removeTabAt(int) -> removeTabAt
     void removeAllTabs() -> removeAllTabs
@@ -2384,8 +2423,8 @@ android.support.design.widget.TabLayout -> android.support.design.widget.TabLayo
     void removeTabViewAt(int) -> removeTabViewAt
     void animateToTab(int) -> animateToTab
     void setSelectedTabView(int) -> setSelectedTabView
-    boolean isAnimationRunning(android.view.animation.Animation) -> isAnimationRunning
     void selectTab(android.support.design.widget.TabLayout$Tab) -> selectTab
+    void selectTab(android.support.design.widget.TabLayout$Tab,boolean) -> selectTab
     int calculateScrollXForTab(int,float) -> calculateScrollXForTab
     void applyModeAndGravity() -> applyModeAndGravity
     void updateTabViewsLayoutParams() -> updateTabViewsLayoutParams
@@ -2401,12 +2440,13 @@ android.support.design.widget.TabLayout -> android.support.design.widget.TabLayo
     int access$800(android.support.design.widget.TabLayout) -> access$800
     int access$900(android.support.design.widget.TabLayout) -> access$900
     android.content.res.ColorStateList access$1000(android.support.design.widget.TabLayout) -> access$1000
-    boolean access$1100(android.view.animation.Animation) -> access$1100
+    android.support.design.widget.ValueAnimatorCompat access$1100(android.support.design.widget.TabLayout) -> access$1100
     int access$1200(android.support.design.widget.TabLayout) -> access$1200
     int access$1300(android.support.design.widget.TabLayout) -> access$1300
     int access$1400(android.support.design.widget.TabLayout,int) -> access$1400
     int access$1302(android.support.design.widget.TabLayout,int) -> access$1302
     void access$1500(android.support.design.widget.TabLayout) -> access$1500
+    android.support.design.widget.ValueAnimatorCompat access$1102(android.support.design.widget.TabLayout,android.support.design.widget.ValueAnimatorCompat) -> access$1102
 android.support.design.widget.TabLayout$1 -> android.support.design.widget.TabLayout$1:
     android.support.design.widget.TabLayout this$0 -> this$0
     void onClick(android.view.View) -> onClick
@@ -2428,13 +2468,14 @@ android.support.design.widget.TabLayout$SlidingTabStrip -> android.support.desig
     android.support.design.widget.TabLayout this$0 -> this$0
     void setSelectedIndicatorColor(int) -> setSelectedIndicatorColor
     void setSelectedIndicatorHeight(int) -> setSelectedIndicatorHeight
+    boolean childrenNeedLayout() -> childrenNeedLayout
     void setIndicatorPositionFromTabPosition(int,float) -> setIndicatorPositionFromTabPosition
     void onMeasure(int,int) -> onMeasure
     void onLayout(boolean,int,int,int,int) -> onLayout
     void updateIndicatorPosition() -> updateIndicatorPosition
     void setIndicatorPosition(int,int) -> setIndicatorPosition
     void animateIndicatorToPosition(int,int) -> animateIndicatorToPosition
-    void onDraw(android.graphics.Canvas) -> onDraw
+    void draw(android.graphics.Canvas) -> draw
     void access$1600(android.support.design.widget.TabLayout$SlidingTabStrip,int,int) -> access$1600
     int access$1702(android.support.design.widget.TabLayout$SlidingTabStrip,int) -> access$1702
     float access$1802(android.support.design.widget.TabLayout$SlidingTabStrip,float) -> access$1802
@@ -2473,6 +2514,7 @@ android.support.design.widget.TabLayout$Tab -> android.support.design.widget.Tab
     android.support.design.widget.TabLayout$Tab setText(java.lang.CharSequence) -> setText
     android.support.design.widget.TabLayout$Tab setText(int) -> setText
     void select() -> select
+    boolean isSelected() -> isSelected
     android.support.design.widget.TabLayout$Tab setContentDescription(int) -> setContentDescription
     android.support.design.widget.TabLayout$Tab setContentDescription(java.lang.CharSequence) -> setContentDescription
     java.lang.CharSequence getContentDescription() -> getContentDescription
@@ -2480,6 +2522,7 @@ android.support.design.widget.TabLayout$Tab -> android.support.design.widget.Tab
 android.support.design.widget.TabLayout$TabGravity -> android.support.design.widget.TabLayout$TabGravity:
 android.support.design.widget.TabLayout$TabLayoutOnPageChangeListener -> android.support.design.widget.TabLayout$TabLayoutOnPageChangeListener:
     java.lang.ref.WeakReference mTabLayoutRef -> mTabLayoutRef
+    int mPreviousScrollState -> mPreviousScrollState
     int mScrollState -> mScrollState
     void onPageScrollStateChanged(int) -> onPageScrollStateChanged
     void onPageScrolled(int,float,int) -> onPageScrolled
@@ -2489,12 +2532,15 @@ android.support.design.widget.TabLayout$TabView -> android.support.design.widget
     android.widget.TextView mTextView -> mTextView
     android.widget.ImageView mIconView -> mIconView
     android.view.View mCustomView -> mCustomView
+    android.widget.TextView mCustomTextView -> mCustomTextView
+    android.widget.ImageView mCustomIconView -> mCustomIconView
     android.support.design.widget.TabLayout this$0 -> this$0
     void setSelected(boolean) -> setSelected
     void onInitializeAccessibilityEvent(android.view.accessibility.AccessibilityEvent) -> onInitializeAccessibilityEvent
     void onInitializeAccessibilityNodeInfo(android.view.accessibility.AccessibilityNodeInfo) -> onInitializeAccessibilityNodeInfo
     void onMeasure(int,int) -> onMeasure
     void update() -> update
+    void updateTextAndIcon(android.support.design.widget.TabLayout$Tab,android.widget.TextView,android.widget.ImageView) -> updateTextAndIcon
     boolean onLongClick(android.view.View) -> onLongClick
     android.support.design.widget.TabLayout$Tab getTab() -> getTab
 android.support.design.widget.TabLayout$ViewPagerOnTabSelectedListener -> android.support.design.widget.TabLayout$ViewPagerOnTabSelectedListener:
@@ -2510,7 +2556,8 @@ android.support.design.widget.TextInputLayout -> android.support.design.widget.T
     boolean mErrorEnabled -> mErrorEnabled
     android.widget.TextView mErrorView -> mErrorView
     int mErrorTextAppearance -> mErrorTextAppearance
-    android.content.res.ColorStateList mLabelTextColor -> mLabelTextColor
+    int mDefaultTextColor -> mDefaultTextColor
+    int mFocusedTextColor -> mFocusedTextColor
     android.support.design.widget.CollapsingTextHelper mCollapsingTextHelper -> mCollapsingTextHelper
     android.os.Handler mHandler -> mHandler
     android.support.design.widget.ValueAnimatorCompat mAnimator -> mAnimator
@@ -2526,7 +2573,6 @@ android.support.design.widget.TextInputLayout -> android.support.design.widget.T
     void collapseHint(boolean) -> collapseHint
     void expandHint(boolean) -> expandHint
     void animateToExpansionFraction(float) -> animateToExpansionFraction
-    android.content.res.ColorStateList createLabelTextColorStateList(int) -> createLabelTextColorStateList
     int getThemeAttrColor(int) -> getThemeAttrColor
     void access$000(android.support.design.widget.TextInputLayout,boolean) -> access$000
     android.os.Handler access$200(android.support.design.widget.TextInputLayout) -> access$200
@@ -5421,7 +5467,42 @@ android.support.v4.text.ICUCompatIcs -> android.support.v4.f.e:
     java.lang.reflect.Method sAddLikelySubtagsMethod -> b
     java.lang.String getScript(java.lang.String) -> a
     java.lang.String addLikelySubtags(java.lang.String) -> b
-android.support.v4.text.TextUtilsCompat -> android.support.v4.f.f:
+android.support.v4.text.TextDirectionHeuristicCompat -> android.support.v4.f.f:
+    boolean isRtl(java.lang.CharSequence,int,int) -> a
+android.support.v4.text.TextDirectionHeuristicsCompat -> android.support.v4.f.g:
+    android.support.v4.text.TextDirectionHeuristicCompat LTR -> a
+    android.support.v4.text.TextDirectionHeuristicCompat RTL -> b
+    android.support.v4.text.TextDirectionHeuristicCompat FIRSTSTRONG_LTR -> c
+    android.support.v4.text.TextDirectionHeuristicCompat FIRSTSTRONG_RTL -> d
+    android.support.v4.text.TextDirectionHeuristicCompat ANYRTL_LTR -> e
+    android.support.v4.text.TextDirectionHeuristicCompat LOCALE -> f
+    int isRtlText(int) -> c
+    int isRtlTextOrFormat(int) -> d
+    int access$100(int) -> a
+    int access$200(int) -> b
+android.support.v4.text.TextDirectionHeuristicsCompat$1 -> android.support.v4.f.h:
+android.support.v4.text.TextDirectionHeuristicsCompat$AnyStrong -> android.support.v4.f.i:
+    boolean mLookForRtl -> c
+    android.support.v4.text.TextDirectionHeuristicsCompat$AnyStrong INSTANCE_RTL -> a
+    android.support.v4.text.TextDirectionHeuristicsCompat$AnyStrong INSTANCE_LTR -> b
+    int checkRtl(java.lang.CharSequence,int,int) -> a
+android.support.v4.text.TextDirectionHeuristicsCompat$FirstStrong -> android.support.v4.f.j:
+    android.support.v4.text.TextDirectionHeuristicsCompat$FirstStrong INSTANCE -> a
+    int checkRtl(java.lang.CharSequence,int,int) -> a
+android.support.v4.text.TextDirectionHeuristicsCompat$TextDirectionAlgorithm -> android.support.v4.f.k:
+    int checkRtl(java.lang.CharSequence,int,int) -> a
+android.support.v4.text.TextDirectionHeuristicsCompat$TextDirectionHeuristicImpl -> android.support.v4.f.l:
+    android.support.v4.text.TextDirectionHeuristicsCompat$TextDirectionAlgorithm mAlgorithm -> a
+    boolean defaultIsRtl() -> a
+    boolean isRtl(java.lang.CharSequence,int,int) -> a
+    boolean doCheck(java.lang.CharSequence,int,int) -> b
+android.support.v4.text.TextDirectionHeuristicsCompat$TextDirectionHeuristicInternal -> android.support.v4.f.m:
+    boolean mDefaultIsRtl -> a
+    boolean defaultIsRtl() -> a
+android.support.v4.text.TextDirectionHeuristicsCompat$TextDirectionHeuristicLocale -> android.support.v4.f.n:
+    android.support.v4.text.TextDirectionHeuristicsCompat$TextDirectionHeuristicLocale INSTANCE -> a
+    boolean defaultIsRtl() -> a
+android.support.v4.text.TextUtilsCompat -> android.support.v4.f.o:
     java.util.Locale ROOT -> a
     java.lang.String ARAB_SCRIPT_SUBTAG -> b
     java.lang.String HEBR_SCRIPT_SUBTAG -> c
@@ -6694,11 +6775,9 @@ android.support.v4.view.ViewPropertyAnimatorCompat -> android.support.v4.view.dx
     android.support.v4.view.ViewPropertyAnimatorCompat translationY(float) -> c
     android.support.v4.view.ViewPropertyAnimatorCompat setInterpolator(android.view.animation.Interpolator) -> a
     android.support.v4.view.ViewPropertyAnimatorCompat setStartDelay(long) -> b
-    android.support.v4.view.ViewPropertyAnimatorCompat scaleX(float) -> d
-    android.support.v4.view.ViewPropertyAnimatorCompat scaleY(float) -> e
+    android.support.v4.view.ViewPropertyAnimatorCompat scaleY(float) -> d
     void cancel() -> a
     void start() -> b
-    android.support.v4.view.ViewPropertyAnimatorCompat withLayer() -> c
     android.support.v4.view.ViewPropertyAnimatorCompat setListener(android.support.v4.view.ViewPropertyAnimatorListener) -> a
     android.support.v4.view.ViewPropertyAnimatorCompat setUpdateListener(android.support.v4.view.ViewPropertyAnimatorUpdateListener) -> a
     java.lang.Runnable access$100(android.support.v4.view.ViewPropertyAnimatorCompat) -> a
@@ -6714,16 +6793,14 @@ android.support.v4.view.ViewPropertyAnimatorCompat$BaseViewPropertyAnimatorCompa
     void translationY(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> c
     void setInterpolator(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.view.animation.Interpolator) -> a
     void setStartDelay(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,long) -> b
-    void scaleX(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> d
-    void scaleY(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> e
+    void scaleY(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> d
     void cancel(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> a
     void start(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> b
-    void withLayer(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> c
     void setListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorListener) -> a
     void setUpdateListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorUpdateListener) -> a
-    void startAnimation(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> d
+    void startAnimation(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> c
     void removeStartMessage(android.view.View) -> a
-    void postStartMessage(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> e
+    void postStartMessage(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> d
     void access$200(android.support.v4.view.ViewPropertyAnimatorCompat$BaseViewPropertyAnimatorCompatImpl,android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> a
 android.support.v4.view.ViewPropertyAnimatorCompat$BaseViewPropertyAnimatorCompatImpl$Starter -> android.support.v4.view.ea:
     java.lang.ref.WeakReference mViewRef -> a
@@ -6738,12 +6815,10 @@ android.support.v4.view.ViewPropertyAnimatorCompat$ICSViewPropertyAnimatorCompat
     void translationY(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> c
     void setInterpolator(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.view.animation.Interpolator) -> a
     void setStartDelay(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,long) -> b
-    void scaleX(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> d
-    void scaleY(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> e
+    void scaleY(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> d
     void cancel(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> a
     void start(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> b
     void setListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorListener) -> a
-    void withLayer(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> c
 android.support.v4.view.ViewPropertyAnimatorCompat$ICSViewPropertyAnimatorCompatImpl$MyVpaListener -> android.support.v4.view.ec:
     android.support.v4.view.ViewPropertyAnimatorCompat mVpa -> a
     void onAnimationStart(android.view.View) -> onAnimationStart
@@ -6752,7 +6827,6 @@ android.support.v4.view.ViewPropertyAnimatorCompat$ICSViewPropertyAnimatorCompat
 android.support.v4.view.ViewPropertyAnimatorCompat$JBMr2ViewPropertyAnimatorCompatImpl -> android.support.v4.view.ed:
 android.support.v4.view.ViewPropertyAnimatorCompat$JBViewPropertyAnimatorCompatImpl -> android.support.v4.view.ee:
     void setListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorListener) -> a
-    void withLayer(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> c
 android.support.v4.view.ViewPropertyAnimatorCompat$KitKatViewPropertyAnimatorCompatImpl -> android.support.v4.view.ef:
     void setUpdateListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorUpdateListener) -> a
 android.support.v4.view.ViewPropertyAnimatorCompat$LollipopViewPropertyAnimatorCompatImpl -> android.support.v4.view.eg:
@@ -6761,13 +6835,11 @@ android.support.v4.view.ViewPropertyAnimatorCompat$ViewPropertyAnimatorCompatImp
     void setInterpolator(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.view.animation.Interpolator) -> a
     void setStartDelay(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,long) -> b
     void alpha(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> a
-    void scaleX(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> d
-    void scaleY(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> e
+    void scaleY(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> d
     void cancel(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> a
     void translationX(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> b
     void translationY(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,float) -> c
     void start(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> b
-    void withLayer(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View) -> c
     void setListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorListener) -> a
     void setUpdateListener(android.support.v4.view.ViewPropertyAnimatorCompat,android.view.View,android.support.v4.view.ViewPropertyAnimatorUpdateListener) -> a
 android.support.v4.view.ViewPropertyAnimatorCompatICS -> android.support.v4.view.ei:
@@ -6777,8 +6849,7 @@ android.support.v4.view.ViewPropertyAnimatorCompatICS -> android.support.v4.view
     void translationY(android.view.View,float) -> c
     void setInterpolator(android.view.View,android.view.animation.Interpolator) -> a
     void setStartDelay(android.view.View,long) -> b
-    void scaleX(android.view.View,float) -> d
-    void scaleY(android.view.View,float) -> e
+    void scaleY(android.view.View,float) -> d
     void cancel(android.view.View) -> a
     void start(android.view.View) -> b
     void setListener(android.view.View,android.support.v4.view.ViewPropertyAnimatorListener) -> a
@@ -6789,7 +6860,6 @@ android.support.v4.view.ViewPropertyAnimatorCompatICS$1 -> android.support.v4.vi
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
     void onAnimationStart(android.animation.Animator) -> onAnimationStart
 android.support.v4.view.ViewPropertyAnimatorCompatJB -> android.support.v4.view.ek:
-    void withLayer(android.view.View) -> a
     void setListener(android.view.View,android.support.v4.view.ViewPropertyAnimatorListener) -> a
 android.support.v4.view.ViewPropertyAnimatorCompatJB$1 -> android.support.v4.view.el:
     android.support.v4.view.ViewPropertyAnimatorListener val$listener -> a
@@ -8254,16 +8324,17 @@ android.support.v7.app.AppCompatDelegateImplBase -> android.support.v7.app.v:
     android.content.Context mContext -> a
     android.view.Window mWindow -> b
     android.view.Window$Callback mOriginalWindowCallback -> c
-    android.support.v7.app.AppCompatCallback mAppCompatCallback -> d
-    android.support.v7.app.ActionBar mActionBar -> j
-    android.view.MenuInflater mMenuInflater -> k
-    boolean mHasActionBar -> e
-    boolean mOverlayActionBar -> f
-    boolean mOverlayActionMode -> g
-    boolean mIsFloating -> h
-    boolean mWindowNoTitle -> i
-    java.lang.CharSequence mTitle -> l
-    boolean mIsDestroyed -> m
+    android.view.Window$Callback mAppCompatWindowCallback -> d
+    android.support.v7.app.AppCompatCallback mAppCompatCallback -> e
+    android.support.v7.app.ActionBar mActionBar -> k
+    android.view.MenuInflater mMenuInflater -> l
+    boolean mHasActionBar -> f
+    boolean mOverlayActionBar -> g
+    boolean mOverlayActionMode -> h
+    boolean mIsFloating -> i
+    boolean mWindowNoTitle -> j
+    java.lang.CharSequence mTitle -> m
+    boolean mIsDestroyed -> n
     android.support.v7.app.ActionBar createSupportActionBar() -> h
     android.view.Window$Callback wrapWindowCallback(android.view.Window$Callback) -> a
     android.support.v7.app.ActionBar getSupportActionBar() -> a
@@ -8295,7 +8366,7 @@ android.support.v7.app.AppCompatDelegateImplBase$AppCompatWindowCallbackBase -> 
 android.support.v7.app.AppCompatDelegateImplV11 -> android.support.v7.app.x:
     android.view.View callActivityOnCreateView(android.view.View,java.lang.String,android.content.Context,android.util.AttributeSet) -> a
 android.support.v7.app.AppCompatDelegateImplV14 -> android.support.v7.app.y:
-    boolean mHandleNativeActionModes -> n
+    boolean mHandleNativeActionModes -> o
     android.view.Window$Callback wrapWindowCallback(android.view.Window$Callback) -> a
     boolean access$000(android.support.v7.app.AppCompatDelegateImplV14) -> a
 android.support.v7.app.AppCompatDelegateImplV14$AppCompatWindowCallbackV14 -> android.support.v7.app.z:
@@ -8303,30 +8374,30 @@ android.support.v7.app.AppCompatDelegateImplV14$AppCompatWindowCallbackV14 -> an
     android.view.ActionMode onWindowStartingActionMode(android.view.ActionMode$Callback) -> onWindowStartingActionMode
     android.view.ActionMode startAsSupportActionMode(android.view.ActionMode$Callback) -> a
 android.support.v7.app.AppCompatDelegateImplV7 -> android.support.v7.app.AppCompatDelegateImplV7:
-    android.support.v7.internal.widget.DecorContentParent mDecorContentParent -> n
-    android.support.v7.app.AppCompatDelegateImplV7$ActionMenuPresenterCallback mActionMenuPresenterCallback -> o
-    android.support.v7.app.AppCompatDelegateImplV7$PanelMenuPresenterCallback mPanelMenuPresenterCallback -> p
-    android.support.v7.view.ActionMode mActionMode -> j
-    android.support.v7.internal.widget.ActionBarContextView mActionModeView -> k
-    android.widget.PopupWindow mActionModePopup -> l
-    java.lang.Runnable mShowActionModePopup -> m
-    boolean mSubDecorInstalled -> q
-    android.view.ViewGroup mWindowDecor -> r
-    android.view.ViewGroup mSubDecor -> s
-    android.widget.TextView mTitleView -> t
-    android.view.View mStatusGuard -> u
-    boolean mFeatureProgress -> v
-    boolean mFeatureIndeterminateProgress -> w
-    boolean mClosingActionMenu -> x
-    android.support.v7.app.AppCompatDelegateImplV7$PanelFeatureState[] mPanels -> y
-    android.support.v7.app.AppCompatDelegateImplV7$PanelFeatureState mPreparedPanel -> z
-    boolean mInvalidatePanelMenuPosted -> A
-    int mInvalidatePanelMenuFeatures -> B
-    java.lang.Runnable mInvalidatePanelMenuRunnable -> C
-    boolean mEnableDefaultActionBarUp -> D
-    android.graphics.Rect mTempRect1 -> E
-    android.graphics.Rect mTempRect2 -> F
-    android.support.v7.internal.app.AppCompatViewInflater mAppCompatViewInflater -> G
+    android.support.v7.internal.widget.DecorContentParent mDecorContentParent -> o
+    android.support.v7.app.AppCompatDelegateImplV7$ActionMenuPresenterCallback mActionMenuPresenterCallback -> p
+    android.support.v7.app.AppCompatDelegateImplV7$PanelMenuPresenterCallback mPanelMenuPresenterCallback -> q
+    android.support.v7.view.ActionMode mActionMode -> k
+    android.support.v7.internal.widget.ActionBarContextView mActionModeView -> l
+    android.widget.PopupWindow mActionModePopup -> m
+    java.lang.Runnable mShowActionModePopup -> n
+    boolean mSubDecorInstalled -> r
+    android.view.ViewGroup mWindowDecor -> s
+    android.view.ViewGroup mSubDecor -> t
+    android.widget.TextView mTitleView -> u
+    android.view.View mStatusGuard -> v
+    boolean mFeatureProgress -> w
+    boolean mFeatureIndeterminateProgress -> x
+    boolean mClosingActionMenu -> y
+    android.support.v7.app.AppCompatDelegateImplV7$PanelFeatureState[] mPanels -> z
+    android.support.v7.app.AppCompatDelegateImplV7$PanelFeatureState mPreparedPanel -> A
+    boolean mInvalidatePanelMenuPosted -> B
+    int mInvalidatePanelMenuFeatures -> C
+    java.lang.Runnable mInvalidatePanelMenuRunnable -> D
+    boolean mEnableDefaultActionBarUp -> E
+    android.graphics.Rect mTempRect1 -> F
+    android.graphics.Rect mTempRect2 -> G
+    android.support.v7.internal.app.AppCompatViewInflater mAppCompatViewInflater -> H
     void onCreate(android.os.Bundle) -> a
     void onPostCreate(android.os.Bundle) -> b
     android.support.v7.app.ActionBar createSupportActionBar() -> h
@@ -8369,7 +8440,7 @@ android.support.v7.app.AppCompatDelegateImplV7 -> android.support.v7.app.AppComp
     void closePanel(int) -> c
     void closePanel(android.support.v7.app.AppCompatDelegateImplV7$PanelFeatureState,boolean) -> a
     boolean onKeyDownPanel(int,android.view.KeyEvent) -> d
-    void onKeyUpPanel(int,android.view.KeyEvent) -> e
+    boolean onKeyUpPanel(int,android.view.KeyEvent) -> e
     void callOnPanelClosed(int,android.support.v7.app.AppCompatDelegateImplV7$PanelFeatureState,android.view.Menu) -> a
     android.support.v7.app.AppCompatDelegateImplV7$PanelFeatureState findMenuPanel(android.view.Menu) -> a
     android.support.v7.app.AppCompatDelegateImplV7$PanelFeatureState getPanelState(int,boolean) -> a
@@ -9736,7 +9807,6 @@ android.support.v7.internal.app.ToolbarActionBar -> android.support.v7.internal.
     boolean mMenuCallbackSet -> mMenuCallbackSet
     boolean mLastMenuVisibility -> mLastMenuVisibility
     java.util.ArrayList mMenuVisibilityListeners -> mMenuVisibilityListeners
-    android.view.Window mWindow -> mWindow
     android.support.v7.internal.view.menu.ListMenuPresenter mListMenuPresenter -> mListMenuPresenter
     java.lang.Runnable mMenuInvalidator -> mMenuInvalidator
     android.support.v7.widget.Toolbar$OnMenuItemClickListener mMenuClicker -> mMenuClicker
@@ -10138,7 +10208,6 @@ android.support.v7.internal.view.SupportActionModeWrapper$CallbackWrapper -> and
     boolean onActionItemClicked(android.support.v7.view.ActionMode,android.view.MenuItem) -> onActionItemClicked
     void onDestroyActionMode(android.support.v7.view.ActionMode) -> onDestroyActionMode
     android.view.Menu getMenuWrapper(android.view.Menu) -> getMenuWrapper
-    void addActionModeWrapper(android.support.v7.internal.view.SupportActionModeWrapper) -> addActionModeWrapper
     android.view.ActionMode getActionModeWrapper(android.support.v7.view.ActionMode) -> getActionModeWrapper
 android.support.v7.internal.view.SupportMenuInflater -> android.support.v7.internal.view.SupportMenuInflater:
     java.lang.String LOG_TAG -> LOG_TAG
@@ -10372,7 +10441,6 @@ android.support.v7.internal.view.menu.ActionMenuItemView$ActionMenuItemForwardin
     android.support.v7.internal.view.menu.ActionMenuItemView this$0 -> this$0
     android.support.v7.widget.ListPopupWindow getPopup() -> getPopup
     boolean onForwardingStarted() -> onForwardingStarted
-    boolean onForwardingStopped() -> onForwardingStopped
 android.support.v7.internal.view.menu.ActionMenuItemView$PopupCallback -> android.support.v7.internal.view.menu.ActionMenuItemView$PopupCallback:
     android.support.v7.widget.ListPopupWindow getPopup() -> getPopup
 android.support.v7.internal.view.menu.BaseMenuPresenter -> android.support.v7.internal.view.menu.BaseMenuPresenter:
@@ -12941,9 +13009,9 @@ android.support.v7.widget.GridLayoutManager -> android.support.v7.widget.GridLay
     android.support.v7.widget.GridLayoutManager$SpanSizeLookup getSpanSizeLookup() -> getSpanSizeLookup
     void updateMeasurements() -> updateMeasurements
     void calculateItemBorders(int) -> calculateItemBorders
-    void onAnchorReady(android.support.v7.widget.RecyclerView$State,android.support.v7.widget.LinearLayoutManager$AnchorInfo) -> onAnchorReady
-    void ensureAnchorIsInFirstSpan(android.support.v7.widget.LinearLayoutManager$AnchorInfo) -> ensureAnchorIsInFirstSpan
-    android.view.View findReferenceChild(int,int,int) -> findReferenceChild
+    void onAnchorReady(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,android.support.v7.widget.LinearLayoutManager$AnchorInfo) -> onAnchorReady
+    void ensureAnchorIsInFirstSpan(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,android.support.v7.widget.LinearLayoutManager$AnchorInfo) -> ensureAnchorIsInFirstSpan
+    android.view.View findReferenceChild(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,int,int,int) -> findReferenceChild
     int getSpanGroupIndex(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,int) -> getSpanGroupIndex
     int getSpanIndex(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,int) -> getSpanIndex
     int getSpanSize(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,int) -> getSpanSize
@@ -13122,10 +13190,10 @@ android.support.v7.widget.LinearLayoutManager -> android.support.v7.widget.Linea
     void smoothScrollToPosition(android.support.v7.widget.RecyclerView,android.support.v7.widget.RecyclerView$State,int) -> smoothScrollToPosition
     android.graphics.PointF computeScrollVectorForPosition(int) -> computeScrollVectorForPosition
     void onLayoutChildren(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State) -> onLayoutChildren
-    void onAnchorReady(android.support.v7.widget.RecyclerView$State,android.support.v7.widget.LinearLayoutManager$AnchorInfo) -> onAnchorReady
+    void onAnchorReady(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,android.support.v7.widget.LinearLayoutManager$AnchorInfo) -> onAnchorReady
     void layoutForPredictiveAnimations(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,int,int) -> layoutForPredictiveAnimations
-    void updateAnchorInfoForLayout(android.support.v7.widget.RecyclerView$State,android.support.v7.widget.LinearLayoutManager$AnchorInfo) -> updateAnchorInfoForLayout
-    boolean updateAnchorFromChildren(android.support.v7.widget.RecyclerView$State,android.support.v7.widget.LinearLayoutManager$AnchorInfo) -> updateAnchorFromChildren
+    void updateAnchorInfoForLayout(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,android.support.v7.widget.LinearLayoutManager$AnchorInfo) -> updateAnchorInfoForLayout
+    boolean updateAnchorFromChildren(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,android.support.v7.widget.LinearLayoutManager$AnchorInfo) -> updateAnchorFromChildren
     boolean updateAnchorFromPendingData(android.support.v7.widget.RecyclerView$State,android.support.v7.widget.LinearLayoutManager$AnchorInfo) -> updateAnchorFromPendingData
     int fixLayoutEndGap(int,android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,boolean) -> fixLayoutEndGap
     int fixLayoutStartGap(int,android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,boolean) -> fixLayoutStartGap
@@ -13165,11 +13233,11 @@ android.support.v7.widget.LinearLayoutManager -> android.support.v7.widget.Linea
     android.view.View getChildClosestToEnd() -> getChildClosestToEnd
     android.view.View findFirstVisibleChildClosestToStart(boolean,boolean) -> findFirstVisibleChildClosestToStart
     android.view.View findFirstVisibleChildClosestToEnd(boolean,boolean) -> findFirstVisibleChildClosestToEnd
-    android.view.View findReferenceChildClosestToEnd(android.support.v7.widget.RecyclerView$State) -> findReferenceChildClosestToEnd
-    android.view.View findReferenceChildClosestToStart(android.support.v7.widget.RecyclerView$State) -> findReferenceChildClosestToStart
-    android.view.View findFirstReferenceChild(int) -> findFirstReferenceChild
-    android.view.View findLastReferenceChild(int) -> findLastReferenceChild
-    android.view.View findReferenceChild(int,int,int) -> findReferenceChild
+    android.view.View findReferenceChildClosestToEnd(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State) -> findReferenceChildClosestToEnd
+    android.view.View findReferenceChildClosestToStart(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State) -> findReferenceChildClosestToStart
+    android.view.View findFirstReferenceChild(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State) -> findFirstReferenceChild
+    android.view.View findLastReferenceChild(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State) -> findLastReferenceChild
+    android.view.View findReferenceChild(android.support.v7.widget.RecyclerView$Recycler,android.support.v7.widget.RecyclerView$State,int,int,int) -> findReferenceChild
     int findFirstVisibleItemPosition() -> findFirstVisibleItemPosition
     int findFirstCompletelyVisibleItemPosition() -> findFirstCompletelyVisibleItemPosition
     int findLastVisibleItemPosition() -> findLastVisibleItemPosition
@@ -13698,6 +13766,7 @@ android.support.v7.widget.RecyclerView -> android.support.v7.widget.RecyclerView
     void removeOnScrollListener(android.support.v7.widget.RecyclerView$OnScrollListener) -> removeOnScrollListener
     void clearOnScrollListeners() -> clearOnScrollListeners
     void scrollToPosition(int) -> scrollToPosition
+    void jumpToPositionForSmoothScroller(int) -> jumpToPositionForSmoothScroller
     void smoothScrollToPosition(int) -> smoothScrollToPosition
     void scrollTo(int,int) -> scrollTo
     void scrollBy(int,int) -> scrollBy
@@ -13753,7 +13822,7 @@ android.support.v7.widget.RecyclerView -> android.support.v7.widget.RecyclerView
     void onEnterLayoutOrScroll() -> onEnterLayoutOrScroll
     void onExitLayoutOrScroll() -> onExitLayoutOrScroll
     void dispatchContentChangedIfNecessary() -> dispatchContentChangedIfNecessary
-    boolean isRunningLayoutOrScroll() -> isRunningLayoutOrScroll
+    boolean isComputingLayout() -> isComputingLayout
     boolean shouldDeferAccessibilityEvent(android.view.accessibility.AccessibilityEvent) -> shouldDeferAccessibilityEvent
     void sendAccessibilityEventUnchecked(android.view.accessibility.AccessibilityEvent) -> sendAccessibilityEventUnchecked
     android.support.v7.widget.RecyclerView$ItemAnimator getItemAnimator() -> getItemAnimator
@@ -13840,7 +13909,7 @@ android.support.v7.widget.RecyclerView -> android.support.v7.widget.RecyclerView
     android.support.v7.widget.RecyclerView$Adapter access$2200(android.support.v7.widget.RecyclerView) -> access$2200
     void access$2300(android.support.v7.widget.RecyclerView) -> access$2300
     boolean access$2400(android.support.v7.widget.RecyclerView) -> access$2400
-    void access$2600(android.support.v7.widget.RecyclerView) -> access$2600
+    void access$2500(android.support.v7.widget.RecyclerView) -> access$2500
     java.util.ArrayList access$2700(android.support.v7.widget.RecyclerView) -> access$2700
     void access$2800(android.support.v7.widget.RecyclerView,int,int) -> access$2800
     boolean access$2900(android.support.v7.widget.RecyclerView) -> access$2900
@@ -13860,7 +13929,8 @@ android.support.v7.widget.RecyclerView -> android.support.v7.widget.RecyclerView
     void access$4500(android.support.v7.widget.RecyclerView,int,int) -> access$4500
     int access$4600(android.support.v7.widget.RecyclerView,android.support.v7.widget.RecyclerView$ViewHolder) -> access$4600
     android.support.v7.widget.RecyclerView$ViewFlinger access$4800(android.support.v7.widget.RecyclerView) -> access$4800
-    boolean access$5100(android.support.v7.widget.RecyclerView,android.view.View) -> access$5100
+    void access$5100(android.support.v7.widget.RecyclerView,int) -> access$5100
+    boolean access$5200(android.support.v7.widget.RecyclerView,android.view.View) -> access$5200
 android.support.v7.widget.RecyclerView$1 -> android.support.v7.widget.RecyclerView$1:
     android.support.v7.widget.RecyclerView this$0 -> this$0
     void run() -> run
@@ -14261,7 +14331,6 @@ android.support.v7.widget.RecyclerView$SavedState$1 -> android.support.v7.widget
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
 android.support.v7.widget.RecyclerView$SimpleOnItemTouchListener -> android.support.v7.widget.RecyclerView$SimpleOnItemTouchListener:
-    android.support.v7.widget.RecyclerView this$0 -> this$0
     boolean onInterceptTouchEvent(android.support.v7.widget.RecyclerView,android.view.MotionEvent) -> onInterceptTouchEvent
     void onTouchEvent(android.support.v7.widget.RecyclerView,android.view.MotionEvent) -> onTouchEvent
     void onRequestDisallowInterceptTouchEvent(boolean) -> onRequestDisallowInterceptTouchEvent
@@ -14291,15 +14360,18 @@ android.support.v7.widget.RecyclerView$SmoothScroller -> android.support.v7.widg
     void onStop() -> onStop
     void onSeekTargetStep(int,int,android.support.v7.widget.RecyclerView$State,android.support.v7.widget.RecyclerView$SmoothScroller$Action) -> onSeekTargetStep
     void onTargetFound(android.view.View,android.support.v7.widget.RecyclerView$State,android.support.v7.widget.RecyclerView$SmoothScroller$Action) -> onTargetFound
-    void access$2500(android.support.v7.widget.RecyclerView$SmoothScroller,int,int) -> access$2500
+    void access$2600(android.support.v7.widget.RecyclerView$SmoothScroller,int,int) -> access$2600
 android.support.v7.widget.RecyclerView$SmoothScroller$Action -> android.support.v7.widget.RecyclerView$SmoothScroller$Action:
     int UNDEFINED_DURATION -> UNDEFINED_DURATION
     int mDx -> mDx
     int mDy -> mDy
     int mDuration -> mDuration
+    int mJumpToPosition -> mJumpToPosition
     android.view.animation.Interpolator mInterpolator -> mInterpolator
     boolean changed -> changed
     int consecutiveUpdates -> consecutiveUpdates
+    void jumpTo(int) -> jumpTo
+    boolean hasJumpTarget() -> hasJumpTarget
     void runIfNecessary(android.support.v7.widget.RecyclerView) -> runIfNecessary
     void validate() -> validate
     int getDx() -> getDx
@@ -14436,8 +14508,8 @@ android.support.v7.widget.RecyclerView$ViewHolder -> android.support.v7.widget.R
     boolean doesTransientStatePreventRecycling() -> doesTransientStatePreventRecycling
     boolean access$4000(android.support.v7.widget.RecyclerView$ViewHolder) -> access$4000
     android.support.v7.widget.RecyclerView$Recycler access$4102(android.support.v7.widget.RecyclerView$ViewHolder,android.support.v7.widget.RecyclerView$Recycler) -> access$4102
-    boolean access$5200(android.support.v7.widget.RecyclerView$ViewHolder) -> access$5200
-    int access$5300(android.support.v7.widget.RecyclerView$ViewHolder) -> access$5300
+    boolean access$5300(android.support.v7.widget.RecyclerView$ViewHolder) -> access$5300
+    int access$5400(android.support.v7.widget.RecyclerView$ViewHolder) -> access$5400
 android.support.v7.widget.RecyclerViewAccessibilityDelegate -> android.support.v7.widget.RecyclerViewAccessibilityDelegate:
     android.support.v7.widget.RecyclerView mRecyclerView -> mRecyclerView
     android.support.v4.view.AccessibilityDelegateCompat mItemDelegate -> mItemDelegate
@@ -22370,12 +22442,25 @@ com.google.i18n.phonenumbers.CountryCodeToRegionCodeMap -> com.google.b.a.a:
     java.util.Map getCountryCodeToRegionCodeMap() -> a
 com.google.i18n.phonenumbers.MetadataLoader -> com.google.b.a.b:
     java.io.InputStream loadMetadata(java.lang.String) -> a
-com.google.i18n.phonenumbers.NumberParseException -> com.google.b.a.c:
+com.google.i18n.phonenumbers.MetadataSource -> com.google.b.a.c:
+    com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadata getMetadataForRegion(java.lang.String) -> a
+    com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadata getMetadataForNonGeographicalRegion(int) -> a
+com.google.i18n.phonenumbers.MultiFileMetadataSourceImpl -> com.google.b.a.d:
+    java.util.logging.Logger logger -> a
+    java.util.Map regionToMetadataMap -> b
+    java.util.Map countryCodeToNonGeographicalMetadataMap -> c
+    java.lang.String currentFilePrefix -> d
+    com.google.i18n.phonenumbers.MetadataLoader metadataLoader -> e
+    com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadata getMetadataForRegion(java.lang.String) -> a
+    com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadata getMetadataForNonGeographicalRegion(int) -> a
+    void loadMetadataFromFile(java.lang.String,java.lang.String,int,com.google.i18n.phonenumbers.MetadataLoader) -> a
+    com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadataCollection loadMetadataAndCloseInput(java.io.ObjectInputStream) -> a
+com.google.i18n.phonenumbers.NumberParseException -> com.google.b.a.e:
     com.google.i18n.phonenumbers.NumberParseException$ErrorType errorType -> a
     java.lang.String message -> b
     com.google.i18n.phonenumbers.NumberParseException$ErrorType getErrorType() -> a
     java.lang.String toString() -> toString
-com.google.i18n.phonenumbers.NumberParseException$ErrorType -> com.google.b.a.d:
+com.google.i18n.phonenumbers.NumberParseException$ErrorType -> com.google.b.a.f:
     com.google.i18n.phonenumbers.NumberParseException$ErrorType INVALID_COUNTRY_CODE -> a
     com.google.i18n.phonenumbers.NumberParseException$ErrorType NOT_A_NUMBER -> b
     com.google.i18n.phonenumbers.NumberParseException$ErrorType TOO_SHORT_AFTER_IDD -> c
@@ -22384,7 +22469,7 @@ com.google.i18n.phonenumbers.NumberParseException$ErrorType -> com.google.b.a.d:
     com.google.i18n.phonenumbers.NumberParseException$ErrorType[] $VALUES -> f
     com.google.i18n.phonenumbers.NumberParseException$ErrorType[] values() -> values
     com.google.i18n.phonenumbers.NumberParseException$ErrorType valueOf(java.lang.String) -> valueOf
-com.google.i18n.phonenumbers.PhoneNumberUtil -> com.google.b.a.e:
+com.google.i18n.phonenumbers.PhoneNumberUtil -> com.google.b.a.g:
     com.google.i18n.phonenumbers.MetadataLoader DEFAULT_METADATA_LOADER -> a
     java.util.logging.Logger logger -> g
     java.util.Map MOBILE_TOKEN_MAPPINGS -> h
@@ -22413,18 +22498,13 @@ com.google.i18n.phonenumbers.PhoneNumberUtil -> com.google.b.a.e:
     java.util.regex.Pattern CC_PATTERN -> z
     java.util.regex.Pattern FIRST_GROUP_ONLY_PREFIX_PATTERN -> A
     com.google.i18n.phonenumbers.PhoneNumberUtil instance -> B
-    java.util.Map countryCallingCodeToRegionCodeMap -> C
-    java.util.Set nanpaRegions -> D
-    java.util.Map regionToMetadataMap -> E
-    java.util.Map countryCodeToNonGeographicalMetadataMap -> F
-    com.google.i18n.phonenumbers.RegexCache regexCache -> G
-    java.util.Set supportedRegions -> H
-    java.util.Set countryCodesForNonGeographicalRegion -> I
-    java.lang.String currentFilePrefix -> J
-    com.google.i18n.phonenumbers.MetadataLoader metadataLoader -> K
+    com.google.i18n.phonenumbers.MetadataSource metadataSource -> C
+    java.util.Map countryCallingCodeToRegionCodeMap -> D
+    java.util.Set nanpaRegions -> E
+    com.google.i18n.phonenumbers.RegexCache regexCache -> F
+    java.util.Set supportedRegions -> G
+    java.util.Set countryCodesForNonGeographicalRegion -> H
     java.lang.String createExtnPattern(java.lang.String) -> g
-    void loadMetadataFromFile(java.lang.String,java.lang.String,int,com.google.i18n.phonenumbers.MetadataLoader) -> a
-    com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadataCollection loadMetadataAndCloseInput(java.io.ObjectInputStream) -> a
     java.lang.String extractPossibleNumber(java.lang.String) -> a
     boolean isViablePhoneNumber(java.lang.String) -> b
     java.lang.String normalize(java.lang.String) -> c
@@ -22434,6 +22514,7 @@ com.google.i18n.phonenumbers.PhoneNumberUtil -> com.google.b.a.e:
     java.lang.String normalizeHelper(java.lang.String,java.util.Map,boolean) -> a
     void setInstance(com.google.i18n.phonenumbers.PhoneNumberUtil) -> a
     com.google.i18n.phonenumbers.PhoneNumberUtil getInstance() -> a
+    com.google.i18n.phonenumbers.PhoneNumberUtil createInstance(com.google.i18n.phonenumbers.MetadataSource) -> a
     com.google.i18n.phonenumbers.PhoneNumberUtil createInstance(com.google.i18n.phonenumbers.MetadataLoader) -> a
     boolean isValidRegionCode(java.lang.String) -> h
     boolean hasValidCountryCallingCode(int) -> c
@@ -22479,13 +22560,13 @@ com.google.i18n.phonenumbers.PhoneNumberUtil -> com.google.b.a.e:
     void setItalianLeadingZerosForPhoneNumber(java.lang.String,com.google.i18n.phonenumbers.Phonenumber$PhoneNumber) -> a
     void parseHelper(java.lang.String,java.lang.String,boolean,boolean,com.google.i18n.phonenumbers.Phonenumber$PhoneNumber) -> a
     void buildNationalNumberForParsing(java.lang.String,java.lang.StringBuilder) -> a
-com.google.i18n.phonenumbers.PhoneNumberUtil$1 -> com.google.b.a.f:
+com.google.i18n.phonenumbers.PhoneNumberUtil$1 -> com.google.b.a.h:
     java.io.InputStream loadMetadata(java.lang.String) -> a
-com.google.i18n.phonenumbers.PhoneNumberUtil$3 -> com.google.b.a.g:
+com.google.i18n.phonenumbers.PhoneNumberUtil$3 -> com.google.b.a.i:
     int[] $SwitchMap$com$google$i18n$phonenumbers$Phonenumber$PhoneNumber$CountryCodeSource -> a
     int[] $SwitchMap$com$google$i18n$phonenumbers$PhoneNumberUtil$PhoneNumberFormat -> b
     int[] $SwitchMap$com$google$i18n$phonenumbers$PhoneNumberUtil$PhoneNumberType -> c
-com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberFormat -> com.google.b.a.h:
+com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberFormat -> com.google.b.a.j:
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberFormat E164 -> a
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberFormat INTERNATIONAL -> b
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberFormat NATIONAL -> c
@@ -22493,7 +22574,7 @@ com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberFormat -> com.google.b.a
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberFormat[] $VALUES -> e
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberFormat[] values() -> values
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberFormat valueOf(java.lang.String) -> valueOf
-com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberType -> com.google.b.a.i:
+com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberType -> com.google.b.a.k:
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberType FIXED_LINE -> a
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberType MOBILE -> b
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberType FIXED_LINE_OR_MOBILE -> c
@@ -22509,7 +22590,7 @@ com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberType -> com.google.b.a.i
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberType[] $VALUES -> m
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberType[] values() -> values
     com.google.i18n.phonenumbers.PhoneNumberUtil$PhoneNumberType valueOf(java.lang.String) -> valueOf
-com.google.i18n.phonenumbers.PhoneNumberUtil$ValidationResult -> com.google.b.a.j:
+com.google.i18n.phonenumbers.PhoneNumberUtil$ValidationResult -> com.google.b.a.l:
     com.google.i18n.phonenumbers.PhoneNumberUtil$ValidationResult IS_POSSIBLE -> a
     com.google.i18n.phonenumbers.PhoneNumberUtil$ValidationResult INVALID_COUNTRY_CODE -> b
     com.google.i18n.phonenumbers.PhoneNumberUtil$ValidationResult TOO_SHORT -> c
@@ -22517,8 +22598,8 @@ com.google.i18n.phonenumbers.PhoneNumberUtil$ValidationResult -> com.google.b.a.
     com.google.i18n.phonenumbers.PhoneNumberUtil$ValidationResult[] $VALUES -> e
     com.google.i18n.phonenumbers.PhoneNumberUtil$ValidationResult[] values() -> values
     com.google.i18n.phonenumbers.PhoneNumberUtil$ValidationResult valueOf(java.lang.String) -> valueOf
-com.google.i18n.phonenumbers.Phonemetadata -> com.google.b.a.k:
-com.google.i18n.phonenumbers.Phonemetadata$NumberFormat -> com.google.b.a.l:
+com.google.i18n.phonenumbers.Phonemetadata -> com.google.b.a.m:
+com.google.i18n.phonenumbers.Phonemetadata$NumberFormat -> com.google.b.a.n:
     boolean hasPattern -> a
     java.lang.String pattern_ -> b
     boolean hasFormat -> c
@@ -22550,7 +22631,7 @@ com.google.i18n.phonenumbers.Phonemetadata$NumberFormat -> com.google.b.a.l:
     com.google.i18n.phonenumbers.Phonemetadata$NumberFormat mergeFrom(com.google.i18n.phonenumbers.Phonemetadata$NumberFormat) -> a
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
-com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadata -> com.google.b.a.m:
+com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadata -> com.google.b.a.o:
     boolean hasGeneralDesc -> a
     com.google.i18n.phonenumbers.Phonemetadata$PhoneNumberDesc generalDesc_ -> b
     boolean hasFixedLine -> c
@@ -22668,13 +22749,13 @@ com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadata -> com.google.b.a.m:
     com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadata setMobileNumberPortableRegion(boolean) -> d
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
-com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadataCollection -> com.google.b.a.n:
+com.google.i18n.phonenumbers.Phonemetadata$PhoneMetadataCollection -> com.google.b.a.p:
     java.util.List metadata_ -> a
     java.util.List getMetadataList() -> a
     int getMetadataCount() -> b
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
-com.google.i18n.phonenumbers.Phonemetadata$PhoneNumberDesc -> com.google.b.a.o:
+com.google.i18n.phonenumbers.Phonemetadata$PhoneNumberDesc -> com.google.b.a.q:
     boolean hasNationalNumberPattern -> a
     java.lang.String nationalNumberPattern_ -> b
     boolean hasPossibleNumberPattern -> c
@@ -22688,8 +22769,8 @@ com.google.i18n.phonenumbers.Phonemetadata$PhoneNumberDesc -> com.google.b.a.o:
     com.google.i18n.phonenumbers.Phonemetadata$PhoneNumberDesc setExampleNumber(java.lang.String) -> c
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
-com.google.i18n.phonenumbers.Phonenumber -> com.google.b.a.p:
-com.google.i18n.phonenumbers.Phonenumber$PhoneNumber -> com.google.b.a.q:
+com.google.i18n.phonenumbers.Phonenumber -> com.google.b.a.r:
+com.google.i18n.phonenumbers.Phonenumber$PhoneNumber -> com.google.b.a.s:
     boolean hasCountryCode -> a
     int countryCode_ -> b
     boolean hasNationalNumber -> c
@@ -22733,7 +22814,7 @@ com.google.i18n.phonenumbers.Phonenumber$PhoneNumber -> com.google.b.a.q:
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String toString() -> toString
-com.google.i18n.phonenumbers.Phonenumber$PhoneNumber$CountryCodeSource -> com.google.b.a.r:
+com.google.i18n.phonenumbers.Phonenumber$PhoneNumber$CountryCodeSource -> com.google.b.a.t:
     com.google.i18n.phonenumbers.Phonenumber$PhoneNumber$CountryCodeSource FROM_NUMBER_WITH_PLUS_SIGN -> a
     com.google.i18n.phonenumbers.Phonenumber$PhoneNumber$CountryCodeSource FROM_NUMBER_WITH_IDD -> b
     com.google.i18n.phonenumbers.Phonenumber$PhoneNumber$CountryCodeSource FROM_NUMBER_WITHOUT_PLUS_SIGN -> c
@@ -22741,16 +22822,16 @@ com.google.i18n.phonenumbers.Phonenumber$PhoneNumber$CountryCodeSource -> com.go
     com.google.i18n.phonenumbers.Phonenumber$PhoneNumber$CountryCodeSource[] $VALUES -> e
     com.google.i18n.phonenumbers.Phonenumber$PhoneNumber$CountryCodeSource[] values() -> values
     com.google.i18n.phonenumbers.Phonenumber$PhoneNumber$CountryCodeSource valueOf(java.lang.String) -> valueOf
-com.google.i18n.phonenumbers.RegexCache -> com.google.b.a.s:
+com.google.i18n.phonenumbers.RegexCache -> com.google.b.a.u:
     com.google.i18n.phonenumbers.RegexCache$LRUCache cache -> a
     java.util.regex.Pattern getPatternForRegex(java.lang.String) -> a
-com.google.i18n.phonenumbers.RegexCache$LRUCache -> com.google.b.a.t:
+com.google.i18n.phonenumbers.RegexCache$LRUCache -> com.google.b.a.v:
     java.util.LinkedHashMap map -> a
     int size -> b
     java.lang.Object get(java.lang.Object) -> a
     void put(java.lang.Object,java.lang.Object) -> a
     int access$000(com.google.i18n.phonenumbers.RegexCache$LRUCache) -> a
-com.google.i18n.phonenumbers.RegexCache$LRUCache$1 -> com.google.b.a.u:
+com.google.i18n.phonenumbers.RegexCache$LRUCache$1 -> com.google.b.a.w:
     com.google.i18n.phonenumbers.RegexCache$LRUCache this$0 -> a
     boolean removeEldestEntry(java.util.Map$Entry) -> removeEldestEntry
 com.livae.ff.api.ff.Ff -> com.livae.ff.api.ff.a:
