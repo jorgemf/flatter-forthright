@@ -112,6 +112,7 @@
 	<string name="error_unknown">Error desconocido: %s</string>
 	<string name="error_unexpected">Error inesperado: %s</string>
 	<string name="error_signing_in_retry">Error registrandose (%s).\nReintentar?</string>
+	<string name="error_sms_not_sent">Error, no se pudo enviar el SMS.\nReintentar?</string>
 	<string name="error_network_no_api_connection">Fallo en la conexión con el servidor</string>
 	<string name="error_network_error">Error conectandose, verifique su conexión a internet.</string>
 	<string name="error_loading_elements">Error cargando los elementos.</string>

@@ -110,7 +110,7 @@
 	<string name="error_api">API error: %s</string>
 	<string name="error_unexpected">Unexpected error: %s</string>
 	<string name="error_signing_in_retry">Error signing in (%s).\nRetry?</string>
-
+	<string name="error_sms_not_sent">Error, we couldn\'t sent the SMS.\nRetry?</string>
 	<string name="on_boarding_welcome_title">Welcome to Pensamientos</string>
 	<string name="on_boarding_welcome"> Pensamientos lets you share your thoughts about others
 		anonymously and public.

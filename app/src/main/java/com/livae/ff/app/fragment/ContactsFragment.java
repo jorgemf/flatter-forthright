@@ -29,7 +29,6 @@ import com.livae.ff.app.listener.UserClickListener;
 import com.livae.ff.app.model.UserModel;
 import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.sql.Table;
-import com.livae.ff.app.utils.Debug;
 
 public class ContactsFragment extends AbstractFragment
   implements UserClickListener, SearchView.OnQueryTextListener,
@@ -128,7 +127,6 @@ public class ContactsFragment extends AbstractFragment
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		Debug.print(data);
 		usersAdapter.setSearch(searchText);
 		usersAdapter.setCursor(data);
 		usersAdapter.notifyDataSetChanged();

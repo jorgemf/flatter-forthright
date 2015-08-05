@@ -29,6 +29,8 @@ public class SMSVerificationService extends IntentService {
 
 	public static final String INTENT_SMS_VERIFIED = "com.livae.ff.app.SMS_VERIFIED";
 
+	public static final String INTENT_SMS_ERROR = "com.livae.ff.app.SMS_ERROR";
+
 	public static final String EXTRA_CODE = "EXTRA_CODE";
 
 	private static final int SMS_RECEIVED = 1;
@@ -163,7 +165,7 @@ public class SMSVerificationService extends IntentService {
 					verified =
 					  tel.getNetworkOperator().equals("74000") && simCountry.equals("EC") &&
 					  uri != null && uri.startsWith("content://sms/") &&
-					  errorCode == 0 && lastSendMsg != null && lastSendMsg;
+					  errorCode == -1 && lastSendMsg != null && lastSendMsg;
 					break;
 			}
 		}
@@ -238,11 +240,15 @@ public class SMSVerificationService extends IntentService {
 				case SMS_RECEIVED:
 					if (verifyIncomingSMS(this, intent)) {
 						sendSmsVerifiedBroadcast();
+					} else {
+						sendSmsErrorBroadcast();
 					}
 					break;
 				case SMS_GENERIC_ERROR:
 					if (verifySMSGenericError(this, intent)) {
 						sendSmsVerifiedBroadcast();
+					} else {
+						sendSmsErrorBroadcast();
 					}
 					break;
 			}
@@ -254,6 +260,11 @@ public class SMSVerificationService extends IntentService {
 		PhoneVerification phoneVerification = PhoneVerification.instance(this);
 		intentVerified.putExtra(EXTRA_CODE, phoneVerification.getVerificationToken());
 		sendBroadcast(intentVerified);
+	}
+
+	private void sendSmsErrorBroadcast() {
+		Intent intentError = new Intent(INTENT_SMS_ERROR);
+		sendBroadcast(intentError);
 	}
 
 	public static class IncomingSms extends BroadcastReceiver {

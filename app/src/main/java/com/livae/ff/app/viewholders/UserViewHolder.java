@@ -99,6 +99,30 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 			} else {
 				userModel.userImageView.setImageResource(R.drawable.ic_account_circle_white_48dp);
 			}
+//			if (imageUri == null) {
+//				userModel.userImageView.setImageResource(R.drawable.ic_account_circle_white_48dp);
+//			} else if (imageUri.startsWith(ContentResolver.SCHEME_CONTENT)) {
+//				InputStream stream = null;
+//				try {
+//					Context context = userModel.userImageView.getContext();
+//					stream = context.getContentResolver().openInputStream(Uri.parse(imageUri));
+//					BitmapDrawable drawable;
+//					drawable = (BitmapDrawable) Drawable.createFromStream(stream, null);
+//					userModel.userImageView.setImageDrawable(new RoundedDrawable(drawable));
+//				} catch (Exception e) {
+//					Analytics.logAndReport(e, false);
+//				} finally {
+//					if (stream != null) {
+//						try {
+//							stream.close();
+//						} catch (IOException e) {
+//							Log.w("ImageView", "Unable to close content: " + imageUri, e);
+//						}
+//					}
+//				}
+//			} else {
+//				ImageUtils.loadUserImage(userModel.userImageView, imageUri);
+//			}
 		}
 	}
 

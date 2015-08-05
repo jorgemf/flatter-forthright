@@ -14,11 +14,12 @@ android {
 		applicationId "com.livae.ff.app"
 		minSdkVersion 16
 		targetSdkVersion 22
-		versionCode 10
-		versionName "0.10"
+		versionCode 11
+		versionName "0.11"
 		buildConfigField "int", "BUILD_DATE", getBuildDate()
 		buildConfigField "boolean", "DEV", "false"
 		resConfigs "en", "es"
+		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 	signingConfigs {
 		release {
@@ -71,6 +72,9 @@ dependencies {
 	androidTestCompile 'com.android.support.test:runner:0.3'
 	androidTestCompile 'com.android.support.test:rules:0.3'
 	androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
+	androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
+	androidTestCompile 'com.google.code.findbugs:jsr305:2.0.1' // force for test version
+	androidTestCompile 'com.android.support:support-annotations:22.2.1' // force for test version
 }
 
 buildscript {

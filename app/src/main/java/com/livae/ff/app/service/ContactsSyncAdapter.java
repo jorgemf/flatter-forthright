@@ -50,6 +50,10 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		contentResolver = context.getContentResolver();
 	}
 
+	private static boolean differentStrings(String a, String b) {
+		return (a == null && b == null) || (a != null && a.equals(b));
+	}
+
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority,
 							  ContentProviderClient provider, SyncResult syncResult) {
@@ -80,7 +84,9 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 			} else if (phoneContact != null) {
 				phoneContact.flag = true;
-				if (phoneContact.version > localContact.lastVersion) {
+				if (phoneContact.version > localContact.lastVersion ||
+					differentStrings(phoneContact.displayName, localContact.displayName) ||
+					differentStrings(phoneContact.photoUri, localContact.photoUri)) {
 					// update
 					Uri uriUpdate = ContactsProvider.getUriContact(localContact.id);
 					ContentValues contentValues;
@@ -223,7 +229,8 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		final Uri uri = ContactsProvider.getUriContacts();
 		String[] projection = {Table.LocalUser.ID, Table.LocalUser.ANDROID_RAW_CONTACT_ID,
 							   Table.LocalUser.ANDROID_RAW_CONTACT_LAST_VERSION,
-							   Table.LocalUser.BLOCKED, Table.LocalUser.PHONE};
+							   Table.LocalUser.BLOCKED, Table.LocalUser.PHONE,
+							   Table.LocalUser.CONTACT_NAME, Table.LocalUser.IMAGE_URI};
 		final Cursor cursor = contentResolver.query(uri, projection, null, null, null);
 
 		int iId = cursor.getColumnIndex(Table.LocalUser.ID);
@@ -231,6 +238,8 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		int iRawContactId = cursor.getColumnIndex(Table.LocalUser.ANDROID_RAW_CONTACT_ID);
 		int iLastVersion = cursor.getColumnIndex(Table.LocalUser.ANDROID_RAW_CONTACT_LAST_VERSION);
 		int iPhone = cursor.getColumnIndex(Table.LocalUser.PHONE);
+		int iContactName = cursor.getColumnIndex(Table.LocalUser.CONTACT_NAME);
+		int iImageUri = cursor.getColumnIndex(Table.LocalUser.IMAGE_URI);
 		if (cursor.moveToFirst()) {
 			do {
 				contact = new LocalContact();
@@ -242,6 +251,12 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 				if (!cursor.isNull(iPhone)) {
 					contact.phone = cursor.getLong(iPhone);
+				}
+				if (!cursor.isNull(iContactName)) {
+					contact.displayName = cursor.getString(iContactName);
+				}
+				if (!cursor.isNull(iImageUri)) {
+					contact.photoUri = cursor.getString(iImageUri);
 				}
 				contacts.add(contact);
 			} while (cursor.moveToNext());
@@ -261,6 +276,10 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		public Integer lastVersion;
 
 		public Long phone;
+
+		public String displayName;
+
+		public String photoUri;
 	}
 
 	class PhoneContact {
