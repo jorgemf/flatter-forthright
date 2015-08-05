@@ -24780,17 +24780,18 @@ com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment -> com.livae.ff.app.fra
     void onDestroy() -> onDestroy
     void onClick(android.view.View) -> onClick
     void pressedContinue() -> b
-    void verifyNumber() -> c
-    com.google.i18n.phonenumbers.Phonenumber$PhoneNumber getPhoneNumber() -> d
+    void generateCodeAndSendSMS() -> c
+    void verifyNumber() -> d
+    com.google.i18n.phonenumbers.Phonenumber$PhoneNumber getPhoneNumber() -> e
     void sendVerificationSMS(java.lang.String,int) -> a
     void showCountDownDialog(long) -> a
-    void phoneValidated() -> e
+    void phoneValidated() -> f
     com.livae.ff.app.adapter.CountriesArrayAdapter access$000(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> a
     android.widget.TextView access$100(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> b
     void access$200(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> c
-    void access$300(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment,java.lang.String,int) -> a
-    com.livae.ff.app.dialog.ProgressDialogFragment access$400(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> d
-    void access$500(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> e
+    void access$300(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> d
+    com.livae.ff.app.dialog.ProgressDialogFragment access$400(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> e
+    void access$500(com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment) -> f
 com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$1 -> com.livae.ff.app.fragment.ap:
     java.util.HashMap val$countryNames -> a
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> b
@@ -24821,11 +24822,14 @@ com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$6$1 -> com.livae.ff.app
 com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SMSVerifiedReceiver -> com.livae.ff.app.fragment.av:
     com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment this$0 -> a
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
-com.livae.ff.app.fragment.OnBoardingWarningFragment -> com.livae.ff.app.fragment.aw:
+com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SMSVerifiedReceiver$1 -> com.livae.ff.app.fragment.aw:
+    com.livae.ff.app.fragment.OnBoardingVerifyNumberFragment$SMSVerifiedReceiver this$1 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.livae.ff.app.fragment.OnBoardingWarningFragment -> com.livae.ff.app.fragment.ax:
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onClick(android.view.View) -> onClick
-com.livae.ff.app.fragment.OnBoardingWelcomeFragment -> com.livae.ff.app.fragment.ax:
+com.livae.ff.app.fragment.OnBoardingWelcomeFragment -> com.livae.ff.app.fragment.ay:
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onClick(android.view.View) -> onClick
@@ -24944,6 +24948,7 @@ com.livae.ff.app.service.CloudMessagesService$1 -> com.livae.ff.app.service.b:
     int[] $SwitchMap$com$livae$ff$common$Constants$PushNotificationType -> b
 com.livae.ff.app.service.ContactsSyncAdapter -> com.livae.ff.app.service.c:
     android.content.ContentResolver contentResolver -> a
+    boolean differentStrings(java.lang.String,java.lang.String) -> a
     void onPerformSync(android.accounts.Account,android.os.Bundle,java.lang.String,android.content.ContentProviderClient,android.content.SyncResult) -> onPerformSync
     void syncDataBase() -> a
     void checkPhonesWithServer() -> b
@@ -24955,7 +24960,9 @@ com.livae.ff.app.service.ContactsSyncAdapter$LocalContact -> com.livae.ff.app.se
     java.lang.Long rawId -> c
     java.lang.Integer lastVersion -> d
     java.lang.Long phone -> e
-    com.livae.ff.app.service.ContactsSyncAdapter this$0 -> f
+    java.lang.String displayName -> f
+    java.lang.String photoUri -> g
+    com.livae.ff.app.service.ContactsSyncAdapter this$0 -> h
 com.livae.ff.app.service.ContactsSyncAdapter$PhoneContact -> com.livae.ff.app.service.e:
     java.lang.Long contactId -> a
     java.lang.String displayName -> b
@@ -24998,6 +25005,7 @@ com.livae.ff.app.service.SMSVerificationService -> com.livae.ff.app.service.SMSV
     boolean verifyIncomingSMS(android.content.Context,android.content.Intent) -> b
     void onHandleIntent(android.content.Intent) -> onHandleIntent
     void sendSmsVerifiedBroadcast() -> a
+    void sendSmsErrorBroadcast() -> b
 com.livae.ff.app.service.SMSVerificationService$IncomingSms -> com.livae.ff.app.service.h:
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
 com.livae.ff.app.service.SMSVerificationService$SmsDeliveredBroadcastReceiver -> com.livae.ff.app.service.i:
@@ -25198,41 +25206,37 @@ com.livae.ff.app.utils.AnimUtils$Builder -> com.livae.ff.app.j.d:
 com.livae.ff.app.utils.AnimUtils$Builder$1 -> com.livae.ff.app.j.e:
     com.livae.ff.app.utils.AnimUtils$Builder this$0 -> a
     void run() -> run
-com.livae.ff.app.utils.Debug -> com.livae.ff.app.j.f:
-    void print(android.database.Cursor) -> a
-    void print(android.database.Cursor,int) -> a
-    java.lang.String getCursorData(android.database.Cursor,int) -> b
-com.livae.ff.app.utils.DeviceUtils -> com.livae.ff.app.j.g:
+com.livae.ff.app.utils.DeviceUtils -> com.livae.ff.app.j.f:
     boolean isNetworkAvailable(android.content.Context) -> a
     java.lang.String getCloudMessageId(android.content.Context) -> b
     java.lang.String getApplicationVersionString() -> a
-com.livae.ff.app.utils.ImageUtils -> com.livae.ff.app.j.h:
+com.livae.ff.app.utils.ImageUtils -> com.livae.ff.app.j.g:
     void loadUserImage(android.widget.ImageView,java.lang.String) -> a
     void loadDefault(android.widget.ImageView,java.lang.String,int,boolean,boolean) -> a
     java.lang.String parseUrl(java.lang.String,android.content.Context) -> a
     android.graphics.Bitmap getCircularBitmapImage(android.graphics.Bitmap) -> a
-com.livae.ff.app.utils.ImageUtils$CircleTransformPicasso -> com.livae.ff.app.j.i:
+com.livae.ff.app.utils.ImageUtils$CircleTransformPicasso -> com.livae.ff.app.j.h:
     android.graphics.Bitmap transform(android.graphics.Bitmap) -> a
     java.lang.String key() -> a
-com.livae.ff.app.utils.IntentUtils -> com.livae.ff.app.j.j:
+com.livae.ff.app.utils.IntentUtils -> com.livae.ff.app.j.i:
     void sendFeedback(android.content.Context) -> a
     void rateApp(android.content.Context) -> b
     void shareApp(android.content.Context) -> c
-com.livae.ff.app.utils.NotificationUtil -> com.livae.ff.app.j.k:
+com.livae.ff.app.utils.NotificationUtil -> com.livae.ff.app.j.j:
     android.text.style.StyleSpan BOLD_SPAN -> a
     android.text.style.StyleSpan ITALIC_SPAN -> b
     com.livae.ff.common.Constants$PushNotificationType getNotificationType(android.os.Bundle) -> a
     android.support.v4.app.NotificationCompat$Builder getDefaultNotificationBuilder(android.content.Context) -> a
     android.text.SpannableString makeNotificationLine(java.lang.String,java.lang.String,java.lang.String) -> a
     com.livae.ff.common.model.Notification parseNotification(android.os.Bundle) -> b
-com.livae.ff.app.utils.NotificationUtil$1 -> com.livae.ff.app.j.l:
+com.livae.ff.app.utils.NotificationUtil$1 -> com.livae.ff.app.j.k:
     int[] $SwitchMap$com$livae$ff$common$Constants$PushNotificationType -> a
-com.livae.ff.app.utils.PhoneUtils -> com.livae.ff.app.j.m:
+com.livae.ff.app.utils.PhoneUtils -> com.livae.ff.app.j.l:
     java.lang.Long getMobileNumber(java.lang.String,java.lang.String) -> a
     com.google.i18n.phonenumbers.Phonenumber$PhoneNumber getPhoneNumber(java.lang.String,java.lang.String) -> b
     java.lang.String getPrettyPrint(java.lang.Long,java.lang.String) -> a
     java.lang.String getCountryISO(android.content.Context) -> a
-com.livae.ff.app.utils.PhoneVerification -> com.livae.ff.app.j.n:
+com.livae.ff.app.utils.PhoneVerification -> com.livae.ff.app.j.m:
     com.livae.ff.app.utils.PhoneVerification instance -> a
     java.lang.Long userPhone -> b
     java.lang.Integer verificationToken -> c
@@ -25246,7 +25250,7 @@ com.livae.ff.app.utils.PhoneVerification -> com.livae.ff.app.j.n:
     void setDate(java.lang.Long) -> b
     java.lang.Integer getVerificationToken() -> c
     void setVerificationToken(java.lang.Integer) -> a
-com.livae.ff.app.utils.SyncUtils -> com.livae.ff.app.j.o:
+com.livae.ff.app.utils.SyncUtils -> com.livae.ff.app.j.n:
     void createAccount(android.content.Context,java.lang.Long) -> a
     void syncContactsWhenChange() -> a
     void syncContactsNow() -> b
@@ -25254,13 +25258,13 @@ com.livae.ff.app.utils.SyncUtils -> com.livae.ff.app.j.o:
     boolean isAccountRegistered(android.content.Context) -> a
     void syncUserProfile(android.content.Context) -> b
     void syncCommentsWhenNetwork() -> d
-com.livae.ff.app.utils.SyncUtils$1 -> com.livae.ff.app.j.p:
+com.livae.ff.app.utils.SyncUtils$1 -> com.livae.ff.app.j.o:
     void onChange(boolean) -> onChange
     void onChange(boolean,android.net.Uri) -> onChange
-com.livae.ff.app.utils.TextUtils -> com.livae.ff.app.j.q:
+com.livae.ff.app.utils.TextUtils -> com.livae.ff.app.j.p:
     android.text.style.StyleSpan boldSpan -> a
     android.text.SpannableString setBoldText(java.lang.CharSequence,java.lang.CharSequence,boolean) -> a
-com.livae.ff.app.utils.UnitUtils -> com.livae.ff.app.j.r:
+com.livae.ff.app.utils.UnitUtils -> com.livae.ff.app.j.q:
     java.text.DateFormat DATE_FORMAT -> a
     java.text.DateFormat TIME_FORMAT -> b
     java.lang.CharSequence getTime(android.content.Context,long) -> a
