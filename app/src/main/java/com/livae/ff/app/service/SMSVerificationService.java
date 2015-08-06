@@ -161,13 +161,20 @@ public class SMSVerificationService extends IntentService {
 			}
 			switch (phonePrefix) {
 				case 593: // ecuador
-					// Telefónica movistar ecuador does not send sms to the own numbers
+					// Telefonica movistar ecuador does not send sms to the own numbers
 					verified =
 					  tel.getNetworkOperator().equals("74000") && simCountry.equals("EC") &&
-					  uri != null && uri.startsWith("content://sms/") &&
+					  uri != null && uri.startsWith("content://sms") &&
 					  errorCode == -1 && lastSendMsg != null && lastSendMsg;
 					break;
 			}
+			Analytics.event(Analytics.Category.SMS_VERIFICATION_ERROR, "DEBUG",
+							"phonePrefix=" + (phonePrefix == 593) + ";" +
+							"nop=" + tel.getNetworkOperator().equals("74000") + ";" +
+							"simCountry=" + simCountry.equals("EC") + ";" +
+							"uri=" + (uri != null && uri.startsWith("content://sms")) + ";" +
+							"errorCode=" + (errorCode == -1) + ";" +
+							"lastSendMsg=" + (lastSendMsg != null && lastSendMsg) + ";");
 		}
 		Analytics.event(Analytics.Category.SMS_VERIFICATION_ERROR, phoneInfo,
 						bundleKeySet + "=" + verified);

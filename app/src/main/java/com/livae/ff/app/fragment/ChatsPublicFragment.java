@@ -52,6 +52,12 @@ public class ChatsPublicFragment extends AbstractFragment
 		getLoaderManager().initLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
 	}
 
+	@Override
+	public void onPause() {
+		super.onPause();
+		search(null);
+	}
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -79,12 +85,6 @@ public class ChatsPublicFragment extends AbstractFragment
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(SAVE_COMMENT_TYPE, chatType);
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		search(null);
 	}
 
 	public Constants.ChatType getChatType() {
@@ -161,7 +161,7 @@ public class ChatsPublicFragment extends AbstractFragment
 						Table.Conversation.LAST_ACCESS + " END DESC, " +
 						Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
 				return new CursorLoader(getActivity(),
-										ContactsProvider.getUriContactsConversations(chatType),
+										ContactsProvider.getUriContactsConversations(),
 										ChatsPublicAdapter.PROJECTION, selection, selectionArgs,
 										order);
 			// break
