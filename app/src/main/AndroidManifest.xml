@@ -60,19 +60,28 @@
 			android:windowSoftInputMode="adjustPan"/>
 		<activity
 			android:name="com.livae.ff.app.activity.ChatPublicActivity"
+			android:parentActivityName="com.livae.ff.app.activity.ChatsActivity"
 			android:screenOrientation="portrait"
-			android:windowSoftInputMode="adjustResize|stateHidden"/>
+			android:windowSoftInputMode="adjustResize|stateHidden">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="com.livae.ff.app.activity.ChatsActivity"/>
+		</activity>
 		<activity
 			android:name="com.livae.ff.app.activity.ChatPrivateActivity"
+			android:parentActivityName="com.livae.ff.app.activity.ChatsActivity"
 			android:screenOrientation="portrait"
-			android:windowSoftInputMode="adjustResize|stateHidden"/>
+			android:windowSoftInputMode="adjustResize|stateHidden">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="com.livae.ff.app.activity.ChatsActivity"/>
+		</activity>
 		<activity
 			android:name="com.livae.ff.app.activity.WebViewActivity"
 			android:screenOrientation="portrait"/>
 		<activity
 			android:name="com.livae.ff.app.activity.AboutActivity"
 			android:screenOrientation="portrait"/>
-
 
 		<service android:name="com.livae.ff.app.service.AuthenticatorService">
 			<intent-filter>

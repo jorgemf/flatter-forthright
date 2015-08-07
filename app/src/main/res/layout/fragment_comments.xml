@@ -45,6 +45,7 @@
 				android:layout_height="wrap_content"
 				android:hint="@string/post_comment_hint"
 				android:inputType="textCapSentences|textAutoCorrect|textShortMessage|textMultiLine"
+				android:maxLength="@integer/comment_max_chars"
 				android:maxLines="4"
 				android:textAppearance="?android:attr/textAppearanceLarge"/>
 		</FrameLayout>

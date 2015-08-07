@@ -326,6 +326,10 @@ public class ApiEndpoint {
 		if (text == null || InputUtil.isEmpty(text.getText())) {
 			throw new BadRequestException("Comment cannot be empty");
 		}
+		if (text.getText().length() > Settings.COMMENTS_MAX_CHARS) {
+			throw new BadRequestException("Comment too long. Max chars: " +
+										  Settings.COMMENTS_MAX_CHARS);
+		}
 		Conversation conversation = getConversation(conversationId, gUser);
 		if (conversation == null) {
 			throw new NotFoundException("Conversation does not exists");

@@ -3,4 +3,5 @@
 	<integer name="default_preload_ahead">10</integer>
 	<integer name="default_load_size">50</integer>
 	<integer name="anonymous_name_max_chars">100</integer>
+	<integer name="comment_max_chars">10000</integer>
 </resources>

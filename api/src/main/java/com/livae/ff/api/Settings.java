@@ -34,6 +34,8 @@ public class Settings {
 
 	public static final int NOTIFY_PUBLIC_COMMENTS_LAST_COMMENTERS = 20;
 
+	public static final int COMMENTS_MAX_CHARS = 10000;
+
 	// default time is 4 weeks
 //	public static final int NOTIFICATIONS_TIME_TO_LIFE = (int) TimeUnit.DAYS.toSeconds(28);
 

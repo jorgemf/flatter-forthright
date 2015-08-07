@@ -55,11 +55,12 @@ public class ImageUtils {
 		if (imageUrl != null) {
 			imageUrl = imageUrl.replace("?sz=512", "?sz=256");
 		}
-		loadDefault(imageView, imageUrl, R.drawable.ic_account_circle_white_48dp, true, true);
+		loadDefault(imageView, imageUrl, R.drawable.ic_account_circle_white_48dp, true, true, 256);
 	}
 
 	public static void loadDefault(@Nonnull ImageView imageView, String imageUrl,
-								   @DrawableRes int placeholderResId, boolean round, boolean fade) {
+								   @DrawableRes int placeholderResId, boolean round, boolean fade,
+								   Integer maxSize) {
 		Context context = imageView.getContext();
 		if (imageUrl != null) {
 			imageUrl = parseUrl(imageUrl, context);
@@ -72,6 +73,9 @@ public class ImageUtils {
 			}
 			if (!fade) {
 				requestCreator = requestCreator.noFade();
+			}
+			if (maxSize != null && maxSize > 0) {
+				requestCreator = requestCreator.resize(maxSize, maxSize);
 			}
 			requestCreator.config(Bitmap.Config.RGB_565).into(imageView);
 		} else {
