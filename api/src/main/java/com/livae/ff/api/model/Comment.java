@@ -84,8 +84,11 @@ public class Comment implements Serializable {
 		deleted = false;
 	}
 
-	public Comment(@Nonnull Long conversationId, @Nonnull Long userId, @Nonnull String comment,
-				   @Nonnull Long aliasId, @Nonnull String alias) {
+	public Comment(@Nonnull Long conversationId,
+				   @Nonnull Long userId,
+				   @Nonnull String comment,
+				   @Nonnull Long aliasId,
+				   @Nonnull String alias) {
 		this(conversationId, userId, comment);
 		this.aliasId = aliasId;
 		this.alias = alias;

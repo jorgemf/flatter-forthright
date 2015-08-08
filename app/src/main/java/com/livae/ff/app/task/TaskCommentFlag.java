@@ -12,13 +12,14 @@ import com.livae.ff.app.async.NetworkAsyncTask;
 public class TaskCommentFlag extends NetworkAsyncTask<Pair<FlagComment, Integer>, Void> {
 
 	@Override
-	protected Void doInBackground(Pair<FlagComment, Integer> params) throws Exception {
+	protected Void doInBackground(Pair<FlagComment, Integer> params)
+	  throws Exception {
 		FlagText flagText = new FlagText();
 		FlagComment flagComment = params.first;
 		flagText.setText(flagComment.getComment());
 		flagText.setReason(flagComment.getReason().name());
-		Comment comment = API.endpoint().flagComment(flagComment.getCommentId(), flagText)
-							 .execute();
+		Comment comment =
+		  API.endpoint().flagComment(flagComment.getCommentId(), flagText).execute();
 		Model model = new Model(Application.getContext());
 		model.parse(comment);
 		model.save();

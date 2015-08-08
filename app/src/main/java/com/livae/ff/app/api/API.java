@@ -42,7 +42,8 @@ public class API {
 		};
 		FfRequestInitializer ffRequestInitializer = (new FfRequestInitializer() {
 			@Override
-			protected void initializeFfRequest(FfRequest<?> request) throws IOException {
+			protected void initializeFfRequest(FfRequest<?> request)
+			  throws IOException {
 				super.initializeFfRequest(request);
 				AppUser appUser = Application.appUser();
 				if (appUser.isDeviceConnected()) {
@@ -55,8 +56,10 @@ public class API {
 		OkHttpTransport okHttpTransport = new OkHttpTransport();
 		JacksonFactory jacksonFactory = new JacksonFactory();
 		Ff.Builder builder = new Ff.Builder(okHttpTransport, jacksonFactory, null);
-		endpoint = builder.setRootUrl(url).setGoogleClientRequestInitializer(initializer)
-						  .setFfRequestInitializer(ffRequestInitializer).build();
+		endpoint = builder.setRootUrl(url)
+						  .setGoogleClientRequestInitializer(initializer)
+						  .setFfRequestInitializer(ffRequestInitializer)
+						  .build();
 //		if (Application.isAdmin()) {
 //			AdminRequestInitializer adminRequestInitializer = (new AdminRequestInitializer() {
 //				@Override
@@ -70,9 +73,12 @@ public class API {
 //				}
 //
 //			});
-//			adminEndpoint = new Admin.Builder(okHttpTransport, jacksonFactory, null).setRootUrl(url)
-//																					.setGoogleClientRequestInitializer(initializer)
-//																					.setAdminRequestInitializer(adminRequestInitializer)
+//			adminEndpoint = new Admin.Builder(okHttpTransport, jacksonFactory, null).setRootUrl
+// (url)
+//
+// .setGoogleClientRequestInitializer(initializer)
+//
+// .setAdminRequestInitializer(adminRequestInitializer)
 //																					.build();
 //		}
 	}
@@ -85,15 +91,18 @@ public class API {
 		instance = new API(url);
 	}
 
-	public static Version version() throws IOException {
-		return instance.endpoint.apiEndpoint().version(Constants.Platform.ANDROID.name()).execute();
+	public static Version version()
+	  throws IOException {
+		return instance.endpoint.apiEndpoint().version(Constants.Platform.ANDROID.name())
+								.execute();
 	}
 
 	public static Ff.ApiEndpoint endpoint() {
 		return instance.endpoint.apiEndpoint();
 	}
 
-	public static JsonParser getJsonParser(String jsonString) throws IOException {
+	public static JsonParser getJsonParser(String jsonString)
+	  throws IOException {
 		return instance.endpoint.getJsonFactory().createJsonParser(jsonString);
 	}
 

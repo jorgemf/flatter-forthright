@@ -21,8 +21,8 @@ public class NotificationReceiver extends WakefulBroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.i(TAG, intent.getExtras().toString());
-		ComponentName comp = new ComponentName(context.getPackageName(),
-											   CloudMessagesService.class.getName());
+		ComponentName comp =
+		  new ComponentName(context.getPackageName(), CloudMessagesService.class.getName());
 		Intent originalIntent;
 		originalIntent = intent.getParcelableExtra(CloudMessagesReceiver.EXTRA_ORIGINAL_INTENT);
 		startWakefulService(context, originalIntent.setComponent(comp));

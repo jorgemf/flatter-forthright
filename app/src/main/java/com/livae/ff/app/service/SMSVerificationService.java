@@ -224,12 +224,15 @@ public class SMSVerificationService extends IntentService {
 			if (bundle != null) {
 				try {
 					final Object[] pdusObj = (Object[]) bundle.get("pdus");
-					for (Object aPdusObj : pdusObj) {
-						SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) aPdusObj);
-						String phoneNumber = currentMessage.getOriginatingAddress();
-						String message = currentMessage.getDisplayMessageBody();
-						if (checkSmsConfirmation(context, phoneNumber, message)) {
-							return true;
+					if (pdusObj != null) {
+						for (Object aPdusObj : pdusObj) {
+							SmsMessage currentMessage = SmsMessage.createFromPdu((byte[])
+																				   aPdusObj);
+							String phoneNumber = currentMessage.getOriginatingAddress();
+							String message = currentMessage.getDisplayMessageBody();
+							if (checkSmsConfirmation(context, phoneNumber, message)) {
+								return true;
+							}
 						}
 					}
 				} catch (Exception e) {

@@ -34,8 +34,8 @@ public class AdminAuthenticator implements Authenticator {
 		String token = request.getHeader("Authorization");
 		if (token != null) {
 			try {
-				PhoneUser phoneUser = ofy().load().type(PhoneUser.class).filter("token", token)
-										   .first().safe();
+				PhoneUser phoneUser =
+				  ofy().load().type(PhoneUser.class).filter("token", token).first().safe();
 				if (isAdminUser(phoneUser)) {
 					return new User(phoneUser.getPhone().toString());
 //					return new User(phoneUser.getPhone().toString(),

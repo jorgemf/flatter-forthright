@@ -43,8 +43,11 @@ public class ConversationsSyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	@Override
-	public void onPerformSync(Account account, Bundle extras, String authority,
-							  ContentProviderClient provider, SyncResult syncResult) {
+	public void onPerformSync(Account account,
+							  Bundle extras,
+							  String authority,
+							  ContentProviderClient provider,
+							  SyncResult syncResult) {
 		Log.i(LOG_TAG, "Starting comments synchronization");
 		List<CommentSync> comments = getCommentsSync();
 		for (CommentSync comment : comments) {
@@ -79,8 +82,9 @@ public class ConversationsSyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private List<CommentSync> getCommentsSync() {
 		List<CommentSync> comments = new ArrayList<CommentSync>();
-		Cursor cursor = contentResolver.query(ConversationsProvider.getUriCommentsSync(), null,
-											  null, null, Table.CommentSync.DATE);
+		Cursor cursor =
+		  contentResolver.query(ConversationsProvider.getUriCommentsSync(), null, null, null,
+								Table.CommentSync.DATE);
 		if (cursor.moveToFirst()) {
 			int iId = cursor.getColumnIndex(Table.CommentSync.ID);
 			int iConversationId = cursor.getColumnIndex(Table.CommentSync.CONVERSATION_ID);

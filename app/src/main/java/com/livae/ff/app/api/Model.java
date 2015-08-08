@@ -95,8 +95,8 @@ public class Model {
 		}
 		if (commentsList.size() > 0) {
 			contentResolver.bulkInsert(ConversationsProvider.getUriComments(),
-									   commentsList.toArray(new ContentValues[commentsList
-																				.size()]));
+									   commentsList.toArray(new ContentValues[commentsList.size()
+															  ]));
 			commentsList.clear();
 		}
 		if (commentsSyncList.size() > 0) {

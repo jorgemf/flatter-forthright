@@ -26,7 +26,8 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder
 
 	private View secretChatMark;
 
-	public ChatPrivateViewHolder(View itemView, ChatPrivateClickListener chatPrivateClickListener) {
+	public ChatPrivateViewHolder(View itemView, ChatPrivateClickListener
+												  chatPrivateClickListener) {
 		this(itemView, new ChatPrivateModel());
 		this.chatPrivateClickListener = chatPrivateClickListener;
 		itemView.setOnClickListener(this);
@@ -39,9 +40,10 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder
 
 		chatPrivateModel.displayNameTextView = (TextView) itemView.findViewById(R.id.user_name);
 		chatPrivateModel.conversationTitleView = (TextView) itemView.findViewById(R.id.title);
-		chatPrivateModel.conversationSubtitleView = (TextView) itemView.findViewById(R.id.subtitle);
-		chatPrivateModel.anonymousImageView = (AnonymousImage) itemView
-																 .findViewById(R.id.anonymous_image);
+		chatPrivateModel.conversationSubtitleView = (TextView) itemView.findViewById(R.id
+																					   .subtitle);
+		chatPrivateModel.anonymousImageView =
+		  (AnonymousImage) itemView.findViewById(R.id.anonymous_image);
 		dateTextView = (TextView) itemView.findViewById(R.id.date);
 		anonymousMark = itemView.findViewById(R.id.anonymous_mark);
 		secretChatMark = itemView.findViewById(R.id.secret_mark);
@@ -98,8 +100,8 @@ public class ChatPrivateViewHolder extends ChatPublicViewHolder
 		if (imageUri != null) {
 			ImageUtils.loadUserImage(chatPrivateModel.userImageView, imageUri);
 		} else {
-			chatPrivateModel.userImageView
-			  .setImageResource(R.drawable.ic_account_circle_white_48dp);
+			chatPrivateModel.userImageView.setImageResource(R.drawable
+															  .ic_account_circle_white_48dp);
 		}
 	}
 

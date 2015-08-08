@@ -54,8 +54,8 @@ public class CloudMessagesService extends IntentService {
 						String conversationType = notificationComment.getConversationType();
 						// increase unread count of conversation
 						Long conversationId = notificationComment.getConversationId();
-						Uri uriConversation = ConversationsProvider
-												.getUriConversationIncreaseUnread(conversationId);
+						Uri uriConversation =
+						  ConversationsProvider.getUriConversationIncreaseUnread(conversationId);
 						context.getContentResolver().update(uriConversation, null, null, null);
 						// notify
 						try {
@@ -120,10 +120,10 @@ public class CloudMessagesService extends IntentService {
 		final Resources res = context.getResources();
 		final ContentResolver contentResolver = context.getContentResolver();
 		Uri uri = ConversationsProvider.getUriCommentsConversations();
-		final String[] projection = {Table.Comment.COMMENT, Table.Comment.USER_ALIAS,
-									 Table.Comment.USER_ANONYMOUS_ID, Table.Comment.CONVERSATION_ID,
-									 Table.Conversation.LAST_ACCESS,
-									 Table.Conversation.LAST_MESSAGE_DATE};
+		final String[] projection =
+		  {Table.Comment.COMMENT, Table.Comment.USER_ALIAS, Table.Comment.USER_ANONYMOUS_ID,
+		   Table.Comment.CONVERSATION_ID, Table.Conversation.LAST_ACCESS,
+		   Table.Conversation.LAST_MESSAGE_DATE};
 		final String selection =
 		  Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS + " AND " +
 		  Table.Conversation.TYPE + "=? AND " + Table.Comment.IS_ME + "=0";
@@ -162,17 +162,18 @@ public class CloudMessagesService extends IntentService {
 				String alias = cursor.getString(iAlias);
 				Spannable text = NotificationUtil.makeNotificationLine(alias, comment, "");
 				builder.setContentText(text);
-				NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle(builder);
+				NotificationCompat.BigTextStyle style =
+				  new NotificationCompat.BigTextStyle(builder);
 				style.setBigContentTitle(title);
 				style.bigText(text);
 				builder.setStyle(style);
 				Long conversationId = cursor.getLong(iConversationId);
 				Long lastAccess = cursor.getLong(iLastAccess);
 				Long lastMessageDate = cursor.getLong(iLastMessageDate);
-				intent = AbstractChatActivity.createIntent(context, chatType, conversationId, null,
-														   null, null, null, null, lastAccess,
-														   lastMessageDate, totalComments, null,
-														   null);
+				intent =
+				  AbstractChatActivity.createIntent(context, chatType, conversationId, null, null,
+													null, null, null, lastAccess, lastMessageDate,
+													totalComments, null, null);
 			} else {
 				NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(builder);
 				int index = 0;
@@ -203,16 +204,17 @@ public class CloudMessagesService extends IntentService {
 					cursor.moveToFirst();
 					Long lastAccess = cursor.getLong(iLastAccess);
 					Long lastMessageDate = cursor.getLong(iLastMessageDate);
-					intent = AbstractChatActivity.createIntent(context, chatType, conversationId,
-															   null, null, null, null, null,
-															   lastAccess, lastMessageDate,
-															   totalComments, null, null);
+					intent =
+					  AbstractChatActivity.createIntent(context, chatType, conversationId, null,
+														null, null, null, null, lastAccess,
+														lastMessageDate, totalComments, null,
+														null);
 				} else {
 					intent = new Intent(context, ChatsActivity.class);
 				}
 			}
-			PendingIntent pending = PendingIntent.getActivity(context, 0, intent,
-															  PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent pending =
+			  PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			builder.setContentIntent(pending);
 			switch (chatType) {
 				case FORTHRIGHT:
@@ -240,19 +242,18 @@ public class CloudMessagesService extends IntentService {
 		final Resources res = context.getResources();
 		final ContentResolver contentResolver = context.getContentResolver();
 		Uri uri = ConversationsProvider.getUriCommentsConversations();
-		final String[] projection = {Table.Comment.COMMENT, Table.Comment.CONVERSATION_ID,
-									 Table.LocalUser.CONTACT_NAME, Table.LocalUser.IMAGE_URI,
-									 Table.LocalUser.BLOCKED,
-									 Table.LocalUser.ANDROID_RAW_CONTACT_ID,
-									 Table.Conversation.TYPE, Table.Conversation.ROOM_NAME,
-									 Table.Conversation.LAST_ACCESS,
-									 Table.Conversation.LAST_MESSAGE_DATE, Table.Conversation.PHONE,
-									 Table.Conversation.ALIAS_ID};
+		final String[] projection =
+		  {Table.Comment.COMMENT, Table.Comment.CONVERSATION_ID, Table.LocalUser.CONTACT_NAME,
+		   Table.LocalUser.IMAGE_URI, Table.LocalUser.BLOCKED,
+		   Table.LocalUser.ANDROID_RAW_CONTACT_ID, Table.Conversation.TYPE,
+		   Table.Conversation.ROOM_NAME, Table.Conversation.LAST_ACCESS,
+		   Table.Conversation.LAST_MESSAGE_DATE, Table.Conversation.PHONE,
+		   Table.Conversation.ALIAS_ID};
 		final String selection =
 		  Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS + " AND " +
 		  Table.Conversation.TYPE + " IN (?,?,?) AND " + Table.Comment.IS_ME + "=0";
-		final String[] selectionArgs = {ChatType.PRIVATE.name(), ChatType.SECRET.name(),
-										ChatType.PRIVATE_ANONYMOUS.name()};
+		final String[] selectionArgs =
+		  {ChatType.PRIVATE.name(), ChatType.SECRET.name(), ChatType.PRIVATE_ANONYMOUS.name()};
 		final String order = "-" + Table.Comment.DATE;
 		Cursor cursor = contentResolver.query(uri, projection, selection, selectionArgs, order);
 		NotificationManager manager;
@@ -286,7 +287,8 @@ public class CloudMessagesService extends IntentService {
 				ChatType chatType = ChatType.valueOf(cursor.getString(iConversationType));
 				Spannable text = createCommentLine(res, chatType, comment, displayName, roomName);
 				builder.setContentText(text);
-				NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle(builder);
+				NotificationCompat.BigTextStyle style =
+				  new NotificationCompat.BigTextStyle(builder);
 				style.setBigContentTitle(title);
 				style.bigText(text);
 				builder.setStyle(style);
@@ -300,7 +302,8 @@ public class CloudMessagesService extends IntentService {
 				Long rawContactId =
 				  cursor.isNull(iRawContactId) ? null : cursor.getLong(iRawContactId);
 				intent = AbstractChatActivity.createIntent(context, chatType, conversationId, phone,
-														   displayName, roomName, imageUri, aliasId,
+														   displayName, roomName, imageUri,
+														   aliasId,
 														   lastAccess, lastMessageDate,
 														   totalComments, blocked, rawContactId);
 			} else {
@@ -344,17 +347,17 @@ public class CloudMessagesService extends IntentService {
 					boolean blocked = cursor.getInt(iBlocked) != 0;
 					Long rawContactId =
 					  cursor.isNull(iRawContactId) ? null : cursor.getLong(iRawContactId);
-					intent = AbstractChatActivity.createIntent(context, chatType, conversationId,
-															   phone, displayName, roomName,
-															   imageUri, aliasId, lastAccess,
-															   lastMessageDate, totalComments,
-															   blocked, rawContactId);
+					intent =
+					  AbstractChatActivity.createIntent(context, chatType, conversationId, phone,
+														displayName, roomName, imageUri, aliasId,
+														lastAccess, lastMessageDate, totalComments,
+														blocked, rawContactId);
 				} else {
 					intent = new Intent(context, ChatsActivity.class);
 				}
 			}
-			PendingIntent pending = PendingIntent.getActivity(context, 0, intent,
-															  PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent pending =
+			  PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			builder.setContentIntent(pending);
 			manager.notify(Settings.Notifications.ID_CHAT_PRIVATE, builder.build());
 		} else {
@@ -363,8 +366,10 @@ public class CloudMessagesService extends IntentService {
 		cursor.close();
 	}
 
-	private static Spannable createCommentLine(Resources resources, ChatType chatType,
-											   String comment, String displayName,
+	private static Spannable createCommentLine(Resources resources,
+											   ChatType chatType,
+											   String comment,
+											   String displayName,
 											   String roomName) {
 		String title = "";
 		String text = "";
@@ -388,7 +393,7 @@ public class CloudMessagesService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.e(LOG_TAG, "it is here");
+		Log.i(LOG_TAG, "New notification");
 		Bundle extras = intent.getExtras();
 		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 		String messageType = gcm.getMessageType(intent);

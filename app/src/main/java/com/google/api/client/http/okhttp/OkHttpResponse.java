@@ -36,7 +36,8 @@ final class OkHttpResponse extends LowLevelHttpResponse {
 
 	private final ArrayList<String> headerValues = new ArrayList<>();
 
-	OkHttpResponse(HttpURLConnection connection) throws IOException {
+	OkHttpResponse(HttpURLConnection connection)
+	  throws IOException {
 		this.connection = connection;
 		int responseCode = connection.getResponseCode();
 		this.responseCode = responseCode == -1 ? 0 : responseCode;
@@ -57,7 +58,8 @@ final class OkHttpResponse extends LowLevelHttpResponse {
 	}
 
 	@Override
-	public InputStream getContent() throws IOException {
+	public InputStream getContent()
+	  throws IOException {
 		HttpURLConnection connection = this.connection;
 		return HttpStatusCodes.isSuccess(responseCode) ? connection.getInputStream()
 													   : connection.getErrorStream();

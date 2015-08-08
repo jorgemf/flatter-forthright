@@ -170,9 +170,10 @@ public class ConversationsProvider extends AbstractProvider {
 									Table.Comment.TIMES_FLAGGED_INSULT,
 									Table.Comment.TIMES_FLAGGED_ABUSE,
 									Table.Comment.TIMES_FLAGGED_OTHER};
-				queries[0] = qb.buildQuery(qSelect,
-										   Table.Comment.CONVERSATION_ID + "=" + conversationId,
-										   null, null, null, null);
+				queries[0] =
+				  qb.buildQuery(qSelect, Table.Comment.CONVERSATION_ID + "=" + conversationId,
+								null,
+								null, null, null);
 				qb.setTables(Table.CommentSync.NAME);
 				String[] uSelect = {Table.CommentSync.T_ID + " AS " + BaseColumns._ID,
 									"1 AS " + Table.CommentSync.TEMP_SYNC,
@@ -193,9 +194,8 @@ public class ConversationsProvider extends AbstractProvider {
 									"null AS " + Table.Comment.TIMES_FLAGGED_INSULT,
 									"null AS " + Table.Comment.TIMES_FLAGGED_ABUSE,
 									"null AS " + Table.Comment.TIMES_FLAGGED_OTHER};
-				queries[1] = qb.buildQuery(uSelect,
-										   Table.CommentSync.CONVERSATION_ID + "=" + conversationId,
-										   null, null, null, null);
+				queries[1] = qb.buildQuery(uSelect, Table.CommentSync.CONVERSATION_ID + "=" +
+													conversationId, null, null, null, null);
 				String query = qb.buildUnionQuery(queries, "date DESC", limit);
 				c = getReadableDatabase().rawQuery(query, args);
 				break;
@@ -311,8 +311,8 @@ public class ConversationsProvider extends AbstractProvider {
 				query = Table.Conversation.ID + "=?";
 				args = new String[1];
 				args[0] = uri.getLastPathSegment();
-				updated = getWritableDatabase().update(Table.Conversation.NAME, values, query,
-													   args);
+				updated =
+				  getWritableDatabase().update(Table.Conversation.NAME, values, query, args);
 				break;
 			case URI_CONVERSATION_INCREASE_UNREAD:
 				args = new String[1];

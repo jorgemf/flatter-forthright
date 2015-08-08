@@ -22,7 +22,8 @@ import static com.livae.ff.api.OfyService.ofy;
 public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+	  throws IOException {
 		String userIdString = request.getParameter("userId");
 		String commentIdString = request.getParameter("commentId");
 		if (userIdString == null || commentIdString == null) {

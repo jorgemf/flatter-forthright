@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sync-adapter
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:accountType="com.livae.pensamientos"
+	android:allowParallelSyncs="false"
+	android:contentAuthority="com.livae.ff.app.dev.provider.ContactsProvider"
+	android:isAlwaysSyncable="true"
+	android:supportsUploading="true"
+	android:userVisible="true"/>

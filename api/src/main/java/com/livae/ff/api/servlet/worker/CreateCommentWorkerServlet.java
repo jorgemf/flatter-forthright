@@ -20,7 +20,8 @@ import static com.livae.ff.api.OfyService.ofy;
 public class CreateCommentWorkerServlet extends HttpServlet {
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+	  throws IOException {
 		String idString = request.getParameter("id");
 		if (idString == null) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -96,7 +97,8 @@ public class CreateCommentWorkerServlet extends HttpServlet {
 // do not notify to last commenters
 //		List<Comment> latest;
 //		latest = ofy().load().type(Comment.class).filter("conversationId", conversation.getId())
-//					  .order("-date").limit(Settings.NOTIFY_PUBLIC_COMMENTS_LAST_COMMENTERS).list();
+//					  .order("-date").limit(Settings.NOTIFY_PUBLIC_COMMENTS_LAST_COMMENTERS)
+// .list();
 //		for (Comment latestComment : latest) {
 //			usersToNotify.add(latestComment.getUserId());
 //		}

@@ -53,7 +53,8 @@ public abstract class CustomAsyncTask<Param, Result> implements OnLifeCycleListe
 		};
 
 		//noinspection unchecked
-		asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Parameter(param, callback));
+		asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Parameter(param,
+																				  callback));
 
 		return this;
 	}
@@ -67,9 +68,10 @@ public abstract class CustomAsyncTask<Param, Result> implements OnLifeCycleListe
 						  result.error);
 					result.callback.onError(this, result.param, result.error);
 				} else {
-					Log.i(LOG_TAG,
-						  CustomAsyncTask.this.getClass().getSimpleName() + " COMPLETED: " +
-						  result.result);
+					Log.i(LOG_TAG, CustomAsyncTask.this.getClass().getSimpleName() + " " +
+								   "COMPLETED:" +
+								   " " +
+								   result.result);
 					result.callback.onComplete(this, result.param, result.result);
 				}
 			} catch (Exception e) {
@@ -93,7 +95,8 @@ public abstract class CustomAsyncTask<Param, Result> implements OnLifeCycleListe
 		cancel();
 	}
 
-	protected abstract Result doInBackground(Param param) throws Exception;
+	protected abstract Result doInBackground(Param param)
+	  throws Exception;
 
 	public void cancel() {
 		cancelled = true;

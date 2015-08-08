@@ -16,7 +16,8 @@ import com.livae.ff.common.Constants;
 public class TaskRegister extends NetworkAsyncTask<Long, Void> {
 
 	@Override
-	protected Void doInBackground(Long phoneNumber) throws Exception {
+	protected Void doInBackground(Long phoneNumber)
+	  throws Exception {
 		final AppUser appUser = Application.appUser();
 		if (appUser.isDeviceConnected()) {
 			Log.d(LOG_TAG, "Device already connected");

@@ -58,8 +58,8 @@ public class NotificationUtil {
 													   String italicText) {
 		final SpannableString spannableString;
 		if (title != null && title.length() > 0) {
-			spannableString = new SpannableString(String.format("%s  %s%s", title, text,
-																italicText));
+			spannableString =
+			  new SpannableString(String.format("%s  %s%s", title, text, italicText));
 			spannableString.setSpan(BOLD_SPAN, 0, title.length(),
 									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			if (italicText.length() > 0) {

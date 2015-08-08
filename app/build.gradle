@@ -18,8 +18,8 @@ android {
 		versionName "0.11"
 		buildConfigField "int", "BUILD_DATE", getBuildDate()
 		buildConfigField "boolean", "DEV", "false"
+		buildConfigField "boolean", "TEST", "false"
 		resConfigs "en", "es"
-		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 	signingConfigs {
 		release {
@@ -51,6 +51,17 @@ android {
 			minSdkVersion 15
 			buildConfigField "boolean", "DEV", "true"
 		}
+		devTest {
+			versionName "test"
+			applicationId "com.livae.ff.app.dev"
+			minSdkVersion 18
+			buildConfigField "boolean", "DEV", "true"
+			buildConfigField "boolean", "TEST", "true"
+			testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+			packagingOptions {
+				exclude 'LICENSE.txt'
+			}
+		}
 	}
 }
 
@@ -73,8 +84,11 @@ dependencies {
 	androidTestCompile 'com.android.support.test:rules:0.3'
 	androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
 	androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
-	androidTestCompile 'com.google.code.findbugs:jsr305:2.0.1' // force for test version
-	androidTestCompile 'com.android.support:support-annotations:22.2.1' // force for test version
+	// force libraries for test version
+	devTestCompile 'com.google.code.findbugs:jsr305:2.0.1'
+	devTestCompile 'com.android.support:support-annotations:22.2.1'
+	androidTestCompile 'com.google.code.findbugs:jsr305:2.0.1'
+	androidTestCompile 'com.android.support:support-annotations:22.2.1'
 }
 
 buildscript {

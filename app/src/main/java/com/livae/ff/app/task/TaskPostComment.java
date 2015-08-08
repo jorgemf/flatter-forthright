@@ -9,7 +9,8 @@ import com.livae.ff.app.utils.SyncUtils;
 public class TaskPostComment extends CustomAsyncTask<TextId, Comment> {
 
 	@Override
-	protected Comment doInBackground(TextId params) throws Exception {
+	protected Comment doInBackground(TextId params)
+	  throws Exception {
 		Comment comment = null;
 		Model model = Application.model();
 // this code is too slow

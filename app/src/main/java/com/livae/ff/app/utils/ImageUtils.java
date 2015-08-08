@@ -44,8 +44,11 @@ public class ImageUtils {
 		imageUrl = parseUrl(imageUrl, context);
 		Bitmap image = null;
 		try {
-			image = Picasso.with(context).load(imageUrl).transform(new CircleTransformPicasso())
-						   .config(Bitmap.Config.RGB_565).get();
+			image = Picasso.with(context)
+						   .load(imageUrl)
+						   .transform(new CircleTransformPicasso())
+						   .config(Bitmap.Config.RGB_565)
+						   .get();
 		} catch (IOException ignore) {
 		}
 		return image;
@@ -58,8 +61,11 @@ public class ImageUtils {
 		loadDefault(imageView, imageUrl, R.drawable.ic_account_circle_white_48dp, true, true, 256);
 	}
 
-	public static void loadDefault(@Nonnull ImageView imageView, String imageUrl,
-								   @DrawableRes int placeholderResId, boolean round, boolean fade,
+	public static void loadDefault(@Nonnull ImageView imageView,
+								   String imageUrl,
+								   @DrawableRes int placeholderResId,
+								   boolean round,
+								   boolean fade,
 								   Integer maxSize) {
 		Context context = imageView.getContext();
 		if (imageUrl != null) {
@@ -98,8 +104,8 @@ public class ImageUtils {
 			if (BuildConfig.DEV) {
 				String newImageUrl = Settings.SERVER_URL + imageUrl;
 				SharedPreferences sharedPreferences;
-				sharedPreferences = context.getSharedPreferences(Settings.PREFERENCES_DEBUG,
-																 Context.MODE_PRIVATE);
+				sharedPreferences =
+				  context.getSharedPreferences(Settings.PREFERENCES_DEBUG, Context.MODE_PRIVATE);
 				if (sharedPreferences.contains(Settings.PREFERENCE_API_IP)) {
 					String ip = sharedPreferences.getString(Settings.PREFERENCE_API_IP, null);
 					newImageUrl = "http://" + ip + ":8080" + imageUrl;
@@ -123,8 +129,9 @@ public class ImageUtils {
 		Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		Paint paint = new Paint();
-		BitmapShader shader = new BitmapShader(squaredBitmap, BitmapShader.TileMode.CLAMP,
-											   BitmapShader.TileMode.CLAMP);
+		BitmapShader shader =
+		  new BitmapShader(squaredBitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode
+																		 .CLAMP);
 		paint.setShader(shader);
 		paint.setAntiAlias(true);
 		float r = size / 2f;

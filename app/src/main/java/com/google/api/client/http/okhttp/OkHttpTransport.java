@@ -55,21 +55,22 @@ import javax.net.ssl.SSLSocketFactory;
 public final class OkHttpTransport extends HttpTransport {
 
 	/**
-	 * All valid request methods as specified in {@link java.net.HttpURLConnection#setRequestMethod},
+	 * All valid request methods as specified in {@link java.net
+	 * .HttpURLConnection#setRequestMethod},
 	 * sorted in ascending alphabetical order.
 	 */
-	private static final String[] SUPPORTED_METHODS = {HttpMethods.DELETE, HttpMethods.GET,
-													   HttpMethods.HEAD, HttpMethods.OPTIONS,
-													   HttpMethods.POST, HttpMethods.PUT,
-													   HttpMethods.TRACE};
+	private static final String[] SUPPORTED_METHODS =
+	  {HttpMethods.DELETE, HttpMethods.GET, HttpMethods.HEAD, HttpMethods.OPTIONS, HttpMethods
+																					 .POST,
+	   HttpMethods.PUT, HttpMethods.TRACE};
 
 	static {
 		Arrays.sort(SUPPORTED_METHODS);
 	}
 
 	/**
-	 * HTTP proxy or {@code null} to use the proxy settings from <a href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
-	 * properties</a>.
+	 * HTTP proxy or {@code null} to use the proxy settings from <a href="http://docs.oracle
+	 * .com/javase/7/docs/api/java/net/doc-files/net-properties.html">system properties</a>.
 	 */
 	private final Proxy proxy;
 
@@ -97,14 +98,15 @@ public final class OkHttpTransport extends HttpTransport {
 
 	/**
 	 * @param proxy
-	 *   HTTP proxy or {@code null} to use the proxy settings from <a href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">
-	 *   system properties</a>
+	 *   HTTP proxy or {@code null} to use the proxy settings from <a href="http://docs.oracle
+	 *   .com/javase/7/docs/api/java/net/doc-files/net-properties.html"> system properties</a>
 	 * @param sslSocketFactory
 	 *   SSL socket factory or {@code null} for the default
 	 * @param hostnameVerifier
 	 *   host name verifier or {@code null} for the default
 	 */
-	OkHttpTransport(Proxy proxy, SSLSocketFactory sslSocketFactory,
+	OkHttpTransport(Proxy proxy,
+					SSLSocketFactory sslSocketFactory,
 					HostnameVerifier hostnameVerifier) {
 		this.proxy = proxy;
 		this.sslSocketFactory = sslSocketFactory;
@@ -119,8 +121,10 @@ public final class OkHttpTransport extends HttpTransport {
 	}
 
 	@Override
-	protected OkHttpRequest buildRequest(String method, String url) throws IOException {
-		Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
+	protected OkHttpRequest buildRequest(String method, String url)
+	  throws IOException {
+		Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported",
+									method);
 		// connection with proxy settings
 		URL connUrl = new URL(url);
 
@@ -163,15 +167,15 @@ public final class OkHttpTransport extends HttpTransport {
 
 		/**
 		 * HTTP proxy or {@code null} to use the proxy settings from <a
-		 * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
-		 * properties</a>.
+		 * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties
+		 * .html">system properties</a>.
 		 */
 		private Proxy proxy;
 
 		/**
 		 * Sets the HTTP proxy or {@code null} to use the proxy settings from <a
-		 * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
-		 * properties</a>. <p/> <p> For example: </p>
+		 * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties
+		 * .html">system properties</a>. <p/> <p> For example: </p>
 		 * <p/>
 		 * <pre>
 		 * setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8080)))
@@ -206,8 +210,8 @@ public final class OkHttpTransport extends HttpTransport {
 
 		/**
 		 * Sets the SSL socket factory based root certificates generated from the specified stream
-		 * using {@link java.security.cert.CertificateFactory#generateCertificates(java.io.InputStream)}.
-		 * <p/> <p> Example usage: </p>
+		 * using {@link java.security.cert.CertificateFactory#generateCertificates(java.io
+		 * .InputStream)}. <p/> <p> Example usage: </p>
 		 * <p/>
 		 * <pre>
 		 * trustCertificatesFromStream(new FileInputStream("certs.pem"));
@@ -231,25 +235,31 @@ public final class OkHttpTransport extends HttpTransport {
 		 * Sets the SSL socket factory based on a root certificate trust store.
 		 *
 		 * @param trustStore
-		 *   certificate trust store (use for example {@link com.google.api.client.util.SecurityUtils#loadKeyStore}
-		 *   or {@link com.google.api.client.util.SecurityUtils#loadKeyStoreFromCertificates})
+		 *   certificate trust store (use for example {@link com.google.api.client.util
+		 *   .SecurityUtils#loadKeyStore} or {@link com.google.api.client.util
+		 *   .SecurityUtils#loadKeyStoreFromCertificates})
 		 * @since 1.14
 		 */
-		public Builder trustCertificates(KeyStore trustStore) throws GeneralSecurityException {
+		public Builder trustCertificates(KeyStore trustStore)
+		  throws GeneralSecurityException {
 			SSLContext sslContext = SslUtils.getTlsSslContext();
 			SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
 			return setSslSocketFactory(sslContext.getSocketFactory());
 		}
 
 		/**
-		 * {@link com.google.api.client.util.Beta} <br/> Disables validating server SSL certificates
-		 * by setting the SSL socket factory using {@link com.google.api.client.util.SslUtils#trustAllSSLContext()}
-		 * for the SSL context and {@link com.google.api.client.util.SslUtils#trustAllHostnameVerifier()}
-		 * for the host name verifier. <p/> <p> Be careful! Disabling certificate validation is
-		 * dangerous and should only be done in testing environments. </p>
+		 * {@link com.google.api.client.util.Beta} <br/> Disables validating server SSL
+		 * certificates
+		 * by setting the SSL socket factory using {@link com.google.api.client.util
+		 * .SslUtils#trustAllSSLContext()} for the SSL context and {@link com.google.api.client
+		 * .util .SslUtils#trustAllHostnameVerifier()} for the host name verifier. <p/> <p> Be
+		 * careful! Disabling certificate validation is dangerous and should only be done in
+		 * testing
+		 * environments. </p>
 		 */
 		@Beta
-		public Builder doNotValidateCertificate() throws GeneralSecurityException {
+		public Builder doNotValidateCertificate()
+		  throws GeneralSecurityException {
 			hostnameVerifier = SslUtils.trustAllHostnameVerifier();
 			sslSocketFactory = SslUtils.trustAllSSLContext().getSocketFactory();
 			return this;

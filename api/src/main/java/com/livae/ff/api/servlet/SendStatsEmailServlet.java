@@ -32,7 +32,8 @@ public class SendStatsEmailServlet extends HttpServlet {
 	private static final Logger logger = Logger.getLogger(SendStatsEmailServlet.class.getName());
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+	  throws IOException {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Query query;
 		Entity entityStat;
@@ -134,8 +135,8 @@ public class SendStatsEmailServlet extends HttpServlet {
 		Session session = Session.getDefaultInstance(new Properties(), null);
 		String subject = "Stats of pensamientos.livae";
 		String msgBody = "";
-		final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,
-																	 DateFormat.LONG);
+		final DateFormat dateFormat =
+		  DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
 		msgBody += "Date:  " + dateFormat.format(stats.getDate()) + "   -  " +
 				   stats.getDate().getTime() + "\n";
 		msgBody += "Total users:  " + stats.getTotalUsers() + "\n";

@@ -7,9 +7,11 @@ public class Notifications {
 
 	private static final String NOTIFICATIONS_COMMENTS_CHAT = "ff.notifications.comments.chats";
 
-	private static final String NOTIFICATIONS_COMMENTS_FLATTERED_ME = "ff.notifications.comments.flattered.me";
+	private static final String NOTIFICATIONS_COMMENTS_FLATTERED_ME =
+	  "ff.notifications.comments" + ".flattered.me";
 
-	private static final String NOTIFICATIONS_COMMENTS_FORTHRIGHT_ME = "ff.notifications.comments.forthright.me";
+	private static final String NOTIFICATIONS_COMMENTS_FORTHRIGHT_ME =
+	  "ff.notifications.comments" + ".forthright.me";
 
 	private static final String NOTIFICATIONS_IMPORTANT = "apphunt.notifications.important";
 
@@ -59,7 +61,8 @@ public class Notifications {
 
 	public void setCommentsForthrightMe(boolean commentsForthrightMe) {
 		this.commentsForthrightMe = commentsForthrightMe;
-		prefs.edit().putBoolean(NOTIFICATIONS_COMMENTS_FORTHRIGHT_ME, commentsForthrightMe).apply();
+		prefs.edit().putBoolean(NOTIFICATIONS_COMMENTS_FORTHRIGHT_ME, commentsForthrightMe)
+			 .apply();
 	}
 
 	public boolean getImportant() {

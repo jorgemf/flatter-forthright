@@ -85,8 +85,9 @@ public class ContactsProvider extends AbstractProvider {
 			case URI_CONTACTS:
 				qb.setTables(Table.LocalUser.NAME);
 				qb.setDistinct(true);
-				c = qb.query(getReadableDatabase(), select, where, args, Table.LocalUser.PHONE,
-							 null, order);
+				c =
+				  qb.query(getReadableDatabase(), select, where, args, Table.LocalUser.PHONE, null,
+						   order);
 				// loader manager will reload the cursor automatically
 				c.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
@@ -102,8 +103,9 @@ public class ContactsProvider extends AbstractProvider {
 				qb.setTables(Table.LocalUser.NAME + " LEFT JOIN " + Table.Conversation.NAME +
 							 " ON " + Table.LocalUser.PHONE + "=" + Table.Conversation.PHONE);
 				qb.setDistinct(true);
-				c = qb.query(getReadableDatabase(), select, where, args, Table.LocalUser.PHONE,
-							 null, order);
+				c =
+				  qb.query(getReadableDatabase(), select, where, args, Table.LocalUser.PHONE, null,
+						   order);
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);

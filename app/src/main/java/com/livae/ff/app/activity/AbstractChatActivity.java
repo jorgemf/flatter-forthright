@@ -62,11 +62,18 @@ public class AbstractChatActivity extends AbstractActivity {
 
 	private ImageView imageUser;
 
-	public static Intent createIntent(@Nonnull Context context, @Nonnull ChatType chatType,
-									  @Nonnull Long conversationId, Long phoneNumber,
-									  String displayName, String roomName, String imageUri,
-									  Long imageSeed, Long lastAccess, Long lastMessage,
-									  Integer unreadMessages, Boolean userBlocked,
+	public static Intent createIntent(@Nonnull Context context,
+									  @Nonnull ChatType chatType,
+									  @Nonnull Long conversationId,
+									  Long phoneNumber,
+									  String displayName,
+									  String roomName,
+									  String imageUri,
+									  Long imageSeed,
+									  Long lastAccess,
+									  Long lastMessage,
+									  Integer unreadMessages,
+									  Boolean userBlocked,
 									  Long rawContactId) {
 		Intent intent = null;
 		switch (chatType) {
@@ -85,11 +92,19 @@ public class AbstractChatActivity extends AbstractActivity {
 		return intent;
 	}
 
-	protected static void startIntent(@Nonnull Intent intent, @Nonnull Activity activity,
-									  @Nonnull ChatType chatType, Long conversationId,
-									  Long phoneNumber, String displayName, String roomName,
-									  String imageUri, Long imageSeed, Long lastAccess,
-									  Long lastMessage, Integer unreadMessages, Boolean userBlocked,
+	protected static void startIntent(@Nonnull Intent intent,
+									  @Nonnull Activity activity,
+									  @Nonnull ChatType chatType,
+									  Long conversationId,
+									  Long phoneNumber,
+									  String displayName,
+									  String roomName,
+									  String imageUri,
+									  Long imageSeed,
+									  Long lastAccess,
+									  Long lastMessage,
+									  Integer unreadMessages,
+									  Boolean userBlocked,
 									  Long rawContactId) {
 		if (conversationId == null && phoneNumber == null) {
 			throw new RuntimeException("Not enough data to start the conversation");
@@ -104,11 +119,19 @@ public class AbstractChatActivity extends AbstractActivity {
 		}
 	}
 
-	private static void fillIntent(@Nonnull Intent intent, @Nonnull ChatType chatType,
-								   Long conversationId, Long phoneNumber, String displayName,
-								   String roomName, String imageUri, Long imageSeed,
-								   Long lastAccess, Long lastMessage, Integer unreadMessages,
-								   Boolean userBlocked, Long rawContactId) {
+	private static void fillIntent(@Nonnull Intent intent,
+								   @Nonnull ChatType chatType,
+								   Long conversationId,
+								   Long phoneNumber,
+								   String displayName,
+								   String roomName,
+								   String imageUri,
+								   Long imageSeed,
+								   Long lastAccess,
+								   Long lastMessage,
+								   Integer unreadMessages,
+								   Boolean userBlocked,
+								   Long rawContactId) {
 		if (conversationId != null) {
 			intent.putExtra(EXTRA_CONVERSATION_ID, conversationId);
 		}

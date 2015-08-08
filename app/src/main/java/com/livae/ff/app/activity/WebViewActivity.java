@@ -37,8 +37,8 @@ public class WebViewActivity extends AbstractActivity {
 			Toolbar toolbar = ((AbstractActivity) activity).getToolbar();
 			if (toolbar != null) {
 				ActivityOptions options;
-				options = ActivityOptions.makeSceneTransitionAnimation(activity, toolbar,
-																	   "toolbar");
+				options =
+				  ActivityOptions.makeSceneTransitionAnimation(activity, toolbar, "toolbar");
 				activity.startActivity(intent, options.toBundle());
 			} else {
 				//noinspection unchecked

@@ -32,8 +32,8 @@ public class CountdownDialogFragment extends DialogFragment {
 	@Nonnull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-										  .setView(R.layout.dialog_countdown).create();
+		final AlertDialog alertDialog =
+		  new AlertDialog.Builder(getActivity()).setView(R.layout.dialog_countdown).create();
 		alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 			@Override
 			public void onShow(DialogInterface dialog) {

@@ -5,7 +5,8 @@ import com.livae.ff.app.async.NetworkAsyncTask;
 public class TaskUserInfoGet extends NetworkAsyncTask<Void, Void> {
 
 	@Override
-	protected Void doInBackground(Void aVoid) throws Exception {
+	protected Void doInBackground(Void aVoid)
+	  throws Exception {
 		// this class does nothing, new registration means a new user
 
 //		// update blocked anonymous chats

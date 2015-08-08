@@ -25,7 +25,8 @@ import com.livae.ff.common.Constants.CommentVoteType;
 public class CommentViewHolder extends RecyclerView.ViewHolder
   implements View.OnLongClickListener, View.OnClickListener {
 
-	private final static ForegroundColorSpan TRANSPARENT_SPAM = new ForegroundColorSpan(Color.TRANSPARENT);
+	private final static ForegroundColorSpan TRANSPARENT_SPAM =
+	  new ForegroundColorSpan(Color.TRANSPARENT);
 
 	private static final StyleSpan ITALIC_SPAN = new StyleSpan(Typeface.ITALIC);
 
@@ -223,7 +224,8 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 						userOpinion.setText(resources.getString(R.string.user_agree, userName));
 						break;
 					case DISAGREE:
-						userOpinion.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDown, null,
+						userOpinion.setCompoundDrawablesRelativeWithIntrinsicBounds(thumbDown,
+																					null,
 																					null, null);
 						userOpinion.setText(resources.getString(R.string.user_disagree, userName));
 						break;

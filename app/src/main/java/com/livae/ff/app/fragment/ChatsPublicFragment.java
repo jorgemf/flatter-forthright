@@ -146,16 +146,18 @@ public class ChatsPublicFragment extends AbstractFragment
 				Long userPhone = Application.appUser().getUserPhone();
 				if (TextUtils.isEmpty(searchText)) {
 					selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND ( " +
-								Table.Conversation.TYPE + " IS NULL OR " + Table.Conversation.TYPE +
+								Table.Conversation.TYPE + " IS NULL OR " + Table.Conversation
+																			 .TYPE +
 								"=? ) AND " + Table.LocalUser.PHONE + " != ?";
 					selectionArgs = new String[]{chatType.name(), userPhone.toString()};
 				} else {
 					selection = Table.LocalUser.IS_MOBILE_NUMBER + " AND " +
 								Table.LocalUser.CONTACT_NAME + " LIKE ? AND ( " +
-								Table.Conversation.TYPE + " IS NULL OR " + Table.Conversation.TYPE +
+								Table.Conversation.TYPE + " IS NULL OR " + Table.Conversation
+																			 .TYPE +
 								"=? ) AND " + Table.LocalUser.PHONE + " != ?";
-					selectionArgs = new String[]{"%" + searchText + "%", chatType.name(),
-												 userPhone.toString()};
+					selectionArgs =
+					  new String[]{"%" + searchText + "%", chatType.name(), userPhone.toString()};
 				}
 				order = "CASE WHEN " + Table.Conversation.LAST_ACCESS + " IS NULL THEN 0 ELSE " +
 						Table.Conversation.LAST_ACCESS + " END DESC, " +

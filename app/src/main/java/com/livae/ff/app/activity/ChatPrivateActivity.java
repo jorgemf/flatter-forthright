@@ -18,31 +18,45 @@ public class ChatPrivateActivity extends AbstractChatActivity {
 
 	private Long secretConversationId;
 
-	public static void startChatPrivate(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
-										@Nonnull String displayName, boolean userBlocked,
+	public static void startChatPrivate(@Nonnull ChatsActivity chatsActivity,
+										@Nonnull Long phone,
+										@Nonnull String displayName,
+										boolean userBlocked,
 										long rawContactId) {
 		start(chatsActivity, ChatType.PRIVATE, null, phone, displayName, null, null, null, null,
 			  null, userBlocked, rawContactId);
 	}
 
-	public static void startChatAnonymous(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
-										  @Nonnull String displayName, boolean userBlocked,
+	public static void startChatAnonymous(@Nonnull ChatsActivity chatsActivity,
+										  @Nonnull Long phone,
+										  @Nonnull String displayName,
+										  boolean userBlocked,
 										  long rawContactId) {
-		start(chatsActivity, ChatType.PRIVATE_ANONYMOUS, null, phone, displayName, null, null, null,
+		start(chatsActivity, ChatType.PRIVATE_ANONYMOUS, null, phone, displayName, null, null,
+			  null,
 			  null, null, userBlocked, rawContactId);
 	}
 
-	public static void startChatSecret(@Nonnull ChatsActivity chatsActivity, @Nonnull Long phone,
-									   @Nonnull String displayName, boolean userBlocked,
+	public static void startChatSecret(@Nonnull ChatsActivity chatsActivity,
+									   @Nonnull Long phone,
+									   @Nonnull String displayName,
+									   boolean userBlocked,
 									   long rawContactId) {
 		start(chatsActivity, ChatType.SECRET, null, phone, displayName, null, null, null, null,
 			  null, userBlocked, rawContactId);
 	}
 
-	public static void start(@Nonnull Activity activity, @Nonnull ChatType chatType,
-							 Long conversationId, @Nonnull Long phoneNumber, String displayName,
-							 String anonymousName, String imageUri, Long lastAccess,
-							 Long lastMessage, Integer unreadMessages, boolean userBlocked,
+	public static void start(@Nonnull Activity activity,
+							 @Nonnull ChatType chatType,
+							 Long conversationId,
+							 @Nonnull Long phoneNumber,
+							 String displayName,
+							 String anonymousName,
+							 String imageUri,
+							 Long lastAccess,
+							 Long lastMessage,
+							 Integer unreadMessages,
+							 boolean userBlocked,
 							 Long rawContactId) {
 		Intent intent = new Intent(activity, ChatPrivateActivity.class);
 		AbstractChatActivity.startIntent(intent, activity, chatType, conversationId, phoneNumber,
@@ -62,8 +76,8 @@ public class ChatPrivateActivity extends AbstractChatActivity {
 		super.onDestroy();
 		if (secretConversationId != null) {
 			ContentResolver cr = getContentResolver();
-			Uri uriComments = ConversationsProvider
-								.getUriConversationComments(secretConversationId);
+			Uri uriComments =
+			  ConversationsProvider.getUriConversationComments(secretConversationId);
 			cr.delete(uriComments, null, null);
 			ContentValues values = new ContentValues();
 			values.putNull(Table.Conversation.LAST_MESSAGE);

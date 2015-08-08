@@ -30,5 +30,6 @@
     <orderEntry type="library" exported="" name="libphonenumber-7.0.9" level="project" />
     <orderEntry type="library" exported="" name="prefixmapper-2.25" level="project" />
     <orderEntry type="library" exported="" name="geocoder-2.25" level="project" />
+    <orderEntry type="library" exported="" name="common.common" level="project" />
   </component>
 </module>

@@ -15,8 +15,10 @@ import android.view.animation.Interpolator;
 
 public class AnimUtils {
 
-	public static void backgroundAnimation(View view, @AttrRes int initialColorResId,
-										   @AttrRes int finalColorResId, long duration,
+	public static void backgroundAnimation(View view,
+										   @AttrRes int initialColorResId,
+										   @AttrRes int finalColorResId,
+										   long duration,
 										   long delay) {
 		TypedValue a = new TypedValue();
 		Resources.Theme theme = view.getContext().getTheme();
@@ -25,8 +27,9 @@ public class AnimUtils {
 		theme.resolveAttribute(finalColorResId, a, true);
 		int endColor = a.data;
 		ObjectAnimator colorAnimation;
-		colorAnimation = ObjectAnimator.ofObject(view, "backgroundColor", new ArgbEvaluator(),
-												 startColor, endColor);
+		colorAnimation =
+		  ObjectAnimator.ofObject(view, "backgroundColor", new ArgbEvaluator(), startColor,
+								  endColor);
 		colorAnimation.setDuration(duration);
 		colorAnimation.setStartDelay(delay);
 		colorAnimation.start();
@@ -42,7 +45,8 @@ public class AnimUtils {
 
 		private static final DecelerateInterpolator DECELERATE = new DecelerateInterpolator();
 
-		private static final AccelerateDecelerateInterpolator ACCELERATE_DECELERATE = new AccelerateDecelerateInterpolator();
+		private static final AccelerateDecelerateInterpolator ACCELERATE_DECELERATE =
+		  new AccelerateDecelerateInterpolator();
 
 		private View view;
 

@@ -7,7 +7,8 @@ import com.livae.ff.app.async.NetworkAsyncTask;
 public class TaskForthrightUnblock extends NetworkAsyncTask<Void, Void> {
 
 	@Override
-	protected Void doInBackground(Void aVoid) throws Exception {
+	protected Void doInBackground(Void aVoid)
+	  throws Exception {
 		API.endpoint().unblockForthright().execute();
 		Application.appUser().setBlockedForthRightChats(null);
 		return null;

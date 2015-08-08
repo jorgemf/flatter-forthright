@@ -21,13 +21,10 @@ import javax.annotation.Nonnull;
 
 public class ChatsPublicAdapter extends UsersAdapter {
 
-	public static final String[] PROJECTION = {Table.LocalUser.T_ID, Table.LocalUser.CONTACT_NAME,
-											   Table.LocalUser.PHONE, Table.LocalUser.IMAGE_URI,
-											   Table.LocalUser.BLOCKED,
-											   Table.Conversation.T_ID + " AS CID",
-											   Table.Conversation.ROOM_NAME,
-											   Table.Conversation.LAST_ACCESS,
-											   Table.Conversation.UNREAD};
+	public static final String[] PROJECTION =
+	  {Table.LocalUser.T_ID, Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
+	   Table.LocalUser.IMAGE_URI, Table.LocalUser.BLOCKED, Table.Conversation.T_ID + " AS CID",
+	   Table.Conversation.ROOM_NAME, Table.Conversation.LAST_ACCESS, Table.Conversation.UNREAD};
 
 	protected int iConversationId;
 

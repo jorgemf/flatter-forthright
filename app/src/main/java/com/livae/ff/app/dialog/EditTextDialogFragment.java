@@ -41,15 +41,22 @@ public abstract class EditTextDialogFragment extends DialogFragment
 
 	private int maxChars;
 
-	public void show(Context context, FragmentManager fragmentManager, @StringRes int titleResId,
-					 @StringRes int messageResId, @IntegerRes int maximumChars, String text) {
+	public void show(Context context,
+					 FragmentManager fragmentManager,
+					 @StringRes int titleResId,
+					 @StringRes int messageResId,
+					 @IntegerRes int maximumChars,
+					 String text) {
 		Resources resources = context.getResources();
 		show(fragmentManager, resources.getString(titleResId), resources.getString(messageResId),
 			 resources.getInteger(maximumChars), text);
 	}
 
-	public void show(FragmentManager fragmentManager, String title, String messageRes,
-					 int maximumChars, String text) {
+	public void show(FragmentManager fragmentManager,
+					 String title,
+					 String messageRes,
+					 int maximumChars,
+					 String text) {
 		Bundle arguments = new Bundle();
 		arguments.putString(ARGUMENT_TITLE, title);
 		arguments.putString(ARGUMENT_MESSAGE, messageRes);
@@ -87,8 +94,9 @@ public abstract class EditTextDialogFragment extends DialogFragment
 				button.setOnClickListener(EditTextDialogFragment.this);
 
 				InputMethodManager keyboard;
-				keyboard = (InputMethodManager) getActivity()
-												  .getSystemService(Context.INPUT_METHOD_SERVICE);
+				keyboard =
+				  (InputMethodManager) getActivity().getSystemService(Context
+																		.INPUT_METHOD_SERVICE);
 				keyboard.showSoftInput(editText, 0);
 				editText.selectAll();
 			}

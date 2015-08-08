@@ -25,20 +25,14 @@ import javax.annotation.Nonnull;
 
 public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
-	public static final String[] PROJECTION = {Table.Comment.T_ID, Table.Comment.DATE,
-											   Table.Comment.CONVERSATION_ID,
-											   Table.Comment.USER_ANONYMOUS_ID,
-											   Table.Comment.USER_ALIAS, Table.Comment.IS_ME,
-											   Table.Comment.COMMENT, Table.Comment.AGREE_VOTES,
-											   Table.Comment.DISAGREE_VOTES,
-											   Table.Comment.USER_VOTE_TYPE,
-											   Table.Comment.VOTE_TYPE, Table.Comment.USER_MARK,
-											   Table.Comment.TIMES_FLAGGED,
-											   Table.Comment.TIMES_FLAGGED_ABUSE,
-											   Table.Comment.TIMES_FLAGGED_INSULT,
-											   Table.Comment.TIMES_FLAGGED_LIE,
-											   Table.Comment.TIMES_FLAGGED_OTHER,
-											   Table.CommentSync.TEMP_SYNC};
+	public static final String[] PROJECTION =
+	  {Table.Comment.T_ID, Table.Comment.DATE, Table.Comment.CONVERSATION_ID,
+	   Table.Comment.USER_ANONYMOUS_ID, Table.Comment.USER_ALIAS, Table.Comment.IS_ME,
+	   Table.Comment.COMMENT, Table.Comment.AGREE_VOTES, Table.Comment.DISAGREE_VOTES,
+	   Table.Comment.USER_VOTE_TYPE, Table.Comment.VOTE_TYPE, Table.Comment.USER_MARK,
+	   Table.Comment.TIMES_FLAGGED, Table.Comment.TIMES_FLAGGED_ABUSE,
+	   Table.Comment.TIMES_FLAGGED_INSULT, Table.Comment.TIMES_FLAGGED_LIE,
+	   Table.Comment.TIMES_FLAGGED_OTHER, Table.CommentSync.TEMP_SYNC};
 
 	private static final int COMMENT_PUBLIC_ME = 1;
 
@@ -102,9 +96,13 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
 	private boolean isMyPublicChat;
 
-	public CommentsAdapter(@Nonnull Fragment fragment, @Nonnull ViewCreator viewCreator,
-						   CommentClickListener commentClickListener, @Nonnull ChatType chatType,
-						   String userName, String userImageUri, boolean myPublicChat) {
+	public CommentsAdapter(@Nonnull Fragment fragment,
+						   @Nonnull ViewCreator viewCreator,
+						   CommentClickListener commentClickListener,
+						   @Nonnull ChatType chatType,
+						   String userName,
+						   String userImageUri,
+						   boolean myPublicChat) {
 		super(fragment.getActivity(), viewCreator);
 		layoutInflater = fragment.getActivity().getLayoutInflater();
 		commentVoteTypeHashMap = new HashMap<>();
@@ -185,18 +183,19 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		View view = null;
 		switch (type) {
 			case COMMENT_PRIVATE_ME:
-				view = layoutInflater.inflate(R.layout.item_comment_private_mine, viewGroup, false);
+				view = layoutInflater.inflate(R.layout.item_comment_private_mine, viewGroup,
+											  false);
 				break;
 			case COMMENT_PRIVATE_OTHERS:
-				view = layoutInflater.inflate(R.layout.item_comment_private_others, viewGroup,
-											  false);
+				view =
+				  layoutInflater.inflate(R.layout.item_comment_private_others, viewGroup, false);
 				break;
 			case COMMENT_PUBLIC_ME:
 				view = layoutInflater.inflate(R.layout.item_comment_public_mine, viewGroup, false);
 				break;
 			case COMMENT_PUBLIC_OTHERS:
-				view = layoutInflater.inflate(R.layout.item_comment_public_others, viewGroup,
-											  false);
+				view =
+				  layoutInflater.inflate(R.layout.item_comment_public_others, viewGroup, false);
 				break;
 			case COMMENT_PUBLIC_USER:
 				view = layoutInflater.inflate(R.layout.item_comment_public_user, viewGroup, false);
@@ -351,8 +350,12 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		holder.setVoteType(voteType);
 	}
 
-	private void bindCommentPadding(CommentViewHolder holder, Cursor cursor, Long anonymousId,
-									String alias, boolean isMe, boolean isTheUser) {
+	private void bindCommentPadding(CommentViewHolder holder,
+									Cursor cursor,
+									Long anonymousId,
+									String alias,
+									boolean isMe,
+									boolean isTheUser) {
 		if (!cursor.isFirst()) {
 			cursor.moveToPrevious();
 			boolean previousIsMe = cursor.getInt(iIsMe) != 0;
@@ -396,8 +399,12 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 		}
 	}
 
-	private void bindCommentHeader(CommentViewHolder holder, Cursor cursor, Long anonymousId,
-								   String alias, boolean isMe, boolean isTheUser) {
+	private void bindCommentHeader(CommentViewHolder holder,
+								   Cursor cursor,
+								   Long anonymousId,
+								   String alias,
+								   boolean isMe,
+								   boolean isTheUser) {
 		if (cursor.isLast()) {
 			holder.setFirstCommentOfPerson(true);
 		} else {
@@ -418,7 +425,8 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 				switch (chatType) {
 					case FLATTER:
 					case FORTHRIGHT:
-						holder.setFirstCommentOfPerson(!(alias != null && alias.equals(nextAlias)));
+						holder.setFirstCommentOfPerson(!(alias != null && alias.equals
+																				  (nextAlias)));
 						break;
 					case PRIVATE:
 					case PRIVATE_ANONYMOUS:

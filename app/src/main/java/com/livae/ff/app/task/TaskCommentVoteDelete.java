@@ -11,7 +11,8 @@ import com.livae.ff.app.async.NetworkAsyncTask;
 public class TaskCommentVoteDelete extends NetworkAsyncTask<Pair<Long, Integer>, Comment> {
 
 	@Override
-	protected Comment doInBackground(Pair<Long, Integer> param) throws Exception {
+	protected Comment doInBackground(Pair<Long, Integer> param)
+	  throws Exception {
 		Comment comment = API.endpoint().noVoteComment(param.first).execute();
 		Model model = Application.model();
 		model.parse(comment);

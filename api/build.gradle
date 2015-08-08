@@ -3,7 +3,8 @@ buildscript {
 		jcenter()
 	}
 	dependencies {
-		classpath 'com.google.appengine:gradle-appengine-plugin:1.9.20' // .20 worked well, wait for 24
+		classpath 'com.google.appengine:gradle-appengine-plugin:1.9.20'
+		// .20 worked well, wait for 24
 	}
 }
 

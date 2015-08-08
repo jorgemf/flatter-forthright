@@ -142,8 +142,8 @@ public class ChatsActivity extends AbstractActivity
 			// increase unread count of conversation
 			Long conversationId = nc.getConversationId();
 			if (!nc.getIsMe()) {
-				Uri uriConversation = ConversationsProvider
-										.getUriConversationIncreaseUnread(conversationId);
+				Uri uriConversation =
+				  ConversationsProvider.getUriConversationIncreaseUnread(conversationId);
 				getContentResolver().update(uriConversation, null, null, null);
 			}
 			// notify to listeners
@@ -155,8 +155,9 @@ public class ChatsActivity extends AbstractActivity
 				case PRIVATE:
 				case SECRET:
 					getSupportLoaderManager().restartLoader(LOADER_UNREAD_PRIVATE, null, this);
-					fragment = chatsFragmentsAdapter
-								 .getRegisteredFragment(ChatsFragmentsAdapter.CHAT_PRIVATE);
+					fragment =
+					  chatsFragmentsAdapter.getRegisteredFragment(ChatsFragmentsAdapter
+																	.CHAT_PRIVATE);
 					if (fragment != null) {
 						ChatsPrivateFragment chatsFragment = (ChatsPrivateFragment) fragment;
 						return chatsFragment.onNotificationReceived(notification);
@@ -167,8 +168,9 @@ public class ChatsActivity extends AbstractActivity
 						chats.increaseChatFlatterUnread();
 					}
 					getSupportLoaderManager().restartLoader(LOADER_UNREAD_FLATTER, null, this);
-					fragment = chatsFragmentsAdapter
-								 .getRegisteredFragment(ChatsFragmentsAdapter.CHAT_FLATTERED);
+					fragment =
+					  chatsFragmentsAdapter.getRegisteredFragment(ChatsFragmentsAdapter
+																	.CHAT_FLATTERED);
 					if (fragment != null) {
 						ChatsPublicFragment chatsPublicFragment = (ChatsPublicFragment) fragment;
 						return chatsPublicFragment.onNotificationReceived(notification);
@@ -179,8 +181,9 @@ public class ChatsActivity extends AbstractActivity
 						chats.increaseChatForthrightUnread();
 					}
 					getSupportLoaderManager().restartLoader(LOADER_UNREAD_FORTHRIGHT, null, this);
-					fragment = chatsFragmentsAdapter
-								 .getRegisteredFragment(ChatsFragmentsAdapter.CHAT_FORTHRIGHT);
+					fragment =
+					  chatsFragmentsAdapter.getRegisteredFragment(ChatsFragmentsAdapter
+																	.CHAT_FORTHRIGHT);
 					if (fragment != null) {
 						ChatsPublicFragment chatsPublicFragment = (ChatsPublicFragment) fragment;
 						return chatsPublicFragment.onNotificationReceived(notification);
@@ -277,8 +280,8 @@ public class ChatsActivity extends AbstractActivity
 			toolbar = (Toolbar) findViewById(R.id.toolbar);
 			setSupportActionBar(toolbar);
 			tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-			chatsFragmentsAdapter = new ChatsFragmentsAdapter(getSupportFragmentManager(),
-															  getResources());
+			chatsFragmentsAdapter =
+			  new ChatsFragmentsAdapter(getSupportFragmentManager(), getResources());
 			tabs = new View[chatsFragmentsAdapter.getCount()];
 			LayoutInflater inflater = getLayoutInflater();
 			for (int i = 0; i < tabs.length; i++) {
@@ -293,8 +296,8 @@ public class ChatsActivity extends AbstractActivity
 			viewPager.setPageMarginDrawable(R.color.black_light);
 			viewPager.setAdapter(chatsFragmentsAdapter);
 //			tabLayout.setupWithViewPager(viewPager);
-			viewPager
-			  .addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+			viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener
+												(tabLayout));
 			viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 				@Override
 				public void onPageScrolled(int position, float positionOffset,
@@ -320,8 +323,8 @@ public class ChatsActivity extends AbstractActivity
 
 				}
 			});
-			tabLayout
-			  .setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+			tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener
+												 (viewPager));
 			viewPager.setCurrentItem(ChatsFragmentsAdapter.CHAT_PRIVATE);
 
 			addChatsContainer = findViewById(R.id.add_chat_container);
@@ -358,7 +361,8 @@ public class ChatsActivity extends AbstractActivity
 			createNewProfile();
 		} else {
 			cursor.moveToFirst();
-			long id = cursor.getLong(cursor.getColumnIndex(Table.LocalUser.ANDROID_RAW_CONTACT_ID));
+			long id = cursor.getLong(cursor.getColumnIndex(Table.LocalUser
+															 .ANDROID_RAW_CONTACT_ID));
 			cursor.close();
 			uri = CommonDataKinds.Phone.CONTENT_URI;
 			projection = new String[]{CommonDataKinds.Phone.CONTACT_ID};
@@ -474,10 +478,10 @@ public class ChatsActivity extends AbstractActivity
 			hideChatsButtonsContainer();
 			final long phone = data.getLongExtra(ContactsActivity.SELECTED_PHONE, 0);
 			final String name = data.getStringExtra(ContactsActivity.SELECTED_DISPLAY_NAME);
-			final boolean blocked = data.getBooleanExtra(ContactsActivity.SELECTED_USER_BLOCKED,
-														 false);
-			final long rawContactId = data.getLongExtra(ContactsActivity.SELECTED_RAW_CONTACT_ID,
-														0);
+			final boolean blocked =
+			  data.getBooleanExtra(ContactsActivity.SELECTED_USER_BLOCKED, false);
+			final long rawContactId =
+			  data.getLongExtra(ContactsActivity.SELECTED_RAW_CONTACT_ID, 0);
 			switch (requestCode) {
 				case REQUEST_CONTACT_PRIVATE:
 					ChatPrivateActivity.startChatPrivate(this, phone, name, blocked, rawContactId);
@@ -558,22 +562,22 @@ public class ChatsActivity extends AbstractActivity
 		int statusBarColor = colorPrivate;
 		switch (position) {
 			case ChatsFragmentsAdapter.CHAT_FLATTERED:
-				color = (Integer) argbEvaluator.evaluate(positionOffset, colorFlatterer,
-														 colorPrivate);
-				statusBarColor = (Integer) argbEvaluator.evaluate(positionOffset,
-																  colorFlattererDarker,
-																  colorPrivateDarker);
+				color =
+				  (Integer) argbEvaluator.evaluate(positionOffset, colorFlatterer, colorPrivate);
+				statusBarColor =
+				  (Integer) argbEvaluator.evaluate(positionOffset, colorFlattererDarker,
+												   colorPrivateDarker);
 				if (positionOffsetPixels > 0) {
 					int totalPixels = (int) (positionOffsetPixels / positionOffset);
 					floatingActionButton.setTranslationX(totalPixels - positionOffsetPixels);
 				}
 				break;
 			case ChatsFragmentsAdapter.CHAT_PRIVATE:
-				color = (Integer) argbEvaluator.evaluate(positionOffset, colorPrivate,
-														 colorForthright);
-				statusBarColor = (Integer) argbEvaluator.evaluate(positionOffset,
-																  colorPrivateDarker,
-																  colorForthrightDarker);
+				color =
+				  (Integer) argbEvaluator.evaluate(positionOffset, colorPrivate, colorForthright);
+				statusBarColor =
+				  (Integer) argbEvaluator.evaluate(positionOffset, colorPrivateDarker,
+												   colorForthrightDarker);
 				floatingActionButton.setTranslationX(-positionOffsetPixels);
 				break;
 			case ChatsFragmentsAdapter.CHAT_FORTHRIGHT:

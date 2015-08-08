@@ -162,4 +162,7 @@ public class AppUser {
 			   notifications.toString();
 	}
 
+	public void clear() {
+		prefs.edit().clear().apply();
+	}
 }

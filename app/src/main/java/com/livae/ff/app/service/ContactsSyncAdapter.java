@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.livae.ff.api.ff.model.Numbers;
 import com.livae.ff.app.Analytics;
+import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.api.API;
 import com.livae.ff.app.provider.ContactsProvider;
@@ -55,13 +56,19 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	@Override
-	public void onPerformSync(Account account, Bundle extras, String authority,
-							  ContentProviderClient provider, SyncResult syncResult) {
+	public void onPerformSync(Account account,
+							  Bundle extras,
+							  String authority,
+							  ContentProviderClient provider,
+							  SyncResult syncResult) {
 		Log.i(LOG_TAG, "Starting contacts synchronization");
-		Log.i(LOG_TAG, "Synchronizing database");
-		syncDataBase();
-		Log.i(LOG_TAG, "Synchronizing with server");
-		checkPhonesWithServer();
+		//noinspection PointlessBooleanExpression
+		if (!BuildConfig.TEST) {
+			Log.i(LOG_TAG, "Synchronizing database");
+			syncDataBase();
+			Log.i(LOG_TAG, "Synchronizing with server");
+			checkPhonesWithServer();
+		}
 		Log.i(LOG_TAG, "Finished contacts synchronization");
 	}
 
@@ -76,8 +83,8 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 			if (phoneContact == null && !localContact.blocked) {
 				// delete
 				Uri uriDelete = ContactsProvider.getUriContact(localContact.id);
-				operation = ContentProviderOperation.newDelete(uriDelete).withExpectedCount(1)
-													.build();
+				operation =
+				  ContentProviderOperation.newDelete(uriDelete).withExpectedCount(1).build();
 				operations.add(operation);
 				if (localContact.phone != null) {
 					Log.i(LOG_TAG, "Deleted user phone: " + localContact.phone);
@@ -92,7 +99,8 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 					ContentValues contentValues;
 					contentValues = phoneContact.getContentValues(localContact, countryISO);
 					operation = ContentProviderOperation.newUpdate(uriUpdate)
-														.withValues(contentValues).build();
+														.withValues(contentValues)
+														.build();
 					operations.add(operation);
 					if (phoneContact.phone != null) {
 						Log.i(LOG_TAG, "Updated user phone: " + phoneContact.phone);
@@ -109,8 +117,9 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 				final ContentValues contentValues = phoneContact.getContentValues(countryISO);
 				contentValues.put(Table.LocalUser.ACCEPTS_PRIVATE, false);
 				contentValues.put(Table.LocalUser.BLOCKED, false);
-				operation = ContentProviderOperation.newInsert(uriContacts)
-													.withValues(contentValues).build();
+				operation =
+				  ContentProviderOperation.newInsert(uriContacts).withValues(contentValues)
+										  .build();
 				operations.add(operation);
 				if (phoneContact.phone != null) {
 					Log.i(LOG_TAG, "Added user phone: " + phoneContact.phone);
@@ -167,7 +176,8 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 					selectionArgs[0] = phone.toString();
 					operation = ContentProviderOperation.newUpdate(uriContacts)
 														.withSelection(selection, selectionArgs)
-														.withValues(contentValues).build();
+														.withValues(contentValues)
+														.build();
 					operations.add(operation);
 				}
 			}
@@ -186,13 +196,14 @@ public class ContactsSyncAdapter extends AbstractThreadedSyncAdapter {
 		HashMap<Long, PhoneContact> contacts = new HashMap<>();
 		PhoneContact contact;
 		final Uri uri = Phone.CONTENT_URI;
-		String[] projection = {Phone._ID, Phone.DATA_VERSION, Phone.NUMBER, Phone.DATA4,
-							   Phone.DISPLAY_NAME, Phone.PHOTO_THUMBNAIL_URI};
+		String[] projection =
+		  {Phone._ID, Phone.DATA_VERSION, Phone.NUMBER, Phone.DATA4, Phone.DISPLAY_NAME,
+		   Phone.PHOTO_THUMBNAIL_URI};
 		String where = "account_type_and_data_set !=? ";
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			projection = new String[]{Phone._ID, Phone.DATA_VERSION, Phone.NUMBER,
-									  Phone.NORMALIZED_NUMBER, Phone.DISPLAY_NAME,
-									  Phone.PHOTO_THUMBNAIL_URI};
+			projection =
+			  new String[]{Phone._ID, Phone.DATA_VERSION, Phone.NUMBER, Phone.NORMALIZED_NUMBER,
+						   Phone.DISPLAY_NAME, Phone.PHOTO_THUMBNAIL_URI};
 			where = Phone.ACCOUNT_TYPE_AND_DATA_SET + "!=? ";
 		}
 		final String[] args = {Constants.ACCOUNT_TYPE};

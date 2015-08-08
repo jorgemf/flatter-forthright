@@ -17,16 +17,12 @@ import javax.annotation.Nonnull;
 
 public class ChatsPrivateAdapter extends UsersAdapter {
 
-	public static final String[] PROJECTION = {Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
-											   Table.LocalUser.IMAGE_URI, Table.LocalUser.BLOCKED,
-											   Table.LocalUser.ANDROID_RAW_CONTACT_ID,
-											   Table.Conversation.T_ID,
-											   Table.Conversation.ROOM_NAME,
-											   Table.Conversation.TYPE,
-											   Table.Conversation.LAST_MESSAGE,
-											   Table.Conversation.LAST_MESSAGE_DATE,
-											   Table.Conversation.LAST_ACCESS,
-											   Table.Conversation.UNREAD, Table.Conversation.PHONE};
+	public static final String[] PROJECTION =
+	  {Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE, Table.LocalUser.IMAGE_URI,
+	   Table.LocalUser.BLOCKED, Table.LocalUser.ANDROID_RAW_CONTACT_ID, Table.Conversation.T_ID,
+	   Table.Conversation.ROOM_NAME, Table.Conversation.TYPE, Table.Conversation.LAST_MESSAGE,
+	   Table.Conversation.LAST_MESSAGE_DATE, Table.Conversation.LAST_ACCESS,
+	   Table.Conversation.UNREAD, Table.Conversation.PHONE};
 
 	protected int iConversationId;
 
@@ -99,7 +95,8 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 										null);
 		}
 		if (!cursor.isNull(iLastMessage)) {
-			holder.setLastMessage(cursor.getString(iLastMessage), cursor.getLong(iLastMessageDate));
+			holder.setLastMessage(cursor.getString(iLastMessage), cursor.getLong
+																		   (iLastMessageDate));
 		}
 		if (!cursor.isNull(iLastAccess)) {
 			holder.setLastAccessDate(cursor.getLong(iLastAccess));

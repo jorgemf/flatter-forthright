@@ -91,7 +91,8 @@ public class DeviceUtils {
 
 	public static boolean isNetworkAvailable(Context context) {
 		ConnectivityManager connectivity;
-		connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		connectivity = (ConnectivityManager) context.getSystemService(Context
+																		.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivity.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}

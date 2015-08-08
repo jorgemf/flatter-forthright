@@ -10,10 +10,12 @@ import com.livae.ff.app.async.NetworkAsyncTask;
 public class TaskConversationCreate extends NetworkAsyncTask<ConversationParams, Conversation> {
 
 	@Override
-	protected Conversation doInBackground(ConversationParams conversation) throws Exception {
+	protected Conversation doInBackground(ConversationParams conversation)
+	  throws Exception {
 		GetPhoneConversation request;
-		request = API.endpoint().getPhoneConversation(conversation.getPhoneNumber(),
-													  conversation.getChatType().name());
+		request = API.endpoint()
+					 .getPhoneConversation(conversation.getPhoneNumber(),
+										   conversation.getChatType().name());
 		if (conversation.getRoomName() != null) {
 			request.setRoomName(conversation.getRoomName());
 		}

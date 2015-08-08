@@ -141,8 +141,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 		switch (objectLoader.getId()) {
 			case LOADER_CONTACT:
 				if (cursor.moveToFirst()) {
-					int iRawContactId = cursor
-										  .getColumnIndex(Table.LocalUser.ANDROID_RAW_CONTACT_ID);
+					int iRawContactId =
+					  cursor.getColumnIndex(Table.LocalUser.ANDROID_RAW_CONTACT_ID);
 					if (!cursor.isNull(iRawContactId) && rawContactId == null) {
 						addContactButton.setVisibility(View.GONE);
 						rawContactId = cursor.getLong(iRawContactId);
@@ -214,7 +214,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 
 			@Override
 			public CustomAsyncTask<QueryId, ListResult> execute(QueryId queryId,
-																Callback<QueryId, ListResult> callback) {
+																Callback<QueryId, ListResult>
+																  callback) {
 				callback.onComplete(this, queryId, doInBackground(queryId));
 				return this;
 			}
@@ -283,7 +284,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 
 			@Override
 			public void onError(CustomAsyncTask<ConversationParams, Conversation> task,
-								ConversationParams conversationParams, Exception e) {
+								ConversationParams conversationParams,
+								Exception e) {
 				if (isResumed()) {
 					AbstractActivity abstractActivity = (AbstractActivity) getActivity();
 					abstractActivity.showSnackBarException(e);
@@ -346,7 +348,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 		dialog = builder.setTitle(anonymousNick)
 						.setMessage(R.string.confirmation_block_anonymous_user)
 						.setNegativeButton(R.string.cancel, null)
-						.setView(R.layout.view_block_buttons).create();
+						.setView(R.layout.view_block_buttons)
+						.create();
 		dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 			@Override
 			public void onShow(final DialogInterface dialogInterface) {
@@ -427,7 +430,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 				if (isResumed()) {
 					adjustBlockMenu();
 					Snackbar.make(getActivity().findViewById(R.id.container),
-								  R.string.confirmation_user_blocked, Snackbar.LENGTH_SHORT).show();
+								  R.string.confirmation_user_blocked, Snackbar.LENGTH_SHORT)
+							.show();
 
 				}
 			}
@@ -452,7 +456,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 		task.execute(flagConversation, new Callback<FlagConversation, Void>() {
 			@Override
 			public void onComplete(CustomAsyncTask<FlagConversation, Void> task,
-								   FlagConversation flagConversation, Void aVoid) {
+								   FlagConversation flagConversation,
+								   Void aVoid) {
 				userBlocked = true;
 				final FragmentActivity activity = getActivity();
 				Uri uriConversation = ConversationsProvider.getUriConversation(conversationId);
@@ -462,14 +467,16 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 				if (isResumed()) {
 					adjustBlockMenu();
 					Snackbar.make(activity.findViewById(R.id.container),
-								  R.string.confirmation_user_blocked, Snackbar.LENGTH_SHORT).show();
+								  R.string.confirmation_user_blocked, Snackbar.LENGTH_SHORT)
+							.show();
 					activity.finish();
 				}
 			}
 
 			@Override
 			public void onError(CustomAsyncTask<FlagConversation, Void> task,
-								FlagConversation flagConversation, Exception e) {
+								FlagConversation flagConversation,
+								Exception e) {
 				userBlocked = false;
 				if (isResumed()) {
 					showSendMessagesPanel();
@@ -504,7 +511,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 			case R.id.action_copy:
 				ClipboardManager clipboard;
 				FragmentActivity activity = getActivity();
-				clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+				clipboard = (ClipboardManager) activity.getSystemService(Context
+																		   .CLIPBOARD_SERVICE);
 				int selected = commentsAdapter.getSelectedItemCount();
 				List<Integer> selectedItems = commentsAdapter.getSelectedItems();
 				String title = getResources().getString(R.string.copy_conversation_label);
@@ -516,8 +524,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 				} else if (selected > 1) {
 					String text = "";
 					String me = getResources().getString(R.string.me);
-					DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,
-																		   DateFormat.SHORT);
+					DateFormat dateFormat =
+					  DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 					for (Integer position : selectedItems) {
 						int pos = commentsAdapter.getCursorPosition(position);
 						Date date = new Date(commentsAdapter.getDate(pos));

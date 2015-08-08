@@ -19,13 +19,14 @@ public class TaskCheckVersion extends NetworkAsyncTask<Void, Version> {
 	}
 
 	@Override
-	protected Version doInBackground(Void aVoid) throws Exception {
+	protected Version doInBackground(Void aVoid)
+	  throws Exception {
 		long currentTime = System.currentTimeMillis();
 		Version version = null;
 		//noinspection PointlessBooleanExpression,ConstantConditions
 		if (BuildConfig.DEBUG || BuildConfig.DEV ||
-			currentTime < prefs.getLong(Settings.Pref.VERSION_CHECK_TIME, 0) +
-						  Settings.VERSION_CHECK_DELAY) {
+			currentTime <
+			prefs.getLong(Settings.Pref.VERSION_CHECK_TIME, 0) + Settings.VERSION_CHECK_DELAY) {
 			version = API.version();
 			prefs.edit().putLong(Settings.Pref.VERSION_CHECK_TIME, currentTime).apply();
 		}

@@ -30,7 +30,8 @@ import com.livae.ff.app.task.ListResult;
 import com.livae.ff.app.task.QueryParam;
 import com.livae.ff.app.utils.Debug;
 
-public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder, QUERY extends QueryParam>
+public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder, QUERY extends
+																						 QueryParam>
   extends AbstractFragment
   implements LoaderManager.LoaderCallbacks<Cursor>, Callback<QUERY, ListResult> {
 
@@ -99,8 +100,8 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 
 	public void setColumnsLayoutManager(int columns) {
 		GridLayoutManager gridLayoutManager;
-		gridLayoutManager = new GridLayoutManager(getActivity(), columns,
-												  GridLayoutManager.VERTICAL, false);
+		gridLayoutManager =
+		  new GridLayoutManager(getActivity(), columns, GridLayoutManager.VERTICAL, false);
 		gridLayoutManager.setSpanSizeLookup(new GridSpanSize(gridLayoutManager));
 		recyclerView.setLayoutManager(gridLayoutManager);
 	}
@@ -136,6 +137,27 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 			selectionArgs = savedInstanceState.getStringArray(KEY_SAVED_SELECTION_ARGS);
 			finishLoading = savedInstanceState.getBoolean(KEY_SAVED_FINISH_LOADING);
 		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (loaderTask != null) {
+			loaderTask.cancel();
+		}
+		adapter.setIsLoading(false);
+		finishLoading = false;
+	}
+
+	public View createErrorView(LayoutInflater layoutInflater, ViewGroup parent) {
+		View view = super.createErrorView(layoutInflater, parent);
+		view.findViewById(R.id.button_retry).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				loadNext();
+			}
+		});
+		return view;
 	}
 
 	@Override
@@ -206,16 +228,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		outState.putString(KEY_SAVED_SELECTION, selection);
 		outState.putStringArray(KEY_SAVED_SELECTION_ARGS, selectionArgs);
 		outState.putBoolean(KEY_SAVED_FINISH_LOADING, finishLoading);
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		if (loaderTask != null) {
-			loaderTask.cancel();
-		}
-		adapter.setIsLoading(false);
-		finishLoading = false;
 	}
 
 	protected void startLoading() {
@@ -323,17 +335,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 			adapter.setIsError(true);
 			hideLoading();
 		}
-	}
-
-	public View createErrorView(LayoutInflater layoutInflater, ViewGroup parent) {
-		View view = super.createErrorView(layoutInflater, parent);
-		view.findViewById(R.id.button_retry).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				loadNext();
-			}
-		});
-		return view;
 	}
 
 	public void restart() {

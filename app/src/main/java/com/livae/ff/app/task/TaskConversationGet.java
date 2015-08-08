@@ -10,7 +10,8 @@ import com.livae.ff.app.async.NetworkAsyncTask;
 public class TaskConversationGet extends NetworkAsyncTask<Long, Conversation> {
 
 	@Override
-	protected Conversation doInBackground(Long conversationId) throws Exception {
+	protected Conversation doInBackground(Long conversationId)
+	  throws Exception {
 		Conversation conversation = API.endpoint().getConversation(conversationId).execute();
 		Model model = new Model(Application.getContext());
 		model.parse(conversation);

@@ -125,6 +125,19 @@ public abstract class AbstractChatFragment
 	}
 
 	@Override
+	public void onPause() {
+		super.onPause();
+		notificationDisabledReceiver.unregister(getActivity());
+		final ContentResolver cr = getActivity().getContentResolver();
+		if (contentObserver != null) {
+			cr.unregisterContentObserver(contentObserver);
+		}
+		if (conversationId != null) {
+			leaveConversation();
+		}
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
 							 @Nullable Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_comments, container, false);
@@ -173,19 +186,6 @@ public abstract class AbstractChatFragment
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
-		notificationDisabledReceiver.unregister(getActivity());
-		final ContentResolver cr = getActivity().getContentResolver();
-		if (contentObserver != null) {
-			cr.unregisterContentObserver(contentObserver);
-		}
-		if (conversationId != null) {
-			leaveConversation();
-		}
-	}
-
-	@Override
 	protected Uri getUriCursor() {
 		return ConversationsProvider.getUriConversationComments(conversationId);
 	}
@@ -195,8 +195,8 @@ public abstract class AbstractChatFragment
 		Long myPhone = Application.appUser().getUserPhone();
 		boolean isMyPublicChat = conversationPhone != null && conversationPhone.equals(myPhone) &&
 								 (ChatType.FLATTER == chatType || ChatType.FORTHRIGHT == chatType);
-		commentsAdapter = new CommentsAdapter(this, this, this, chatType, userName, userImageUri,
-											  isMyPublicChat);
+		commentsAdapter =
+		  new CommentsAdapter(this, this, this, chatType, userName, userImageUri, isMyPublicChat);
 		return commentsAdapter;
 	}
 
@@ -259,8 +259,8 @@ public abstract class AbstractChatFragment
 										 conversationPhone);
 
 					final ContentResolver contentResolver = activity.getContentResolver();
-					final Uri uriConversation = ConversationsProvider
-												  .getUriConversation(conversationId);
+					final Uri uriConversation =
+					  ConversationsProvider.getUriConversation(conversationId);
 					final ContentValues contentValues = new ContentValues();
 					contentValues.put(Table.Conversation.LAST_ACCESS, System.currentTimeMillis());
 					contentResolver.update(uriConversation, contentValues, null, null);
@@ -460,11 +460,17 @@ public abstract class AbstractChatFragment
 			Resources res = getResources();
 			int height = commentPostContainer.getHeight();
 			int margin = res.getDimensionPixelSize(R.dimen.space_normal) * 2;
-			AnimUtils.build(commentPostContainer).alpha(0.2f, 1f).translateY(height + margin, 0)
-					 .accelerateDecelerate().start();
+			AnimUtils.build(commentPostContainer)
+					 .alpha(0.2f, 1f)
+					 .translateY(height + margin, 0)
+					 .accelerateDecelerate()
+					 .start();
 			height = buttonPostComment.getHeight();
-			AnimUtils.build(buttonPostComment).alpha(0.2f, 1f).translateY(height + margin, 0)
-					 .accelerateDecelerate().start();
+			AnimUtils.build(buttonPostComment)
+					 .alpha(0.2f, 1f)
+					 .translateY(height + margin, 0)
+					 .accelerateDecelerate()
+					 .start();
 			commentPostContainer.setVisibility(View.VISIBLE);
 			buttonPostComment.setVisibility(View.VISIBLE);
 		}
@@ -475,17 +481,24 @@ public abstract class AbstractChatFragment
 			Resources res = getResources();
 			int height = commentPostContainer.getHeight();
 			int margin = res.getDimensionPixelSize(R.dimen.space_normal) * 2;
-			AnimUtils.build(commentPostContainer).alpha(1f, 0.2f).translateY(0, height + margin)
-					 .accelerateDecelerate().start();
+			AnimUtils.build(commentPostContainer)
+					 .alpha(1f, 0.2f)
+					 .translateY(0, height + margin)
+					 .accelerateDecelerate()
+					 .start();
 			height = buttonPostComment.getHeight();
-			AnimUtils.build(buttonPostComment).alpha(1f, 0.2f).translateY(0, height + margin)
-					 .accelerateDecelerate().setListener(new AnimatorListenerAdapter() {
-				@Override
-				public void onAnimationEnd(Animator animation) {
-					commentPostContainer.setVisibility(View.GONE);
-					buttonPostComment.setVisibility(View.GONE);
-				}
-			}).start();
+			AnimUtils.build(buttonPostComment)
+					 .alpha(1f, 0.2f)
+					 .translateY(0, height + margin)
+					 .accelerateDecelerate()
+					 .setListener(new AnimatorListenerAdapter() {
+						 @Override
+						 public void onAnimationEnd(Animator animation) {
+							 commentPostContainer.setVisibility(View.GONE);
+							 buttonPostComment.setVisibility(View.GONE);
+						 }
+					 })
+					 .start();
 		}
 	}
 }

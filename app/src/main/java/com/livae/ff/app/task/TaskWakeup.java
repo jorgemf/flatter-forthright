@@ -12,7 +12,8 @@ import com.livae.ff.app.utils.SyncUtils;
 public class TaskWakeup extends NetworkAsyncTask<Void, Void> {
 
 	@Override
-	protected Void doInBackground(Void aVoid) throws Exception {
+	protected Void doInBackground(Void aVoid)
+	  throws Exception {
 		final AppUser appUser = Application.appUser();
 		if (appUser.getUserPhone() != null) {
 			// sync user profile

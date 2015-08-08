@@ -17,7 +17,8 @@ import static com.livae.ff.api.OfyService.ofy;
 public class ForgetFlaggedUsersServlet extends HttpServlet {
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+	  throws IOException {
 		Date date = new Date(System.currentTimeMillis() - Settings.FLAG_FORGET_TIME);
 		Query<FlagComment> query;
 		query = ofy().load().type(FlagComment.class).filter("forgot", false).filter("date<", date);

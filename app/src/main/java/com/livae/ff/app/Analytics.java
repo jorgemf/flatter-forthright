@@ -44,8 +44,8 @@ public class Analytics {
 			builder.setValue(value);
 		}
 		t.send(builder.build());
-		Log.i(LOG_TAG,
-			  "EVENT  [" + category + "] [" + action + "] [" + label + "] [" + value + "]");
+		Log.i(LOG_TAG, "EVENT  [" + category + "] [" + action + "] [" + label + "] [" + value +
+					   "]");
 	}
 
 	public static void logAndReport(Throwable throwable) {
@@ -179,7 +179,7 @@ public class Analytics {
 
 		public static final String COMMENT_VOTE_REMOVED = "COMMENT_VOTE_REMOVED";
 
-		public static final String COMMENT_FLAGGED      = "COMMENT_FLAGGED";
+		public static final String COMMENT_FLAGGED = "COMMENT_FLAGGED";
 
 		// USER
 

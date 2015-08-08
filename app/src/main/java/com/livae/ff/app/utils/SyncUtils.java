@@ -137,17 +137,19 @@ public class SyncUtils {
 	}
 
 	public static void syncUserProfile(Context context) {
-		final String[] projection = {ContactsContract.Profile.PHOTO_THUMBNAIL_URI,
-									 ContactsContract.Profile.DISPLAY_NAME};
-		Cursor cursor = context.getContentResolver().query(ContactsContract.Profile.CONTENT_URI,
-														   projection, null, null, null);
+		final String[] projection =
+		  {ContactsContract.Profile.PHOTO_THUMBNAIL_URI, ContactsContract.Profile.DISPLAY_NAME};
+		Cursor cursor = context.getContentResolver()
+							   .query(ContactsContract.Profile.CONTENT_URI, projection, null, null,
+									  null);
 		String imageUri = null;
 		String userName = null;
 		if (cursor.moveToFirst()) {
-			imageUri = cursor.getString(cursor
-										  .getColumnIndex(ContactsContract.Profile.PHOTO_THUMBNAIL_URI));
-			userName = cursor.getString(cursor
-										  .getColumnIndex(ContactsContract.Profile.DISPLAY_NAME));
+			imageUri =
+			  cursor.getString(cursor.getColumnIndex(ContactsContract.Profile
+													   .PHOTO_THUMBNAIL_URI));
+			userName =
+			  cursor.getString(cursor.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME));
 
 		}
 		cursor.close();

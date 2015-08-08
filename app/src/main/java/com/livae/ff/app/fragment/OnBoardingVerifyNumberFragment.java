@@ -254,8 +254,8 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		View view = getActivity().getCurrentFocus();
 		if (view != null) {
 			InputMethodManager inputManager;
-			inputManager = (InputMethodManager) getActivity()
-												  .getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputManager =
+			  (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 			inputManager.hideSoftInputFromWindow(view.getWindowToken(),
 												 InputMethodManager.HIDE_NOT_ALWAYS);
 		}
@@ -265,18 +265,38 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		final int selectedItemPosition = countryCodeSpinner.getSelectedItemPosition();
 		final String country = countriesAdapter.getItem(selectedItemPosition).name().toUpperCase();
 		String number = phoneUtil.formatOutOfCountryCallingNumber(phoneNumber, country);
-		new AlertDialog.Builder(getActivity())
-		  .setMessage(getString(R.string.verification_sms_dialog_confirmation, number))
-		  .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-			  public void onClick(DialogInterface dialog, int id) {
-				  String phoneString = Long.toString(phoneNumber.getCountryCode()) +
-									   Long.toString(phoneNumber.getNationalNumber());
-				  Long phoneLong = Long.parseLong(phoneString);
-				  PhoneVerification verification = PhoneVerification.instance(getActivity());
-				  verification.setUserPhone(phoneLong);
-				  generateCodeAndSendSMS();
-			  }
-		  }).setNegativeButton(R.string.no, null).setCancelable(false).show();
+		new AlertDialog.Builder(getActivity()).setMessage(getString(R.string
+																	  .verification_sms_dialog_confirmation,
+																	number))
+											  .setPositiveButton(R.string.yes,
+																 new DialogInterface
+																	   .OnClickListener() {
+																	 public void onClick
+																	   (DialogInterface dialog,
+																						 int id) {
+																		 String phoneString =
+																		   Long.toString
+																				  (phoneNumber
+																						   .getCountryCode()) +
+																		   Long.toString
+																				  (phoneNumber
+																						   .getNationalNumber());
+																		 Long phoneLong =
+																		   Long.parseLong
+																				  (phoneString);
+																		 PhoneVerification
+																		   verification =
+																		   PhoneVerification
+																			 .instance(getActivity
+																						 ());
+																		 verification.setUserPhone
+																						(phoneLong);
+																		 generateCodeAndSendSMS();
+																	 }
+																 })
+											  .setNegativeButton(R.string.no, null)
+											  .setCancelable(false)
+											  .show();
 	}
 
 	private void generateCodeAndSendSMS() {
@@ -293,15 +313,15 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 	}
 
 	private void verifyNumber() {
-		String prefix = countriesAdapter.getItem(countryCodeSpinner.getSelectedItemPosition())
-										.getPhonePrefix();
+		String prefix =
+		  countriesAdapter.getItem(countryCodeSpinner.getSelectedItemPosition()).getPhonePrefix();
 		String number = phoneNumberEditText.getText().toString();
 		validateButton.setEnabled(PhoneUtils.getMobileNumber(prefix + number, null) != null);
 	}
 
 	private Phonenumber.PhoneNumber getPhoneNumber() {
-		String prefix = countriesAdapter.getItem(countryCodeSpinner.getSelectedItemPosition())
-										.getPhonePrefix();
+		String prefix =
+		  countriesAdapter.getItem(countryCodeSpinner.getSelectedItemPosition()).getPhonePrefix();
 		String number = phoneNumberEditText.getText().toString();
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		Phonenumber.PhoneNumber phoneNumber = null;
@@ -336,7 +356,8 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 			final Intent sentI = new Intent(INTENT_SMS_SEND);
 			final PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, sentI, 0);
 			final Intent deliveredI = new Intent(INTENT_SMS_DELIVER);
-			final PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, deliveredI, 0);
+			final PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, deliveredI,
+																		 0);
 			// send sms
 			SmsManager sms = SmsManager.getDefault();
 			Analytics.event(Analytics.Category.SMS, Analytics.Action.SMS_VERIFICATION,
@@ -389,13 +410,22 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 			public void onError(CustomAsyncTask<Long, Void> task, Long phone, Exception e) {
 				progressDialogFragment.dismiss();
 				if (isResumed() && getActivity() != null) {
-					new AlertDialog.Builder(getActivity())
-					  .setMessage(getString(R.string.error_signing_in_retry, e.getMessage()))
-					  .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-						  public void onClick(DialogInterface dialog, int id) {
-							  phoneValidated();
-						  }
-					  }).setNegativeButton(R.string.cancel, null).setCancelable(false).show();
+					new AlertDialog.Builder(getActivity()).setMessage(getString(R.string
+																				  .error_signing_in_retry,
+																				e.getMessage()))
+														  .setPositiveButton(R.string.ok,
+																			 new DialogInterface
+																				   .OnClickListener() {
+																				 public void
+																				 onClick
+																				   (DialogInterface dialog,
+																									 int id) {
+																					 phoneValidated();
+																				 }
+																			 })
+														  .setNegativeButton(R.string.cancel, null)
+														  .setCancelable(false)
+														  .show();
 				}
 			}
 		});
@@ -408,7 +438,8 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 			switch (intent.getAction()) {
 				case SMSVerificationService.INTENT_SMS_VERIFIED:
 					int code = intent.getIntExtra(SMSVerificationService.EXTRA_CODE, -1);
-					PhoneVerification phoneVerification = PhoneVerification.instance(getActivity());
+					PhoneVerification phoneVerification = PhoneVerification.instance(getActivity
+																					   ());
 					if (code == phoneVerification.getVerificationToken()) {
 						phoneValidated();
 					}
@@ -418,13 +449,22 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 						progressDialogFragment.dismiss();
 					}
 					if (isResumed() && getActivity() != null) {
-						new AlertDialog.Builder(getActivity())
-						  .setMessage(getString(R.string.error_sms_not_sent))
-						  .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-							  public void onClick(DialogInterface dialog, int id) {
-								  generateCodeAndSendSMS();
-							  }
-						  }).setNegativeButton(R.string.cancel, null).show();
+						new AlertDialog.Builder(getActivity()).setMessage(getString(R.string
+																					  .error_sms_not_sent))
+															  .setPositiveButton(R.string.ok,
+																				 new
+																				   DialogInterface
+																					 .OnClickListener() {
+																					 public void
+																					 onClick
+																					   (DialogInterface dialog,
+																										 int id) {
+																						 generateCodeAndSendSMS();
+																					 }
+																				 })
+															  .setNegativeButton(R.string.cancel,
+																				 null)
+															  .show();
 					}
 					break;
 			}

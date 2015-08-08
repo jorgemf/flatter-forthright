@@ -10,7 +10,8 @@ import com.livae.ff.app.async.NetworkAsyncTask;
 public class TaskCommentPost extends NetworkAsyncTask<TextId, Comment> {
 
 	@Override
-	protected Comment doInBackground(TextId params) throws Exception {
+	protected Comment doInBackground(TextId params)
+	  throws Exception {
 		Ff.ApiEndpoint.PostComment postComment;
 		postComment = API.endpoint().postComment(params.getId(), params.getText());
 		if (params.getAlias() != null) {

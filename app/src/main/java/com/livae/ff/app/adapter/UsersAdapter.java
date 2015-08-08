@@ -16,9 +16,9 @@ import javax.annotation.Nonnull;
 
 public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 
-	public static final String[] PROJECTION = {Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
-											   Table.LocalUser.IMAGE_URI, Table.LocalUser.BLOCKED,
-											   Table.LocalUser.ANDROID_RAW_CONTACT_ID};
+	public static final String[] PROJECTION =
+	  {Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE, Table.LocalUser.IMAGE_URI,
+	   Table.LocalUser.BLOCKED, Table.LocalUser.ANDROID_RAW_CONTACT_ID};
 
 	protected String search;
 

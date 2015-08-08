@@ -45,8 +45,8 @@ public class IntentUtils {
 		Uri marketUri = Uri.parse(context.getString(R.string.rate_app_market_url, packageName));
 		Intent goToMarket = new Intent(Intent.ACTION_VIEW, marketUri);
 		try {
-			ApplicationInfo info = context.getPackageManager()
-										  .getApplicationInfo(Constants.MARKET_PACKAGE_ID, 0);
+			ApplicationInfo info =
+			  context.getPackageManager().getApplicationInfo(Constants.MARKET_PACKAGE_ID, 0);
 			if (info.packageName.equals(Constants.MARKET_PACKAGE_ID)) {
 				goToMarket.setPackage(Constants.MARKET_PACKAGE_ID);
 			}
@@ -66,8 +66,8 @@ public class IntentUtils {
 		String packageName = context.getApplicationContext().getPackageName();
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_SEND);
-		sendIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.rate_app_web_url,
-																 packageName));
+		sendIntent.putExtra(Intent.EXTRA_TEXT,
+							context.getString(R.string.rate_app_web_url, packageName));
 		sendIntent.setType("text/plain");
 		context.startActivity(sendIntent);
 	}

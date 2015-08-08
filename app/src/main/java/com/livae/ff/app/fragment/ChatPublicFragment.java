@@ -74,6 +74,20 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	}
 
 	@Override
+	public void onPause() {
+		super.onPause();
+		if (taskVoteAgreeComment != null) {
+			taskVoteAgreeComment.cancel();
+		}
+		if (taskVoteDisagreeComment != null) {
+			taskVoteDisagreeComment.cancel();
+		}
+		if (taskNoVoteComment != null) {
+			taskNoVoteComment.cancel();
+		}
+	}
+
+	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		switch (chatType) {
@@ -90,20 +104,6 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		if (taskVoteAgreeComment != null) {
-			taskVoteAgreeComment.cancel();
-		}
-		if (taskVoteDisagreeComment != null) {
-			taskVoteDisagreeComment.cancel();
-		}
-		if (taskNoVoteComment != null) {
-			taskNoVoteComment.cancel();
-		}
 	}
 
 	@Override
@@ -142,7 +142,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 
 	@Override
 	protected void getConversation() {
-		ConversationParams conversationParams = new ConversationParams(chatType, conversationPhone);
+		ConversationParams conversationParams = new ConversationParams(chatType,
+																	   conversationPhone);
 		Callback<ConversationParams, Conversation> callback;
 		callback = new Callback<ConversationParams, Conversation>() {
 			@Override
@@ -157,7 +158,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 
 			@Override
 			public void onError(CustomAsyncTask<ConversationParams, Conversation> task,
-								ConversationParams conversationParams, Exception e) {
+								ConversationParams conversationParams,
+								Exception e) {
 				if (isResumed()) {
 					AbstractActivity abstractActivity = (AbstractActivity) getActivity();
 					abstractActivity.showSnackBarException(e);
@@ -223,7 +225,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 									ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		ContextMenuRecyclerView.RecyclerContextMenuInfo recyclerInfo = (ContextMenuRecyclerView.RecyclerContextMenuInfo) menuInfo;
+		ContextMenuRecyclerView.RecyclerContextMenuInfo recyclerInfo =
+		  (ContextMenuRecyclerView.RecyclerContextMenuInfo) menuInfo;
 		CommentViewHolder viewHolder = (CommentViewHolder) recyclerInfo.viewHolder;
 		String comment = viewHolder.getComment();
 		if (!TextUtils.isEmpty(comment)) { // if it is empty, chat was probably blocked
@@ -233,7 +236,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 			menu.setHeaderTitle(comment);
 			MenuInflater inflater = getActivity().getMenuInflater();
 			inflater.inflate(R.menu.menu_comment, menu);
-			int cursorPosition = commentsAdapter.getCursorPosition(viewHolder.getAdapterPosition());
+			int cursorPosition = commentsAdapter.getCursorPosition(viewHolder.getAdapterPosition
+																				());
 			MenuItem menuItem = menu.findItem(R.id.action_flag);
 			menuItem.setVisible(!commentsAdapter.isMe(cursorPosition));
 			CommentVoteType commentVoteType = commentsAdapter.getVote(cursorPosition);
@@ -347,7 +351,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 				if (isResumed()) {
 					adjustBlockMenu();
 					Snackbar.make(getActivity().findViewById(R.id.container),
-								  R.string.confirmation_forthright_unblocked, Snackbar.LENGTH_SHORT)
+								  R.string.confirmation_forthright_unblocked, Snackbar
+																				.LENGTH_SHORT)
 							.show();
 					restart();
 				}
@@ -402,7 +407,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 		taskCommentFlag.execute(param, new Callback<Pair<FlagComment, Integer>, Void>() {
 			@Override
 			public void onComplete(CustomAsyncTask<Pair<FlagComment, Integer>, Void> task,
-								   Pair<FlagComment, Integer> param, Void aVoid) {
+								   Pair<FlagComment, Integer> param,
+								   Void aVoid) {
 				Analytics.event(Analytics.Category.CONTENT, Analytics.Action.COMMENT_FLAGGED,
 								param.first.getReason().name());
 				if (isResumed()) {
@@ -415,7 +421,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 
 			@Override
 			public void onError(CustomAsyncTask<Pair<FlagComment, Integer>, Void> task,
-								Pair<FlagComment, Integer> param, Exception e) {
+								Pair<FlagComment, Integer> param,
+								Exception e) {
 				if (isResumed()) {
 					commentsAdapter.notifyItemChanged(param.second);
 					AbstractActivity activity = (AbstractActivity) getActivity();
@@ -435,7 +442,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 		taskVoteAgreeComment.execute(param, new Callback<Pair<Long, Integer>, Comment>() {
 			@Override
 			public void onComplete(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
-								   Pair<Long, Integer> param, Comment result) {
+								   Pair<Long, Integer> param,
+								   Comment result) {
 				Analytics.event(Analytics.Category.CONTENT, Analytics.Action.COMMENT_VOTED_AGREE);
 				if (!task.isCancelled()) {
 					commentsAdapter.notifyItemChanged(param.second);
@@ -444,7 +452,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 
 			@Override
 			public void onError(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
-								Pair<Long, Integer> param, Exception e) {
+								Pair<Long, Integer> param,
+								Exception e) {
 				commentsAdapter.removeVote(param.first);
 				if (!task.isCancelled()) {
 					commentsAdapter.notifyItemChanged(param.second);
@@ -465,7 +474,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 		taskVoteDisagreeComment.execute(param, new Callback<Pair<Long, Integer>, Comment>() {
 			@Override
 			public void onComplete(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
-								   Pair<Long, Integer> param, Comment result) {
+								   Pair<Long, Integer> param,
+								   Comment result) {
 				Analytics.event(Analytics.Category.CONTENT,
 								Analytics.Action.COMMENT_VOTED_DISAGREE);
 				if (!task.isCancelled()) {
@@ -475,7 +485,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 
 			@Override
 			public void onError(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
-								Pair<Long, Integer> param, Exception e) {
+								Pair<Long, Integer> param,
+								Exception e) {
 				commentsAdapter.removeVote(param.first);
 				if (!task.isCancelled()) {
 					commentsAdapter.notifyItemChanged(param.second);
@@ -496,7 +507,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 		taskNoVoteComment.execute(param, new Callback<Pair<Long, Integer>, Comment>() {
 			@Override
 			public void onComplete(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
-								   Pair<Long, Integer> param, Comment result) {
+								   Pair<Long, Integer> param,
+								   Comment result) {
 				Analytics.event(Analytics.Category.CONTENT, Analytics.Action.COMMENT_VOTE_REMOVED);
 				if (!task.isCancelled()) {
 					commentsAdapter.notifyItemChanged(param.second);
@@ -505,7 +517,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 
 			@Override
 			public void onError(CustomAsyncTask<Pair<Long, Integer>, Comment> task,
-								Pair<Long, Integer> param, Exception e) {
+								Pair<Long, Integer> param,
+								Exception e) {
 				commentsAdapter.removeVote(param.first);
 				if (!task.isCancelled()) {
 					commentsAdapter.notifyItemChanged(param.second);
@@ -527,7 +540,8 @@ public class ChatPublicFragment extends AbstractChatFragment {
 					ContentResolver contentResolver = getActivity().getContentResolver();
 					ContentValues values = new ContentValues();
 					values.put(Table.Conversation.ROOM_NAME, anonymousNick);
-					contentResolver.update(ConversationsProvider.getUriConversation(conversationId),
+					contentResolver.update(ConversationsProvider.getUriConversation
+																   (conversationId),
 										   values, null, null);
 					Application.appUser().getChats().setUserAnonymousName(anonymousNick);
 					dialogFragment.dismiss();

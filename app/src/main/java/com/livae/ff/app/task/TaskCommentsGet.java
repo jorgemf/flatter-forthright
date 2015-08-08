@@ -10,7 +10,8 @@ import com.livae.ff.app.async.NetworkAsyncTask;
 public class TaskCommentsGet extends NetworkAsyncTask<QueryId, ListResult> {
 
 	@Override
-	protected ListResult doInBackground(QueryId queryParams) throws Exception {
+	protected ListResult doInBackground(QueryId queryParams)
+	  throws Exception {
 		GetComments request = API.endpoint().getComments(queryParams.getId());
 		if (queryParams.getLimit() != null) {
 			request.setLimit(queryParams.getLimit());
