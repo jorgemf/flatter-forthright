@@ -57,54 +57,61 @@ public class VideoTest {
 		// 5 guy 4
 		"This is app is amazing, I was talking with this girl and...",
 		// male friend conversation
-		// 6 me
+		// 6 guy 2
+		"\uD83D\uDE02",
+		// 7 me
 		"How was your trip?",
-		// 7 guy 2
+		// 8 guy 2
 		"We went to that place you told me, it was awesome", "I will show you some pics later",
 		"\uD83D\uDE06",
-		// 10 me
+		// 11 me
 		"\uD83D\uDC4D",
-		// 11 guy 2
-		"What are you doing tonight? I have to talk about going to the bar",
 		// male friend forthright
-		// me
+		// 12 guy 6
+		"that tshirt...",
+		// 13 me
 		"dude, we love you as your friends, but your tshirt has to go",
 		"it scares all the girls in the bar",
-		// guy 8
+		// 15 guy 8
 		"finally someone said what we all were thinking", "thanks bro",
+		// 17 guy 2
+		"\uD83D\uDE31",
 
 		// male friend conversation
-		// 12 me
-		"I was thinking about her",
-		// 13 guy 2
-		"the same girl again?? \uD83D\uDE34",
-		// 14 me
-		"I have to say something to her",
 		// 15 guy 2
-		"same story again and again...", "DO IT!!", "NOW!!!",
+		"What are you doing tonight? I have to talk about going to the bar",
 		// 16 me
+		"I was thinking about her",
+		// 17 guy 2
+		"the same girl again?? \uD83D\uDE34",
+		// 19 me
+		"I have to say something to her",
+		// 19 guy 2
+		"same story again and again...", "DO IT!!", "NOW!!!",
+		// 22 me
 		"ok \uD83D\uDE13",
 		// female friend flatterer
-		// girl 1
+		// 23 girl 1
 		"you are a great person, I loooveee you too much. BFF",
 		"❤❤❤❤❤\uD83D\uDC9B\uD83D\uDC9B\uD83D\uDC9B\uD83D\uDC9B",
-		// guy 2
+		// 25 guy 2
 		"I am bit shy but I want you to know you are very pretty",
 		"I would want to be your " + "friend", "\uD83D\uDE18",
-		// the girl
+		// 28 the girl
 		"I don't know who you are but I have a BF",
-		// me
+		// 29 me
 		"Well... I know you have a boyfriend but sometimes you just need to say it",
 		"I think you are a great girl",
-		// the girl
+		// 31 the girl
 		"thanks, you are kind",
 		// female friend private anonymous
 		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "", "",};
 
 	private static final String[] aliasEnglish =
-	  {"Someone had to tell you", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-	   "", "", "", "", "", "", "", "",};
+	  {"Someone had to tell you", "Football star", "Terminator", "", "", "", "", "", "", "", "",
+	   "",
+	   "", "", "", "", "", "", "", "", "", "", "", "", "",};
 
 	private static final String[] usersNamesSpanish =
 	  {"Noah Jones", "Linda Allen", "Liam Taylor", "Olivia West", "Paul Smith", "Sophia Moore",
@@ -189,50 +196,55 @@ public class VideoTest {
 	}
 
 	private void initComments() {
-		comments =
-		  new Comment[]{new Comment(1L, 1L, Constants.ChatType.PRIVATE, users[6].phone, alias[0],
-									text[3], TimeUnit.DAYS.toSeconds(2), true),
-						new Comment(2L, 2L, Constants.ChatType.PRIVATE, users[9].phone, alias[0],
-									text[2], TimeUnit.DAYS.toSeconds(1), true),
-						new Comment(3L, 3L, Constants.ChatType.PRIVATE, users[8].phone, alias[0],
-									text[1], TimeUnit.HOURS.toSeconds(2), true),
-						new Comment(4L, 1L, Constants.ChatType.PRIVATE, users[7].phone, alias[0],
-									text[0], TimeUnit.HOURS.toSeconds(1), true),
-						new Comment(5L, 1L, Constants.ChatType.PRIVATE, users[5].phone, alias[0],
-									text[4], TimeUnit.MINUTES.toSeconds(90), true),
-						new Comment(6L, 1L, Constants.ChatType.FORTHRIGHT, users[4].phone,
-									alias[0],
-									text[5], 0, true),
-						new Comment(7L, 1L, Constants.ChatType.FORTHRIGHT, users[4].phone,
-									alias[0],
-									text[6], 0, true),
-						new Comment(8L, 1L, Constants.ChatType.FORTHRIGHT, users[4].phone,
-									alias[0],
-									text[7], 0, true),
-						new Comment(9L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[8], 0, true),
-						new Comment(10L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[9], 0, false),
-						new Comment(11L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[10], 0, false),
-						new Comment(12L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[11], 0, false),
-						new Comment(13L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[12], 0, false),
-						new Comment(14L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[13], 0, false),
-						new Comment(15L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[14], 0, false),
-						new Comment(16L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[15], 0, false),
-						new Comment(17L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[16], 0, false),
-						new Comment(18L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[17], 0, false),
-						new Comment(19L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[18], 0, false),
-						new Comment(20L, 1L, Constants.ChatType.PRIVATE, users[0].phone, alias[0],
-									text[19], 0, false)};
+		comments = new Comment[100];
+		// private chats
+		comments[0] = new Comment(6001L, Constants.ChatType.PRIVATE, users[9].phone, null, text[0],
+								  TimeUnit.MINUTES.toSeconds(157), null);
+		comments[1] = new Comment(6002L, Constants.ChatType.PRIVATE, users[8].phone, null, text[1],
+								  TimeUnit.HOURS.toSeconds(3), null);
+		comments[2] = new Comment(6003L, Constants.ChatType.PRIVATE, users[7].phone, null, text[2],
+								  TimeUnit.DAYS.toSeconds(1), null);
+		comments[3] = new Comment(6004L, Constants.ChatType.PRIVATE, users[6].phone, null, text[3],
+								  TimeUnit.DAYS.toSeconds(1), null);
+		comments[4] = new Comment(6005L, Constants.ChatType.PRIVATE, users[5].phone, null, text[4],
+								  TimeUnit.DAYS.toSeconds(2), null);
+		comments[5] = new Comment(6006L, Constants.ChatType.PRIVATE, users[4].phone, null, text[5],
+								  TimeUnit.DAYS.toSeconds(2), null);
+		// friend chat
+		comments[6] = new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[6],
+								  TimeUnit.DAYS.toSeconds(7), null);
+		comments[7] = new Comment(1002L, Constants.ChatType.PRIVATE, users[0].phone, null, text[7],
+								  TimeUnit.DAYS.toSeconds(7), null);
+		comments[8] = new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[8],
+								  TimeUnit.DAYS.toSeconds(7), null);
+		comments[9] = new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[9],
+								  TimeUnit.DAYS.toSeconds(7), null);
+		comments[10] =
+		  new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[10],
+					  TimeUnit.DAYS.toSeconds(7), null);
+		comments[11] =
+		  new Comment(1002L, Constants.ChatType.PRIVATE, users[0].phone, null, text[11],
+					  TimeUnit.DAYS.toSeconds(7), null);
+		// write in forthright
+		comments[12] =
+		  new Comment(2002L, Constants.ChatType.FORTHRIGHT, users[6].phone, alias[1], text[12],
+					  TimeUnit.MINUTES.toSeconds(97), users[2].phone);
+		comments[13] =
+		  new Comment(2002L, Constants.ChatType.FORTHRIGHT, users[0].phone, alias[0], text[13], 0,
+					  users[2].phone);
+		comments[14] =
+		  new Comment(2002L, Constants.ChatType.FORTHRIGHT, users[0].phone, alias[0], text[14], 0,
+					  users[2].phone);
+		comments[15] =
+		  new Comment(2002L, Constants.ChatType.FORTHRIGHT, users[8].phone, alias[2], text[15], 0,
+					  users[2].phone);
+		comments[16] =
+		  new Comment(2002L, Constants.ChatType.FORTHRIGHT, users[8].phone, alias[2], text[16], 0,
+					  users[2].phone);
+		comments[17] =
+		  new Comment(2002L, Constants.ChatType.FORTHRIGHT, users[2].phone, null, text[16], 0,
+					  users[2].phone);
+		// real time chat with friend
 	}
 
 	@Test
@@ -244,39 +256,59 @@ public class VideoTest {
 		for (User user : users) {
 			addUser(context, user);
 		}
-		// add initial comments
+		// private chats
 		addComment(context, comments[0]);
 		addComment(context, comments[1]);
 		addComment(context, comments[2]);
 		addComment(context, comments[3]);
 		addComment(context, comments[4]);
-//		addComment(context, comments[5]);
-//		addComment(context, comments[6]);
-//		addComment(context, comments[7]);
-//		addComment(context, comments[8]);
-//		addComment(context, comments[9]);
-//		addComment(context, comments[10]);
-//		addComment(context, comments[11]);
-//		addComment(context, comments[12]);
+		addComment(context, comments[5]);
+		// friend chat
+		addComment(context, comments[6]);
+		addComment(context, comments[7]);
+		addComment(context, comments[8]);
+		addComment(context, comments[9]);
+		addComment(context, comments[10]);
+		addComment(context, comments[11]);
+		// friend forthright initial comments
+		addComment(context, comments[12]);
+		// girl flatterer initial comments
+		// TODO
+
 		// Launch the app
 		Intent intent;
 		intent = context.getPackageManager().getLaunchIntentForPackage(PENSAMIENTOS_PACKAGE);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		context.startActivity(intent);
 		device.wait(Until.hasObject(By.pkg(PENSAMIENTOS_PACKAGE).depth(0)), TIMEOUT);
+
 		sleep(1000);
-		pressText(FLATTERER);
+		pressText(FORTHRIGHT);
 		sleep(600);
 		swipeUp("recycler_view");
 		sleep(500);
-		pressText(users[1].name);
+		pressText(users[2].name);
 		pressId("comment_text");
-		typeText(comments[5].comment);
+		typeText(comments[13].alias);
+		pressText("Ok");
+		sleep(1000);
+		typeText(comments[13].comment);
 		pressId("button_post_comment");
-		addComment(context, comments[5]);
-		sleep(2000);
-		pressText(FORTHRIGHT);
-		sleep(10000);
+		addComment(context, comments[13]);
+		pressId("comment_text");
+		typeText(comments[14].comment);
+		pressId("button_post_comment");
+		addComment(context, comments[14]);
+		sleep(2500);
+		addComment(context, comments[15]);
+		sleep(1500);
+		addComment(context, comments[16]);
+		sleep(1000);
+		addComment(context, comments[17]);
+		sleep(1000);
+		device.pressBack();
+
+		// private friend conversation
 	}
 
 	private void addUser(Context context, User user) {

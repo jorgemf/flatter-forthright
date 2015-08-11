@@ -162,7 +162,9 @@ public class ImageUtils {
 		@Override
 		public void onSuccess() {
 			long elapsedTime = System.currentTimeMillis() - time;
-			Log.v("PROFILING_IMAGES", this.imageUrl + " " + elapsedTime);
+			if (elapsedTime > 50) {
+				Log.v("PROFILING_IMAGES", this.imageUrl + " " + elapsedTime);
+			}
 		}
 
 		@Override

@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 import com.livae.ff.app.sql.Table;
+import com.livae.ff.app.utils.Debug;
+import com.livae.ff.common.Constants;
 
 import java.util.List;
 
@@ -33,8 +35,10 @@ public class ContactsProvider extends AbstractProvider {
 		return ContentUris.withAppendedId(getUriContacts(), id);
 	}
 
-	public static Uri getUriContactsConversations() {
-		return Uri.withAppendedPath(getUriContacts(), Table.Conversation.NAME);
+	public static Uri getUriContactsConversations(Constants.ChatType chatType) {
+		return Uri.withAppendedPath(Uri.withAppendedPath(getUriContacts(), Table.Conversation
+																			 .NAME),
+									chatType.name());
 	}
 
 	@Override
@@ -43,7 +47,7 @@ public class ContactsProvider extends AbstractProvider {
 		final String authority = getAuthority(this.getClass());
 		uriMatcher.addURI(authority, Table.LocalUser.NAME, URI_CONTACTS);
 		uriMatcher.addURI(authority, Table.LocalUser.NAME + "/#/", URI_CONTACT);
-		uriMatcher.addURI(authority, Table.LocalUser.NAME + "/" + Table.Conversation.NAME + "/",
+		uriMatcher.addURI(authority, Table.LocalUser.NAME + "/" + Table.Conversation.NAME + "/*/",
 						  URI_CONTACTS_CONVERSATIONS);
 		return result;
 	}
@@ -100,12 +104,20 @@ public class ContactsProvider extends AbstractProvider {
 				c.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
 			case URI_CONTACTS_CONVERSATIONS:
+				qb.setTables(Table.Conversation.NAME);
+				c = qb.query(getReadableDatabase(), null, Table.Conversation.TYPE + "!=?",
+							 new String[]{Constants.ChatType.PRIVATE.name()}, null, null, null);
+				Debug.print("-----------------v-------------------");
+				Debug.print(c);
+				String chatType = uri.getLastPathSegment();
 				qb.setTables(Table.LocalUser.NAME + " LEFT JOIN " + Table.Conversation.NAME +
-							 " ON " + Table.LocalUser.PHONE + "=" + Table.Conversation.PHONE);
+							 " ON " + Table.LocalUser.PHONE + "=" + Table.Conversation.PHONE +
+							 " AND " + Table.Conversation.TYPE + "=\'" + chatType + "\'");
 				qb.setDistinct(true);
 				c =
 				  qb.query(getReadableDatabase(), select, where, args, Table.LocalUser.PHONE, null,
 						   order);
+				Debug.print(c);
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);

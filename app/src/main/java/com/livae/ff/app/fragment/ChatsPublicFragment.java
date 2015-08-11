@@ -163,7 +163,7 @@ public class ChatsPublicFragment extends AbstractFragment
 						Table.Conversation.LAST_ACCESS + " END DESC, " +
 						Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE";
 				return new CursorLoader(getActivity(),
-										ContactsProvider.getUriContactsConversations(),
+										ContactsProvider.getUriContactsConversations(chatType),
 										ChatsPublicAdapter.PROJECTION, selection, selectionArgs,
 										order);
 			// break

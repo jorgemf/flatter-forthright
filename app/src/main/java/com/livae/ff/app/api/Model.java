@@ -251,6 +251,7 @@ public class Model {
 						comment.setAlias(nc.getAlias());
 						comment.setAliasId(nc.getAliasId());
 						Long conversationPhone = nc.getConversationUserId();
+						conversation.setPhone(conversationPhone);
 						AppUser appUser = Application.appUser();
 						if (appUser.getUserPhone().equals(conversationPhone)) {
 							switch (chatType) {

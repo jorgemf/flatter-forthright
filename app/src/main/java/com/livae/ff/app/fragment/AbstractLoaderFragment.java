@@ -253,7 +253,7 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		if (!task.isCancelled() && loaderTask == task) {
 			nextCursor = result.getNextCursor();
 			totalLoaded += result.getSize();
-			finishLoading = result.getSize() == 0;
+			finishLoading =  nextCursor == null;
 			getLoaderManager().restartLoader(LOADER_ID, null, this);
 		}
 	}

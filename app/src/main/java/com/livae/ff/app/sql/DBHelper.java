@@ -5,11 +5,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.livae.ff.app.Application;
+import com.livae.ff.app.settings.Chats;
+import com.livae.ff.common.Constants;
+
 public class DBHelper extends SQLiteOpenHelper {
 
 	private static final String NAME = "ff.sqlite";
 
-	private static final int VERSION = 2;
+	private static final int VERSION = 3;
 
 	private static DBHelper instance;
 
@@ -52,7 +56,16 @@ public class DBHelper extends SQLiteOpenHelper {
 				// sorry users for losing your old comments
 				sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Comment.NAME);
 				sqLiteDatabase.execSQL(Table.Comment.CREATE_SQL);
-			case 2: // current version
+			case 2:
+				// bug in public conversations
+				sqLiteDatabase.execSQL("DELETE FROM " + Table.Conversation.NAME +
+									   " WHERE " + Table.Conversation.TYPE + " IN (\'" +
+									   Constants.ChatType.FORTHRIGHT.name() + "', '" +
+									   Constants.ChatType.FLATTER.name() + "')");
+				final Chats chats = Application.appUser().getChats();
+				chats.setChatFlatterId(null);
+				chats.setChatForthrightId(null);
+			case 3: // current version
 		}
 	}
 

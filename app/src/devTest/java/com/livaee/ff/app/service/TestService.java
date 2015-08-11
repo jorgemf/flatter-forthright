@@ -31,6 +31,8 @@ public class TestService extends IntentService {
 
 	private static final String LOG_TAG = "TEST_SERVICE";
 
+	private static long commentsCounter = 0L;
+
 	public TestService() {
 		super("TestService");
 	}
@@ -68,7 +70,7 @@ public class TestService extends IntentService {
 				case POST_MESSAGE:
 					Comment comment = (Comment) intent.getSerializableExtra(EXTRA_DATA);
 					NotificationComment notificationComment = new NotificationComment();
-					notificationComment.setId(comment.serverId);
+					notificationComment.setId(commentsCounter++);
 					notificationComment.setConversationId(comment.conversationId);
 					notificationComment.setConversationType(comment.chatType.name());
 					notificationComment.setComment(comment.comment);
@@ -76,15 +78,18 @@ public class TestService extends IntentService {
 												TimeUnit.SECONDS.toMillis(comment.secondsAgo));
 					notificationComment.setIsMe(comment.userId == appUser.getUserPhone());
 					notificationComment.setUserId(comment.userId);
+					notificationComment.setConversationUserId(comment.publicUserId);
 					switch (comment.chatType) {
 						case FORTHRIGHT:
 						case FLATTER:
 						case PRIVATE_ANONYMOUS:
-							notificationComment.setAlias(comment.alias);
-							notificationComment.setAliasId(comment.alias.hashCode() + 1L);
+							if (comment.alias != null) {
+								notificationComment.setAlias(comment.alias);
+								notificationComment.setAliasId(comment.alias.hashCode() + 1L);
+							}
 							break;
 					}
-					if (comment.read) {
+					if (comment.secondsAgo > 0) {
 						Model model = Application.model();
 						model.parse(notificationComment);
 						model.save();
@@ -127,8 +132,6 @@ public class TestService extends IntentService {
 
 	static public class Comment implements Serializable {
 
-		public long serverId;
-
 		public long userId;
 
 		public String comment;
@@ -141,24 +144,22 @@ public class TestService extends IntentService {
 
 		public long secondsAgo;
 
-		public boolean read;
+		public Long publicUserId;
 
-		public Comment(long serverId,
-					   long conversationId,
+		public Comment(long conversationId,
 					   Constants.ChatType chatType,
 					   long userId,
 					   String alias,
 					   String comment,
 					   long secondsAgo,
-					   boolean read) {
+					   Long publicUserId) {
 			this.conversationId = conversationId;
 			this.chatType = chatType;
-			this.serverId = serverId;
 			this.userId = userId;
 			this.alias = alias;
 			this.comment = comment;
 			this.secondsAgo = secondsAgo;
-			this.read = read;
+			this.publicUserId = publicUserId;
 		}
 	}
 
