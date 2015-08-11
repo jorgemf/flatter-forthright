@@ -126,8 +126,8 @@
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" scope="TEST" name="espresso-idling-resource-2.2" level="project" />
-    <orderEntry type="library" exported="" name="libphonenumber-7.0.9" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
+    <orderEntry type="library" exported="" name="libphonenumber-7.0.9" level="project" />
     <orderEntry type="library" exported="" name="google-http-client-android-1.20.0" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="runner-0.3" level="project" />

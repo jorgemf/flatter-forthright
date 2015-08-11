@@ -208,13 +208,13 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 			Drawable thumbDown;
 			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
 				Resources.Theme theme = userOpinion.getContext().getTheme();
-				thumbUp = theme.getDrawable(R.drawable.ic_thumb_up_terciary_14px);
-				thumbDown = theme.getDrawable(R.drawable.ic_thumb_down_terciary_14px);
+				thumbUp = theme.getDrawable(R.drawable.ic_thumb_up_terciary_14dp);
+				thumbDown = theme.getDrawable(R.drawable.ic_thumb_down_terciary_14dp);
 			} else {
 				//noinspection deprecation
-				thumbUp = resources.getDrawable(R.drawable.ic_thumb_up_terciary_14px);
+				thumbUp = resources.getDrawable(R.drawable.ic_thumb_up_terciary_14dp);
 				//noinspection deprecation
-				thumbDown = resources.getDrawable(R.drawable.ic_thumb_down_terciary_14px);
+				thumbDown = resources.getDrawable(R.drawable.ic_thumb_down_terciary_14dp);
 			}
 			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
 				switch (voteType) {
@@ -257,19 +257,19 @@ public class CommentViewHolder extends RecyclerView.ViewHolder
 		Drawable thumbDownAccent;
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
 			Resources.Theme theme = userOpinion.getContext().getTheme();
-			thumbUp = theme.getDrawable(R.drawable.ic_thumb_up_terciary_14px);
-			thumbDown = theme.getDrawable(R.drawable.ic_thumb_down_terciary_14px);
-			thumbUpAccent = theme.getDrawable(R.drawable.ic_thumb_up_black_14px);
-			thumbDownAccent = theme.getDrawable(R.drawable.ic_thumb_down_black_14px);
+			thumbUp = theme.getDrawable(R.drawable.ic_thumb_up_terciary_14dp);
+			thumbDown = theme.getDrawable(R.drawable.ic_thumb_down_terciary_14dp);
+			thumbUpAccent = theme.getDrawable(R.drawable.ic_thumb_up_black_14dp);
+			thumbDownAccent = theme.getDrawable(R.drawable.ic_thumb_down_black_14dp);
 		} else {
 			//noinspection deprecation
-			thumbUp = resources.getDrawable(R.drawable.ic_thumb_up_terciary_14px);
+			thumbUp = resources.getDrawable(R.drawable.ic_thumb_up_terciary_14dp);
 			//noinspection deprecation
-			thumbDown = resources.getDrawable(R.drawable.ic_thumb_down_terciary_14px);
+			thumbDown = resources.getDrawable(R.drawable.ic_thumb_down_terciary_14dp);
 			//noinspection deprecation
-			thumbUpAccent = resources.getDrawable(R.drawable.ic_thumb_up_black_14px);
+			thumbUpAccent = resources.getDrawable(R.drawable.ic_thumb_up_black_14dp);
 			//noinspection deprecation
-			thumbDownAccent = resources.getDrawable(R.drawable.ic_thumb_down_black_14px);
+			thumbDownAccent = resources.getDrawable(R.drawable.ic_thumb_down_black_14dp);
 		}
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
 			if (voteType == null) {
