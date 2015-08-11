@@ -24208,17 +24208,13 @@ com.livae.ff.app.adapter.CursorAdapter -> com.livae.ff.app.a.h:
     void setCursor(android.database.Cursor) -> b
 com.livae.ff.app.adapter.EndlessCursorAdapter -> com.livae.ff.app.a.i:
     android.view.LayoutInflater layoutInflater -> b
-    android.view.View headerView -> a
-    android.view.View footerView -> c
-    boolean isLoading -> d
-    boolean isError -> e
-    android.database.Cursor cursor -> f
-    com.livae.ff.app.adapter.EndlessCursorAdapter$ViewCreator viewCreator -> g
-    int iId -> h
+    boolean isLoading -> a
+    boolean isError -> c
+    android.database.Cursor cursor -> d
+    com.livae.ff.app.adapter.EndlessCursorAdapter$ViewCreator viewCreator -> e
+    int iId -> f
     android.database.Cursor getCursor() -> d
     void setCursor(android.database.Cursor) -> a
-    void setHeaderView(android.view.View) -> a
-    void setFooterView(android.view.View) -> b
     void findIndexes(android.database.Cursor) -> b
     void setIsLoading(boolean) -> a
     void setIsError(boolean) -> b
@@ -24371,10 +24367,10 @@ com.livae.ff.app.fragment.AbstractChatFragment -> com.livae.ff.app.fragment.a:
     com.livae.ff.app.receiver.NotificationDisabledReceiver notificationDisabledReceiver -> r
     android.widget.TextView dateText -> s
     void onCreate(android.os.Bundle) -> onCreate
+    void onPause() -> onPause
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onResume() -> onResume
-    void onPause() -> onPause
     android.net.Uri getUriCursor() -> a
     com.livae.ff.app.adapter.EndlessCursorAdapter getAdapter() -> b
     java.lang.String[] getProjection() -> c
@@ -24448,11 +24444,12 @@ com.livae.ff.app.fragment.AbstractLoaderFragment -> com.livae.ff.app.fragment.i:
     android.widget.ProgressBar loading -> p
     boolean finishLoading -> q
     void onCreate(android.os.Bundle) -> onCreate
+    void onPause() -> onPause
+    android.view.View createErrorView(android.view.LayoutInflater,android.view.ViewGroup) -> b
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onResume() -> onResume
     void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    void onPause() -> onPause
     void startLoading() -> k
     void checkLoadNext() -> d
     com.livae.ff.app.async.CustomAsyncTask getLoaderTask() -> l
@@ -24465,7 +24462,6 @@ com.livae.ff.app.fragment.AbstractLoaderFragment -> com.livae.ff.app.fragment.i:
     void reloadCursor() -> n
     void onComplete(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.QueryParam,com.livae.ff.app.task.ListResult) -> a
     void onError(com.livae.ff.app.async.CustomAsyncTask,com.livae.ff.app.task.QueryParam,java.lang.Exception) -> a
-    android.view.View createErrorView(android.view.LayoutInflater,android.view.ViewGroup) -> b
     void restart() -> o
     void setEmptyViewText(int) -> a
     void setEmptyView() -> p
@@ -24483,24 +24479,24 @@ com.livae.ff.app.fragment.AbstractLoaderFragment -> com.livae.ff.app.fragment.i:
     android.support.v7.widget.RecyclerView$OnScrollListener access$000(com.livae.ff.app.fragment.AbstractLoaderFragment) -> a
     void access$100(com.livae.ff.app.fragment.AbstractLoaderFragment) -> b
     com.livae.ff.app.adapter.EndlessCursorAdapter access$200(com.livae.ff.app.fragment.AbstractLoaderFragment) -> c
-    android.widget.ProgressBar access$400(com.livae.ff.app.fragment.AbstractLoaderFragment) -> d
+    android.widget.ProgressBar access$300(com.livae.ff.app.fragment.AbstractLoaderFragment) -> d
 com.livae.ff.app.fragment.AbstractLoaderFragment$1 -> com.livae.ff.app.fragment.j:
+    com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
+    void onClick(android.view.View) -> onClick
+com.livae.ff.app.fragment.AbstractLoaderFragment$2 -> com.livae.ff.app.fragment.k:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onScrollStateChanged(android.support.v7.widget.RecyclerView,int) -> onScrollStateChanged
     void onScrolled(android.support.v7.widget.RecyclerView,int,int) -> onScrolled
-com.livae.ff.app.fragment.AbstractLoaderFragment$2 -> com.livae.ff.app.fragment.k:
+com.livae.ff.app.fragment.AbstractLoaderFragment$3 -> com.livae.ff.app.fragment.l:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
     void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-com.livae.ff.app.fragment.AbstractLoaderFragment$3 -> com.livae.ff.app.fragment.l:
-    com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
-    void onClick(android.view.View) -> onClick
-com.livae.ff.app.fragment.AbstractLoaderFragment$5 -> com.livae.ff.app.fragment.m:
+com.livae.ff.app.fragment.AbstractLoaderFragment$4 -> com.livae.ff.app.fragment.m:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onAnimationStart(android.animation.Animator) -> onAnimationStart
-com.livae.ff.app.fragment.AbstractLoaderFragment$6 -> com.livae.ff.app.fragment.n:
+com.livae.ff.app.fragment.AbstractLoaderFragment$5 -> com.livae.ff.app.fragment.n:
     com.livae.ff.app.fragment.AbstractLoaderFragment this$0 -> a
     void onAnimationEnd(android.animation.Animator) -> onAnimationEnd
 com.livae.ff.app.fragment.ChatPrivateFragment -> com.livae.ff.app.fragment.ChatPrivateFragment:
@@ -24611,9 +24607,9 @@ com.livae.ff.app.fragment.ChatPublicFragment -> com.livae.ff.app.fragment.ChatPu
     android.view.MenuItem menuUnblock -> t
     android.support.v4.util.Pair savedContextMenuInfo -> u
     void onCreate(android.os.Bundle) -> onCreate
+    void onPause() -> onPause
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onResume() -> onResume
-    void onPause() -> onPause
     void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     void getConversation() -> f
     void startConversation() -> g
@@ -24725,11 +24721,11 @@ com.livae.ff.app.fragment.ChatsPublicFragment -> com.livae.ff.app.fragment.al:
     java.lang.String searchText -> c
     android.widget.TextView emptyView -> d
     void onCreate(android.os.Bundle) -> onCreate
+    void onPause() -> onPause
     android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     void onViewCreated(android.view.View,android.os.Bundle) -> onViewCreated
     void onResume() -> onResume
     void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    void onPause() -> onPause
     void setChatType(com.livae.ff.common.Constants$ChatType) -> a
     void chatClicked(com.livae.ff.app.model.ChatPublicModel) -> a
     boolean onNotificationReceived(com.livae.ff.common.model.Notification) -> a
@@ -25206,37 +25202,42 @@ com.livae.ff.app.utils.AnimUtils$Builder -> com.livae.ff.app.j.d:
 com.livae.ff.app.utils.AnimUtils$Builder$1 -> com.livae.ff.app.j.e:
     com.livae.ff.app.utils.AnimUtils$Builder this$0 -> a
     void run() -> run
-com.livae.ff.app.utils.DeviceUtils -> com.livae.ff.app.j.f:
+com.livae.ff.app.utils.Debug -> com.livae.ff.app.j.f:
+    void print(android.database.Cursor) -> a
+    void print(android.database.Cursor,int) -> a
+    java.lang.String getCursorData(android.database.Cursor,int) -> b
+    void print(java.lang.String) -> a
+com.livae.ff.app.utils.DeviceUtils -> com.livae.ff.app.j.g:
     boolean isNetworkAvailable(android.content.Context) -> a
     java.lang.String getCloudMessageId(android.content.Context) -> b
     java.lang.String getApplicationVersionString() -> a
-com.livae.ff.app.utils.ImageUtils -> com.livae.ff.app.j.g:
+com.livae.ff.app.utils.ImageUtils -> com.livae.ff.app.j.h:
     void loadUserImage(android.widget.ImageView,java.lang.String) -> a
-    void loadDefault(android.widget.ImageView,java.lang.String,int,boolean,boolean) -> a
+    void loadDefault(android.widget.ImageView,java.lang.String,int,boolean,boolean,java.lang.Integer) -> a
     java.lang.String parseUrl(java.lang.String,android.content.Context) -> a
     android.graphics.Bitmap getCircularBitmapImage(android.graphics.Bitmap) -> a
-com.livae.ff.app.utils.ImageUtils$CircleTransformPicasso -> com.livae.ff.app.j.h:
+com.livae.ff.app.utils.ImageUtils$CircleTransformPicasso -> com.livae.ff.app.j.i:
     android.graphics.Bitmap transform(android.graphics.Bitmap) -> a
     java.lang.String key() -> a
-com.livae.ff.app.utils.IntentUtils -> com.livae.ff.app.j.i:
+com.livae.ff.app.utils.IntentUtils -> com.livae.ff.app.j.j:
     void sendFeedback(android.content.Context) -> a
     void rateApp(android.content.Context) -> b
     void shareApp(android.content.Context) -> c
-com.livae.ff.app.utils.NotificationUtil -> com.livae.ff.app.j.j:
+com.livae.ff.app.utils.NotificationUtil -> com.livae.ff.app.j.k:
     android.text.style.StyleSpan BOLD_SPAN -> a
     android.text.style.StyleSpan ITALIC_SPAN -> b
     com.livae.ff.common.Constants$PushNotificationType getNotificationType(android.os.Bundle) -> a
     android.support.v4.app.NotificationCompat$Builder getDefaultNotificationBuilder(android.content.Context) -> a
     android.text.SpannableString makeNotificationLine(java.lang.String,java.lang.String,java.lang.String) -> a
     com.livae.ff.common.model.Notification parseNotification(android.os.Bundle) -> b
-com.livae.ff.app.utils.NotificationUtil$1 -> com.livae.ff.app.j.k:
+com.livae.ff.app.utils.NotificationUtil$1 -> com.livae.ff.app.j.l:
     int[] $SwitchMap$com$livae$ff$common$Constants$PushNotificationType -> a
-com.livae.ff.app.utils.PhoneUtils -> com.livae.ff.app.j.l:
+com.livae.ff.app.utils.PhoneUtils -> com.livae.ff.app.j.m:
     java.lang.Long getMobileNumber(java.lang.String,java.lang.String) -> a
     com.google.i18n.phonenumbers.Phonenumber$PhoneNumber getPhoneNumber(java.lang.String,java.lang.String) -> b
     java.lang.String getPrettyPrint(java.lang.Long,java.lang.String) -> a
     java.lang.String getCountryISO(android.content.Context) -> a
-com.livae.ff.app.utils.PhoneVerification -> com.livae.ff.app.j.m:
+com.livae.ff.app.utils.PhoneVerification -> com.livae.ff.app.j.n:
     com.livae.ff.app.utils.PhoneVerification instance -> a
     java.lang.Long userPhone -> b
     java.lang.Integer verificationToken -> c
@@ -25250,7 +25251,7 @@ com.livae.ff.app.utils.PhoneVerification -> com.livae.ff.app.j.m:
     void setDate(java.lang.Long) -> b
     java.lang.Integer getVerificationToken() -> c
     void setVerificationToken(java.lang.Integer) -> a
-com.livae.ff.app.utils.SyncUtils -> com.livae.ff.app.j.n:
+com.livae.ff.app.utils.SyncUtils -> com.livae.ff.app.j.o:
     void createAccount(android.content.Context,java.lang.Long) -> a
     void syncContactsWhenChange() -> a
     void syncContactsNow() -> b
@@ -25258,13 +25259,13 @@ com.livae.ff.app.utils.SyncUtils -> com.livae.ff.app.j.n:
     boolean isAccountRegistered(android.content.Context) -> a
     void syncUserProfile(android.content.Context) -> b
     void syncCommentsWhenNetwork() -> d
-com.livae.ff.app.utils.SyncUtils$1 -> com.livae.ff.app.j.o:
+com.livae.ff.app.utils.SyncUtils$1 -> com.livae.ff.app.j.p:
     void onChange(boolean) -> onChange
     void onChange(boolean,android.net.Uri) -> onChange
-com.livae.ff.app.utils.TextUtils -> com.livae.ff.app.j.p:
+com.livae.ff.app.utils.TextUtils -> com.livae.ff.app.j.q:
     android.text.style.StyleSpan boldSpan -> a
     android.text.SpannableString setBoldText(java.lang.CharSequence,java.lang.CharSequence,boolean) -> a
-com.livae.ff.app.utils.UnitUtils -> com.livae.ff.app.j.q:
+com.livae.ff.app.utils.UnitUtils -> com.livae.ff.app.j.r:
     java.text.DateFormat DATE_FORMAT -> a
     java.text.DateFormat TIME_FORMAT -> b
     java.lang.CharSequence getTime(android.content.Context,long) -> a
