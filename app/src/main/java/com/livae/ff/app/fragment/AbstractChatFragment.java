@@ -138,7 +138,8 @@ public abstract class AbstractChatFragment
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+	public View onCreateView(LayoutInflater inflater,
+							 @Nullable ViewGroup container,
 							 @Nullable Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_comments, container, false);
 	}
@@ -370,7 +371,8 @@ public abstract class AbstractChatFragment
 		scrollToPosition(0, true);
 		taskPostComment.execute(textId, new Callback<TextId, Comment>() {
 			@Override
-			public void onComplete(CustomAsyncTask<TextId, Comment> task, TextId param,
+			public void onComplete(CustomAsyncTask<TextId, Comment> task,
+								   TextId param,
 								   Comment result) {
 				switch (chatType) {
 					case FLATTER:

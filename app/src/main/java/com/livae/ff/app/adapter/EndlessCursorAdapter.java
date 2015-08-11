@@ -17,15 +17,7 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	private static final int TYPE_LOADING = -3;
 
-	private static final int TYPE_HEADER = -4;
-
-	private static final int TYPE_FOOTER = -5;
-
 	protected LayoutInflater layoutInflater;
-
-	private View headerView;
-
-	private View footerView;
 
 	private boolean isLoading;
 
@@ -54,53 +46,12 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 			iId = cursor.getColumnIndexOrThrow(BaseColumns._ID);
 			findIndexes(cursor);
 		}
-		int currentSize = getCursorItemCount();
 		if (this.cursor != null && this.cursor != cursor) {
 			this.cursor.close();
 		}
 		this.cursor = cursor;
-		int newSize = getCursorItemCount();
-		int diff = newSize - currentSize;
-		int start = 0;
-		if (headerView != null) {
-			start++;
-		}
-//		if (diff > 0) {
-//			notifyItemRangeInserted(start + currentSize, diff);
-//		} else if (diff < 0) {
-//			notifyItemRangeRemoved(start, -diff);
-//		} else {
-//			notifyDataSetChanged();
-//		}
-		notifyDataSetChanged();
 		setIsLoading(false);
 		setIsError(false);
-	}
-
-	public void setHeaderView(View headerView) {
-		if (this.headerView != null) {
-			notifyItemRemoved(0);
-		}
-		this.headerView = headerView;
-		notifyItemInserted(0);
-	}
-
-	public void setFooterView(View footerView) {
-		int size = getCursorItemCount();
-		if (headerView != null) {
-			size++;
-		}
-		if (isError) {
-			size++;
-		}
-		if (isLoading) {
-			size++;
-		}
-		if (this.footerView != null) {
-			notifyItemRemoved(size);
-		}
-		this.footerView = footerView;
-		notifyItemInserted(size);
 	}
 
 	protected abstract void findIndexes(@Nonnull Cursor cursor);
@@ -108,9 +59,6 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 	public void setIsLoading(boolean loading) {
 		if (loading != isLoading) {
 			int size = getCursorItemCount();
-			if (headerView != null) {
-				size++;
-			}
 			isLoading = loading;
 			if (isLoading) {
 				if (isError) {
@@ -127,9 +75,6 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 	public void setIsError(boolean error) {
 		if (error != isError) {
 			int size = getCursorItemCount();
-			if (headerView != null) {
-				size++;
-			}
 			isError = error;
 			if (isError) {
 				notifyItemInserted(size);
@@ -154,12 +99,6 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 				return new EndlessViewHolder(viewCreator.createErrorView(layoutInflater,
 																		 viewGroup));
 //			break;
-			case TYPE_HEADER:
-				return new EndlessViewHolder(headerView);
-//			break;
-			case TYPE_FOOTER:
-				return new EndlessViewHolder(footerView);
-//			break;
 			default:
 				return createCustomViewHolder(viewGroup, type);
 		}
@@ -169,9 +108,6 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 		int size = getCursorItemCount();
-		if (headerView != null) {
-			position--;
-		}
 		if (position >= 0 && position < size) {
 			//noinspection ConstantConditions
 			cursor.moveToPosition(position);
@@ -182,12 +118,6 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	public int getItemViewType(int position) {
 		int size = getCursorItemCount();
-		if (headerView != null && position == 0) {
-			return TYPE_HEADER;
-		}
-		if (headerView != null) {
-			position--;
-		}
 		if (position < size) {
 			cursor.moveToPosition(position);
 			return getCustomItemViewType(position, cursor);
@@ -196,16 +126,8 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 			return TYPE_ERROR;
 		} else if (isError && isLoading && size + 1 == position) {
 			return TYPE_LOADING;
-		} else if (isError && isLoading && footerView != null && size + 2 == position) {
-			return TYPE_FOOTER;
-		} else if (isError && !isLoading && footerView != null && size + 1 == position) {
-			return TYPE_FOOTER;
 		} else if (!isError && isLoading && size == position) {
 			return TYPE_LOADING;
-		} else if (!isError && isLoading && footerView != null && size + 1 == position) {
-			return TYPE_FOOTER;
-		} else if (!isError && !isLoading && footerView != null && size == position) {
-			return TYPE_FOOTER;
 		} else {
 			throw new RuntimeException("Should not happen");
 		}
@@ -214,9 +136,6 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 	@Override
 	public long getItemId(int position) {
 		int size = getCursorItemCount();
-		if (headerView != null) {
-			position--;
-		}
 		if (position >= 0 && position < size) {
 			cursor.moveToPosition(position);
 			return cursor.getLong(iId);
@@ -234,12 +153,6 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 		if (isLoading) {
 			size++;
 		}
-		if (headerView != null) {
-			size++;
-		}
-		if (footerView != null) {
-			size++;
-		}
 		return size;
 	}
 
@@ -255,14 +168,6 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	protected abstract void bindCustomViewHolder(k viewHolder, int position, Cursor cursor);
 
-	public boolean isHeader() {
-		return headerView != null;
-	}
-
-	public boolean isFooter() {
-		return footerView != null;
-	}
-
 	public boolean isLoading() {
 		return isLoading;
 	}
@@ -273,9 +178,6 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	public int getCursorPosition(int position) {
 		int size = getCursorItemCount();
-		if (headerView != null) {
-			position--;
-		}
 		if (position >= 0 && position < size) {
 			return position;
 		} else {
@@ -285,9 +187,9 @@ public abstract class EndlessCursorAdapter<k extends RecyclerView.ViewHolder>
 
 	public interface ViewCreator {
 
-		public View createLoadingView(LayoutInflater layoutInflater, ViewGroup parent);
+		View createLoadingView(LayoutInflater layoutInflater, ViewGroup parent);
 
-		public View createErrorView(LayoutInflater layoutInflater, ViewGroup parent);
+		View createErrorView(LayoutInflater layoutInflater, ViewGroup parent);
 	}
 
 	class EndlessViewHolder extends RecyclerView.ViewHolder {

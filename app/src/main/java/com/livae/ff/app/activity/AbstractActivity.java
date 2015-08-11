@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.R;
 import com.livae.ff.app.listener.OnLifeCycleListener;
 import com.livae.ff.app.utils.SyncUtils;
@@ -100,12 +101,12 @@ public abstract class AbstractActivity extends AppCompatActivity {
 	}
 
 	public void showSnackBarException(Exception e) {
-		Snackbar.make(findViewById(R.id.container), getExceptionError(e), Snackbar.LENGTH_LONG)
-				.show();
+			Snackbar.make(findViewById(R.id.container), getExceptionError(e), Snackbar.LENGTH_LONG)
+					.show();
 	}
 
 	public void showSnackBarException(String message) {
-		Snackbar.make(findViewById(R.id.container), message, Snackbar.LENGTH_LONG).show();
+			Snackbar.make(findViewById(R.id.container), message, Snackbar.LENGTH_LONG).show();
 	}
 
 	@Override

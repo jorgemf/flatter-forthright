@@ -71,58 +71,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 
 	private boolean finishLoading;
 
-	private View topPaddingView;
-
-	private View bottomPaddingView;
-
-	public void setSelection(String selection, String[] selectionArgs) {
-		this.selection = selection;
-		this.selectionArgs = selectionArgs;
-	}
-
-	public void setRecyclerViewTopPadding(final View view) {
-		if (topPaddingView == null) {
-			topPaddingView = createViewWithHeight(view);
-			adapter.setHeaderView(topPaddingView);
-		} else {
-			setSameHeight(view, topPaddingView);
-		}
-	}
-
-	public void setRecyclerViewBottomPadding(final View view) {
-		if (bottomPaddingView == null) {
-			bottomPaddingView = createViewWithHeight(view);
-			adapter.setFooterView(bottomPaddingView);
-		} else {
-			setSameHeight(view, bottomPaddingView);
-		}
-	}
-
-	public void setColumnsLayoutManager(int columns) {
-		GridLayoutManager gridLayoutManager;
-		gridLayoutManager =
-		  new GridLayoutManager(getActivity(), columns, GridLayoutManager.VERTICAL, false);
-		gridLayoutManager.setSpanSizeLookup(new GridSpanSize(gridLayoutManager));
-		recyclerView.setLayoutManager(gridLayoutManager);
-	}
-
-	private View createViewWithHeight(View view) {
-		View viewPadding = new View(getActivity());
-		setSameHeight(view, viewPadding);
-		return viewPadding;
-	}
-
-	private void setSameHeight(View view, View viewPadding) {
-		view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-		int height = view.getMeasuredHeight();
-		ViewGroup.MarginLayoutParams lp;
-		lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-		int newHeight = height + lp.topMargin + lp.bottomMargin;
-		RecyclerView.LayoutParams rlp;
-		rlp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, newHeight);
-		viewPadding.setLayoutParams(rlp);
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -199,19 +147,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 				checkLoadNext();
 			}
 		});
-		// fix bug in recycler library when removing the last element
-		View viewFooterPadding = new View(getActivity());
-		RecyclerView.LayoutParams rlp;
-		int height = 1;
-		rlp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
-		viewFooterPadding.setLayoutParams(rlp);
-		adapter.setFooterView(viewFooterPadding);
-		// fix auto scroll to the bottom
-		View viewHeaderPadding = new View(getActivity());
-		height = 1;
-		rlp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
-		viewHeaderPadding.setLayoutParams(rlp);
-		adapter.setHeaderView(viewHeaderPadding);
 	}
 
 	@Override
@@ -258,10 +193,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		totalLoaded = 0;
 		finishLoading = false;
 		adapter.setCursor(null);
-	}
-
-	public void setOnScrollListener(RecyclerView.OnScrollListener listener) {
-		onScrollListener = listener;
 	}
 
 	protected abstract CustomAsyncTask<QUERY, ListResult> getLoaderTask();
@@ -367,41 +298,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 		}
 	}
 
-	protected void removeItem(final int adapterPosition) {
-		LoaderManager lm = getLoaderManager();
-		lm.restartLoader(LOADER_ID, null, new LoaderManager.LoaderCallbacks<Cursor>() {
-
-			@Override
-			public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-				totalLoaded--;
-				return AbstractLoaderFragment.this.onCreateLoader(LOADER_ID, args);
-			}
-
-			@Override
-			public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-				adapter.setCursor(data);
-				adapter.notifyDataSetChanged();
-				setEmptyView();
-			}
-
-			@Override
-			public void onLoaderReset(Loader<Cursor> loader) {
-				// nothing
-			}
-		});
-	}
-
-	public int getFirstItemTranslationY() {
-		LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-		if (layoutManager.findFirstVisibleItemPosition() == 0) {
-			View firstView = layoutManager.findViewByPosition(0);
-			if (firstView != null) {
-				return (int) firstView.getY();
-			}
-		}
-		return 1;
-	}
-
 	private void showLoading() {
 		if (loading.getVisibility() == View.GONE) {
 			loading.animate().alpha(1).setListener(new AnimatorListenerAdapter() {
@@ -440,42 +336,6 @@ public abstract class AbstractLoaderFragment<VH extends RecyclerView.ViewHolder,
 				recyclerView.smoothScrollToPosition(position);
 			} else {
 				recyclerView.scrollToPosition(position);
-			}
-		}
-	}
-
-	public class GridSpanSize extends GridLayoutManager.SpanSizeLookup {
-
-		private GridLayoutManager.SpanSizeLookup mSpanSizeLookUpWrapped;
-
-		private int spanCount;
-
-		public GridSpanSize(GridLayoutManager gridLayoutManager) {
-			mSpanSizeLookUpWrapped = gridLayoutManager.getSpanSizeLookup();
-			spanCount = gridLayoutManager.getSpanCount();
-		}
-
-		@Override
-		public int getSpanSize(int position) {
-			if (adapter.isHeader()) {
-				position -= 1;
-			}
-			if (position < 0 || position >= adapter.getCursorItemCount()) {
-				return spanCount;
-			} else {
-				return mSpanSizeLookUpWrapped.getSpanSize(position);
-			}
-		}
-
-		@Override
-		public int getSpanIndex(int position, int spanCount) {
-			if (adapter.isHeader()) {
-				position -= 1;
-			}
-			if (position < 0 || position >= adapter.getCursorItemCount()) {
-				return 0;
-			} else {
-				return position % spanCount;
 			}
 		}
 	}

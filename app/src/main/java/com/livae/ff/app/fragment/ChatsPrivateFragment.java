@@ -28,6 +28,7 @@ import com.livae.ff.app.model.ChatPrivateModel;
 import com.livae.ff.app.provider.ConversationsProvider;
 import com.livae.ff.app.receiver.NotificationDisabledReceiver;
 import com.livae.ff.app.sql.Table;
+import com.livae.ff.app.utils.Debug;
 import com.livae.ff.app.view.ContextMenuRecyclerView.RecyclerContextMenuInfo;
 import com.livae.ff.app.viewholders.ChatPrivateViewHolder;
 import com.livae.ff.common.Constants;
@@ -76,6 +77,7 @@ public class ChatsPrivateFragment extends AbstractFragment
 		recyclerView.setAdapter(conversationsAdapter);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		registerForContextMenu(recyclerView);
+		tutorialView.setVisibility(View.GONE);
 	}
 
 	@Override

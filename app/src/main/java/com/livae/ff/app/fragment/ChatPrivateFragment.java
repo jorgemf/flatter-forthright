@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.livae.ff.api.ff.model.Conversation;
+import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.R;
 import com.livae.ff.app.activity.AbstractActivity;
 import com.livae.ff.app.activity.AbstractChatActivity;
@@ -99,7 +100,8 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+	public View onCreateView(LayoutInflater inflater,
+							 @Nullable ViewGroup container,
 							 @Nullable Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_private_comments, container, false);
 	}
@@ -110,7 +112,7 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 		registerForContextMenu(recyclerView);
 		addContactButton = (Button) view.findViewById(R.id.button_add_contact);
 		addContactButton.setOnClickListener(this);
-		if (rawContactId != null || chatType == ChatType.PRIVATE_ANONYMOUS) {
+		if (rawContactId != null || chatType == ChatType.PRIVATE_ANONYMOUS || BuildConfig.TEST) {
 			addContactButton.setVisibility(View.GONE);
 		}
 	}
@@ -140,7 +142,7 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 		super.onLoadFinished(objectLoader, cursor);
 		switch (objectLoader.getId()) {
 			case LOADER_CONTACT:
-				if (cursor.moveToFirst()) {
+				if (cursor.moveToFirst() && !BuildConfig.TEST) {
 					int iRawContactId =
 					  cursor.getColumnIndex(Table.LocalUser.ANDROID_RAW_CONTACT_ID);
 					if (!cursor.isNull(iRawContactId) && rawContactId == null) {
@@ -384,14 +386,17 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 
 	private void confirmationBlockUser() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(userName).setMessage(R.string.confirmation_block_user)
+		builder.setTitle(userName)
+			   .setMessage(R.string.confirmation_block_user)
 			   .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 				   @Override
 				   public void onClick(DialogInterface dialog, int which) {
 					   blockUser();
 					   dialog.dismiss();
 				   }
-			   }).setNegativeButton(R.string.no, null).show();
+			   })
+			   .setNegativeButton(R.string.no, null)
+			   .show();
 	}
 
 	private void unblockUser() {

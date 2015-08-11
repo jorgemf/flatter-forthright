@@ -131,23 +131,23 @@ public class CommentsAdapter extends EndlessCursorAdapter<CommentViewHolder> {
 
 	@Override
 	public void findIndexes(Cursor cursor) {
-		iId = cursor.getColumnIndex(Table.Comment.ID);
-		iDate = cursor.getColumnIndex(Table.Comment.DATE);
-		iUserAnonymousId = cursor.getColumnIndex(Table.Comment.USER_ANONYMOUS_ID);
-		iUserAlias = cursor.getColumnIndex(Table.Comment.USER_ALIAS);
-		iIsMe = cursor.getColumnIndex(Table.Comment.IS_ME);
-		iComment = cursor.getColumnIndex(Table.Comment.COMMENT);
-		iAgreeVotes = cursor.getColumnIndex(Table.Comment.AGREE_VOTES);
-		iDisagreeVotes = cursor.getColumnIndex(Table.Comment.DISAGREE_VOTES);
-		iVoteType = cursor.getColumnIndex(Table.Comment.VOTE_TYPE);
-		iUserVoteType = cursor.getColumnIndex(Table.Comment.USER_VOTE_TYPE);
-		iUserMark = cursor.getColumnIndex(Table.Comment.USER_MARK);
-		iTimesFlagged = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED);
-		iTimesFlaggedAbuse = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED_ABUSE);
-		iTimesFlaggedInsult = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED_INSULT);
-		iTimesFlaggedLie = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED_LIE);
-		iTimesFlaggedOther = cursor.getColumnIndex(Table.Comment.TIMES_FLAGGED_OTHER);
-		iSyncTemp = cursor.getColumnIndex(Table.CommentSync.TEMP_SYNC);
+		iId = cursor.getColumnIndexOrThrow(Table.Comment.ID);
+		iDate = cursor.getColumnIndexOrThrow(Table.Comment.DATE);
+		iUserAnonymousId = cursor.getColumnIndexOrThrow(Table.Comment.USER_ANONYMOUS_ID);
+		iUserAlias = cursor.getColumnIndexOrThrow(Table.Comment.USER_ALIAS);
+		iIsMe = cursor.getColumnIndexOrThrow(Table.Comment.IS_ME);
+		iComment = cursor.getColumnIndexOrThrow(Table.Comment.COMMENT);
+		iAgreeVotes = cursor.getColumnIndexOrThrow(Table.Comment.AGREE_VOTES);
+		iDisagreeVotes = cursor.getColumnIndexOrThrow(Table.Comment.DISAGREE_VOTES);
+		iVoteType = cursor.getColumnIndexOrThrow(Table.Comment.VOTE_TYPE);
+		iUserVoteType = cursor.getColumnIndexOrThrow(Table.Comment.USER_VOTE_TYPE);
+		iUserMark = cursor.getColumnIndexOrThrow(Table.Comment.USER_MARK);
+		iTimesFlagged = cursor.getColumnIndexOrThrow(Table.Comment.TIMES_FLAGGED);
+		iTimesFlaggedAbuse = cursor.getColumnIndexOrThrow(Table.Comment.TIMES_FLAGGED_ABUSE);
+		iTimesFlaggedInsult = cursor.getColumnIndexOrThrow(Table.Comment.TIMES_FLAGGED_INSULT);
+		iTimesFlaggedLie = cursor.getColumnIndexOrThrow(Table.Comment.TIMES_FLAGGED_LIE);
+		iTimesFlaggedOther = cursor.getColumnIndexOrThrow(Table.Comment.TIMES_FLAGGED_OTHER);
+		iSyncTemp = cursor.getColumnIndexOrThrow(Table.CommentSync.TEMP_SYNC);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.livae.ff.app.Analytics;
+import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.activity.AbstractActivity;
 import com.livae.ff.app.fragment.AbstractFragment;
 import com.livae.ff.app.listener.OnLifeCycleListener;

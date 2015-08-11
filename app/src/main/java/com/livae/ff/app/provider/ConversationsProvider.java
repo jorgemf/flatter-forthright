@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.livae.ff.app.sql.Table;
+import com.livae.ff.app.utils.Debug;
 
 import java.util.List;
 

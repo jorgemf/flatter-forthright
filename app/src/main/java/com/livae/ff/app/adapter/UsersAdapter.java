@@ -48,11 +48,11 @@ public class UsersAdapter extends CursorAdapter<UserViewHolder> {
 
 	@Override
 	protected void findIndexes(@Nonnull Cursor cursor) {
-		iContact = cursor.getColumnIndex(Table.LocalUser.CONTACT_NAME);
-		iPhone = cursor.getColumnIndex(Table.LocalUser.PHONE);
-		iImageUri = cursor.getColumnIndex(Table.LocalUser.IMAGE_URI);
-		iBlocked = cursor.getColumnIndex(Table.LocalUser.BLOCKED);
-		iRawContactId = cursor.getColumnIndex(Table.LocalUser.ANDROID_RAW_CONTACT_ID);
+		iContact = cursor.getColumnIndexOrThrow(Table.LocalUser.CONTACT_NAME);
+		iPhone = cursor.getColumnIndexOrThrow(Table.LocalUser.PHONE);
+		iImageUri = cursor.getColumnIndexOrThrow(Table.LocalUser.IMAGE_URI);
+		iBlocked = cursor.getColumnIndexOrThrow(Table.LocalUser.BLOCKED);
+		iRawContactId = cursor.getColumnIndexOrThrow(Table.LocalUser.ANDROID_RAW_CONTACT_ID);
 	}
 
 	@Override

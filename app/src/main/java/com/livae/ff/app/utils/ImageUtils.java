@@ -8,12 +8,14 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.DrawableRes;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
 
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.R;
 import com.livae.ff.app.settings.Settings;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Transformation;
@@ -83,7 +85,13 @@ public class ImageUtils {
 			if (maxSize != null && maxSize > 0) {
 				requestCreator = requestCreator.resize(maxSize, maxSize);
 			}
-			requestCreator.config(Bitmap.Config.RGB_565).into(imageView);
+
+			requestCreator = requestCreator.config(Bitmap.Config.RGB_565);
+			if (BuildConfig.DEBUG) {
+				requestCreator.into(imageView, new TimerCallback(imageUrl));
+			} else {
+				requestCreator.into(imageView);
+			}
 		} else {
 			if (placeholderResId != 0) {
 				imageView.setImageResource(placeholderResId);
@@ -138,6 +146,29 @@ public class ImageUtils {
 		canvas.drawCircle(r, r, r, paint);
 		squaredBitmap.recycle();
 		return bitmap;
+	}
+
+	static final class TimerCallback implements Callback {
+
+		private long time;
+
+		private String imageUrl;
+
+		TimerCallback(String imageUrl) {
+			time = System.currentTimeMillis();
+			this.imageUrl = imageUrl;
+		}
+
+		@Override
+		public void onSuccess() {
+			long elapsedTime = System.currentTimeMillis() - time;
+			Log.v("PROFILING_IMAGES", this.imageUrl + " " + elapsedTime);
+		}
+
+		@Override
+		public void onError() {
+
+		}
 	}
 
 	static class CircleTransformPicasso implements Transformation {

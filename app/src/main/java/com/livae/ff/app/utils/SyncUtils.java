@@ -14,6 +14,7 @@ import android.util.Log;
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.AppUser;
 import com.livae.ff.app.Application;
+import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.provider.ConversationsProvider;
@@ -137,25 +138,28 @@ public class SyncUtils {
 	}
 
 	public static void syncUserProfile(Context context) {
-		final String[] projection =
-		  {ContactsContract.Profile.PHOTO_THUMBNAIL_URI, ContactsContract.Profile.DISPLAY_NAME};
-		Cursor cursor = context.getContentResolver()
-							   .query(ContactsContract.Profile.CONTENT_URI, projection, null, null,
-									  null);
-		String imageUri = null;
-		String userName = null;
-		if (cursor.moveToFirst()) {
-			imageUri =
-			  cursor.getString(cursor.getColumnIndex(ContactsContract.Profile
-													   .PHOTO_THUMBNAIL_URI));
-			userName =
-			  cursor.getString(cursor.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME));
+		if (!BuildConfig.TEST) {
+			final String[] projection =
+			  {ContactsContract.Profile.PHOTO_THUMBNAIL_URI, ContactsContract.Profile
+															   .DISPLAY_NAME};
+			Cursor cursor = context.getContentResolver()
+								   .query(ContactsContract.Profile.CONTENT_URI, projection, null,
+										  null, null);
+			String imageUri = null;
+			String userName = null;
+			if (cursor.moveToFirst()) {
+				imageUri =
+				  cursor.getString(cursor.getColumnIndex(ContactsContract.Profile
+														   .PHOTO_THUMBNAIL_URI));
+				userName =
+				  cursor.getString(cursor.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME));
 
+			}
+			cursor.close();
+			Chats chats = Application.appUser().getChats();
+			chats.setUserImageUri(imageUri);
+			chats.setUserDisplayName(userName);
 		}
-		cursor.close();
-		Chats chats = Application.appUser().getChats();
-		chats.setUserImageUri(imageUri);
-		chats.setUserDisplayName(userName);
 	}
 
 	public static void syncCommentsWhenNetwork() {

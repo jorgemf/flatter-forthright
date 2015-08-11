@@ -55,14 +55,14 @@ public class ChatsPrivateAdapter extends UsersAdapter {
 	@Override
 	protected void findIndexes(Cursor cursor) {
 		super.findIndexes(cursor);
-		iConversationId = cursor.getColumnIndex(Table.Conversation.ID);
-		iRoomName = cursor.getColumnIndex(Table.Conversation.ROOM_NAME);
-		iType = cursor.getColumnIndex(Table.Conversation.TYPE);
-		iLastMessage = cursor.getColumnIndex(Table.Conversation.LAST_MESSAGE);
-		iLastMessageDate = cursor.getColumnIndex(Table.Conversation.LAST_MESSAGE_DATE);
-		iLastAccess = cursor.getColumnIndex(Table.Conversation.LAST_ACCESS);
-		iUnreadCount = cursor.getColumnIndex(Table.Conversation.UNREAD);
-		iConversationPhone = cursor.getColumnIndex(Table.Conversation.PHONE);
+		iConversationId = cursor.getColumnIndexOrThrow(Table.Conversation.ID);
+		iRoomName = cursor.getColumnIndexOrThrow(Table.Conversation.ROOM_NAME);
+		iType = cursor.getColumnIndexOrThrow(Table.Conversation.TYPE);
+		iLastMessage = cursor.getColumnIndexOrThrow(Table.Conversation.LAST_MESSAGE);
+		iLastMessageDate = cursor.getColumnIndexOrThrow(Table.Conversation.LAST_MESSAGE_DATE);
+		iLastAccess = cursor.getColumnIndexOrThrow(Table.Conversation.LAST_ACCESS);
+		iUnreadCount = cursor.getColumnIndexOrThrow(Table.Conversation.UNREAD);
+		iConversationPhone = cursor.getColumnIndexOrThrow(Table.Conversation.PHONE);
 	}
 
 	@Override

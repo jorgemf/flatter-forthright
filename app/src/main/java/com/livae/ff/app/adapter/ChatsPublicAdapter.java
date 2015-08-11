@@ -23,8 +23,9 @@ public class ChatsPublicAdapter extends UsersAdapter {
 
 	public static final String[] PROJECTION =
 	  {Table.LocalUser.T_ID, Table.LocalUser.CONTACT_NAME, Table.LocalUser.PHONE,
-	   Table.LocalUser.IMAGE_URI, Table.LocalUser.BLOCKED, Table.Conversation.T_ID + " AS CID",
-	   Table.Conversation.ROOM_NAME, Table.Conversation.LAST_ACCESS, Table.Conversation.UNREAD};
+	   Table.LocalUser.IMAGE_URI, Table.LocalUser.BLOCKED, Table.LocalUser.ANDROID_RAW_CONTACT_ID,
+	   Table.Conversation.T_ID + " AS CID", Table.Conversation.ROOM_NAME,
+	   Table.Conversation.LAST_ACCESS, Table.Conversation.UNREAD};
 
 	protected int iConversationId;
 
@@ -36,7 +37,8 @@ public class ChatsPublicAdapter extends UsersAdapter {
 
 	private ChatType chatType;
 
-	public ChatsPublicAdapter(@Nonnull Context context, @Nonnull ChatType chatType,
+	public ChatsPublicAdapter(@Nonnull Context context,
+							  @Nonnull ChatType chatType,
 							  @Nonnull ChatPublicClickListener chatPublicClickListener) {
 		this(context, chatType);
 		this.chatPublicClickListener = chatPublicClickListener;
@@ -53,9 +55,9 @@ public class ChatsPublicAdapter extends UsersAdapter {
 	@Override
 	protected void findIndexes(@Nonnull Cursor cursor) {
 		super.findIndexes(cursor);
-		iConversationId = cursor.getColumnIndex("CID");
-		iRoomName = cursor.getColumnIndex(Table.Conversation.ROOM_NAME);
-		iUnreadCount = cursor.getColumnIndex(Table.Conversation.UNREAD);
+		iConversationId = cursor.getColumnIndexOrThrow("CID");
+		iRoomName = cursor.getColumnIndexOrThrow(Table.Conversation.ROOM_NAME);
+		iUnreadCount = cursor.getColumnIndexOrThrow(Table.Conversation.UNREAD);
 	}
 
 	@Override

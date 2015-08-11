@@ -13,6 +13,7 @@ import com.livae.ff.app.api.Model;
 import com.livae.ff.app.provider.ContactsProvider;
 import com.livae.ff.app.receiver.CloudMessagesReceiver;
 import com.livae.ff.app.receiver.NotificationReceiver;
+import com.livae.ff.app.settings.Chats;
 import com.livae.ff.app.sql.DBHelper;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.utils.SyncUtils;
@@ -38,19 +39,23 @@ public class TestService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		if (intent.hasExtra(EXTRA_ACTION)) {
 			ContentValues values;
+			User user;
 			final AppUser appUser = Application.appUser();
 			switch ((ACTION) intent.getSerializableExtra(EXTRA_ACTION)) {
 				case REGISTER_MY_PHONE:
-					final long phone = intent.getLongExtra(EXTRA_DATA, 0L);
+					user = (User) intent.getSerializableExtra(EXTRA_DATA);
 					DBHelper.clearData(this);
 					appUser.clear();
-					appUser.setUserPhone(phone);
+					appUser.setUserPhone(user.phone);
 					appUser.setAccessToken("accessToken");
-					SyncUtils.createAccount(this, phone);
-					Log.i(LOG_TAG, "my phone registered: " + phone);
+					final Chats appUserChats = appUser.getChats();
+					appUserChats.setUserDisplayName(user.name);
+					appUserChats.setUserImageUri(user.imageUrl);
+					SyncUtils.createAccount(this, user.phone);
+					Log.i(LOG_TAG, "my phone registered: " + user.phone);
 					break;
 				case ADD_USER:
-					User user = (User) intent.getSerializableExtra(EXTRA_DATA);
+					user = (User) intent.getSerializableExtra(EXTRA_DATA);
 					values = new ContentValues();
 					values.put(Table.LocalUser.ACCEPTS_PRIVATE, true);
 					values.put(Table.LocalUser.IS_MOBILE_NUMBER, true);
