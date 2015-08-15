@@ -63,9 +63,11 @@ public class CloudMessagesService extends IntentService {
 
 							switch (chatType) {
 								case FORTHRIGHT:
-									if (conversationId.equals(Application.appUser().getChats()
+									if (conversationId.equals(Application.appUser()
+																		 .getChats()
 																		 .getChatForthrightId())) {
-										Application.appUser().getChats()
+										Application.appUser()
+												   .getChats()
 												   .increaseChatForthrightUnread();
 									}
 									if (notifications.isCommentsForthrightMe()) {
@@ -73,9 +75,11 @@ public class CloudMessagesService extends IntentService {
 									}
 									break;
 								case FLATTER:
-									if (conversationId.equals(Application.appUser().getChats()
+									if (conversationId.equals(Application.appUser()
+																		 .getChats()
 																		 .getChatFlatterId())) {
-										Application.appUser().getChats()
+										Application.appUser()
+												   .getChats()
 												   .increaseChatFlatterUnread();
 									}
 									if (notifications.isCommentsFlatteredMe()) {
@@ -179,6 +183,7 @@ public class CloudMessagesService extends IntentService {
 				int index = 0;
 				Long conversationId = cursor.getLong(iConversationId);
 				do {
+					long cId = cursor.getLong(iConversationId);
 					if (index < Settings.Notifications.MAXIMUM_MESSAGES) {
 						String comment = cursor.getString(iComment);
 						String alias = cursor.getString(iAlias);
@@ -186,7 +191,6 @@ public class CloudMessagesService extends IntentService {
 						style.addLine(text);
 						index++;
 					}
-					long cId = cursor.getLong(iConversationId);
 					if (conversationId != null && conversationId != cId) {
 						conversationId = null;
 					}
@@ -194,7 +198,8 @@ public class CloudMessagesService extends IntentService {
 												 conversationId != null));
 				int unreadMore = totalComments - Settings.Notifications.MAXIMUM_MESSAGES;
 				if (unreadMore > 0) {
-					style.setSummaryText(res.getString(R.string.notifications_summary_comments_more,
+					style.setSummaryText(res.getString(R.string
+														 .notifications_summary_comments_more,
 													   unreadMore));
 				}
 				builder.setContentText(res.getString(R.string.notifications_summary_comments,
@@ -301,7 +306,8 @@ public class CloudMessagesService extends IntentService {
 				boolean blocked = cursor.getInt(iBlocked) != 0;
 				Long rawContactId =
 				  cursor.isNull(iRawContactId) ? null : cursor.getLong(iRawContactId);
-				intent = AbstractChatActivity.createIntent(context, chatType, conversationId, phone,
+				intent = AbstractChatActivity.createIntent(context, chatType, conversationId,
+														   phone,
 														   displayName, roomName, imageUri,
 														   aliasId,
 														   lastAccess, lastMessageDate,

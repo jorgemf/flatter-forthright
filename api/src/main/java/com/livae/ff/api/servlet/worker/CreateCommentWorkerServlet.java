@@ -85,27 +85,16 @@ public class CreateCommentWorkerServlet extends HttpServlet {
 
 	@SuppressWarnings("MethodWithMultipleLoops")
 	private void createNotificationsPublic(Comment comment, Conversation conversation) {
-		Set<Long> usersToNotify = new HashSet<>();
-		for (Long phone : conversation.getUsersNotification()) {
-			PhoneUser user = PhoneUser.get(phone);
-			usersToNotify.add(user.getPhone());
-		}
-		PhoneUser conversationUser = PhoneUser.get(conversation.getPhone());
-		if (conversationUser != null) {
-			usersToNotify.add(conversationUser.getPhone());
-		}
-// do not notify to last commenters
-//		List<Comment> latest;
-//		latest = ofy().load().type(Comment.class).filter("conversationId", conversation.getId())
-//					  .order("-date").limit(Settings.NOTIFY_PUBLIC_COMMENTS_LAST_COMMENTERS)
-// .list();
-//		for (Comment latestComment : latest) {
-//			usersToNotify.add(latestComment.getUserId());
-//		}
+		// notify the creator of the comment and the user of the conversation as individual push notifications
+		Long commentUserId = comment.getUserId();
+		Long conversationUserId = conversation.getPhone();
 		final Long commentId = comment.getId();
-		for (Long phone : usersToNotify) {
-			notify(phone, commentId);
+		notify(commentUserId, commentId);
+		if(!commentUserId.equals(conversationUserId)){
+			notify(conversationUserId,commentId);
 		}
+		// notify other users
+		notify(commentId);
 	}
 
 	private void notify(Long userId, Long commentId) {
@@ -113,6 +102,12 @@ public class CreateCommentWorkerServlet extends HttpServlet {
 		queue.add(TaskOptions.Builder.withUrl("/sendpushcommentnotificationworker?userId=" +
 											  userId + "&commentId=" + commentId)
 									 .method(TaskOptions.Method.GET));
+	}
+
+	private void notify(Long commentId) {
+		Queue queue = QueueFactory.getQueue("send-push-notifications-queue");
+		queue.add(TaskOptions.Builder.withUrl("/sendpushcommentnotificationworker?commentId=" +
+											  commentId).method(TaskOptions.Method.GET));
 	}
 
 }

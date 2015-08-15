@@ -70,4 +70,15 @@ public class ChatPublicViewHolder extends UserViewHolder {
 	public ChatPublicModel getModel() {
 		return chatPublicModel;
 	}
+
+	public void setUnread(boolean unread) {
+		if (unreadCount != null) {
+			unreadCount.setText(null);
+			if (unread) {
+				unreadCount.setVisibility(View.VISIBLE);
+			} else {
+				unreadCount.setVisibility(View.GONE);
+			}
+		}
+	}
 }

@@ -32,7 +32,7 @@ public class Settings {
 
 	public static final int MIN_FLAG_TO_MARK_USER = 5;
 
-	public static final int NOTIFY_PUBLIC_COMMENTS_LAST_COMMENTERS = 20;
+	public static final int NOTIFY_PUBLIC_LAST_COMMENTERS = 30;
 
 	public static final int COMMENTS_MAX_CHARS = 10000;
 

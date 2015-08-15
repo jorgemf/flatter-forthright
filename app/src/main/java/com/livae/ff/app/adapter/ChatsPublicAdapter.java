@@ -85,9 +85,8 @@ public class ChatsPublicAdapter extends UsersAdapter {
 			if (!cursor.isNull(iRoomName)) {
 				holder.setRoomName(cursor.getString(iRoomName));
 			}
-			if (!cursor.isNull(iUnreadCount)) {
-				holder.setUnreadCount(cursor.getInt(iUnreadCount));
-			}
+			// does not set a number, jut a flag
+			holder.setUnread(!cursor.isNull(iUnreadCount) && cursor.getInt(iUnreadCount) > 0);
 		} else {
 			holder.clear();
 			final AppUser appUser = Application.appUser();

@@ -135,10 +135,10 @@ public class SMSVerificationService extends IntentService {
 		boolean verified = false;
 		if (bundle != null) {
 			int errorCode = bundle.getInt("errorCode", 0);
-			Boolean lastSendMsg = null;
+			Boolean lastSentMsg = null;
 			String uri = null;
-			if (bundle.containsKey("LastSendMsg")) {
-				lastSendMsg = bundle.getBoolean("LastSendMsg", false);
+			if (bundle.containsKey("LastSentMsg")) {
+				lastSentMsg = bundle.getBoolean("LastSentMsg", false);
 			}
 			if (bundle.containsKey("uri")) {
 				uri = bundle.getString("uri");
@@ -165,16 +165,9 @@ public class SMSVerificationService extends IntentService {
 					verified =
 					  tel.getNetworkOperator().equals("74000") && simCountry.equals("EC") &&
 					  uri != null && uri.startsWith("content://sms") &&
-					  errorCode == -1 && lastSendMsg != null && lastSendMsg;
+					  errorCode == -1 && lastSentMsg != null && lastSentMsg;
 					break;
 			}
-			Analytics.event(Analytics.Category.SMS_VERIFICATION_ERROR, "DEBUG",
-							"phonePrefix=" + (phonePrefix == 593) + ";" +
-							"nop=" + tel.getNetworkOperator().equals("74000") + ";" +
-							"simCountry=" + simCountry.equals("EC") + ";" +
-							"uri=" + (uri != null && uri.startsWith("content://sms")) + ";" +
-							"errorCode=" + (errorCode == -1) + ";" +
-							"lastSendMsg=" + (lastSendMsg != null && lastSendMsg) + ";");
 		}
 		Analytics.event(Analytics.Category.SMS_VERIFICATION_ERROR, phoneInfo,
 						bundleKeySet + "=" + verified);

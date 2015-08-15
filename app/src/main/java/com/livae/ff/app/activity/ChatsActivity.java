@@ -504,12 +504,12 @@ public class ChatsActivity extends AbstractActivity
 		String[] selectionArgs = null;
 		switch (id) {
 			case LOADER_UNREAD_FLATTER:
-				selection = Table.Conversation.UNREAD + ">0 AND " + Table.Conversation.TYPE + "=?";
+				selection = Table.Conversation.UNREAD + "> 0 AND " + Table.Conversation.TYPE + "=?";
 				selectionArgs = new String[]{ChatType.FLATTER.name()};
 				return new CursorLoader(this, ConversationsProvider.getUriConversations(),
 										projection, selection, selectionArgs, null);
 			case LOADER_UNREAD_FORTHRIGHT:
-				selection = Table.Conversation.UNREAD + ">0 AND " + Table.Conversation.TYPE + "=?";
+				selection = Table.Conversation.UNREAD + "> 0 AND " + Table.Conversation.TYPE + "=?";
 				selectionArgs = new String[]{ChatType.FORTHRIGHT.name()};
 				return new CursorLoader(this, ConversationsProvider.getUriConversations(),
 										projection, selection, selectionArgs, null);
