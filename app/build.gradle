@@ -87,6 +87,8 @@ dependencies {
 	// force libraries for test version
 	androidTestCompile 'com.google.code.findbugs:jsr305:2.0.1'
 	androidTestCompile 'com.android.support:support-annotations:22.2.1'
+	devTestCompile 'com.google.code.findbugs:jsr305:2.0.1'
+	devTestCompile 'com.android.support:support-annotations:22.2.1'
 }
 
 buildscript {

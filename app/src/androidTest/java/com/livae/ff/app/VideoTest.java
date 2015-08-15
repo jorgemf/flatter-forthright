@@ -9,11 +9,10 @@ import android.support.test.filters.SdkSuppress;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 import android.support.test.uiautomator.Until;
-import android.view.KeyEvent;
-import android.widget.Button;
 
 import com.livae.ff.common.Constants;
 import com.livaee.ff.app.service.TestService;
@@ -38,11 +37,11 @@ public class VideoTest {
 	private static final String TEST_SERVICE = TestService.class.getCanonicalName();
 
 	private static final String[] usersNamesEnglish =
-	  {"Noah Jones", "Linda Allen", "Liam Taylor", "Olivia West", "Paul Smith", "Sophia Moore",
-	   "William White", "Isabella  Rodriguez", "James Lee", "Emily Miller"};
+	  {"Noah Jones", "Linda Allen", "James Lee", "Olivia West", "Paul Smith", "Sophia Moore",
+	   "William White", "Isabella  Rodriguez", "Liam Taylor", "Emily Miller"};
 
 	private static final String[] textEnglish =
-	  // private conversations
+	  // private conversations initial
 	  {
 		// 0 girl 9
 		"Hahaha",
@@ -58,12 +57,12 @@ public class VideoTest {
 		"This is app is amazing, I was talking with this girl and...",
 		// male friend conversation
 		// 6 guy 2
-		"\uD83D\uDE02",
+		"\uD83C\uDCCF\n\uD83D\uDC7E\n\uD83D\uDE02",
 		// 7 me
-		"How was your trip?",
+		"How was your trip?\n\uD83D\uDE80\uD83D\uDE80",
 		// 8 guy 2
-		"We went to that place you told me, it was awesome", "I will show you some pics later",
-		"\uD83D\uDE06",
+		"\uD83D\uDE0E\nWe went to that place you told me, it was awesome",
+		"I will show you some pics later", "\uD83D\uDE06",
 		// 11 me
 		"\uD83D\uDC4D",
 		// male friend forthright
@@ -109,9 +108,7 @@ public class VideoTest {
 		"", "", "", "", "", "", "", "", "",};
 
 	private static final String[] aliasEnglish =
-	  {"Someone had to tell you", "Football star", "Terminator", "", "", "", "", "", "", "", "",
-	   "",
-	   "", "", "", "", "", "", "", "", "", "", "", "", "",};
+	  {"Someone had to tell you", "Football star", "Terminator", "", "", "", "", "", "", ""};
 
 	private static final String[] usersNamesSpanish =
 	  {"Noah Jones", "Linda Allen", "Liam Taylor", "Olivia West", "Paul Smith", "Sophia Moore",
@@ -123,9 +120,7 @@ public class VideoTest {
 	   "", "", "", "", "", "",};
 
 	private static final String[] aliasSpanish =
-	  {"Tengo algo que decirte", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-	   "",
-	   "", "", "", "", "", "", "",};
+	  {"Tengo algo que decirte", "Futbol superstar", "Terminator", "", "", "", "", "", "", ""};
 
 	private static final long[] PHONES =
 	  {785639L, 757392L, 753286L, 799438L, 711204L, 784585L, 765890L, 712943L, 749598L, 712534L};
@@ -205,26 +200,26 @@ public class VideoTest {
 		comments[2] = new Comment(6003L, Constants.ChatType.PRIVATE, users[7].phone, null, text[2],
 								  TimeUnit.DAYS.toSeconds(1), null);
 		comments[3] = new Comment(6004L, Constants.ChatType.PRIVATE, users[6].phone, null, text[3],
-								  TimeUnit.DAYS.toSeconds(1), null);
+								  TimeUnit.HOURS.toSeconds(33), null);
 		comments[4] = new Comment(6005L, Constants.ChatType.PRIVATE, users[5].phone, null, text[4],
 								  TimeUnit.DAYS.toSeconds(2), null);
 		comments[5] = new Comment(6006L, Constants.ChatType.PRIVATE, users[4].phone, null, text[5],
 								  TimeUnit.DAYS.toSeconds(2), null);
 		// friend chat
 		comments[6] = new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[6],
-								  TimeUnit.DAYS.toSeconds(7), null);
+								  TimeUnit.HOURS.toSeconds(30), null);
 		comments[7] = new Comment(1002L, Constants.ChatType.PRIVATE, users[0].phone, null, text[7],
-								  TimeUnit.DAYS.toSeconds(7), null);
+								  TimeUnit.HOURS.toSeconds(30), null);
 		comments[8] = new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[8],
-								  TimeUnit.DAYS.toSeconds(7), null);
+								  TimeUnit.HOURS.toSeconds(30), null);
 		comments[9] = new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[9],
-								  TimeUnit.DAYS.toSeconds(7), null);
+								  TimeUnit.HOURS.toSeconds(30), null);
 		comments[10] =
 		  new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[10],
-					  TimeUnit.DAYS.toSeconds(7), null);
+					  TimeUnit.HOURS.toSeconds(30), null);
 		comments[11] =
 		  new Comment(1002L, Constants.ChatType.PRIVATE, users[0].phone, null, text[11],
-					  TimeUnit.DAYS.toSeconds(7), null);
+					  TimeUnit.HOURS.toSeconds(30), null);
 		// write in forthright
 		comments[12] =
 		  new Comment(2002L, Constants.ChatType.FORTHRIGHT, users[6].phone, alias[1], text[12],
@@ -285,18 +280,16 @@ public class VideoTest {
 		sleep(1000);
 		pressText(FORTHRIGHT);
 		sleep(600);
-		swipeUp("recycler_view");
-		sleep(500);
 		pressText(users[2].name);
-		pressId("comment_text");
-		typeText(comments[13].alias);
-		pressText("Ok");
+		typeText("dialog_edit_text", comments[13].alias);
+		pressText("OK");
 		sleep(1000);
-		typeText(comments[13].comment);
+		pressId("comment_text");
+		typeText("comment_text",comments[13].comment);
 		pressId("button_post_comment");
 		addComment(context, comments[13]);
 		pressId("comment_text");
-		typeText(comments[14].comment);
+		typeText("comment_text",comments[14].comment);
 		pressId("button_post_comment");
 		addComment(context, comments[14]);
 		sleep(2500);
@@ -335,12 +328,6 @@ public class VideoTest {
 		context.startService(intent);
 	}
 
-	private void pressKey(char key)
-	  throws UiObjectNotFoundException {
-		device.findObject(new UiSelector().text(String.valueOf(key))
-										  .className(Button.class.getName())).click();
-	}
-
 	private void pressText(String text)
 	  throws UiObjectNotFoundException {
 		device.findObject(new UiSelector().text(text)).click();
@@ -355,24 +342,24 @@ public class VideoTest {
 	private void swipeUp(String resId)
 	  throws UiObjectNotFoundException {
 		device.findObject(new UiSelector().resourceId(PENSAMIENTOS_PACKAGE + ":id/" + resId))
-			  .swipeUp(20);
+			  .swipeUp(10);
 	}
 
-	private void typeText(String text)
+	private void typeText(String resId, String text)
 	  throws UiObjectNotFoundException {
-		for (int i = 0; i < text.length(); i++) {
-			if (text.charAt(i) == ' ') {
-				device.pressKeyCode(KeyEvent.KEYCODE_SPACE);
-			} else {
-				pressKey(text.charAt(i));
-			}
-			sleep(100 + (int) (Math.random() * 20));
+		UiSelector selector = new UiSelector().resourceId(PENSAMIENTOS_PACKAGE + ":id/" + resId);
+		UiObject uiObject = device.findObject(selector);
+		for (int i = 1; i < text.length(); i++) {
+			uiObject.setText(text.substring(0, i));
+			sleep(40 + (int) (Math.random() * 15));
 		}
+		uiObject.setText(text);
+		sleep(40 + (int) (Math.random() * 15));
 	}
 
 	private void sleep(long time) {
 		try {
-			Thread.sleep(time / 10); // TODO remove the / 10
+			Thread.sleep(time);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
