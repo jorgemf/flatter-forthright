@@ -121,7 +121,6 @@
       <excludeFolder url="file:///tmp/gradlebuild/flatter-forthright/app/intermediates/rs" />
       <excludeFolder url="file:///tmp/gradlebuild/flatter-forthright/app/intermediates/symbols" />
       <excludeFolder url="file:///tmp/gradlebuild/flatter-forthright/app/outputs" />
-      <excludeFolder url="file:///tmp/gradlebuild/flatter-forthright/app/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
