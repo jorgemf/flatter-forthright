@@ -119,6 +119,7 @@ public class SendPushCommentNotificationWorkerServlet extends HttpServlet {
 				}
 			}
 		}
+		comment.setIsMe(false);
 		NotificationsUtil.sendMulticastPushNotification(devicesIds,
 														createNotification(comment, conversation),
 														PushNotificationType.COMMENT);
