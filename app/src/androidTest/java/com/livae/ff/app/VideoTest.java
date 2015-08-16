@@ -37,8 +37,8 @@ public class VideoTest {
 	private static final String TEST_SERVICE = TestService.class.getCanonicalName();
 
 	private static final String[] usersNamesEnglish =
-	  {"Noah Jones", "Linda Allen", "James Lee", "Olivia West", "Paul Smith", "Sophia Moore",
-	   "William White", "Isabella  Rodriguez", "Liam Taylor", "Emily Miller"};
+	  {"Noah Jones", "Isabella  Rodriguez", "James Lee", "Olivia West", "Paul Smith",
+	   "Sophia Moore", "William White", "Linda Allen", "Liam Taylor", "Emily Miller"};
 
 	private static final String[] textEnglish =
 	  // private conversations initial
@@ -61,8 +61,8 @@ public class VideoTest {
 		// 7 me
 		"How was your trip?\n\uD83D\uDE80\uD83D\uDE80",
 		// 8 guy 2
-		"\uD83D\uDE0E\nWe went to that place you told me, it was awesome",
-		"I will show you some pics later", "\uD83D\uDE06",
+		"\uD83D\uDE0E\nWe went to that place you told me, it was " +
+		"awesome\n\uD83C\uDF7B\uD83C\uDF78", "I will show you some pics later", "\uD83D\uDE06",
 		// 11 me
 		"\uD83D\uDC4D",
 		// male friend forthright
@@ -77,42 +77,57 @@ public class VideoTest {
 		"\uD83D\uDE31",
 
 		// male friend conversation
-		// 15 guy 2
-		"What are you doing tonight? I have to talk about going to the bar",
-		// 16 me
-		"I was thinking about her",
-		// 17 guy 2
-		"the same girl again?? \uD83D\uDE34",
+		// 18 guy 2
+		"What are you doing? I was thinking about going to the bar tonight",
 		// 19 me
+		"I was thinking about her",
+		// 20 guy 2
+		"the same girl again?? \uD83D\uDE34",
+		// 21 me
 		"I have to say something to her",
-		// 19 guy 2
+		// 22 guy 2
 		"same story again and again...", "DO IT!!", "NOW!!!",
-		// 22 me
-		"ok \uD83D\uDE13",
+		// 25 me
+		"ok",
 		// female friend flatterer
-		// 23 girl 1
-		"you are a great person, I loooveee you too much. BFF",
-		"❤❤❤❤❤\uD83D\uDC9B\uD83D\uDC9B\uD83D\uDC9B\uD83D\uDC9B",
-		// 25 guy 2
-		"I am bit shy but I want you to know you are very pretty",
-		"I would want to be your " + "friend", "\uD83D\uDE18",
-		// 28 the girl
-		"I don't know who you are but I have a BF",
-		// 29 me
-		"Well... I know you have a boyfriend but sometimes you just need to say it",
-		"I think you are a great girl",
-		// 31 the girl
-		"thanks, you are kind",
+		// 26 girl 3
+		"you are the best friend\nI loooveee you too much. BFF",
+		"  ❤❤❤    ❤❤❤\n❤❤❤❤❤❤❤❤\n   ❤❤❤❤❤❤❤\n       ❤❤❤❤❤\n          ❤❤❤\n            ❤\n",
+		// 28 girl
+		"\uD83D\uDE0D\uD83D\uDE0D\uD83D\uDE0D\uD83D\uDE0D\uD83D\uDE0D", "\uD83D\uDC8B\uD83D\uDE18",
+		// 30 me
+		"I love you",
+		// 31 girl
+		"What?",
+		// 32
+		"I needed to say how I feel",
+		// 33 the girl
+		"Let's talk in private",
 		// female friend private anonymous
-		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "", "", "",};
+		// 34 me
+		"Here I am", "I love you since long time ago",
+		// 36 girl
+		"Sorry, but I got a boyfriend recently", "Don't tell everybody",
+		// 38 me
+		"I am late",
+		// 39 girl
+		"you are",
+		// 40 me
+		"ok", "well... at least I said it",
+		// new private conversation
+		// 42 anom girl
+		"Hi",
+		// 43 me
+		"Hi", "Who are you?",
+		// 45 anom girl
+		"Your secret lover \uD83D\uDE09"};
 
 	private static final String[] aliasEnglish =
-	  {"Someone had to tell you", "Football star", "Terminator", "", "", "", "", "", "", ""};
+	  {"Priest", "Football star", "Terminator", "BFF", "half heart", "Sweet heart"};
 
 	private static final String[] usersNamesSpanish =
-	  {"Noah Jones", "Linda Allen", "Liam Taylor", "Olivia West", "Paul Smith", "Sophia Moore",
-	   "William White", "Isabella  Rodriguez", "James Lee", "Emily Miller"};
+	  {"Noah Jones", "Isabella  Rodriguez", "James Lee", "Olivia West", "Paul Smith",
+	   "Sophia Moore", "William White", "Linda Allen", "Liam Taylor", "Emily Miller"};
 
 	private static final String[] textSpanish =
 	  {"Te veo luego", "Sabes donde está?", "Ta lueg :)", "jajaja", "pasalo bien!", "", "", "", "",
@@ -120,7 +135,7 @@ public class VideoTest {
 	   "", "", "", "", "", "",};
 
 	private static final String[] aliasSpanish =
-	  {"Tengo algo que decirte", "Futbol superstar", "Terminator", "", "", "", "", "", "", ""};
+	  {"Predicador", "superestrella", "Terminator", "Best friend", "corazón vacio", "dulce"};
 
 	private static final long[] PHONES =
 	  {785639L, 757392L, 753286L, 799438L, 711204L, 784585L, 765890L, 712943L, 749598L, 712534L};
@@ -237,9 +252,89 @@ public class VideoTest {
 		  new Comment(2002L, Constants.ChatType.FORTHRIGHT, users[8].phone, alias[2], text[16], 0,
 					  users[2].phone);
 		comments[17] =
-		  new Comment(2002L, Constants.ChatType.FORTHRIGHT, users[2].phone, null, text[16], 0,
+		  new Comment(2002L, Constants.ChatType.FORTHRIGHT, users[2].phone, null, text[17], 0,
 					  users[2].phone);
 		// real time chat with friend
+		comments[18] =
+		  new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[18], 0, null);
+		comments[19] =
+		  new Comment(1002L, Constants.ChatType.PRIVATE, users[0].phone, null, text[19], 0, null);
+		comments[20] =
+		  new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[20], 0, null);
+		comments[21] =
+		  new Comment(1002L, Constants.ChatType.PRIVATE, users[0].phone, null, text[21], 0, null);
+		comments[22] =
+		  new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[22], 0, null);
+		comments[23] =
+		  new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[23], 0, null);
+		comments[24] =
+		  new Comment(1002L, Constants.ChatType.PRIVATE, users[2].phone, null, text[24], 0, null);
+		comments[25] =
+		  new Comment(1002L, Constants.ChatType.PRIVATE, users[0].phone, null, text[25], 0, null);
+		// flatter the girl
+		comments[26] =
+		  new Comment(2001L, Constants.ChatType.FLATTER, users[3].phone, alias[3], text[26],
+					  TimeUnit.DAYS.toSeconds(7), users[1].phone);
+		comments[27] =
+		  new Comment(2001L, Constants.ChatType.FLATTER, users[3].phone, alias[3], text[27],
+					  TimeUnit.DAYS.toSeconds(7), users[1].phone);
+		comments[28] =
+		  new Comment(2001L, Constants.ChatType.FLATTER, users[1].phone, null, text[28],
+					  TimeUnit.DAYS.toSeconds(7), users[1].phone);
+		comments[29] =
+		  new Comment(2001L, Constants.ChatType.FLATTER, users[1].phone, null, text[29],
+					  TimeUnit.DAYS.toSeconds(7), users[1].phone);
+		comments[30] =
+		  new Comment(2001L, Constants.ChatType.FLATTER, users[0].phone, alias[4], text[30], 0,
+					  users[1].phone);
+		comments[31] =
+		  new Comment(2001L, Constants.ChatType.FLATTER, users[1].phone, null, text[31], 0,
+					  users[1].phone);
+		comments[32] =
+		  new Comment(2001L, Constants.ChatType.FLATTER, users[0].phone, alias[4], text[32], 0,
+					  users[1].phone);
+		comments[33] =
+		  new Comment(2001L, Constants.ChatType.FLATTER, users[1].phone, null, text[33], 0,
+					  users[1].phone);
+		// private anonymous
+		comments[34] =
+		  new Comment(3001L, Constants.ChatType.PRIVATE_ANONYMOUS, users[0].phone, null, text[34],
+					  0, users[1].phone);
+		comments[35] =
+		  new Comment(3001L, Constants.ChatType.PRIVATE_ANONYMOUS, users[0].phone, null, text[35],
+					  0, users[1].phone);
+		comments[36] =
+		  new Comment(3001L, Constants.ChatType.PRIVATE_ANONYMOUS, users[1].phone, null, text[36],
+					  0, users[1].phone);
+		comments[37] =
+		  new Comment(3001L, Constants.ChatType.PRIVATE_ANONYMOUS, users[1].phone, null, text[37],
+					  0, users[1].phone);
+		comments[38] =
+		  new Comment(3001L, Constants.ChatType.PRIVATE_ANONYMOUS, users[0].phone, null, text[38],
+					  0, users[1].phone);
+		comments[39] =
+		  new Comment(3001L, Constants.ChatType.PRIVATE_ANONYMOUS, users[1].phone, null, text[39],
+					  0, users[1].phone);
+		comments[40] =
+		  new Comment(3001L, Constants.ChatType.PRIVATE_ANONYMOUS, users[0].phone, null, text[40],
+					  0, users[1].phone);
+		comments[41] =
+		  new Comment(3001L, Constants.ChatType.PRIVATE_ANONYMOUS, users[0].phone, null, text[41],
+					  0, users[1].phone);
+		// other anonymous talk
+		comments[42] =
+		  new Comment(3007L, Constants.ChatType.PRIVATE_ANONYMOUS, users[7].phone, alias[5],
+					  text[42], 0, users[0].phone);
+		comments[43] =
+		  new Comment(3007L, Constants.ChatType.PRIVATE_ANONYMOUS, users[0].phone, null, text[43],
+					  0, users[0].phone);
+		comments[44] =
+		  new Comment(3007L, Constants.ChatType.PRIVATE_ANONYMOUS, users[0].phone, null, text[44],
+					  0, users[0].phone);
+		comments[45] =
+		  new Comment(3007L, Constants.ChatType.PRIVATE_ANONYMOUS, users[7].phone, alias[5],
+					  text[45], 0, users[0].phone);
+
 	}
 
 	@Test
@@ -268,7 +363,10 @@ public class VideoTest {
 		// friend forthright initial comments
 		addComment(context, comments[12]);
 		// girl flatterer initial comments
-		// TODO
+		addComment(context, comments[26]);
+		addComment(context, comments[27]);
+		addComment(context, comments[28]);
+		addComment(context, comments[29]);
 
 		// Launch the app
 		Intent intent;
@@ -277,31 +375,98 @@ public class VideoTest {
 		context.startActivity(intent);
 		device.wait(Until.hasObject(By.pkg(PENSAMIENTOS_PACKAGE).depth(0)), TIMEOUT);
 
-		sleep(1000);
+		// forthright your friend
+		sleep(900);
 		pressText(FORTHRIGHT);
 		sleep(600);
 		pressText(users[2].name);
+		sleep(700);
 		typeText("dialog_edit_text", comments[13].alias);
 		pressText("OK");
-		sleep(1000);
-		pressId("comment_text");
-		typeText("comment_text",comments[13].comment);
-		pressId("button_post_comment");
-		addComment(context, comments[13]);
-		pressId("comment_text");
-		typeText("comment_text",comments[14].comment);
-		pressId("button_post_comment");
-		addComment(context, comments[14]);
-		sleep(2500);
-		addComment(context, comments[15]);
-		sleep(1500);
-		addComment(context, comments[16]);
-		sleep(1000);
-		addComment(context, comments[17]);
-		sleep(1000);
+		sleep(600);
+		writeComment(context, comments[13]);
+		writeComment(context, comments[14]);
+		writeComment(context, comments[15]);
+		writeComment(context, comments[16]);
+		writeComment(context, comments[17]);
+		sleep(1600);
+		device.pressBack();
 		device.pressBack();
 
 		// private friend conversation
+		sleep(500);
+		addComment(context, comments[18]);
+		sleep(200);
+		pressText(PRIVATE);
+		pressText(users[2].name);
+		sleep(2000);
+		writeComment(context, comments[19]);
+		writeComment(context, comments[20]);
+		writeComment(context, comments[21]);
+		writeComment(context, comments[22]);
+		writeComment(context, comments[23]);
+		writeComment(context, comments[24]);
+		writeComment(context, comments[25]);
+		sleep(1000);
+		device.pressBack();
+		device.pressBack();
+
+		// flatterer the girl
+		pressText(FLATTERER);
+		pressText(users[1].name);
+		sleep(700);
+		typeText("dialog_edit_text", comments[30].alias);
+		pressText("OK");
+		sleep(2000);
+		writeComment(context, comments[30]);
+		writeComment(context, comments[31]);
+		writeComment(context, comments[32]);
+		writeComment(context, comments[33]);
+		sleep(1600);
+		device.pressBack();
+		device.pressBack();
+		pressText(PRIVATE);
+		pressId("create_chat_button");
+		sleep(1000);
+		pressId("create_chat_anonymous_button");
+		sleep(500);
+		pressText(users[1].name);
+		typeText("dialog_edit_text", comments[30].alias);
+		sleep(1000);
+		pressText("OK");
+		writeComment(context, comments[34]);
+		writeComment(context, comments[35]);
+		writeComment(context, comments[36]);
+		writeComment(context, comments[37]);
+		writeComment(context, comments[38]);
+		writeComment(context, comments[39]);
+		writeComment(context, comments[40]);
+		writeComment(context, comments[41]);
+		sleep(1600);
+		device.pressBack();
+		device.pressBack();
+
+		// anonymous girl
+		writeComment(context, comments[42]);
+		pressText(comments[42].alias);
+		writeComment(context, comments[43]);
+		writeComment(context, comments[44]);
+		writeComment(context, comments[45]);
+		sleep(10000);
+	}
+
+	private void writeComment(Context context, Comment comment)
+	  throws UiObjectNotFoundException {
+		if (comment.userId == users[0].phone) {
+			pressId("comment_text");
+			typeText("comment_text", comment.comment);
+			pressId("button_post_comment");
+			addComment(context, comment);
+		} else {
+			sleep(comment.comment.length() * 50);
+			addComment(context, comment);
+			sleep(comment.comment.length() * 50);
+		}
 	}
 
 	private void addUser(Context context, User user) {

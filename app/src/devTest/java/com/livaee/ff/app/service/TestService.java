@@ -53,6 +53,7 @@ public class TestService extends IntentService {
 					final Chats appUserChats = appUser.getChats();
 					appUserChats.setUserDisplayName(user.name);
 					appUserChats.setUserImageUri(user.imageUrl);
+					appUserChats.setUserAnonymousName(null);
 					SyncUtils.createAccount(this, user.phone);
 					Log.i(LOG_TAG, "my phone registered: " + user.phone);
 					break;

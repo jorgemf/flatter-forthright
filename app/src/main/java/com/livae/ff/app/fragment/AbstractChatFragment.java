@@ -449,8 +449,8 @@ public abstract class AbstractChatFragment
 			if (conversationId != null && conversationId.equals(nc.getConversationId())) {
 				if (!nc.getIsMe()) {
 					increaseTotalLoaded();
-					reloadCursor();
 				}
+				reloadCursor();
 				return true;
 			}
 		}

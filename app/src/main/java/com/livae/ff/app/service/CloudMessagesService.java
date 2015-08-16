@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.livae.ff.app.Application;
+import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.R;
 import com.livae.ff.app.activity.AbstractChatActivity;
 import com.livae.ff.app.activity.ChatsActivity;
@@ -50,7 +51,7 @@ public class CloudMessagesService extends IntentService {
 			switch (type) {
 				case COMMENT:
 					NotificationComment notificationComment = (NotificationComment) notification;
-					if (!notificationComment.getIsMe()) {
+					if (!notificationComment.getIsMe() && !BuildConfig.TEST) {
 						String conversationType = notificationComment.getConversationType();
 						// increase unread count of conversation
 						Long conversationId = notificationComment.getConversationId();
@@ -70,9 +71,7 @@ public class CloudMessagesService extends IntentService {
 												   .getChats()
 												   .increaseChatForthrightUnread();
 									}
-									if (notifications.isCommentsForthrightMe()) {
-										notifyChatsPublic(context, ChatType.FORTHRIGHT, true);
-									}
+									notifyChatsPublic(context, ChatType.FORTHRIGHT, true);
 									break;
 								case FLATTER:
 									if (conversationId.equals(Application.appUser()
@@ -82,9 +81,7 @@ public class CloudMessagesService extends IntentService {
 												   .getChats()
 												   .increaseChatFlatterUnread();
 									}
-									if (notifications.isCommentsFlatteredMe()) {
-										notifyChatsPublic(context, ChatType.FLATTER, true);
-									}
+									notifyChatsPublic(context, ChatType.FLATTER, true);
 									break;
 								case PRIVATE:
 								case SECRET:
