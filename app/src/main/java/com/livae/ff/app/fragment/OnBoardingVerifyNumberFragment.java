@@ -265,38 +265,22 @@ public class OnBoardingVerifyNumberFragment extends AbstractFragment
 		final int selectedItemPosition = countryCodeSpinner.getSelectedItemPosition();
 		final String country = countriesAdapter.getItem(selectedItemPosition).name().toUpperCase();
 		String number = phoneUtil.formatOutOfCountryCallingNumber(phoneNumber, country);
-		new AlertDialog.Builder(getActivity()).setMessage(getString(R.string
-																	  .verification_sms_dialog_confirmation,
-																	number))
-											  .setPositiveButton(R.string.yes,
-																 new DialogInterface
-																	   .OnClickListener() {
-																	 public void onClick
-																	   (DialogInterface dialog,
-																						 int id) {
-																		 String phoneString =
-																		   Long.toString
-																				  (phoneNumber
-																						   .getCountryCode()) +
-																		   Long.toString
-																				  (phoneNumber
-																						   .getNationalNumber());
-																		 Long phoneLong =
-																		   Long.parseLong
-																				  (phoneString);
-																		 PhoneVerification
-																		   verification =
-																		   PhoneVerification
-																			 .instance(getActivity
-																						 ());
-																		 verification.setUserPhone
-																						(phoneLong);
-																		 generateCodeAndSendSMS();
-																	 }
-																 })
-											  .setNegativeButton(R.string.no, null)
-											  .setCancelable(false)
-											  .show();
+		DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				String phoneString = Long.toString(phoneNumber.getCountryCode()) +
+									 Long.toString(phoneNumber.getNationalNumber());
+				Long phoneLong = Long.parseLong(phoneString);
+				PhoneVerification verification = PhoneVerification.instance(getActivity());
+				verification.setUserPhone(phoneLong);
+				generateCodeAndSendSMS();
+			}
+		};
+		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setMessage(getString(R.string.verification_sms_dialog_confirmation, number))
+			   .setPositiveButton(R.string.yes, onClickListener)
+			   .setNegativeButton(R.string.no, null)
+			   .setCancelable(false)
+			   .show();
 	}
 
 	private void generateCodeAndSendSMS() {

@@ -27,6 +27,7 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
+import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.R;
 import com.livae.ff.app.activity.AbstractActivity;
 import com.livae.ff.app.activity.AbstractChatActivity;
@@ -275,7 +276,7 @@ public abstract class AbstractChatFragment
 	}
 
 	private void updateNotifications() {
-		if (chatType != null) {
+		if (chatType != null && !BuildConfig.TEST) {
 			final FragmentActivity activity = getActivity();
 			switch (chatType) {
 				case FLATTER:

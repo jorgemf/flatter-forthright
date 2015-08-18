@@ -24,7 +24,8 @@ public class PhoneUtils {
 		if (phoneUtil.isPossibleNumber(phoneNumber) &&
 			phoneUtil.isValidNumber(phoneNumber) &&
 			(numberType == PhoneNumberUtil.PhoneNumberType.MOBILE ||
-			 numberType == PhoneNumberUtil.PhoneNumberType.UNKNOWN)) {
+			 numberType == PhoneNumberUtil.PhoneNumberType.UNKNOWN ||
+			 numberType == PhoneNumberUtil.PhoneNumberType.FIXED_LINE_OR_MOBILE)) {
 			String phoneString = Long.toString(phoneNumber.getCountryCode()) +
 								 Long.toString(phoneNumber.getNationalNumber());
 			return Long.parseLong(phoneString);
