@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -134,6 +135,14 @@ public abstract class AbstractActivity extends AppCompatActivity implements Life
 
 	public void showSnackBarException(String message) {
 		Snackbar.make(findViewById(R.id.container), message, Snackbar.LENGTH_LONG).show();
+	}
+
+	public void showSnackBarMessage(String message) {
+		Snackbar.make(findViewById(R.id.container), message, Snackbar.LENGTH_SHORT).show();
+	}
+
+	public void showSnackBarMessage(@StringRes int message) {
+		Snackbar.make(findViewById(R.id.container), message, Snackbar.LENGTH_SHORT).show();
 	}
 
 	@Override

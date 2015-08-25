@@ -111,6 +111,8 @@ public abstract class AbstractChatFragment
 
 	private String notificationSoundUri;
 
+	private Long notificationMute;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Bundle extras = getActivity().getIntent().getExtras();
@@ -142,17 +144,6 @@ public abstract class AbstractChatFragment
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		notificationDisabledReceiver.register(getActivity());
-		if (conversationId == null) {
-			getConversation();
-		} else {
-			startConversation();
-		}
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater,
 							 @Nullable ViewGroup container,
 							 @Nullable Bundle savedInstanceState) {
@@ -170,6 +161,8 @@ public abstract class AbstractChatFragment
 		buttonPostComment.setOnClickListener(this);
 		commentPostContainer.setVisibility(View.GONE);
 		buttonPostComment.setVisibility(View.GONE);
+		LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+		layoutManager.setReverseLayout(true);
 		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -280,10 +273,11 @@ public abstract class AbstractChatFragment
 					contentResolver.update(uriConversation, contentValues, null, null);
 					updateNotifications();
 					// set menu notifications
-					menuNotifications.setVisible(true);
 					int iMute = cursor.getColumnIndex(Table.Conversation.NOTIFICATION_MUTED);
-					Long mute = cursor.isNull(iMute) ? null : cursor.getLong(iMute);
-					updateMenuNotifications(mute);
+					notificationMute = cursor.isNull(iMute) ? null : cursor.getLong(iMute);
+					if (menuNotifications != null) {
+						updateMenuNotifications();
+					}
 					int iNotfColor = cursor.getColumnIndex(Table.Conversation.NOTIFICATION_COLOR);
 					notificationColor =
 					  cursor.isNull(iNotfColor) ? null : cursor.getInt(iNotfColor);
@@ -298,11 +292,15 @@ public abstract class AbstractChatFragment
 		}
 	}
 
-	private void updateMenuNotifications(Long mute) {
-		boolean isMute = mute != null && (mute < 0 || mute > System.currentTimeMillis());
-		final SubMenu subMenu = menuNotifications.getSubMenu();
-		subMenu.findItem(R.id.action_notification_mute).setVisible(!isMute);
-		subMenu.findItem(R.id.action_notification_unmute).setVisible(isMute);
+	@Override
+	public void onResume() {
+		super.onResume();
+		notificationDisabledReceiver.register(getActivity());
+		if (conversationId == null) {
+			getConversation();
+		} else {
+			startConversation();
+		}
 	}
 
 	@Override
@@ -316,6 +314,15 @@ public abstract class AbstractChatFragment
 		if (conversationId != null) {
 			leaveConversation();
 		}
+	}
+
+	private void updateMenuNotifications() {
+		this.menuNotifications.setEnabled(conversationId != null);
+		Long mute = notificationMute;
+		boolean isMute = mute != null && (mute < 0 || mute > System.currentTimeMillis());
+		final SubMenu subMenu = menuNotifications.getSubMenu();
+		subMenu.findItem(R.id.action_notification_mute).setVisible(!isMute);
+		subMenu.findItem(R.id.action_notification_unmute).setVisible(isMute);
 	}
 
 	private void updateNotifications() {
@@ -341,6 +348,7 @@ public abstract class AbstractChatFragment
 	abstract protected void getConversation();
 
 	protected void startConversation() {
+		reloadCursor();
 		getLoaderManager().restartLoader(LOADER_CONVERSATION_ID, Bundle.EMPTY,
 										 AbstractChatFragment.this);
 		registerContentObserver();
@@ -560,6 +568,8 @@ public abstract class AbstractChatFragment
 				final ContentResolver contentResolver = getActivity().getContentResolver();
 				contentResolver.update(ConversationsProvider.getUriConversation(conversationId),
 									   values, null, null);
+				AbstractActivity activity = (AbstractActivity) getActivity();
+				activity.showSnackBarMessage(R.string.notification_color_update);
 			}
 		}.show(getFragmentManager(), notificationColor);
 	}
@@ -569,9 +579,10 @@ public abstract class AbstractChatFragment
 		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE,
 						getString(R.string.select_notification_sound));
 		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
-		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
 		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
-		Uri currentUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		Uri defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, defaultUri);
+		Uri currentUri = defaultUri;
 		if (notificationSoundUri != null) {
 			currentUri = Uri.parse(notificationSoundUri);
 		}
@@ -592,7 +603,10 @@ public abstract class AbstractChatFragment
 				final ContentResolver contentResolver = getActivity().getContentResolver();
 				contentResolver.update(ConversationsProvider.getUriConversation(conversationId),
 									   values, null, null);
-				updateMenuNotifications(mutedTime);
+				notificationMute = mutedTime;
+				updateMenuNotifications();
+				AbstractActivity activity = (AbstractActivity) getActivity();
+				activity.showSnackBarMessage(R.string.notification_muted);
 
 			}
 		}.show(getFragmentManager(), null);
@@ -604,15 +618,24 @@ public abstract class AbstractChatFragment
 		final ContentResolver contentResolver = getActivity().getContentResolver();
 		contentResolver.update(ConversationsProvider.getUriConversation(conversationId), values,
 							   null, null);
-		updateMenuNotifications(null);
+		notificationMute = null;
+		updateMenuNotifications();
+		AbstractActivity activity = (AbstractActivity) getActivity();
+		activity.showSnackBarMessage(R.string.notification_cancel_muted);
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK && requestCode == RESULT_SELECT_SOUND) {
-			notificationSoundUri = data.getStringExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+			Bundle extras = data.getExtras();
+			//noinspection ConstantConditions
+			String uriSelected = extras.get(RingtoneManager.EXTRA_RINGTONE_PICKED_URI).toString();
+			if (uriSelected == null) {
+				return;
+			}
 			Uri defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+			notificationSoundUri = uriSelected;
 			if (notificationSoundUri.equals(defaultUri.toString())) {
 				notificationSoundUri = null;
 			}
@@ -626,6 +649,8 @@ public abstract class AbstractChatFragment
 			contentResolver.update(ConversationsProvider.getUriConversation(conversationId),
 								   values,
 								   null, null);
+			AbstractActivity activity = (AbstractActivity) getActivity();
+			activity.showSnackBarMessage(R.string.notification_sound_updated);
 		}
 	}
 
@@ -639,7 +664,7 @@ public abstract class AbstractChatFragment
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		this.menuNotifications = menu.findItem(R.id.action_notifications);
-		this.menuNotifications.setEnabled(false);
+		updateMenuNotifications();
 	}
 
 	@Override

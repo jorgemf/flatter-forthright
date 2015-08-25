@@ -20,7 +20,7 @@
 		android:src="@drawable/ic_account_circle_white_48dp"
 		tools:ignore="ContentDescription"/>
 
-	<com.livae.ff.app.view.AnonymousImage
+	<com.livae.ff.app.ui.view.AnonymousImage
 		android:id="@+id/anonymous_image"
 		android:layout_width="@dimen/item_user_image_size"
 		android:layout_height="@dimen/item_user_image_size"

@@ -50,8 +50,10 @@ public class NotificationsUtil {
 		Sender sender = new Sender(Settings.Google.API_KEY);
 		Message msg = new Message.Builder().addData("m", message).addData("t", type.name())
 										   .build();
-		MulticastResult results = sender.send(msg, devicesIds, Settings.GCM_NOTIFICATION_RETRIES);
-		// do not care about results in multicast
+		if(devicesIds.size()>0) {
+			MulticastResult results = sender.send(msg, devicesIds, Settings.GCM_NOTIFICATION_RETRIES);
+			// do not care about results in multicast
+		}
 	}
 
 }

@@ -178,6 +178,10 @@
 	<string name="default_color">Default Color</string>
 	<string name="select_notification_mute">Mute for:</string>
 	<string name="select_notification_sound">Notification sound</string>
+	<string name="notification_color_update">Color for notifications updated.</string>
+	<string name="notification_muted">Conversation muted.</string>
+	<string name="notification_cancel_muted">Conversation un-muted.</string>
+	<string name="notification_sound_updated">Sound for notifications updated.</string>
 	<string-array
 		name="notification_mute_array">
 		<item>8 hours</item>

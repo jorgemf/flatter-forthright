@@ -54,7 +54,8 @@ public class NotificationUtil {
 		return builder;
 	}
 
-	public static SpannableString makeNotificationLine(String title, String text,
+	public static SpannableString makeNotificationLine(String title,
+													   String text,
 													   String italicText) {
 		final SpannableString spannableString;
 		if (title != null && title.length() > 0) {

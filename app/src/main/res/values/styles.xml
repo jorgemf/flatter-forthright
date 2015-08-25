@@ -68,7 +68,7 @@
 		<item name="ff_primaryLight">@color/purple_light</item>
 		<item name="colorPrimary">?ff_primary</item>
 		<item name="colorPrimaryDark">?ff_primaryDark</item>
-		<item name="colorAccent">@color/amber</item>
+		<item name="colorAccent">?ff_primary</item>
 		<item name="colorControlHighlight">@color/amber_dark</item>
 		<item name="android:windowTitleStyle">@style/TitleDialog</item>
 		<item name="android:background">@color/white</item>

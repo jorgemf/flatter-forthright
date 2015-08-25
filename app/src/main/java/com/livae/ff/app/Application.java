@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.IntegerRes;
 
+import com.facebook.stetho.Stetho;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.livae.ff.app.api.API;
@@ -115,6 +116,11 @@ public class Application extends android.app.Application {
 				String ip = sharedPreferences.getString(Settings.PREFERENCE_API_IP, null);
 				API.changeAPIUrl("http://" + ip + ":8080/_ah/api/");
 			}
+			Stetho.initialize(Stetho.newInitializerBuilder(this)
+									.enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+									.enableWebKitInspector(Stetho.defaultInspectorModulesProvider
+																	(this))
+									.build());
 		}
 		//debug
 		refWatcher = LeakCanary.install(this);

@@ -106,15 +106,11 @@ public abstract class AbstractEndlessCursorLoaderFragment<O> extends AbstractFra
 		loaderTask = getLoaderTask();
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		reloadCursor();
-	}
-
 	protected void startLoading() {
 		if (totalLoaded == 0 && !isLoading && canLoadMore) {
 			loadNext();
+		}else{
+			reloadCursor();
 		}
 	}
 
@@ -190,6 +186,7 @@ public abstract class AbstractEndlessCursorLoaderFragment<O> extends AbstractFra
 		isLoading = false;
 		isError = false;
 		canLoadMore = true;
+		cursor = null;
 		hideLoading();
 		hideError();
 		hideMainLoading();
@@ -390,7 +387,7 @@ public abstract class AbstractEndlessCursorLoaderFragment<O> extends AbstractFra
 		View view = inflater.inflate(R.layout.item_footer, parent, false);
 		loading = view.findViewById(R.id.item_loading);
 		error = view.findViewById(R.id.item_retry);
-		if (!isLoading || totalLoaded == 0) {
+		if (!isLoading || totalLoaded == 0 || loadingCenter.getVisibility() == View.VISIBLE) {
 			loading.setVisibility(View.GONE);
 		}
 		if (isError) {
@@ -429,11 +426,14 @@ public abstract class AbstractEndlessCursorLoaderFragment<O> extends AbstractFra
 	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
 		switch (id) {
 			case LOADER_ITEMS:
-				return new CursorLoader(getActivity(), getUriCursor(), getProjection(),
-										getSelect(),
-										getSelectArgs(), getOrderString() + " LIMIT " +
-														 totalLoaded);
-			// break
+				Uri uri = getUriCursor();
+				if (uri != null) {
+					return new CursorLoader(getActivity(), getUriCursor(), getProjection(),
+											getSelect(), getSelectArgs(),
+											getOrderString() + " LIMIT " +
+											totalLoaded);
+				}
+				// break
 		}
 		return null;
 	}

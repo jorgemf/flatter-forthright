@@ -25,6 +25,7 @@ import com.livae.ff.app.settings.Settings;
 import com.livae.ff.app.sql.Table;
 import com.livae.ff.app.ui.activity.AbstractChatActivity;
 import com.livae.ff.app.ui.activity.ChatsActivity;
+import com.livae.ff.app.utils.Debug;
 import com.livae.ff.app.utils.NotificationUtil;
 import com.livae.ff.common.Constants.ChatType;
 import com.livae.ff.common.Constants.PushNotificationType;
@@ -126,10 +127,12 @@ public class NotificationService extends IntentService {
 		   Table.Comment.CONVERSATION_ID, Table.Conversation.LAST_ACCESS,
 		   Table.Conversation.LAST_MESSAGE_DATE, Table.Conversation.PHONE,
 		   Table.Conversation.ROOM_NAME, Table.Conversation.NOTIFICATION_COLOR,
-		   Table.Conversation.NOTIFICATION_SOUND, Table.Conversation.NOTIFICATION_MUTED};
-		final String selection =
-		  Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS + " AND " +
-		  Table.Conversation.TYPE + "=? AND " + Table.Comment.IS_ME + "=0";
+		   Table.Conversation.NOTIFICATION_SOUND, Table.Conversation.NOTIFICATION_MUTED,
+		   Table.LocalUser.CONTACT_NAME, Table.LocalUser.IMAGE_URI};
+		final String selection = "( " + Table.Conversation.LAST_ACCESS + " IS NULL OR " +
+								 Table.Comment.DATE + ">" + Table.Conversation.LAST_ACCESS +
+								 " ) AND " + Table.Conversation.TYPE + "=? AND " +
+								 Table.Comment.IS_ME + "=0";
 		final String[] selectionArgs = {chatType.name()};
 		final String order = "-" + Table.Comment.DATE;
 		Cursor cursor = contentResolver.query(uri, projection, selection, selectionArgs, order);
@@ -140,6 +143,7 @@ public class NotificationService extends IntentService {
 			builder = NotificationUtil.getDefaultNotificationBuilder(context);
 			if (!sound) {
 				builder.setSound(null);
+				builder.setDefaults(android.app.Notification.DEFAULT_LIGHTS);
 			}
 			CharSequence title = "";
 			switch (chatType) {
@@ -164,8 +168,11 @@ public class NotificationService extends IntentService {
 			int iNotificationSound = cursor.getColumnIndex(Table.Conversation.NOTIFICATION_SOUND);
 			int iNotificationColor = cursor.getColumnIndex(Table.Conversation.NOTIFICATION_COLOR);
 			int iNotificationMuted = cursor.getColumnIndex(Table.Conversation.NOTIFICATION_MUTED);
+			int iContactName = cursor.getColumnIndex(Table.LocalUser.CONTACT_NAME);
+			int iImageUri = cursor.getColumnIndex(Table.LocalUser.IMAGE_URI);
 			Intent intent;
 			if (totalComments == 1) {
+				Debug.print(cursor);// TODO
 				String comment = cursor.getString(iComment);
 				String alias = cursor.getString(iAlias);
 				Spannable text = NotificationUtil.makeNotificationLine(alias, comment, "");
@@ -180,14 +187,15 @@ public class NotificationService extends IntentService {
 				Long lastMessageDate = cursor.getLong(iLastMessageDate);
 				Long phoneNumber = cursor.getLong(iPhoneNumber);
 				String displayName = cursor.getString(iDisplayName);
-				if (sound) {
-					setCustomization(cursor, builder, iNotificationSound, iNotificationColor,
-									 iNotificationMuted);
-				}
+				String roomName = cursor.getString(iContactName);
+				String userImageUri = cursor.getString(iImageUri);
+				setCustomization(sound, cursor, builder, iNotificationSound, iNotificationColor,
+								 iNotificationMuted);
 				intent =
 				  AbstractChatActivity.createIntent(context, chatType, conversationId, phoneNumber,
-													displayName, null, null, null, lastAccess,
-													lastMessageDate, totalComments, null, null);
+													displayName, roomName, userImageUri, null,
+													lastAccess, lastMessageDate, totalComments,
+													null, null);
 			} else {
 				NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(builder);
 				int index = 0;
@@ -221,15 +229,17 @@ public class NotificationService extends IntentService {
 					Long lastMessageDate = cursor.getLong(iLastMessageDate);
 					Long phoneNumber = cursor.getLong(iPhoneNumber);
 					String displayName = cursor.getString(iDisplayName);
-					if (sound) {
-						setCustomization(cursor, builder, iNotificationSound, iNotificationColor,
-										 iNotificationMuted);
-					}
+					String roomName = cursor.getString(iContactName);
+					String userImageUri = cursor.getString(iImageUri);
+					setCustomization(sound, cursor, builder, iNotificationSound,
+									 iNotificationColor,
+									 iNotificationMuted);
 					intent = AbstractChatActivity.createIntent(context, chatType, conversationId,
-															   phoneNumber, displayName, null,
+															   phoneNumber, displayName, roomName,
+															   userImageUri, null, lastAccess,
+															   lastMessageDate, totalComments,
 															   null,
-															   null, lastAccess, lastMessageDate,
-															   totalComments, null, null);
+															   null);
 				} else {
 					intent = new Intent(context, ChatsActivity.class);
 				}
@@ -285,6 +295,7 @@ public class NotificationService extends IntentService {
 			builder = NotificationUtil.getDefaultNotificationBuilder(context);
 			if (!sound) {
 				builder.setSound(null);
+				builder.setDefaults(android.app.Notification.DEFAULT_LIGHTS);
 			}
 			CharSequence title = res.getText(R.string.notifications_chat_private_title);
 			builder.setContentTitle(title);
@@ -323,10 +334,8 @@ public class NotificationService extends IntentService {
 				Long phone = cursor.getLong(iPhone);
 				Long aliasId = cursor.getLong(iAliasId);
 				String imageUri = cursor.getString(iImageUri);
-				if (sound) {
-					setCustomization(cursor, builder, iNotificationSound, iNotificationColor,
-									 iNotificationMuted);
-				}
+				setCustomization(sound, cursor, builder, iNotificationSound, iNotificationColor,
+								 iNotificationMuted);
 				boolean blocked = cursor.getInt(iBlocked) != 0;
 				Long rawContactId =
 				  cursor.isNull(iRawContactId) ? null : cursor.getLong(iRawContactId);
@@ -374,10 +383,9 @@ public class NotificationService extends IntentService {
 					String imageUri = cursor.getString(iImageUri);
 					String displayName = cursor.getString(iDisplayName);
 					String roomName = cursor.getString(iRoomName);
-					if (sound) {
-						setCustomization(cursor, builder, iNotificationSound, iNotificationColor,
-										 iNotificationMuted);
-					}
+					setCustomization(sound, cursor, builder, iNotificationSound,
+									 iNotificationColor,
+									 iNotificationMuted);
 					boolean blocked = cursor.getInt(iBlocked) != 0;
 					Long rawContactId =
 					  cursor.isNull(iRawContactId) ? null : cursor.getLong(iRawContactId);
@@ -400,7 +408,8 @@ public class NotificationService extends IntentService {
 		cursor.close();
 	}
 
-	private static void setCustomization(Cursor cursor,
+	private static void setCustomization(boolean sound,
+										 Cursor cursor,
 										 NotificationCompat.Builder builder,
 										 int iNotificationSound,
 										 int iNotificationColor,
@@ -415,13 +424,25 @@ public class NotificationService extends IntentService {
 		if (notificationMuted != null) {
 			muted = notificationMuted < 0 || notificationMuted > System.currentTimeMillis();
 		}
-		if (muted) {
+		if (muted || !sound) {
 			builder.setSound(null);
+			builder.setVibrate(null);
+			builder.setDefaults(android.app.Notification.DEFAULT_LIGHTS);
 		} else if (notificationSoundUri != null) {
 			builder.setSound(Uri.parse(notificationSoundUri));
+			builder.setDefaults(~android.app.Notification.DEFAULT_SOUND);
 		}
 		if (notificationColor != null) {
-			builder.setColor(notificationColor);
+			android.app.Notification notification = builder.build();
+			builder.setLights(notificationColor, notification.ledOnMS, notification.ledOffMS);
+			if (muted || !sound) {
+				builder.setDefaults(~android.app.Notification.DEFAULT_ALL);
+			} else if (notificationSoundUri != null) {
+				builder.setDefaults(android.app.Notification.DEFAULT_VIBRATE);
+			} else {
+				builder.setDefaults(android.app.Notification.DEFAULT_VIBRATE |
+									android.app.Notification.DEFAULT_SOUND);
+			}
 		}
 	}
 

@@ -34,7 +34,7 @@
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		android:visibility="visible"/>
 
-	<com.livae.ff.app.view.ContextMenuRecyclerView
+	<com.livae.ff.app.ui.view.ContextMenuRecyclerView
 		android:id="@+id/recycler_view"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"

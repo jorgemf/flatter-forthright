@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 
 import com.livae.ff.app.R;
 
@@ -31,25 +30,26 @@ public abstract class NotificationMuteDialogFragment extends DialogFragment {
 					   dismiss();
 				   }
 			   })
-			   .setItems(R.array.notification_mute_array, new DialogInterface.OnClickListener() {
-				   @Override
-				   public void onClick(DialogInterface dialog, int which) {
-					   switch (which) {
-						   case 0:
-							   onMuteSelected(TimeUnit.HOURS.toMillis(8));
-							   break;
-						   case 1:
-							   onMuteSelected(TimeUnit.DAYS.toMillis(1));
-							   break;
-						   case 2:
-							   onMuteSelected(TimeUnit.DAYS.toMillis(7));
-							   break;
-						   default:
-							   onMuteSelected(-1);
-					   }
-					   dismiss();
-				   }
-			   });
+			   .setSingleChoiceItems(R.array.notification_mute_array, -1,
+									 new DialogInterface.OnClickListener() {
+										 @Override
+										 public void onClick(DialogInterface dialog, int which) {
+											 switch (which) {
+												 case 0:
+													 onMuteSelected(TimeUnit.HOURS.toMillis(8));
+													 break;
+												 case 1:
+													 onMuteSelected(TimeUnit.DAYS.toMillis(1));
+													 break;
+												 case 2:
+													 onMuteSelected(TimeUnit.DAYS.toMillis(7));
+													 break;
+												 default:
+													 onMuteSelected(-1);
+											 }
+											 dismiss();
+										 }
+									 });
 
 		final AlertDialog alertDialog = builder.create();
 		setCancelable(true);

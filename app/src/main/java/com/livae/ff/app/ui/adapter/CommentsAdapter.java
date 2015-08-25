@@ -152,6 +152,7 @@ public class CommentsAdapter extends CursorAdapter<CommentViewHolder> {
 	@Override
 	public int getItemViewType(int position) {
 		Cursor cursor = getCursor();
+		cursor.moveToPosition(position);
 		boolean isMe = !cursor.isNull(iIsMe) && cursor.getInt(iIsMe) != 0;
 		boolean isTheUser = cursor.isNull(iUserAnonymousId);
 		switch (chatType) {
@@ -421,7 +422,7 @@ public class CommentsAdapter extends CursorAdapter<CommentViewHolder> {
 			}
 			boolean nextIsTheUser = isPublicChat && nextAlias == null;
 			if (isTheUser && nextIsTheUser) {
-				holder.setExtraPadding(false);
+				holder.setFirstCommentOfPerson(false);
 			} else if (isMe && nextIsMe) {
 				switch (chatType) {
 					case FLATTER:

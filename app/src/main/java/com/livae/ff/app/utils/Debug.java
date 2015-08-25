@@ -10,7 +10,7 @@ public class Debug {
 	private static final String LOG_TAG = "DEBUG_SOP";
 
 	public static void print(Cursor c) {
-		print(c, 0);
+		print(c, 10);
 	}
 
 	public static void print(Cursor c, int limit) {

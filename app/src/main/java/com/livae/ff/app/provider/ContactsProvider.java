@@ -105,11 +105,6 @@ public class ContactsProvider extends AbstractProvider {
 				c.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
 			case URI_CONTACTS_CONVERSATIONS:
-				qb.setTables(Table.Conversation._NAME);
-				c = qb.query(getReadableDatabase(), null, Table.Conversation.TYPE + "!=?",
-							 new String[]{Constants.ChatType.PRIVATE.name()}, null, null, null);
-				Debug.print("-----------------v-------------------");
-				Debug.print(c);
 				String chatType = uri.getLastPathSegment();
 				qb.setTables(Table.LocalUser._NAME + " LEFT JOIN " + Table.Conversation._NAME +
 							 " ON " + Table.LocalUser.PHONE + "=" + Table.Conversation.PHONE +

@@ -38,7 +38,7 @@
 		android:layout_marginStart="@dimen/space_small"
 		android:src="@drawable/ic_account_circle_white_48dp"/>
 
-	<com.livae.ff.app.view.Triangle
+	<com.livae.ff.app.ui.view.Triangle
 		android:id="@+id/comment_arrow"
 		android:layout_width="@dimen/space_large"
 		android:layout_height="@dimen/space_medium"

@@ -25,7 +25,7 @@ public class ChatPublicActivity extends AbstractChatActivity {
 	public static void startChatForthright(@Nonnull FragmentActivity activity,
 										   Long conversationId,
 										   @Nonnull Long userId,
-										   String userDisplayName,
+										   @Nonnull String userDisplayName,
 										   String anonymousName,
 										   String imageUri) {
 		start(activity, ChatType.FORTHRIGHT, conversationId, userId, userDisplayName,

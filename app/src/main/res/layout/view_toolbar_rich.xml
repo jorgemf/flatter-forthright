@@ -15,7 +15,7 @@
 		android:minHeight="?attr/actionBarSize"
 		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-		<com.livae.ff.app.view.AnonymousImage
+		<com.livae.ff.app.ui.view.AnonymousImage
 			android:id="@+id/image_anonymous"
 			android:layout_width="@dimen/item_user_image_toolbar_size"
 			android:layout_height="@dimen/item_user_image_toolbar_size"

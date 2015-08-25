@@ -14,7 +14,7 @@
 		android:id="@+id/conversation_fragment"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:name="com.livae.ff.app.fragment.ChatPrivateFragment"
+		android:name="com.livae.ff.app.ui.fragment.ChatPrivateFragment"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"
 		tools:layout="@layout/fragment_list_items"/>
 
