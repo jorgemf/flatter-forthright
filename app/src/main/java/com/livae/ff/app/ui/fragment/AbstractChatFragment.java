@@ -2,11 +2,14 @@ package com.livae.ff.app.ui.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -49,6 +53,8 @@ import com.livae.ff.app.ui.activity.AbstractActivity;
 import com.livae.ff.app.ui.activity.AbstractChatActivity;
 import com.livae.ff.app.ui.adapter.CommentsAdapter;
 import com.livae.ff.app.ui.adapter.CursorAdapter;
+import com.livae.ff.app.ui.dialog.NotificationColorDialogFragment;
+import com.livae.ff.app.ui.dialog.NotificationMuteDialogFragment;
 import com.livae.ff.app.ui.viewholders.CommentViewHolder;
 import com.livae.ff.app.utils.AnimUtils;
 import com.livae.ff.app.utils.UnitUtils;
@@ -62,6 +68,8 @@ public abstract class AbstractChatFragment
 			 CommentClickListener {
 
 	protected static final int LOADER_CONVERSATION_ID = LOADER_ITEM;
+
+	private static final int RESULT_SELECT_SOUND = 9999;
 
 	protected Long conversationId;
 
@@ -96,6 +104,12 @@ public abstract class AbstractChatFragment
 	private NotificationDisabledReceiver notificationDisabledReceiver;
 
 	private TextView dateText;
+
+	private MenuItem menuNotifications;
+
+	private Integer notificationColor;
+
+	private String notificationSoundUri;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -265,6 +279,17 @@ public abstract class AbstractChatFragment
 					contentValues.put(Table.Conversation.LAST_ACCESS, System.currentTimeMillis());
 					contentResolver.update(uriConversation, contentValues, null, null);
 					updateNotifications();
+					// set menu notifications
+					menuNotifications.setVisible(true);
+					int iMute = cursor.getColumnIndex(Table.Conversation.NOTIFICATION_MUTED);
+					Long mute = cursor.isNull(iMute) ? null : cursor.getLong(iMute);
+					updateMenuNotifications(mute);
+					int iNotfColor = cursor.getColumnIndex(Table.Conversation.NOTIFICATION_COLOR);
+					notificationColor =
+					  cursor.isNull(iNotfColor) ? null : cursor.getInt(iNotfColor);
+					int iNotfSound = cursor.getColumnIndex(Table.Conversation.NOTIFICATION_SOUND);
+					notificationSoundUri =
+					  cursor.isNull(iNotfSound) ? null : cursor.getString(iNotfSound);
 				}
 				break;
 			default:
@@ -273,29 +298,11 @@ public abstract class AbstractChatFragment
 		}
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_notifications, menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_notification_color:
-				// TODO
-				return true;
-			case R.id.action_notification_sound:
-				// TODO
-				return true;
-			case R.id.action_notification_mute:
-				// TODO
-				return true;
-			case R.id.action_notification_unmute:
-				// TODO
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
+	private void updateMenuNotifications(Long mute) {
+		boolean isMute = mute != null && (mute < 0 || mute > System.currentTimeMillis());
+		final SubMenu subMenu = menuNotifications.getSubMenu();
+		subMenu.findItem(R.id.action_notification_mute).setVisible(!isMute);
+		subMenu.findItem(R.id.action_notification_unmute).setVisible(isMute);
 	}
 
 	@Override
@@ -536,5 +543,121 @@ public abstract class AbstractChatFragment
 					 })
 					 .start();
 		}
+	}
+
+	private void notificationsSelectColor() {
+		new NotificationColorDialogFragment() {
+
+			@Override
+			public void onColorSelected(Integer color) {
+				notificationColor = color;
+				ContentValues values = new ContentValues();
+				if (color == null) {
+					values.putNull(Table.Conversation.NOTIFICATION_COLOR);
+				} else {
+					values.put(Table.Conversation.NOTIFICATION_COLOR, color);
+				}
+				final ContentResolver contentResolver = getActivity().getContentResolver();
+				contentResolver.update(ConversationsProvider.getUriConversation(conversationId),
+									   values, null, null);
+			}
+		}.show(getFragmentManager(), notificationColor);
+	}
+
+	private void notificationsSelectSound() {
+		Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE,
+						getString(R.string.select_notification_sound));
+		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+		Uri currentUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		if (notificationSoundUri != null) {
+			currentUri = Uri.parse(notificationSoundUri);
+		}
+		intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, currentUri);
+		startActivityForResult(intent, RESULT_SELECT_SOUND);
+	}
+
+	private void notificationsSelectMute() {
+		new NotificationMuteDialogFragment() {
+
+			@Override
+			public void onMuteSelected(long mutedTime) {
+				if (mutedTime > 0) {
+					mutedTime = System.currentTimeMillis() + mutedTime;
+				}
+				ContentValues values = new ContentValues();
+				values.put(Table.Conversation.NOTIFICATION_MUTED, mutedTime);
+				final ContentResolver contentResolver = getActivity().getContentResolver();
+				contentResolver.update(ConversationsProvider.getUriConversation(conversationId),
+									   values, null, null);
+				updateMenuNotifications(mutedTime);
+
+			}
+		}.show(getFragmentManager(), null);
+	}
+
+	private void notificationsSelectUnmute() {
+		ContentValues values = new ContentValues();
+		values.putNull(Table.Conversation.NOTIFICATION_MUTED);
+		final ContentResolver contentResolver = getActivity().getContentResolver();
+		contentResolver.update(ConversationsProvider.getUriConversation(conversationId), values,
+							   null, null);
+		updateMenuNotifications(null);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK && requestCode == RESULT_SELECT_SOUND) {
+			notificationSoundUri = data.getStringExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+			Uri defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+			if (notificationSoundUri.equals(defaultUri.toString())) {
+				notificationSoundUri = null;
+			}
+			ContentValues values = new ContentValues();
+			if (notificationSoundUri == null) {
+				values.putNull(Table.Conversation.NOTIFICATION_SOUND);
+			} else {
+				values.put(Table.Conversation.NOTIFICATION_SOUND, notificationSoundUri);
+			}
+			final ContentResolver contentResolver = getActivity().getContentResolver();
+			contentResolver.update(ConversationsProvider.getUriConversation(conversationId),
+								   values,
+								   null, null);
+		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_notifications, menu);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		this.menuNotifications = menu.findItem(R.id.action_notifications);
+		this.menuNotifications.setEnabled(false);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_notification_color:
+				notificationsSelectColor();
+				return true;
+			case R.id.action_notification_sound:
+				notificationsSelectSound();
+				return true;
+			case R.id.action_notification_mute:
+				notificationsSelectMute();
+				return true;
+			case R.id.action_notification_unmute:
+				notificationsSelectUnmute();
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

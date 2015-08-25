@@ -79,21 +79,6 @@ public class ChatPrivateFragment extends AbstractChatFragment implements ActionM
 
 	private Button addContactButton;
 
-	// TODO color and tone chooser for notifications:
-
-	/*
-
-            Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select ringtone for
-            notifications:");
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION)
-            Uri currentUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, currentUri);
-            startActivityForResult( intent, 999);
-	 */
-
 	private void addContactActivity() {
 		Intent intent = new Intent(ContactsContract.Intents.SHOW_OR_CREATE_CONTACT,
 								   Uri.parse("tel:" + conversationPhone));

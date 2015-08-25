@@ -174,5 +174,16 @@
 	<string name="menu_notification_sound">Sound</string>
 	<string name="menu_notification_mute">Mute</string>
 	<string name="menu_notification_cancel_mute">Cancel mute</string>
+	<string name="select_notification_color">Notification Led Color</string>
+	<string name="default_color">Default Color</string>
+	<string name="select_notification_mute">Mute for:</string>
+	<string name="select_notification_sound">Notification sound</string>
+	<string-array
+		name="notification_mute_array">
+		<item>8 hours</item>
+		<item>1 day</item>
+		<item>1 week</item>
+		<item>Forever</item>
+	</string-array>
 
 </resources>
