@@ -13,7 +13,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	private static final String NAME = "ff.sqlite";
 
-	private static final int VERSION = 3;
+	private static final int VERSION = 4;
 
 	private static DBHelper instance;
 
@@ -58,14 +58,20 @@ public class DBHelper extends SQLiteOpenHelper {
 				sqLiteDatabase.execSQL(Table.Comment.CREATE_SQL);
 			case 2:
 				// bug in public conversations
-				sqLiteDatabase.execSQL("DELETE FROM " + Table.Conversation.NAME +
+				sqLiteDatabase.execSQL("DELETE FROM " + Table.Conversation._NAME +
 									   " WHERE " + Table.Conversation.TYPE + " IN (\'" +
 									   Constants.ChatType.FORTHRIGHT.name() + "', '" +
 									   Constants.ChatType.FLATTER.name() + "')");
 				final Chats chats = Application.appUser().getChats();
 				chats.setChatFlatterId(null);
 				chats.setChatForthrightId(null);
-			case 3: // current version
+			case 3:
+				// added notification colors and sounds
+				sqLiteDatabase.execSQL("ALTER TABLE " + Table.Conversation._NAME + " ADD " +
+									   Table.Conversation.NOTIFICATION_COLOR + " INTEGER, " +
+									   Table.Conversation.NOTIFICATION_SOUND + " TEXT," +
+									   Table.Conversation.NOTIFICATION_MUTED + " INTEGER ;");
+			case 4: // current version
 		}
 	}
 
@@ -81,8 +87,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	private void clearData(SQLiteDatabase sqLiteDatabase) {
-		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.LocalUser.NAME);
-		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Conversation.NAME);
+		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.LocalUser._NAME);
+		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Conversation._NAME);
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Comment.NAME);
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.CommentSync.NAME);
 		onCreate(sqLiteDatabase);

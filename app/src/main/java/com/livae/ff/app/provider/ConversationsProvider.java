@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.livae.ff.app.sql.Table;
-import com.livae.ff.app.utils.Debug;
 
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class ConversationsProvider extends AbstractProvider {
 	}
 
 	public static Uri getUriConversations() {
-		return Uri.withAppendedPath(getContentUri(), Table.Conversation.NAME);
+		return Uri.withAppendedPath(getContentUri(), Table.Conversation._NAME);
 	}
 
 	public static Uri getUriConversation(Long conversationId) {
@@ -70,11 +69,11 @@ public class ConversationsProvider extends AbstractProvider {
 	}
 
 	public static Uri getUriCommentsConversations() {
-		return Uri.withAppendedPath(getUriComments(), Table.Conversation.NAME);
+		return Uri.withAppendedPath(getUriComments(), Table.Conversation._NAME);
 	}
 
 	public static Uri getUriConversationsContacts() {
-		return Uri.withAppendedPath(getUriConversations(), Table.LocalUser.NAME);
+		return Uri.withAppendedPath(getUriConversations(), Table.LocalUser._NAME);
 	}
 
 	@Override
@@ -82,17 +81,17 @@ public class ConversationsProvider extends AbstractProvider {
 		final boolean result = super.onCreate();
 		final String authority = getAuthority(this.getClass());
 		uriMatcher.addURI(authority, Table.Comment.NAME, URI_COMMENTS);
-		uriMatcher.addURI(authority, Table.Comment.NAME + "/" + Table.Conversation.NAME,
+		uriMatcher.addURI(authority, Table.Comment.NAME + "/" + Table.Conversation._NAME,
 						  URI_COMMENTS_CONVERSATIONS);
 		uriMatcher.addURI(authority, Table.CommentSync.NAME, URI_COMMENTS_SYNC);
 		uriMatcher.addURI(authority, Table.CommentSync.NAME + "/#/", URI_COMMENT_SYNC);
-		uriMatcher.addURI(authority, Table.Conversation.NAME, URI_CONVERSATIONS);
-		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/", URI_CONVERSATION);
-		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/" +
+		uriMatcher.addURI(authority, Table.Conversation._NAME, URI_CONVERSATIONS);
+		uriMatcher.addURI(authority, Table.Conversation._NAME + "/#/", URI_CONVERSATION);
+		uriMatcher.addURI(authority, Table.Conversation._NAME + "/#/" +
 									 Table.Comment.NAME, URI_CONVERSATION_COMMENTS);
-		uriMatcher.addURI(authority, Table.Conversation.NAME + "/#/" + UNREAD,
+		uriMatcher.addURI(authority, Table.Conversation._NAME + "/#/" + UNREAD,
 						  URI_CONVERSATION_INCREASE_UNREAD);
-		uriMatcher.addURI(authority, Table.Conversation.NAME + "/" + Table.LocalUser.NAME,
+		uriMatcher.addURI(authority, Table.Conversation._NAME + "/" + Table.LocalUser._NAME,
 						  URI_CONVERSATIONS_CONTACTS);
 		return result;
 	}
@@ -108,7 +107,7 @@ public class ConversationsProvider extends AbstractProvider {
 		db.beginTransaction();
 		switch (uriId) {
 			case URI_CONVERSATIONS:
-				table = Table.Conversation.NAME;
+				table = Table.Conversation._NAME;
 				for (ContentValues value : values) {
 					db.insertWithOnConflict(table, null, value, SQLiteDatabase.CONFLICT_REPLACE);
 				}
@@ -144,13 +143,13 @@ public class ConversationsProvider extends AbstractProvider {
 				where = Table.Conversation.T_ID + "=?";
 				args = new String[1];
 				args[0] = uri.getLastPathSegment();
-				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +
+				qb.setTables(Table.Conversation._NAME + " LEFT JOIN " + Table.LocalUser._NAME +
 							 " ON " + Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				c.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
 			case URI_CONVERSATIONS:
-				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +
+				qb.setTables(Table.Conversation._NAME + " LEFT JOIN " + Table.LocalUser._NAME +
 							 " ON " + Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
 				qb.setDistinct(true);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
@@ -201,16 +200,16 @@ public class ConversationsProvider extends AbstractProvider {
 				c = getReadableDatabase().rawQuery(query, args);
 				break;
 			case URI_COMMENTS_CONVERSATIONS:
-				qb.setTables(Table.Comment.NAME + " JOIN " + Table.Conversation.NAME + " ON " +
+				qb.setTables(Table.Comment.NAME + " JOIN " + Table.Conversation._NAME + " ON " +
 							 Table.Comment.CONVERSATION_ID + "=" + Table.Conversation.T_ID +
-							 " LEFT JOIN " + Table.LocalUser.NAME + " ON " +
+							 " LEFT JOIN " + Table.LocalUser._NAME + " ON " +
 							 Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
 				qb.setDistinct(true);
 				c = qb.query(getReadableDatabase(), select, where, args, Table.Comment.T_ID, null,
 							 order);
 				break;
 			case URI_CONVERSATIONS_CONTACTS:
-				qb.setTables(Table.Conversation.NAME + " LEFT JOIN " + Table.LocalUser.NAME +
+				qb.setTables(Table.Conversation._NAME + " LEFT JOIN " + Table.LocalUser._NAME +
 							 " ON " + Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
 				qb.setDistinct(true);
 				c = qb.query(getReadableDatabase(), select, where, args, Table.Conversation.T_ID,
@@ -239,13 +238,13 @@ public class ConversationsProvider extends AbstractProvider {
 			case URI_COMMENT_SYNC:
 				return TYPE_ITEM_BASE + Table.CommentSync.NAME;
 			case URI_CONVERSATION:
-				return TYPE_ITEM_BASE + Table.Conversation.NAME;
+				return TYPE_ITEM_BASE + Table.Conversation._NAME;
 			case URI_CONVERSATIONS:
-				return TYPE_LIST_BASE + Table.Conversation.NAME;
+				return TYPE_LIST_BASE + Table.Conversation._NAME;
 			case URI_CONVERSATION_COMMENTS:
 				return TYPE_LIST_BASE + Table.Comment.NAME;
 			case URI_CONVERSATIONS_CONTACTS:
-				return TYPE_LIST_BASE + Table.LocalUser.NAME;
+				return TYPE_LIST_BASE + Table.LocalUser._NAME;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -259,7 +258,7 @@ public class ConversationsProvider extends AbstractProvider {
 			case URI_CONVERSATION:
 				updated = update(uri, values, null, null);
 				if (updated == 0) {
-					getWritableDatabase().insert(Table.Conversation.NAME, null, values);
+					getWritableDatabase().insert(Table.Conversation._NAME, null, values);
 				}
 				break;
 			case URI_COMMENTS:
@@ -283,7 +282,7 @@ public class ConversationsProvider extends AbstractProvider {
 				query = Table.Conversation.ID + "=?";
 				args = new String[1];
 				args[0] = uri.getLastPathSegment();
-				deleted = getWritableDatabase().delete(Table.Conversation.NAME, query, args);
+				deleted = getWritableDatabase().delete(Table.Conversation._NAME, query, args);
 				break;
 			case URI_CONVERSATION_COMMENTS:
 				query = Table.Comment.CONVERSATION_ID + "=?";
@@ -313,13 +312,13 @@ public class ConversationsProvider extends AbstractProvider {
 				args = new String[1];
 				args[0] = uri.getLastPathSegment();
 				updated =
-				  getWritableDatabase().update(Table.Conversation.NAME, values, query, args);
+				  getWritableDatabase().update(Table.Conversation._NAME, values, query, args);
 				break;
 			case URI_CONVERSATION_INCREASE_UNREAD:
 				args = new String[1];
 				args[0] = uri.getPathSegments().get(1);
 				SQLiteDatabase db = getWritableDatabase();
-				db.execSQL("UPDATE " + Table.Conversation.NAME + " SET " +
+				db.execSQL("UPDATE " + Table.Conversation._NAME + " SET " +
 						   Table.Conversation.UNREAD + " = " +
 						   Table.Conversation.UNREAD + " + 1 WHERE " +
 						   Table.Conversation.ID + "=?", args);

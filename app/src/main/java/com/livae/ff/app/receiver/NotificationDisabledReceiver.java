@@ -28,9 +28,7 @@ public class NotificationDisabledReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Intent originalIntent;
-		originalIntent = intent.getParcelableExtra(CloudMessagesReceiver.EXTRA_ORIGINAL_INTENT);
-		Bundle extras = originalIntent.getExtras();
+		Bundle extras = intent.getExtras();
 		Notification notification = NotificationUtil.parseNotification(extras);
 		Log.i(TAG, extras.toString());
 		if (notification != null) {
@@ -62,8 +60,8 @@ public class NotificationDisabledReceiver extends BroadcastReceiver {
 		this.listener = listener;
 	}
 
-	public static interface CloudMessagesDisabledListener {
+	public interface CloudMessagesDisabledListener {
 
-		public boolean onNotificationReceived(Notification notification);
+		boolean onNotificationReceived(Notification notification);
 	}
 }

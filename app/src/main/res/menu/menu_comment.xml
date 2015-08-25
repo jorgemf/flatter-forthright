@@ -1,31 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-	>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
 	<item
-		android:id="@+id/action_agree"
-		android:title="@string/menu_agree"/>
-	<item
-		android:id="@+id/action_disagree"
-		android:title="@string/menu_disagree"/>
-	<item
-		android:id="@+id/action_indifferent"
-		android:title="@string/menu_indifferent"/>
-	<item
-		android:id="@+id/action_flag"
-		android:title="@string/menu_flag_comment">
+		android:id="@+id/action_notifications"
+		android:title="@string/menu_notifications">
 		<menu>
 			<item
-				android:id="@+id/action_flag_abuse"
-				android:title="@string/menu_flag_comment_abuse"/>
+				android:id="@+id/action_notification_color"
+				android:title="@string/menu_notification_color"/>
 			<item
-				android:id="@+id/action_flag_insult"
-				android:title="@string/menu_flag_comment_insult"/>
+				android:id="@+id/action_notification_sound"
+				android:title="@string/menu_notification_sound"/>
 			<item
-				android:id="@+id/action_flag_lie"
-				android:title="@string/menu_flag_comment_lie"/>
+				android:id="@+id/action_notification_mute"
+				android:title="@string/menu_notification_mute"/>
 			<item
-				android:id="@+id/action_flag_other"
-				android:title="@string/menu_flag_comment_other"/>
+				android:id="@+id/action_notification_unmute"
+				android:title="@string/menu_notification_cancel_mute"/>
+
 		</menu>
 	</item>
 </menu>

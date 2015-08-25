@@ -42,7 +42,8 @@ public class InputUtil {
 			return phoneUtil.isPossibleNumber(phoneNumber) &&
 				   phoneUtil.isValidNumber(phoneNumber) &&
 				   (numberType == PhoneNumberUtil.PhoneNumberType.MOBILE ||
-					numberType == PhoneNumberUtil.PhoneNumberType.UNKNOWN);
+					numberType == PhoneNumberUtil.PhoneNumberType.UNKNOWN ||
+					numberType == PhoneNumberUtil.PhoneNumberType.FIXED_LINE_OR_MOBILE);
 		} catch (NumberParseException e) {
 			return false;
 		}

@@ -28,7 +28,7 @@ public class ContactsProvider extends AbstractProvider {
 	}
 
 	public static Uri getUriContacts() {
-		return Uri.withAppendedPath(getContentUri(), Table.LocalUser.NAME);
+		return Uri.withAppendedPath(getContentUri(), Table.LocalUser._NAME);
 	}
 
 	public static Uri getUriContact(Long id) {
@@ -36,8 +36,8 @@ public class ContactsProvider extends AbstractProvider {
 	}
 
 	public static Uri getUriContactsConversations(Constants.ChatType chatType) {
-		return Uri.withAppendedPath(Uri.withAppendedPath(getUriContacts(), Table.Conversation
-																			 .NAME),
+		return Uri.withAppendedPath(Uri.withAppendedPath(getUriContacts(),
+														 Table.Conversation._NAME),
 									chatType.name());
 	}
 
@@ -45,9 +45,10 @@ public class ContactsProvider extends AbstractProvider {
 	public boolean onCreate() {
 		final boolean result = super.onCreate();
 		final String authority = getAuthority(this.getClass());
-		uriMatcher.addURI(authority, Table.LocalUser.NAME, URI_CONTACTS);
-		uriMatcher.addURI(authority, Table.LocalUser.NAME + "/#/", URI_CONTACT);
-		uriMatcher.addURI(authority, Table.LocalUser.NAME + "/" + Table.Conversation.NAME + "/*/",
+		uriMatcher.addURI(authority, Table.LocalUser._NAME, URI_CONTACTS);
+		uriMatcher.addURI(authority, Table.LocalUser._NAME + "/#/", URI_CONTACT);
+		uriMatcher.addURI(authority, Table.LocalUser._NAME + "/" + Table.Conversation._NAME +
+									 "/*/",
 						  URI_CONTACTS_CONVERSATIONS);
 		return result;
 	}
@@ -61,12 +62,12 @@ public class ContactsProvider extends AbstractProvider {
 		db.beginTransaction();
 		switch (uriId) {
 			case URI_CONTACTS:
-				table = Table.LocalUser.NAME;
+				table = Table.LocalUser._NAME;
 				String query = Table.LocalUser.PHONE + "=?";
 				String[] args = new String[1];
 				for (ContentValues value : values) {
 					args[0] = value.getAsString(Table.LocalUser.PHONE);
-					if (db.update(Table.LocalUser.NAME, value, query, args) == 0) {
+					if (db.update(Table.LocalUser._NAME, value, query, args) == 0) {
 						db.insert(table, null, value);
 					}
 				}
@@ -87,7 +88,7 @@ public class ContactsProvider extends AbstractProvider {
 		List<String> pathSegments = uri.getPathSegments();
 		switch (uriId) {
 			case URI_CONTACTS:
-				qb.setTables(Table.LocalUser.NAME);
+				qb.setTables(Table.LocalUser._NAME);
 				qb.setDistinct(true);
 				c =
 				  qb.query(getReadableDatabase(), select, where, args, Table.LocalUser.PHONE, null,
@@ -99,18 +100,18 @@ public class ContactsProvider extends AbstractProvider {
 				where = Table.LocalUser.T_ID + "=?";
 				args = new String[1];
 				args[0] = uri.getLastPathSegment();
-				qb.setTables(Table.LocalUser.NAME);
+				qb.setTables(Table.LocalUser._NAME);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				c.setNotificationUri(getContext().getContentResolver(), uri);
 				break;
 			case URI_CONTACTS_CONVERSATIONS:
-				qb.setTables(Table.Conversation.NAME);
+				qb.setTables(Table.Conversation._NAME);
 				c = qb.query(getReadableDatabase(), null, Table.Conversation.TYPE + "!=?",
 							 new String[]{Constants.ChatType.PRIVATE.name()}, null, null, null);
 				Debug.print("-----------------v-------------------");
 				Debug.print(c);
 				String chatType = uri.getLastPathSegment();
-				qb.setTables(Table.LocalUser.NAME + " LEFT JOIN " + Table.Conversation.NAME +
+				qb.setTables(Table.LocalUser._NAME + " LEFT JOIN " + Table.Conversation._NAME +
 							 " ON " + Table.LocalUser.PHONE + "=" + Table.Conversation.PHONE +
 							 " AND " + Table.Conversation.TYPE + "=\'" + chatType + "\'");
 				qb.setDistinct(true);
@@ -129,11 +130,11 @@ public class ContactsProvider extends AbstractProvider {
 	public String getType(Uri uri) {
 		switch (uriMatcher.match(uri)) {
 			case URI_CONTACTS:
-				return TYPE_LIST_BASE + Table.LocalUser.NAME;
+				return TYPE_LIST_BASE + Table.LocalUser._NAME;
 			case URI_CONTACT:
-				return TYPE_ITEM_BASE + Table.LocalUser.NAME;
+				return TYPE_ITEM_BASE + Table.LocalUser._NAME;
 			case URI_CONTACTS_CONVERSATIONS:
-				return TYPE_LIST_BASE + Table.Conversation.NAME;
+				return TYPE_LIST_BASE + Table.Conversation._NAME;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -147,11 +148,11 @@ public class ContactsProvider extends AbstractProvider {
 			case URI_CONTACT:
 				updated = update(uri, values, null, null);
 				if (updated == 0) {
-					getWritableDatabase().insert(Table.LocalUser.NAME, null, values);
+					getWritableDatabase().insert(Table.LocalUser._NAME, null, values);
 				}
 				break;
 			case URI_CONTACTS:
-				long id = getWritableDatabase().insert(Table.LocalUser.NAME, null, values);
+				long id = getWritableDatabase().insert(Table.LocalUser._NAME, null, values);
 				return getUriContact(id);
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -170,7 +171,7 @@ public class ContactsProvider extends AbstractProvider {
 				args[0] = uri.getLastPathSegment();
 				// no break
 			case URI_CONTACTS:
-				deleted = getWritableDatabase().delete(Table.LocalUser.NAME, query, args);
+				deleted = getWritableDatabase().delete(Table.LocalUser._NAME, query, args);
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -187,10 +188,10 @@ public class ContactsProvider extends AbstractProvider {
 				query = Table.LocalUser.T_ID + "=?";
 				args = new String[1];
 				args[0] = uri.getLastPathSegment();
-				updated = getWritableDatabase().update(Table.LocalUser.NAME, values, query, args);
+				updated = getWritableDatabase().update(Table.LocalUser._NAME, values, query, args);
 				break;
 			case URI_CONTACTS:
-				updated = getWritableDatabase().update(Table.LocalUser.NAME, values, query, args);
+				updated = getWritableDatabase().update(Table.LocalUser._NAME, values, query, args);
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);

@@ -2,9 +2,13 @@ package com.livae.ff.app.listener;
 
 public interface OnLifeCycleListener {
 
-	public void onPause();
+	void onResume(LifeCycle lifeCycle);
 
-	public void onDestroy();
+	void onPause(LifeCycle lifeCycle);
 
-	public void onConfigurationChanges();
+	void onDestroy(LifeCycle lifeCycle);
+
+	void onCreate(LifeCycle lifeCycle);
+
+	void onRecreate(LifeCycle lifeCycle);
 }

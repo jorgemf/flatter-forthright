@@ -13,15 +13,16 @@ import com.livae.ff.app.AppUser;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.Constants;
 import com.livae.ff.app.R;
-import com.livae.ff.app.activity.WebViewActivity;
+import com.livae.ff.app.ui.activity.AbstractActivity;
+import com.livae.ff.app.ui.activity.WebViewActivity;
 
 public class IntentUtils {
 
-	public static void readTermsAndConditions(Context context) {
+	public static void readTermsAndConditions(AbstractActivity activity) {
 		Analytics.event(Analytics.Category.USER, Analytics.Action.VISITED_TERMS);
-		String urlTermsConditions = context.getString(R.string.url_terms_conditions);
-		String title = context.getString(R.string.activity_about);
-		WebViewActivity.start(context, urlTermsConditions, title);
+		String urlTermsConditions = activity.getString(R.string.url_terms_conditions);
+		String title = activity.getString(R.string.activity_about);
+		WebViewActivity.start(activity, urlTermsConditions, title);
 	}
 
 	public static void sendFeedback(Context context) {

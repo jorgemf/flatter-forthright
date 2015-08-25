@@ -6,17 +6,15 @@ import android.support.annotation.IntegerRes;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.livae.ff.app.api.API;
 import com.livae.ff.app.api.Model;
-import com.livae.ff.app.async.Callback;
-import com.livae.ff.app.async.CustomAsyncTask;
 import com.livae.ff.app.settings.Settings;
 import com.livae.ff.app.task.TaskWakeup;
 import com.livae.ff.app.utils.SyncUtils;
 import com.livae.ff.common.Constants;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
-import java.net.HttpURLConnection;
 import java.util.HashMap;
 
 public class Application extends android.app.Application {
@@ -28,6 +26,8 @@ public class Application extends android.app.Application {
 	private Model model;
 
 	private HashMap<TrackerName, Tracker> trackers;
+
+	private RefWatcher refWatcher;
 
 	private boolean admin;
 
@@ -88,6 +88,11 @@ public class Application extends android.app.Application {
 		instance.seeAdmin = seeAdmin;
 	}
 
+	public static RefWatcher getRefWatcher(Context context) {
+		Application application = (Application) context.getApplicationContext();
+		return application.refWatcher;
+	}
+
 	@Override
 	public void onCreate() {
 		// init basic stuff
@@ -111,26 +116,12 @@ public class Application extends android.app.Application {
 				API.changeAPIUrl("http://" + ip + ":8080/_ah/api/");
 			}
 		}
+		//debug
+		refWatcher = LeakCanary.install(this);
 
 		// wake up to the server, only to update the last accessed times
-		new TaskWakeup().execute(null, new Callback<Void, Void>() {
-			@Override
-			public void onComplete(CustomAsyncTask<Void, Void> task, Void param, Void result) {
-
-			}
-
-			@Override
-			public void onError(CustomAsyncTask<Void, Void> task, Void param, Exception e) {
-				if (e instanceof GoogleJsonResponseException) {
-					GoogleJsonResponseException jsonException = (GoogleJsonResponseException) e;
-					if (jsonException.getStatusCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-						AppUser user = Application.appUser();
-						user.setAccessToken(null);
-						user.setUserPhone(null);
-					}
-				}
-			}
-		});
+		new TaskWakeup().execute((Void) null);
+		// sync
 		if (SyncUtils.isAccountRegistered(this)) {
 //			SyncUtils.syncContactsEveryDay();
 			SyncUtils.syncContactsWhenChange();

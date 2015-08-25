@@ -1,5 +1,7 @@
 package com.livae.ff.app.task;
 
+import android.support.annotation.NonNull;
+
 import com.livae.ff.api.ff.Ff.ApiEndpoint.GetPhoneConversation;
 import com.livae.ff.api.ff.model.Conversation;
 import com.livae.ff.app.Application;
@@ -7,10 +9,16 @@ import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.api.API;
 import com.livae.ff.app.api.Model;
 import com.livae.ff.app.async.NetworkAsyncTask;
+import com.livae.ff.app.listener.LifeCycle;
 
-public class TaskConversationCreate extends NetworkAsyncTask<ConversationParams, Conversation> {
+public class TaskConversationCreate
+  extends NetworkAsyncTask<LifeCycle, ConversationParams, Conversation> {
 
 	private static long FAKE_IDS = 3000L;
+
+	public TaskConversationCreate(@NonNull LifeCycle lifeCycle) {
+		super(lifeCycle);
+	}
 
 	@Override
 	protected Conversation doInBackground(ConversationParams conversation)

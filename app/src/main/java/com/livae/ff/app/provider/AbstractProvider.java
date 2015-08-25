@@ -28,11 +28,7 @@ public abstract class AbstractProvider extends ContentProvider {
 	private DBHelper dbHelper;
 
 	public static String getAuthority(Class objectClass) {
-		String authority = objectClass.getCanonicalName();
-		if (BuildConfig.DEV) {
-			authority = authority.replace("com.livae.ff.app.", "com.livae.ff.app.dev.");
-		}
-		return authority;
+		return BuildConfig.APPLICATION_ID + ".provider." + objectClass.getSimpleName();
 	}
 
 	@Override

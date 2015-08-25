@@ -31,7 +31,8 @@ public class CommentVote implements Serializable {
 	public CommentVote() {
 	}
 
-	public CommentVote(@Nonnull Long commentId, @Nonnull Long userId,
+	public CommentVote(@Nonnull Long commentId,
+					   @Nonnull Long userId,
 					   @Nonnull CommentVoteType type) {
 		this.commentId = commentId;
 		this.userId = userId;

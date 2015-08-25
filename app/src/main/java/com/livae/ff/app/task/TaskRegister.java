@@ -1,5 +1,6 @@
 package com.livae.ff.app.task;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.livae.ff.api.ff.Ff;
@@ -9,11 +10,16 @@ import com.livae.ff.app.Application;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.api.API;
 import com.livae.ff.app.async.NetworkAsyncTask;
+import com.livae.ff.app.listener.LifeCycle;
 import com.livae.ff.app.utils.DeviceUtils;
 import com.livae.ff.app.utils.SyncUtils;
 import com.livae.ff.common.Constants;
 
-public class TaskRegister extends NetworkAsyncTask<Long, Void> {
+public class TaskRegister extends NetworkAsyncTask<LifeCycle, Long, Void> {
+
+	public TaskRegister(@NonNull LifeCycle lifeCycle) {
+		super(lifeCycle);
+	}
 
 	@Override
 	protected Void doInBackground(Long phoneNumber)

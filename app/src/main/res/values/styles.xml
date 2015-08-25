@@ -23,6 +23,11 @@
 		<item name="android:windowSoftInputMode">adjustResize|stateAlwaysHidden</item>
 		<item name="windowActionModeOverlay">true</item>
 		<item name="android:windowActionModeOverlay">true</item>
+
+		<item name="dialogTheme">@style/Dialog</item>
+		<item name="alertDialogTheme">@style/Dialog</item>
+		<item name="android:dialogTheme">@style/Dialog</item>
+		<item name="android:alertDialogTheme">@style/Dialog</item>
 	</style>
 
 	<style name="FFBase.Theme">
@@ -56,10 +61,21 @@
 		<item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
 		<item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 	</style>
-	an
 
-	<style name="Dialog" parent="Theme.AppCompat.Dialog">
+	<style name="Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+		<item name="ff_primary">@color/purple</item>
+		<item name="ff_primaryDark">@color/purple_dark</item>
+		<item name="ff_primaryLight">@color/purple_light</item>
+		<item name="colorPrimary">?ff_primary</item>
+		<item name="colorPrimaryDark">?ff_primaryDark</item>
+		<item name="colorAccent">@color/amber</item>
+		<item name="colorControlHighlight">@color/amber_dark</item>
+		<item name="android:windowTitleStyle">@style/TitleDialog</item>
 		<item name="android:background">@color/white</item>
+	</style>
+
+	<style name="TitleDialog" parent="Base.DialogWindowTitle.AppCompat">
+		<item name="android:textColor">?ff_primary</item>
 	</style>
 
 	<style name="TextAppearance.Small" parent="TextAppearance.AppCompat.Small">

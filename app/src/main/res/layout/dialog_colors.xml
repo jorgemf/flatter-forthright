@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnCount="4"
+            android:padding="@dimen/space_normal"
+            android:rowCount="4">
+
+	<ImageView
+		android:id="@+id/color_yellow_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_yellow_500"/>
+
+	<ImageView
+		android:id="@+id/color_amber_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_amber_500"/>
+
+	<ImageView
+		android:id="@+id/color_orange_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_orange_500"/>
+
+	<ImageView
+		android:id="@+id/color_deep_orange_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_deep_orange_500"/>
+
+	<ImageView
+		android:id="@+id/color_red_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_red_500"/>
+
+	<ImageView
+		android:id="@+id/color_pink_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_pink_500"/>
+
+	<ImageView
+		android:id="@+id/color_purple_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_purple_500"/>
+
+	<ImageView
+		android:id="@+id/color_deep_purple_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_deep_purple_500"/>
+
+	<ImageView
+		android:id="@+id/color_indigo_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_indigo_500"/>
+
+	<ImageView
+		android:id="@+id/color_blue_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_blue_500"/>
+
+	<ImageView
+		android:id="@+id/color_ligth_blue_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_light_blue_500"/>
+
+	<ImageView
+		android:id="@+id/color_cyan_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_cyan_500"/>
+
+	<ImageView
+		android:id="@+id/color_teal_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_teal_500"/>
+
+	<ImageView
+		android:id="@+id/color_green_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_green_500"/>
+
+	<ImageView
+		android:id="@+id/color_light_green_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_light_green_500"/>
+
+	<ImageView
+		android:id="@+id/color_lime_500"
+		android:layout_width="@dimen/color_picker_button_width"
+		android:layout_height="@dimen/color_picker_button_height"
+		android:layout_margin="@dimen/space_normal"
+		android:src="@drawable/button_color_lime_500"/>
+</GridLayout>

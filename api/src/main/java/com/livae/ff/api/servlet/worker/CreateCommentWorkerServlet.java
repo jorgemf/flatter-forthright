@@ -8,8 +8,6 @@ import com.livae.ff.api.model.Conversation;
 import com.livae.ff.api.model.PhoneUser;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -85,13 +83,14 @@ public class CreateCommentWorkerServlet extends HttpServlet {
 
 	@SuppressWarnings("MethodWithMultipleLoops")
 	private void createNotificationsPublic(Comment comment, Conversation conversation) {
-		// notify the creator of the comment and the user of the conversation as individual push notifications
+		// notify the creator of the comment and the user of the conversation as individual push
+		// notifications
 		Long commentUserId = comment.getUserId();
 		Long conversationUserId = conversation.getPhone();
 		final Long commentId = comment.getId();
 		notify(commentUserId, commentId);
-		if(!commentUserId.equals(conversationUserId)){
-			notify(conversationUserId,commentId);
+		if (!commentUserId.equals(conversationUserId)) {
+			notify(conversationUserId, commentId);
 		}
 		// notify other users
 		notify(commentId);

@@ -6,11 +6,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings.Secure;
+import android.support.annotation.WorkerThread;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.livae.ff.app.Analytics;
+import com.google.android.gms.iid.InstanceID;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.settings.Settings;
 
@@ -114,13 +115,14 @@ public class DeviceUtils {
 		return true;
 	}
 
+	@WorkerThread
 	public static String getCloudMessageId(Context context) {
 		try {
-			GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
-			return gcm.register(Settings.Google.SENDER_ID);
+			InstanceID instanceID = InstanceID.getInstance(context);
+			return instanceID.getToken(Settings.Google.SENDER_ID,
+									   GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 		} catch (IOException e) {
 			e.printStackTrace();
-			Analytics.logAndReport(e, false);
 		}
 		return null;
 	}

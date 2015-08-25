@@ -1,6 +1,6 @@
 package com.livae.ff.app.listener;
 
-import com.livae.ff.app.viewholders.CommentViewHolder;
+import com.livae.ff.app.ui.viewholders.CommentViewHolder;
 
 public interface CommentClickListener {
 

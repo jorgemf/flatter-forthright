@@ -9,6 +9,11 @@
 		android:smallScreens="false"
 		android:xlargeScreens="false"/>
 
+	<permission
+		android:name="${applicationId}.gcm.permission.C2D_MESSAGE"
+		android:protectionLevel="signature"/>
+	<uses-permission android:name="${applicationId}.gcm.permission.C2D_MESSAGE"/>
+
 	<!-- Internet -->
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -32,6 +37,8 @@
 
 	<uses-feature android:name="android.hardware.telephony"/>
 
+	<!-- Application -->
+
 	<application
 		android:allowBackup="true"
 		android:icon="@mipmap/ic_launcher"
@@ -39,9 +46,12 @@
 		android:name=".Application"
 		android:theme="@style/FFBase.Theme">
 
+		<!-- Activities -->
+
 		<activity
 			android:label="@string/app_name"
-			android:name="com.livae.ff.app.activity.ChatsActivity"
+			android:launchMode="singleTop"
+			android:name=".ui.activity.ChatsActivity"
 			android:screenOrientation="portrait"
 			android:windowSoftInputMode="adjustPan">
 			<intent-filter>
@@ -52,36 +62,71 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name="com.livae.ff.app.activity.OnBoardingActivity"
+			android:name=".ui.activity.OnBoardingActivity"
 			android:screenOrientation="portrait"/>
 		<activity
-			android:name="com.livae.ff.app.activity.ContactsActivity"
+			android:name=".ui.activity.ContactsActivity"
 			android:screenOrientation="portrait"
 			android:windowSoftInputMode="adjustPan"/>
 		<activity
-			android:name="com.livae.ff.app.activity.ChatPublicActivity"
-			android:parentActivityName="com.livae.ff.app.activity.ChatsActivity"
+			android:name=".ui.activity.ChatPublicActivity"
+			android:parentActivityName=".ui.activity.ChatsActivity"
 			android:screenOrientation="portrait"
 			android:windowSoftInputMode="adjustResize|stateHidden">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="com.livae.ff.app.activity.ChatsActivity"/>
+				android:value=".ui.activity.ChatsActivity"/>
 		</activity>
 		<activity
-			android:name="com.livae.ff.app.activity.ChatPrivateActivity"
-			android:parentActivityName="com.livae.ff.app.activity.ChatsActivity"
+			android:name=".ui.activity.ChatPrivateActivity"
+			android:parentActivityName=".ui.activity.ChatsActivity"
 			android:screenOrientation="portrait"
 			android:windowSoftInputMode="adjustResize|stateHidden">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="com.livae.ff.app.activity.ChatsActivity"/>
+				android:value=".ui.activity.ChatsActivity"/>
 		</activity>
 		<activity
-			android:name="com.livae.ff.app.activity.WebViewActivity"
+			android:name=".ui.activity.WebViewActivity"
 			android:screenOrientation="portrait"/>
 		<activity
-			android:name="com.livae.ff.app.activity.AboutActivity"
+			android:name=".ui.activity.AboutActivity"
 			android:screenOrientation="portrait"/>
+
+		<!-- Providers -->
+
+		<provider
+			android:authorities="${applicationId}.provider.ContactsProvider"
+			android:exported="false"
+			android:label="@string/provider_contacts"
+			android:name="com.livae.ff.app.provider.ContactsProvider"
+			android:syncable="true"/>
+		<provider
+			android:authorities="${applicationId}.provider.ConversationsProvider"
+			android:exported="false"
+			android:label="@string/provider_conversations"
+			android:name="com.livae.ff.app.provider.ConversationsProvider"
+			android:syncable="true"/>
+
+		<receiver
+			android:name="com.livae.ff.app.receiver.CloudMessagesReceiver"
+			android:permission="com.google.android.c2dm.permission.SEND">
+			<intent-filter>
+				<action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+				<category android:name="${applicationId}.gcm"/>
+			</intent-filter>
+		</receiver>
+
+		<!-- Receivers -->
+
+		<receiver
+			android:name="com.livae.ff.app.receiver.NotificationReceiver">
+			<intent-filter>
+				<action android:name="com.livae.ff.app.dev.intent.RECEIVE"/>
+			</intent-filter>
+		</receiver>
+
+		<!-- Services -->
 
 		<service android:name="com.livae.ff.app.service.AuthenticatorService">
 			<intent-filter>
@@ -116,8 +161,10 @@
 				android:resource="@xml/syncadapter_conversations"/>
 		</service>
 
-		<service android:name="com.livae.ff.app.service.CloudMessagesService"/>
+		<service android:name=".service.NotificationService"/>
 		<service android:name="com.livae.ff.app.service.SMSVerificationService"/>
+
+		<!-- Meta Data -->
 
 		<meta-data
 			android:name="com.google.android.gms.version"

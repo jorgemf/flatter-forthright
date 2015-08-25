@@ -4,18 +4,35 @@ def getBuildDate() {
 	return new SimpleDateFormat("yyMMddHH").format(new Date());
 }
 
+buildscript {
+	repositories {
+		jcenter()
+		mavenCentral()
+	}
+	dependencies {
+		// publish in play store
+		classpath 'com.github.triplet.gradle:play-publisher:1.1.2'
+		// data bindings
+		classpath "com.android.databinding:dataBinder:1.0-rc1"
+		// google cloud messages services
+		classpath 'com.google.gms:google-services:1.3.0-beta1'
+	}
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.android.databinding'
 
 android {
-	compileSdkVersion 22
-	buildToolsVersion "22.0.1"
+	compileSdkVersion 23
+	buildToolsVersion "23.0.0"
 
 	defaultConfig {
 		applicationId "com.livae.ff.app"
 		minSdkVersion 16
-		targetSdkVersion 22
-		versionCode 13
-		versionName "0.13"
+		targetSdkVersion 23
+		versionCode 14
+		versionName "0.14"
 		buildConfigField "int", "BUILD_DATE", getBuildDate()
 		buildConfigField "boolean", "DEV", "false"
 		buildConfigField "boolean", "TEST", "false"
@@ -69,36 +86,34 @@ dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
 	compile project(path: ':api', configuration: 'android-endpoints')
 	compile project(':common')
-	compile 'com.android.support:support-v4:22.2.1'
-	compile 'com.android.support:recyclerview-v7:22.2.1'
-	compile 'com.android.support:appcompat-v7:22.2.1'
-	compile 'com.android.support:cardview-v7:22.2.1'
-	compile 'com.android.support:design:22.2.1'
+
+	compile 'com.android.support:support-v4:23.0.0'
+	compile 'com.android.support:appcompat-v7:23.0.0'
+	compile 'com.android.support:recyclerview-v7:23.0.0'
+	compile 'com.android.support:cardview-v7:23.0.0'
+	compile 'com.android.support:design:23.0.0'
 	compile 'com.google.android.gms:play-services-base:7.8.0'
 	compile 'com.google.android.gms:play-services-analytics:7.8.0'
 	compile 'com.google.android.gms:play-services-gcm:7.8.0'
 	compile 'com.squareup.okhttp:okhttp:2.4.0'
 	compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
 	compile 'com.squareup.picasso:picasso:2.5.2'
+
+	debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+	releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+	devTestCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+
 	androidTestCompile 'com.android.support.test:runner:0.3'
 	androidTestCompile 'com.android.support.test:rules:0.3'
 	androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
 	androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
 	// force libraries for test version
 	androidTestCompile 'com.google.code.findbugs:jsr305:2.0.1'
-	androidTestCompile 'com.android.support:support-annotations:22.2.1'
+	androidTestCompile 'com.android.support:support-annotations:23.0.0'
 	devTestCompile 'com.google.code.findbugs:jsr305:2.0.1'
-	devTestCompile 'com.android.support:support-annotations:22.2.1'
+	devTestCompile 'com.android.support:support-annotations:23.0.0'
 }
 
-buildscript {
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath 'com.github.triplet.gradle:play-publisher:1.1.2'
-	}
-}
 
 apply plugin: 'com.github.triplet.play'
 

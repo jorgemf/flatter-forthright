@@ -6,7 +6,8 @@ public class QueryParam {
 
 	private Integer limit;
 
-	public QueryParam(Integer limit) {
+	public QueryParam(String cursor, Integer limit) {
+		this.cursor = cursor;
 		this.limit = limit;
 	}
 

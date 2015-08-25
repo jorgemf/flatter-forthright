@@ -169,5 +169,10 @@
 	<string name="comment_flagged">Comment flagged</string>
 	<string name="hidden_comment">«hidden comment»</string>
 	<string name="button_add_contact">Add Contact</string>
+	<string name="menu_notifications">Notifications</string>
+	<string name="menu_notification_color">Led color</string>
+	<string name="menu_notification_sound">Sound</string>
+	<string name="menu_notification_mute">Mute</string>
+	<string name="menu_notification_cancel_mute">Cancel mute</string>
 
 </resources>

@@ -18,7 +18,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.livae.ff.app.Analytics;
 import com.livae.ff.app.R;
-import com.livae.ff.app.service.CloudMessagesService;
+import com.livae.ff.app.service.NotificationService;
 import com.livae.ff.common.Constants.PushNotificationType;
 import com.livae.ff.common.model.Notification;
 
@@ -92,7 +92,7 @@ public class NotificationUtil {
 	public static Notification parseNotification(Bundle extras) {
 		String jsonMessage = extras.getString("m");
 		String jsonType = extras.getString("t");
-		Log.d(CloudMessagesService.LOG_TAG, jsonType + ": " + jsonMessage);
+		Log.d(NotificationService.LOG_TAG, jsonType + ": " + jsonMessage);
 		PushNotificationType notificationType = getNotificationType(extras);
 		if (notificationType == null) {
 			return null;

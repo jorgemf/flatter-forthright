@@ -148,4 +148,9 @@
 	<string name="on_boarding_payments"> Pensamientos esta en beta, esto significa que la app
 		contiene fallos y es complemtamente gratuita por el momento.
 	</string>
+	<string name="menu_notification_cancel_mute">Cancelar mute</string>
+	<string name="menu_notification_color">Color del led</string>
+	<string name="menu_notification_mute">Mute</string>
+	<string name="menu_notification_sound">Sonido</string>
+	<string name="menu_notifications">Notificaciones</string>
 </resources>

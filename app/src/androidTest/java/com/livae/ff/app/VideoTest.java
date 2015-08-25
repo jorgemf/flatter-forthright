@@ -399,7 +399,7 @@ public class VideoTest {
 		sleep(200);
 		pressText(PRIVATE);
 		pressText(users[2].name);
-		sleep(2000);
+		sleep(1500);
 		writeComment(context, comments[19]);
 		writeComment(context, comments[20]);
 		writeComment(context, comments[21]);
@@ -417,7 +417,7 @@ public class VideoTest {
 		sleep(700);
 		typeText("dialog_edit_text", comments[30].alias);
 		pressText("OK");
-		sleep(2000);
+		sleep(1500);
 		writeComment(context, comments[30]);
 		writeComment(context, comments[31]);
 		writeComment(context, comments[32]);
@@ -445,6 +445,7 @@ public class VideoTest {
 		sleep(1600);
 		device.pressBack();
 		device.pressBack();
+		sleep(1500);
 
 		// anonymous girl
 		writeComment(context, comments[42]);
@@ -463,9 +464,9 @@ public class VideoTest {
 			pressId("button_post_comment");
 			addComment(context, comment);
 		} else {
-			sleep(comment.comment.length() * 50);
+			sleep(comment.comment.length() * 30 + 200);
 			addComment(context, comment);
-			sleep(comment.comment.length() * 50);
+			sleep(comment.comment.length() * 30 + 500);
 		}
 	}
 
@@ -515,11 +516,12 @@ public class VideoTest {
 		UiSelector selector = new UiSelector().resourceId(PENSAMIENTOS_PACKAGE + ":id/" + resId);
 		UiObject uiObject = device.findObject(selector);
 		for (int i = 1; i < text.length(); i++) {
-			uiObject.setText(text.substring(0, i));
-			sleep(40 + (int) (Math.random() * 15));
+			// TODO
+//			uiObject.setText(text.substring(0, i));
+//			sleep(50 + (int) (Math.random() * 20 ));
 		}
 		uiObject.setText(text);
-		sleep(40 + (int) (Math.random() * 15));
+		sleep(50 + (int) (Math.random() * 20));
 	}
 
 	private void sleep(long time) {

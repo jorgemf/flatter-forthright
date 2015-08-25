@@ -1,20 +1,27 @@
 package com.livae.ff.app.task;
 
+import android.support.annotation.NonNull;
+
 import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.BuildConfig;
 import com.livae.ff.app.api.Model;
 import com.livae.ff.app.async.CustomAsyncTask;
+import com.livae.ff.app.listener.LifeCycle;
 import com.livae.ff.app.utils.SyncUtils;
 
-public class TaskPostComment extends CustomAsyncTask<TextId, Comment> {
+public class TaskPostComment extends CustomAsyncTask<LifeCycle, TextId, Comment> {
+
+	public TaskPostComment(@NonNull LifeCycle lifeCycle) {
+		super(lifeCycle);
+	}
 
 	@Override
 	protected Comment doInBackground(TextId params)
 	  throws Exception {
-		if(BuildConfig.TEST){
+		if (BuildConfig.TEST) {
 			return null;
-		}else {
+		} else {
 			Comment comment = null;
 			Model model = Application.model();
 // this code is too slow

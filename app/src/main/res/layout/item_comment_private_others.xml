@@ -31,7 +31,7 @@
 		android:layout_height="wrap_content"
 		android:background="@drawable/selector_comment">
 
-		<com.livae.ff.app.view.Triangle
+		<com.livae.ff.app.ui.view.Triangle
 			android:id="@+id/comment_arrow"
 			android:layout_width="@dimen/space_large"
 			android:layout_height="@dimen/space_medium"

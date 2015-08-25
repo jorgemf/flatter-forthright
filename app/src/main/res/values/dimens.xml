@@ -31,4 +31,7 @@
 
 	<dimen name="date_comment_width">100dp</dimen>
 
+	<dimen name="color_picker_button_width">60dp</dimen>
+	<dimen name="color_picker_button_height">@dimen/color_picker_button_width</dimen>
+
 </resources>

@@ -1,8 +1,12 @@
 package com.livae.ff.app.async;
 
-public interface Callback<Param, Result> {
+import android.support.annotation.NonNull;
 
-	public void onComplete(CustomAsyncTask<Param, Result> task, Param param, Result result);
+import com.livae.ff.app.listener.LifeCycle;
 
-	public void onError(CustomAsyncTask<Param, Result> task, Param param, Exception e);
+public interface Callback<A extends LifeCycle, Param, Result> {
+
+	void onComplete(@NonNull A a, Param param, Result result);
+
+	void onError(@NonNull A a, Param param, @NonNull Exception e);
 }
