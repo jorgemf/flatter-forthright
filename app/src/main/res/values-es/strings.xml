@@ -153,4 +153,18 @@
 	<string name="menu_notification_mute">Mute</string>
 	<string name="menu_notification_sound">Sonido</string>
 	<string name="menu_notifications">Notificaciones</string>
+	<string name="notification_cancel_muted">La conversación ya no esta silenciada.</string>
+	<string name="notification_muted">Conversación silenciada</string>
+	<string name="notification_color_update">Color del led para notificaciones actualizado.</string>
+	<string name="notification_sound_updated">Sonido para las notificaciones actualizado.</string>
+	<string name="select_notification_color">Color para las notificacaciones:</string>
+	<string name="select_notification_mute">Silenciar durante:</string>
+	<string name="select_notification_sound">Sonido de las notificaciones:</string>
+	<string-array
+		name="notification_mute_array">
+		<item>8 horas</item>
+		<item>1 día</item>
+		<item>1 semana</item>
+		<item>para siempre</item>
+	</string-array>
 </resources>
