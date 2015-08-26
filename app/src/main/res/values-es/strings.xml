@@ -167,4 +167,5 @@
 		<item>1 semana</item>
 		<item>para siempre</item>
 	</string-array>
+	<string name="default_color">Color por defecto</string>
 </resources>

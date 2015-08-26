@@ -32,7 +32,7 @@ android {
 		minSdkVersion 16
 		targetSdkVersion 23
 		versionCode 14
-		versionName "0.14"
+		versionName "1.0"
 		buildConfigField "int", "BUILD_DATE", getBuildDate()
 		buildConfigField "boolean", "DEV", "false"
 		buildConfigField "boolean", "TEST", "false"
