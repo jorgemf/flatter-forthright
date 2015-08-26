@@ -109,7 +109,7 @@ public abstract class AbstractEndlessCursorLoaderFragment<O> extends AbstractFra
 	protected void startLoading() {
 		if (totalLoaded == 0 && !isLoading && canLoadMore) {
 			loadNext();
-		}else{
+		} else {
 			reloadCursor();
 		}
 	}
@@ -411,7 +411,7 @@ public abstract class AbstractEndlessCursorLoaderFragment<O> extends AbstractFra
 			AbstractEndlessCursorLoaderFragment f = (AbstractEndlessCursorLoaderFragment) ab;
 			f.totalLoaded += listResult.getSize();
 			f.cursor = listResult.getNextCursor();
-			f.canLoadMore = listResult.getSize() == query.getLimit() && f.cursor != null;
+			f.canLoadMore = listResult.getSize() >= query.getLimit() && f.cursor != null;
 			f.getLoaderManager().restartLoader(LOADER_ITEMS, null, f);
 		}
 
