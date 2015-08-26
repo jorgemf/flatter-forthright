@@ -90,45 +90,47 @@ public class Table {
 
 	public static class Comment {
 
-		public static final String NAME = "comment";
+		public static final String _NAME = "comment";
 
-		public static final String DATE = NAME + "_" + "date";
+		public static final String DATE = _NAME + "_" + "date";
 
-		public static final String CONVERSATION_ID = NAME + "_" + "conversation_id";
+		public static final String DATE_CREATED = _NAME + "_" + "date_created";
 
-		public static final String USER_ANONYMOUS_ID = NAME + "_" + "user_anonymous_id";
+		public static final String CONVERSATION_ID = _NAME + "_" + "conversation_id";
 
-		public static final String USER_ALIAS = NAME + "_" + "user_alias";
+		public static final String USER_ANONYMOUS_ID = _NAME + "_" + "user_anonymous_id";
 
-		public static final String IS_ME = NAME + "_" + "is_me";
+		public static final String USER_ALIAS = _NAME + "_" + "user_alias";
 
-		public static final String COMMENT = NAME + "_" + "comment";
+		public static final String IS_ME = _NAME + "_" + "is_me";
 
-		public static final String AGREE_VOTES = NAME + "_" + "agree_votes";
+		public static final String COMMENT = _NAME + "_" + "comment";
 
-		public static final String DISAGREE_VOTES = NAME + "_" + "disagree_votes";
+		public static final String AGREE_VOTES = _NAME + "_" + "agree_votes";
 
-		public static final String USER_VOTE_TYPE = NAME + "_" + "user_vote_type";
+		public static final String DISAGREE_VOTES = _NAME + "_" + "disagree_votes";
 
-		public static final String VOTE_TYPE = NAME + "_" + "vote_type";
+		public static final String USER_VOTE_TYPE = _NAME + "_" + "user_vote_type";
 
-		public static final String USER_MARK = NAME + "_" + "user_mark";
+		public static final String VOTE_TYPE = _NAME + "_" + "vote_type";
 
-		public static final String TIMES_FLAGGED = NAME + "_" + "times_flagged";
+		public static final String USER_MARK = _NAME + "_" + "user_mark";
 
-		public static final String TIMES_FLAGGED_ABUSE = NAME + "_" + "times_flagged_abuse";
+		public static final String TIMES_FLAGGED = _NAME + "_" + "times_flagged";
 
-		public static final String TIMES_FLAGGED_INSULT = NAME + "_" + "times_flagged_insult";
+		public static final String TIMES_FLAGGED_ABUSE = _NAME + "_" + "times_flagged_abuse";
 
-		public static final String TIMES_FLAGGED_LIE = NAME + "_" + "times_flagged_lie";
+		public static final String TIMES_FLAGGED_INSULT = _NAME + "_" + "times_flagged_insult";
 
-		public static final String TIMES_FLAGGED_OTHER = NAME + "_" + "times_flagged_other";
+		public static final String TIMES_FLAGGED_LIE = _NAME + "_" + "times_flagged_lie";
+
+		public static final String TIMES_FLAGGED_OTHER = _NAME + "_" + "times_flagged_other";
 
 		public static final String ID = BaseColumns._ID;
 
-		public static final String T_ID = NAME + "." + ID;
+		public static final String T_ID = _NAME + "." + ID;
 
-		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
+		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + _NAME + " ( " +
 												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 												CONVERSATION_ID + " INTEGER NOT NULL, " +
 												USER_ANONYMOUS_ID + " INTEGER, " +
@@ -136,6 +138,7 @@ public class Table {
 												IS_ME + " INTEGER, " +
 												COMMENT + " TEXT, " +
 												DATE + " INTEGER NOT NULL, " +
+												DATE_CREATED + " INTEGER, " +
 												AGREE_VOTES + " INTEGER, " +
 												DISAGREE_VOTES + " INTEGER, " +
 												USER_VOTE_TYPE + " TEXT, " +
@@ -151,21 +154,21 @@ public class Table {
 
 	public static class CommentSync {
 
-		public static final String NAME = "comment_sync";
+		public static final String _NAME = "comment_sync";
 
-		public static final String DATE = NAME + "_" + "date";
+		public static final String DATE = _NAME + "_" + "date";
 
-		public static final String CONVERSATION_ID = NAME + "_" + "conversation_id";
+		public static final String CONVERSATION_ID = _NAME + "_" + "conversation_id";
 
-		public static final String USER_ALIAS = NAME + "_" + "user_alias";
+		public static final String USER_ALIAS = _NAME + "_" + "user_alias";
 
-		public static final String COMMENT = NAME + "_" + "comment";
+		public static final String COMMENT = _NAME + "_" + "comment";
 
 		public static final String ID = BaseColumns._ID;
 
-		public static final String T_ID = NAME + "." + ID;
+		public static final String T_ID = _NAME + "." + ID;
 
-		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
+		public static final String CREATE_SQL = "CREATE TABLE IF NOT EXISTS " + _NAME + " ( " +
 												ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 												CONVERSATION_ID + " INTEGER NOT NULL, " +
 												USER_ALIAS + " TEXT, " +
@@ -173,7 +176,7 @@ public class Table {
 												DATE + " INTEGER NOT NULL " +
 												" );";
 
-		public static final String TEMP_SYNC = NAME + "_" + "temp_sync";
+		public static final String TEMP_SYNC = _NAME + "_" + "temp_sync";
 	}
 
 }

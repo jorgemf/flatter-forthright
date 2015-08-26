@@ -108,10 +108,18 @@ public class Model {
 	}
 
 	public void parse(Comment comment) {
-		parse(comment, false);
+		parse(comment, false, null);
 	}
 
-	public synchronized void parse(Comment comment, boolean forSyncing) {
+	public void parse(Comment comment, long dateCreated) {
+		parse(comment, false, dateCreated);
+	}
+
+	public void parse(Comment comment, boolean forSyncing) {
+		parse(comment, forSyncing, null);
+	}
+
+	public synchronized void parse(Comment comment, boolean forSyncing, Long dateCreated) {
 		ContentValues val = new ContentValues();
 		Long date;
 		Long conversationId = comment.getConversationId();
@@ -132,6 +140,7 @@ public class Model {
 			val.put(Table.Comment.DISAGREE_VOTES, comment.getDisagreeVotes());
 			date = comment.getDate().getValue();
 			val.put(Table.Comment.DATE, date);
+			val.put(Table.Comment.DATE_CREATED, dateCreated);
 			val.put(Table.Comment.IS_ME, comment.getIsMe());
 			val.put(Table.Comment.VOTE_TYPE, comment.getVoteType());
 			val.put(Table.Comment.USER_VOTE_TYPE, comment.getUserVoteType());
@@ -167,7 +176,8 @@ public class Model {
 		parse(conversation, null, null);
 	}
 
-	public synchronized void parse(@Nonnull Long conversationId, @Nonnull Long lastMessageDate,
+	public synchronized void parse(@Nonnull Long conversationId,
+								   @Nonnull Long lastMessageDate,
 								   @Nonnull String lastMessage) {
 		ContentValues val = new ContentValues();
 		val.put(Table.Conversation.ID, conversationId);
@@ -176,7 +186,8 @@ public class Model {
 		conversationsList.add(val);
 	}
 
-	public synchronized void parse(Conversation conversation, Long lastMessageDate,
+	public synchronized void parse(Conversation conversation,
+								   Long lastMessageDate,
 								   String lastMessage) {
 		ContentValues val = new ContentValues();
 

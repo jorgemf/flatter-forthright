@@ -214,7 +214,7 @@ public abstract class AbstractChatFragment
 
 	@Override
 	protected String getOrderString() {
-		return "-" + Table.Comment.DATE;
+		return "date DESC";
 	}
 
 	@Override
@@ -225,10 +225,6 @@ public abstract class AbstractChatFragment
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
 		switch (id) {
-			case LOADER_ITEMS:
-				return new CursorLoader(getActivity(), getUriCursor(), getProjection(), null, null,
-										Integer.toString(getTotalLoaded()));
-			// break
 			case LOADER_CONVERSATION_ID:
 				return new CursorLoader(getActivity(),
 										ConversationsProvider.getUriConversation(conversationId),
@@ -449,6 +445,7 @@ public abstract class AbstractChatFragment
 				}
 				f.setTotalLoaded(f.getTotalLoaded() + 1);
 				f.reloadCursor();
+				f.commentsAdapter.notifyItemInserted(f.getTotalLoaded() - 1);
 				f.commentText.setEnabled(true);
 				f.buttonPostComment.setEnabled(true);
 				f.commentText.setText("");
@@ -498,8 +495,9 @@ public abstract class AbstractChatFragment
 			if (conversationId != null && conversationId.equals(nc.getConversationId())) {
 				if (!nc.getIsMe()) {
 					setTotalLoaded(getTotalLoaded() + 1);
+					reloadCursor();
+					commentsAdapter.notifyItemInserted(getTotalLoaded()-1);
 				}
-				reloadCursor();
 				return true;
 			}
 		}

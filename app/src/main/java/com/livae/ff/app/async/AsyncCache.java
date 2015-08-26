@@ -45,23 +45,27 @@ public class AsyncCache implements OnLifeCycleListener {
 	}
 
 	public CustomAsyncTask getTask(LifeCycle lifeCycle, Class<CustomAsyncTask> c) {
-		List<CustomAsyncTask> list = getList(lifeCycle);
-		for (CustomAsyncTask task : list) {
-			if (task.getClass().getCanonicalName().equals(c.getCanonicalName())) {
-				return task;
+		synchronized (this) {
+			List<CustomAsyncTask> list = getList(lifeCycle);
+			for (CustomAsyncTask task : list) {
+				if (task.getClass().getCanonicalName().equals(c.getCanonicalName())) {
+					return task;
+				}
 			}
+			return null;
 		}
-		return null;
 	}
 
 	@Override
 	public void onResume(LifeCycle lifeCycle) {
 		// set all lifecycle in tasks and execute the pending ones
-		final List<CustomAsyncTask> list = getList(lifeCycle);
-		for (CustomAsyncTask task : list) {
-			task.setLifeCycle(lifeCycle);
-			if (task.getStatus() == CustomAsyncTask.STATUS.WAITING) {
-				task.executeWaitingCallback(lifeCycle);
+		synchronized (this) {
+			final List<CustomAsyncTask> list = getList(lifeCycle);
+			for (CustomAsyncTask task : list) {
+				task.setLifeCycle(lifeCycle);
+				if (task.getStatus() == CustomAsyncTask.STATUS.WAITING) {
+					task.executeWaitingCallback(lifeCycle);
+				}
 			}
 		}
 	}
@@ -69,9 +73,11 @@ public class AsyncCache implements OnLifeCycleListener {
 	@Override
 	public void onPause(LifeCycle lifeCycle) {
 		// set lifecycle in tasks as null
-		final List<CustomAsyncTask> list = getList(lifeCycle);
-		for (CustomAsyncTask task : list) {
-			task.setLifeCycle(null);
+		synchronized (this) {
+			final List<CustomAsyncTask> list = getList(lifeCycle);
+			for (CustomAsyncTask task : list) {
+				task.setLifeCycle(null);
+			}
 		}
 	}
 
@@ -83,8 +89,10 @@ public class AsyncCache implements OnLifeCycleListener {
 	@Override
 	public void onCreate(LifeCycle lifeCycle) {
 		// empty list of lifecycle as the object was created for first time
-		final String name = lifeCycle.getClass().getName();
-		cache.remove(name);
+		synchronized (this) {
+			final String name = lifeCycle.getClass().getName();
+			cache.remove(name);
+		}
 	}
 
 	@Override

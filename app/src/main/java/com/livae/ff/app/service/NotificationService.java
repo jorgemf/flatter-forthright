@@ -172,7 +172,6 @@ public class NotificationService extends IntentService {
 			int iImageUri = cursor.getColumnIndex(Table.LocalUser.IMAGE_URI);
 			Intent intent;
 			if (totalComments == 1) {
-				Debug.print(cursor);// TODO
 				String comment = cursor.getString(iComment);
 				String alias = cursor.getString(iAlias);
 				Spannable text = NotificationUtil.makeNotificationLine(alias, comment, "");
@@ -189,6 +188,9 @@ public class NotificationService extends IntentService {
 				String displayName = cursor.getString(iDisplayName);
 				String roomName = cursor.getString(iContactName);
 				String userImageUri = cursor.getString(iImageUri);
+				if(Application.appUser().getUserPhone().equals(phoneNumber)){
+					displayName = roomName;
+				}
 				setCustomization(sound, cursor, builder, iNotificationSound, iNotificationColor,
 								 iNotificationMuted);
 				intent =
@@ -231,6 +233,9 @@ public class NotificationService extends IntentService {
 					String displayName = cursor.getString(iDisplayName);
 					String roomName = cursor.getString(iContactName);
 					String userImageUri = cursor.getString(iImageUri);
+					if(Application.appUser().getUserPhone().equals(phoneNumber)){
+						displayName = roomName;
+					}
 					setCustomization(sound, cursor, builder, iNotificationSound,
 									 iNotificationColor,
 									 iNotificationMuted);

@@ -113,7 +113,6 @@ public class ContactsProvider extends AbstractProvider {
 				c =
 				  qb.query(getReadableDatabase(), select, where, args, Table.LocalUser.PHONE, null,
 						   order);
-				Debug.print(c);
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);

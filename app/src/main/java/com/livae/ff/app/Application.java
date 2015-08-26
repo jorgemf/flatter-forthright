@@ -116,11 +116,11 @@ public class Application extends android.app.Application {
 				String ip = sharedPreferences.getString(Settings.PREFERENCE_API_IP, null);
 				API.changeAPIUrl("http://" + ip + ":8080/_ah/api/");
 			}
-			Stetho.initialize(Stetho.newInitializerBuilder(this)
-									.enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-									.enableWebKitInspector(Stetho.defaultInspectorModulesProvider
-																	(this))
-									.build());
+//			Stetho.initialize(Stetho.newInitializerBuilder(this)
+//									.enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+//									.enableWebKitInspector(Stetho.defaultInspectorModulesProvider
+//																	(this))
+//									.build());
 		}
 		//debug
 		refWatcher = LeakCanary.install(this);

@@ -36,7 +36,8 @@ public class ConversationsSyncAdapter extends AbstractThreadedSyncAdapter {
 		contentResolver = context.getContentResolver();
 	}
 
-	public ConversationsSyncAdapter(Context context, boolean autoInitialize,
+	public ConversationsSyncAdapter(Context context,
+									boolean autoInitialize,
 									boolean allowParallelSyncs) {
 		super(context, autoInitialize, allowParallelSyncs);
 		contentResolver = context.getContentResolver();
@@ -68,7 +69,7 @@ public class ConversationsSyncAdapter extends AbstractThreadedSyncAdapter {
 				commentPosted = request.execute();
 				commentPosted.setIsMe(true);
 				Model model = Application.model();
-				model.parse(commentPosted);
+				model.parse(commentPosted, comment.date);
 				model.save();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -90,12 +91,14 @@ public class ConversationsSyncAdapter extends AbstractThreadedSyncAdapter {
 			int iConversationId = cursor.getColumnIndex(Table.CommentSync.CONVERSATION_ID);
 			int iAlias = cursor.getColumnIndex(Table.CommentSync.USER_ALIAS);
 			int iComment = cursor.getColumnIndex(Table.CommentSync.COMMENT);
+			int iDate = cursor.getColumnIndex(Table.CommentSync.DATE);
 			do {
 				CommentSync comment = new CommentSync();
 				comment.id = cursor.getLong(iId);
 				comment.conversationId = cursor.getLong(iConversationId);
 				comment.comment = cursor.getString(iComment);
 				comment.alias = cursor.getString(iAlias);
+				comment.date = cursor.getLong(iDate);
 				comments.add(comment);
 			} while (cursor.moveToNext());
 		}
@@ -112,6 +115,8 @@ public class ConversationsSyncAdapter extends AbstractThreadedSyncAdapter {
 		String comment;
 
 		String alias;
+
+		long date;
 	}
 
 }

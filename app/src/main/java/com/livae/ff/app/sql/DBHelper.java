@@ -13,7 +13,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	private static final String NAME = "ff.sqlite";
 
-	private static final int VERSION = 4;
+	private static final int VERSION = 5;
 
 	private static DBHelper instance;
 
@@ -54,7 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		switch (oldVersion) {
 			case 1:
 				// sorry users for losing your old comments
-				sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Comment.NAME);
+				sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Comment._NAME);
 				sqLiteDatabase.execSQL(Table.Comment.CREATE_SQL);
 			case 2:
 				// bug in public conversations
@@ -71,7 +71,10 @@ public class DBHelper extends SQLiteOpenHelper {
 									   Table.Conversation.NOTIFICATION_COLOR + " INTEGER, " +
 									   Table.Conversation.NOTIFICATION_SOUND + " TEXT," +
 									   Table.Conversation.NOTIFICATION_MUTED + " INTEGER ;");
-			case 4: // current version
+			case 4:
+				sqLiteDatabase.execSQL("ALTER TABLE " + Table.Comment._NAME + " ADD " +
+									   Table.Comment.DATE_CREATED + " INTEGER ;");
+			case 5: // current version
 		}
 	}
 
@@ -89,8 +92,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	private void clearData(SQLiteDatabase sqLiteDatabase) {
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.LocalUser._NAME);
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Conversation._NAME);
-		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Comment.NAME);
-		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.CommentSync.NAME);
+		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Comment._NAME);
+		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.CommentSync._NAME);
 		onCreate(sqLiteDatabase);
 	}
 }

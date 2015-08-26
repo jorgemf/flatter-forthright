@@ -3,6 +3,7 @@ package com.livae.ff.app.ui.adapter;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,12 +29,13 @@ public class CommentsAdapter extends CursorAdapter<CommentViewHolder> {
 
 	public static final String[] PROJECTION =
 	  {Table.Comment.T_ID + " AS " + BaseColumns._ID, Table.Comment.DATE,
-	   Table.Comment.CONVERSATION_ID, Table.Comment.USER_ANONYMOUS_ID, Table.Comment.USER_ALIAS,
-	   Table.Comment.IS_ME, Table.Comment.COMMENT, Table.Comment.AGREE_VOTES,
-	   Table.Comment.DISAGREE_VOTES, Table.Comment.USER_VOTE_TYPE, Table.Comment.VOTE_TYPE,
-	   Table.Comment.USER_MARK, Table.Comment.TIMES_FLAGGED, Table.Comment.TIMES_FLAGGED_ABUSE,
-	   Table.Comment.TIMES_FLAGGED_INSULT, Table.Comment.TIMES_FLAGGED_LIE,
-	   Table.Comment.TIMES_FLAGGED_OTHER, Table.CommentSync.TEMP_SYNC};
+	   Table.Comment.DATE_CREATED, Table.Comment.CONVERSATION_ID, Table.Comment.USER_ANONYMOUS_ID,
+	   Table.Comment.USER_ALIAS, Table.Comment.IS_ME, Table.Comment.COMMENT,
+	   Table.Comment.AGREE_VOTES, Table.Comment.DISAGREE_VOTES, Table.Comment.USER_VOTE_TYPE,
+	   Table.Comment.VOTE_TYPE, Table.Comment.USER_MARK, Table.Comment.TIMES_FLAGGED,
+	   Table.Comment.TIMES_FLAGGED_ABUSE, Table.Comment.TIMES_FLAGGED_INSULT,
+	   Table.Comment.TIMES_FLAGGED_LIE, Table.Comment.TIMES_FLAGGED_OTHER,
+	   Table.CommentSync.TEMP_SYNC};
 
 	private static final int COMMENT_PUBLIC_ME = 1;
 
@@ -48,6 +50,8 @@ public class CommentsAdapter extends CursorAdapter<CommentViewHolder> {
 	private int iId;
 
 	private int iDate;
+
+	private int iDateCreated;
 
 	private int iUserAnonymousId;
 
@@ -124,59 +128,14 @@ public class CommentsAdapter extends CursorAdapter<CommentViewHolder> {
 	}
 
 	@Override
-	public CommentViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
-		View view = null;
-		switch (type) {
-			case COMMENT_PRIVATE_ME:
-				view = layoutInflater.inflate(R.layout.item_comment_private_mine, viewGroup,
-											  false);
-				break;
-			case COMMENT_PRIVATE_OTHERS:
-				view =
-				  layoutInflater.inflate(R.layout.item_comment_private_others, viewGroup, false);
-				break;
-			case COMMENT_PUBLIC_ME:
-				view = layoutInflater.inflate(R.layout.item_comment_public_mine, viewGroup, false);
-				break;
-			case COMMENT_PUBLIC_OTHERS:
-				view =
-				  layoutInflater.inflate(R.layout.item_comment_public_others, viewGroup, false);
-				break;
-			case COMMENT_PUBLIC_USER:
-				view = layoutInflater.inflate(R.layout.item_comment_public_user, viewGroup, false);
-				break;
-		}
-		return new CommentViewHolder(view, commentClickListener);
-	}
-
-	@Override
-	public int getItemViewType(int position) {
+	public long getItemId(int position) {
 		Cursor cursor = getCursor();
-		cursor.moveToPosition(position);
-		boolean isMe = !cursor.isNull(iIsMe) && cursor.getInt(iIsMe) != 0;
-		boolean isTheUser = cursor.isNull(iUserAnonymousId);
-		switch (chatType) {
-			case FLATTER:
-			case FORTHRIGHT:
-				if (isMe) {
-					return COMMENT_PUBLIC_ME;
-				} else if (isTheUser) {
-					return COMMENT_PUBLIC_USER;
-				} else {
-					return COMMENT_PUBLIC_OTHERS;
-				}
-//				break;
-			case PRIVATE:
-			case PRIVATE_ANONYMOUS:
-			case SECRET:
-				if (isMe) {
-					return COMMENT_PRIVATE_ME;
-				} else {
-					return COMMENT_PRIVATE_OTHERS;
-				}
-//				break;
+		if (hasStableIds() && cursor != null && !cursor.isClosed()) {
+			if (cursor.moveToPosition(position)) {
+				return cursor.getLong(iDateCreated);
+			}
 		}
-		return super.getItemViewType(position);
+		return RecyclerView.NO_ID;
 	}
 
 	@Override
@@ -230,6 +189,7 @@ public class CommentsAdapter extends CursorAdapter<CommentViewHolder> {
 	public void findIndexes(Cursor cursor) {
 		iId = cursor.getColumnIndexOrThrow(Table.Comment.ID);
 		iDate = cursor.getColumnIndexOrThrow(Table.Comment.DATE);
+		iDateCreated = cursor.getColumnIndexOrThrow("date");
 		iUserAnonymousId = cursor.getColumnIndexOrThrow(Table.Comment.USER_ANONYMOUS_ID);
 		iUserAlias = cursor.getColumnIndexOrThrow(Table.Comment.USER_ALIAS);
 		iIsMe = cursor.getColumnIndexOrThrow(Table.Comment.IS_ME);
@@ -251,6 +211,62 @@ public class CommentsAdapter extends CursorAdapter<CommentViewHolder> {
 	public void setCursor(Cursor cursor) {
 		commentVoteTypeHashMap.clear();
 		super.setCursor(cursor);
+	}
+
+	@Override
+	public CommentViewHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
+		View view = null;
+		switch (type) {
+			case COMMENT_PRIVATE_ME:
+				view = layoutInflater.inflate(R.layout.item_comment_private_mine, viewGroup,
+											  false);
+				break;
+			case COMMENT_PRIVATE_OTHERS:
+				view =
+				  layoutInflater.inflate(R.layout.item_comment_private_others, viewGroup, false);
+				break;
+			case COMMENT_PUBLIC_ME:
+				view = layoutInflater.inflate(R.layout.item_comment_public_mine, viewGroup, false);
+				break;
+			case COMMENT_PUBLIC_OTHERS:
+				view =
+				  layoutInflater.inflate(R.layout.item_comment_public_others, viewGroup, false);
+				break;
+			case COMMENT_PUBLIC_USER:
+				view = layoutInflater.inflate(R.layout.item_comment_public_user, viewGroup, false);
+				break;
+		}
+		return new CommentViewHolder(view, commentClickListener);
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		Cursor cursor = getCursor();
+		cursor.moveToPosition(position);
+		boolean isMe = !cursor.isNull(iIsMe) && cursor.getInt(iIsMe) != 0;
+		boolean isTheUser = cursor.isNull(iUserAnonymousId);
+		switch (chatType) {
+			case FLATTER:
+			case FORTHRIGHT:
+				if (isMe) {
+					return COMMENT_PUBLIC_ME;
+				} else if (isTheUser) {
+					return COMMENT_PUBLIC_USER;
+				} else {
+					return COMMENT_PUBLIC_OTHERS;
+				}
+//				break;
+			case PRIVATE:
+			case PRIVATE_ANONYMOUS:
+			case SECRET:
+				if (isMe) {
+					return COMMENT_PRIVATE_ME;
+				} else {
+					return COMMENT_PRIVATE_OTHERS;
+				}
+//				break;
+		}
+		return super.getItemViewType(position);
 	}
 
 	private void bindCommentFlag(CommentViewHolder holder, Cursor cursor) {
