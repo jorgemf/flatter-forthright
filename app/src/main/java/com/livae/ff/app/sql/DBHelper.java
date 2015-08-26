@@ -68,12 +68,14 @@ public class DBHelper extends SQLiteOpenHelper {
 			case 3:
 				// added notification colors and sounds
 				sqLiteDatabase.execSQL("ALTER TABLE " + Table.Conversation._NAME + " ADD " +
-									   Table.Conversation.NOTIFICATION_COLOR + " INTEGER, " +
-									   Table.Conversation.NOTIFICATION_SOUND + " TEXT," +
-									   Table.Conversation.NOTIFICATION_MUTED + " INTEGER ;");
+									   Table.Conversation.NOTIFICATION_COLOR + " INTEGER ");
+				sqLiteDatabase.execSQL("ALTER TABLE " + Table.Conversation._NAME + " ADD " +
+									   Table.Conversation.NOTIFICATION_SOUND + " TEXT ");
+				sqLiteDatabase.execSQL("ALTER TABLE " + Table.Conversation._NAME + " ADD " +
+									   Table.Conversation.NOTIFICATION_MUTED + " INTEGER ");
 			case 4:
 				sqLiteDatabase.execSQL("ALTER TABLE " + Table.Comment._NAME + " ADD " +
-									   Table.Comment.DATE_CREATED + " INTEGER ;");
+									   Table.Comment.DATE_CREATED + " INTEGER");
 			case 5: // current version
 		}
 	}

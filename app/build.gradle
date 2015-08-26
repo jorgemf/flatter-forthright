@@ -31,7 +31,7 @@ android {
 		applicationId "com.livae.ff.app"
 		minSdkVersion 16
 		targetSdkVersion 23
-		versionCode 14
+		versionCode 15
 		versionName "1.0"
 		buildConfigField "int", "BUILD_DATE", getBuildDate()
 		buildConfigField "boolean", "DEV", "false"
