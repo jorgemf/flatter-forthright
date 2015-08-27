@@ -92,7 +92,7 @@ public class VideoTest {
 		// female friend flatterer
 		// 26 girl 3
 		"you are the best friend\nI loooveee you too much. BFF",
-		"  ❤❤❤    ❤❤❤\n❤❤❤❤❤❤❤❤\n   ❤❤❤❤❤❤❤\n       ❤❤❤❤❤\n          ❤❤❤\n            ❤\n",
+		"  ❤❤❤    ❤❤❤\n❤❤❤❤❤❤❤❤\n   ❤❤❤❤❤❤❤\n        ❤❤❤❤❤\n           ❤❤❤\n               ❤\n",
 		// 28 girl
 		"\uD83D\uDE0D\uD83D\uDE0D\uD83D\uDE0D\uD83D\uDE0D\uD83D\uDE0D", "\uD83D\uDC8B\uD83D\uDE18",
 		// 30 me
@@ -107,7 +107,7 @@ public class VideoTest {
 		// 34 me
 		"Here I am", "I love you since long time ago",
 		// 36 girl
-		"Sorry, but I got a boyfriend recently", "Don't tell everybody",
+		"Sorry, but I got a boyfriend recently", "Don't tell anyone",
 		// 38 me
 		"I am late",
 		// 39 girl
@@ -123,19 +123,96 @@ public class VideoTest {
 		"Your secret lover \uD83D\uDE09"};
 
 	private static final String[] aliasEnglish =
-	  {"Priest", "Football star", "Terminator", "BFF", "half heart", "Sweet heart"};
+	  {"Priest", "Football star", "Terminator", "BFF", "Half heart", "Sweet heart"};
 
 	private static final String[] usersNamesSpanish =
-	  {"Noah Jones", "Isabella  Rodriguez", "James Lee", "Olivia West", "Paul Smith",
-	   "Sophia Moore", "William White", "Linda Allen", "Liam Taylor", "Emily Miller"};
+	  {"Alejandro García", "Isabel Gonzalez", "Juan Lopez", "Olivia Fernandez", "Pedro Martínez",
+	   "Sofia Torres", "Tomas Alonso", "Linda Suarez", "Lorenzo Vazquez", "Elena Sánchez"};
 
 	private static final String[] textSpanish =
-	  {"Te veo luego", "Sabes donde está?", "Ta lueg :)", "jajaja", "pasalo bien!", "", "", "", "",
-	   "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-	   "", "", "", "", "", "",};
+	  // private conversations initial
+	  {
+		// 0 girl 9
+		"jajaja",
+		// 1 guy 8
+		"Si! Te entiendo",
+		// 2 girl 7
+		"Ciao \uD83D\uDE0A",
+		// 3 guy 6
+		"Diviertete!",
+		// 4 anonymous girl 5
+		"Me parece bien",
+		// 5 guy 4
+		"Esta app es alucinante, estaba hablando con una chica y...",
+		// male friend conversation
+		// 6 guy 2
+		"\uD83C\uDCCF\n\uD83D\uDC7E\n\uD83D\uDE02",
+		// 7 me
+		"Cómo fue tu viaje?\n\uD83D\uDE80\uD83D\uDE80",
+		// 8 guy 2
+		"\uD83D\uDE0E\nFuimos al sitio que me dijistes y era increible " +
+		"\n\uD83C\uDF7B\uD83C\uDF78", "Te mando luego unas fotos", "\uD83D\uDE06",
+		// 11 me
+		"\uD83D\uDC4D",
+		// male friend forthright
+		// 12 guy 6
+		"esa camisa...",
+		// 13 me
+		"tio, somos tus amigos y te queremos pero esa camisa tiene que acabar en la basura",
+		"asusta a todas las chicas del bar",
+		// 15 guy 8
+		"al final alguien dijo lo que todos pensabamos", "gracias en nombre de la humanidad",
+		// 17 guy 2
+		"\uD83D\uDE31",
+
+		// male friend conversation
+		// 18 guy 2
+		"Qué estas haciendo? Estaba pensando en ir al bar esta noche",
+		// 19 me
+		"Estaba pensando en ella",
+		// 20 guy 2
+		"Otra vez?? \uD83D\uDE34",
+		// 21 me
+		"Debería decirla algo",
+		// 22 guy 2
+		"la misma historia de siempre...", "HAZLO!!", "AHORA!!!",
+		// 25 me
+		"ok",
+		// female friend flatterer
+		// 26 girl 3
+		"Eres la mejor amiga\nTQM",
+		"  ❤❤❤    ❤❤❤\n❤❤❤❤❤❤❤❤\n   ❤❤❤❤❤❤❤\n        ❤❤❤❤❤\n           ❤❤❤\n               ❤\n",
+		// 28 girl
+		"\uD83D\uDE0D\uD83D\uDE0D\uD83D\uDE0D\uD83D\uDE0D\uD83D\uDE0D", "\uD83D\uDC8B\uD83D\uDE18",
+		// 30 me
+		"Creo que estoy enamorado de ti",
+		// 31 girl
+		"Qué?!",
+		// 32
+		"Necesitaba decir como me sentia",
+		// 33 the girl
+		"Mejor hablame en privado",
+		// female friend private anonymous
+		// 34 me
+		"Aqui estoy", "Tengo sentimientos hacia ti desde hace un tiempo",
+		// 36 girl
+		"Lo siento, pero tengo novio desde hace poco", "Por favor no lo vayas contando",
+		// 38 me
+		"Llego tarde",
+		// 39 girl
+		"Un poco",
+		// 40 me
+		"Bueno...", "Al menos ya lo solté",
+		// new private conversation
+		// 42 anom girl
+		"Hola",
+		// 43 me
+		"Hola", "Quien eres?",
+		// 45 anom girl
+		"Tu amante secreta \uD83D\uDE09"};
 
 	private static final String[] aliasSpanish =
-	  {"Predicador", "superestrella", "Terminator", "Best friend", "corazón vacio", "dulce"};
+	  {"Predicador", "Superestrella", "Terminator", "Best friend", "Corazón vacio", "Dulce"};
 
 	private static final long[] PHONES =
 	  {785639L, 757392L, 753286L, 799438L, 711204L, 784585L, 765890L, 712943L, 749598L, 712534L};
@@ -174,6 +251,7 @@ public class VideoTest {
 			PRIVATE = "Privado";
 		} else {
 			userNames = usersNamesEnglish;
+
 			text = textEnglish;
 			alias = aliasEnglish;
 			FLATTERER = "Flatterer";
@@ -389,7 +467,7 @@ public class VideoTest {
 		writeComment(context, comments[15]);
 		writeComment(context, comments[16]);
 		writeComment(context, comments[17]);
-		sleep(1600);
+		sleep(1000);
 		device.pressBack();
 		device.pressBack();
 
@@ -463,8 +541,9 @@ public class VideoTest {
 			typeText("comment_text", comment.comment);
 			pressId("button_post_comment");
 			addComment(context, comment);
-		} else {
 			sleep(comment.comment.length() * 30 + 200);
+		} else {
+			sleep(comment.comment.length() * 30 + 300);
 			addComment(context, comment);
 			sleep(comment.comment.length() * 30 + 500);
 		}
@@ -516,9 +595,8 @@ public class VideoTest {
 		UiSelector selector = new UiSelector().resourceId(PENSAMIENTOS_PACKAGE + ":id/" + resId);
 		UiObject uiObject = device.findObject(selector);
 		for (int i = 1; i < text.length(); i++) {
-			// TODO
-//			uiObject.setText(text.substring(0, i));
-//			sleep(50 + (int) (Math.random() * 20 ));
+			uiObject.setText(text.substring(0, i));
+			sleep(50 + (int) (Math.random() * 20));
 		}
 		uiObject.setText(text);
 		sleep(50 + (int) (Math.random() * 20));

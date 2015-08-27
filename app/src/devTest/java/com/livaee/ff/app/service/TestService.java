@@ -11,7 +11,6 @@ import com.livae.ff.app.AppUser;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.api.Model;
 import com.livae.ff.app.provider.ContactsProvider;
-import com.livae.ff.app.receiver.CloudMessagesReceiver;
 import com.livae.ff.app.receiver.NotificationReceiver;
 import com.livae.ff.app.settings.Chats;
 import com.livae.ff.app.sql.DBHelper;
@@ -95,18 +94,13 @@ public class TestService extends IntentService {
 						model.parse(notificationComment);
 						model.save();
 					} else {
-						Intent originalIntent = new Intent();
-						originalIntent.putExtra("t", Constants.PushNotificationType.COMMENT.name
-																							  ());
-
 						final Gson gson = new GsonBuilder().create();
-						originalIntent.putExtra("m", gson.toJson(notificationComment));
-						originalIntent.setAction("com.google.android.c2dm.intent.RECEIVE");
-						originalIntent.putExtra("message_type", "gcm");
-						Intent intentNotification = new Intent(NotificationReceiver.INTENT_ACTION);
-						intentNotification.putExtra(CloudMessagesReceiver.EXTRA_ORIGINAL_INTENT,
-													originalIntent);
-						sendOrderedBroadcast(intentNotification, null);
+						Intent gcmIntent = new Intent(NotificationReceiver.INTENT_ACTION);
+						gcmIntent.putExtra("t", Constants.PushNotificationType.COMMENT.name());
+						gcmIntent.putExtra("m", gson.toJson(notificationComment));
+						gcmIntent.setAction("com.google.android.c2dm.intent.RECEIVE");
+						gcmIntent.putExtra("message_type", "gcm");
+						sendOrderedBroadcast(gcmIntent, null);
 					}
 					Log.i(LOG_TAG, "post comment: " + comment.comment);
 					break;

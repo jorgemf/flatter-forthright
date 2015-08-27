@@ -445,7 +445,6 @@ public abstract class AbstractChatFragment
 				}
 				f.setTotalLoaded(f.getTotalLoaded() + 1);
 				f.reloadCursor();
-				f.commentsAdapter.notifyItemInserted(f.getTotalLoaded() - 1);
 				f.commentText.setEnabled(true);
 				f.buttonPostComment.setEnabled(true);
 				f.commentText.setText("");
@@ -493,10 +492,10 @@ public abstract class AbstractChatFragment
 		if (notification instanceof NotificationComment) {
 			NotificationComment nc = (NotificationComment) notification;
 			if (conversationId != null && conversationId.equals(nc.getConversationId())) {
-				if (!nc.getIsMe()) {
+				//noinspection PointlessBooleanExpression,ConstantConditions
+				if (!nc.getIsMe() || BuildConfig.TEST) {
 					setTotalLoaded(getTotalLoaded() + 1);
 					reloadCursor();
-					commentsAdapter.notifyItemInserted(getTotalLoaded()-1);
 				}
 				return true;
 			}

@@ -145,4 +145,48 @@ public class DeviceUtils {
 		}
 		return version;
 	}
+
+//	TODO https://developer.android.com/preview/features/runtime-permissions.html
+//
+//	public static boolean requestPermission(Activity activity, String[] permissions) {
+//
+//		if (checkSelfPermission(context, Manifest.permission.READ_CONTACTS) !=
+//			PackageManager.PERMISSION_GRANTED) {
+//
+//			// Should we show an explanation?
+//			if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+//				// Explain to the user why we need to read the contacts
+//			}
+//
+//			requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
+//							   MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+//
+//			// MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+//			// app-defined int constant
+//		}
+//
+//		return false;
+//	}
+//	@Override
+//	public void onRequestPermissionsResult(int requestCode,
+//										   String permissions[], int[] grantResults) {
+//		switch (requestCode) {
+//			case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+//				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//
+//					// permission was granted, yay! do the
+//					// calendar task you need to do.
+//
+//				} else {
+//
+//					// permission denied, boo! Disable the
+//					// functionality that depends on this permission.
+//				}
+//				return;
+//			}
+//
+//			// other 'switch' lines to check for other
+//			// permissions this app might request
+//		}
+//	}
 }

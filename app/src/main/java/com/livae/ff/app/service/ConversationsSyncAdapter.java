@@ -14,6 +14,7 @@ import android.util.Log;
 import com.livae.ff.api.ff.Ff;
 import com.livae.ff.api.ff.model.Comment;
 import com.livae.ff.api.ff.model.Text;
+import com.livae.ff.app.Analytics;
 import com.livae.ff.app.Application;
 import com.livae.ff.app.api.API;
 import com.livae.ff.app.api.Model;
@@ -71,13 +72,15 @@ public class ConversationsSyncAdapter extends AbstractThreadedSyncAdapter {
 				Model model = Application.model();
 				model.parse(commentPosted, comment.date);
 				model.save();
+				final Uri uriCommentSync = ConversationsProvider.getUriCommentSync(comment.id);
+				contentResolver.delete(uriCommentSync, null, null);
+				Uri uriConversation =
+				  ConversationsProvider.getUriConversation(comment.conversationId);
+				contentResolver.notifyChange(uriConversation, null);
 			} catch (IOException e) {
+				Analytics.logAndReport(e);
 				e.printStackTrace();
 			}
-			final Uri uriCommentSync = ConversationsProvider.getUriCommentSync(comment.id);
-			contentResolver.delete(uriCommentSync, null, null);
-			Uri uriConversation = ConversationsProvider.getUriConversation(comment.conversationId);
-			contentResolver.notifyChange(uriConversation, null);
 		}
 	}
 

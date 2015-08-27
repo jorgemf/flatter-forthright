@@ -56,12 +56,16 @@ public abstract class AbstractActivity extends AppCompatActivity implements Life
 			if (toolbar != null) {
 				sharedElements.add(new Pair<>((View) toolbar, "toolbar"));
 			}
-			//noinspection unchecked
-			Pair<View, String>[] pairs = new Pair[sharedElements.size()];
-			pairs = sharedElements.toArray(pairs);
-			//noinspection unchecked
-			options = ActivityOptions.makeSceneTransitionAnimation(activity, pairs);
-			activity.startActivity(intent, options.toBundle());
+			if (sharedElements.size() > 0) {
+				//noinspection unchecked
+				Pair<View, String>[] pairs = new Pair[sharedElements.size()];
+				pairs = sharedElements.toArray(pairs);
+				//noinspection unchecked
+				options = ActivityOptions.makeSceneTransitionAnimation(activity, pairs);
+				activity.startActivity(intent, options.toBundle());
+			} else {
+				activity.startActivity(intent);
+			}
 		} else {
 			activity.startActivity(intent);
 		}

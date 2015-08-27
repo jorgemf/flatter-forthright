@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.IntegerRes;
 
-import com.facebook.stetho.Stetho;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.livae.ff.app.api.API;
@@ -130,8 +129,10 @@ public class Application extends android.app.Application {
 		// sync
 		if (SyncUtils.isAccountRegistered(this)) {
 //			SyncUtils.syncContactsEveryDay();
-			SyncUtils.syncContactsWhenChange();
-			SyncUtils.syncContactsNow();
+			if(!BuildConfig.DEBUG) {
+				SyncUtils.syncContactsWhenChange();
+				SyncUtils.syncContactsNow();
+			}
 			SyncUtils.syncConversationsNow();
 			SyncUtils.syncCommentsWhenNetwork();
 		}

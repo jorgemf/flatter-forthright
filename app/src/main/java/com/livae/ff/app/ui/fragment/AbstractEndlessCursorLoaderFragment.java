@@ -183,6 +183,7 @@ public abstract class AbstractEndlessCursorLoaderFragment<O> extends AbstractFra
 	private void clear() {
 		totalLoaded = 0;
 		dataAdapter.setCursor(null);
+		dataAdapter.notifyDataSetChanged();
 		isLoading = false;
 		isError = false;
 		canLoadMore = true;
@@ -251,7 +252,14 @@ public abstract class AbstractEndlessCursorLoaderFragment<O> extends AbstractFra
 			@Override
 			public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 				Debug.print(data);
+				int items = dataAdapter.getItemCount();
 				dataAdapter.setCursor(data);
+				int newItems = dataAdapter.getItemCount() - items;
+				if (newItems > 0) {
+					dataAdapter.notifyItemRangeInserted(items, newItems);
+				} else if (newItems < 0) {
+					dataAdapter.notifyDataSetChanged();
+				}
 				setEmptyView();
 			}
 
@@ -443,7 +451,14 @@ public abstract class AbstractEndlessCursorLoaderFragment<O> extends AbstractFra
 		switch (objectLoader.getId()) {
 			case LOADER_ITEMS:
 				Debug.print(cursor);
+				int items = dataAdapter.getItemCount();
 				dataAdapter.setCursor(cursor);
+				int newItems = dataAdapter.getItemCount() - items;
+				if (newItems > 0) {
+					dataAdapter.notifyItemRangeInserted(items, newItems);
+				} else if (newItems < 0) {
+					dataAdapter.notifyDataSetChanged();
+				}
 				setEmptyView();
 				hideLoading();
 				isLoading = false;

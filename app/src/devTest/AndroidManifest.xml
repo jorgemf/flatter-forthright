@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.livae.ff.app">
+
+	<application>
+		<service android:name="com.livaee.ff.app.service.TestService"/>
+	</application>
+
+</manifest>

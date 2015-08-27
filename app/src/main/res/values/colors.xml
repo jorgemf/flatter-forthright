@@ -24,8 +24,8 @@
 	<!-- anonymous -->
 	<color name="grey_comment">#cccccc</color>
 	<!-- comments -->
-	<color name="amber_comment">@color/amber_100</color>
-	<color name="purple_comment">@color/purple_100</color>
+	<color name="amber_comment">@color/amber_50</color>
+	<color name="purple_comment">@color/purple_50</color>
 
 	<!-- background -->
 	<color name="white_dark">#EEEEEE</color>
