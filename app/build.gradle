@@ -32,7 +32,7 @@ android {
 		minSdkVersion 16
 		targetSdkVersion 22 // TODO change to 23 when request permissions is done
 		// https://developer.android.com/preview/features/runtime-permissions.html
-		versionCode 15
+		versionCode 16
 		versionName "1.0"
 		buildConfigField "int", "BUILD_DATE", getBuildDate()
 		buildConfigField "boolean", "DEV", "false"
