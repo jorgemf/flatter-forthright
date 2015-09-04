@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 import com.livae.ff.app.sql.Table;
-import com.livae.ff.app.utils.Debug;
 import com.livae.ff.common.Constants;
 
 import java.util.List;
@@ -48,8 +47,7 @@ public class ContactsProvider extends AbstractProvider {
 		uriMatcher.addURI(authority, Table.LocalUser._NAME, URI_CONTACTS);
 		uriMatcher.addURI(authority, Table.LocalUser._NAME + "/#/", URI_CONTACT);
 		uriMatcher.addURI(authority, Table.LocalUser._NAME + "/" + Table.Conversation._NAME +
-									 "/*/",
-						  URI_CONTACTS_CONVERSATIONS);
+									 "/*/", URI_CONTACTS_CONVERSATIONS);
 		return result;
 	}
 

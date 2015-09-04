@@ -49,7 +49,7 @@ public class ChatsPublicFragment extends AbstractFragment
 		if (savedInstanceState != null) {
 			chatType = (Constants.ChatType) savedInstanceState.getSerializable(SAVE_COMMENT_TYPE);
 		}
-		getLoaderManager().initLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
+//		getLoaderManager().initLoader(LOAD_CONTACTS, Bundle.EMPTY, this);
 	}
 
 	@Override

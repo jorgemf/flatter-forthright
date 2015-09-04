@@ -151,7 +151,6 @@ public class ConversationsProvider extends AbstractProvider {
 			case URI_CONVERSATIONS:
 				qb.setTables(Table.Conversation._NAME + " LEFT JOIN " + Table.LocalUser._NAME +
 							 " ON " + Table.Conversation.PHONE + "=" + Table.LocalUser.PHONE);
-				qb.setDistinct(true);
 				c = qb.query(getReadableDatabase(), select, where, args, null, null, order);
 				break;
 			case URI_CONVERSATION_COMMENTS:
@@ -224,7 +223,6 @@ public class ConversationsProvider extends AbstractProvider {
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
-
 		return c;
 	}
 

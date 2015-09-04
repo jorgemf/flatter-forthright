@@ -2,6 +2,7 @@ package com.livae.ff.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.annotation.IntegerRes;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -16,6 +17,7 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class Application extends android.app.Application {
 
@@ -128,13 +130,19 @@ public class Application extends android.app.Application {
 		new TaskWakeup().execute((Void) null);
 		// sync
 		if (SyncUtils.isAccountRegistered(this)) {
-//			SyncUtils.syncContactsEveryDay();
-			if(!BuildConfig.DEBUG) {
-				SyncUtils.syncContactsWhenChange();
-				SyncUtils.syncContactsNow();
-			}
-			SyncUtils.syncConversationsNow();
-			SyncUtils.syncCommentsWhenNetwork();
+			// sync contacts a bit later, so the ui is loaded quick and correctly
+			final Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (!BuildConfig.DEBUG) {
+						SyncUtils.syncContactsWhenChange();
+						SyncUtils.syncContactsNow();
+					}
+					SyncUtils.syncConversationsNow();
+					SyncUtils.syncCommentsWhenNetwork();
+				}
+			}, TimeUnit.SECONDS.toMillis(2));
 		}
 	}
 

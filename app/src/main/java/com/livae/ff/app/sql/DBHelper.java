@@ -13,7 +13,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	private static final String NAME = "ff.sqlite";
 
-	private static final int VERSION = 5;
+	private static final int VERSION = 6;
 
 	private static DBHelper instance;
 
@@ -44,6 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			sqLiteDatabase.execSQL(Table.Conversation.CREATE_SQL);
 			sqLiteDatabase.execSQL(Table.Comment.CREATE_SQL);
 			sqLiteDatabase.execSQL(Table.CommentSync.CREATE_SQL);
+			createIndexes(sqLiteDatabase);
 		} catch (SQLiteException e) {
 			e.printStackTrace();
 		}
@@ -76,7 +77,9 @@ public class DBHelper extends SQLiteOpenHelper {
 			case 4:
 				sqLiteDatabase.execSQL("ALTER TABLE " + Table.Comment._NAME + " ADD " +
 									   Table.Comment.DATE_CREATED + " INTEGER");
-			case 5: // current version
+			case 5:
+				createIndexes(sqLiteDatabase);
+			case 6: // current version
 		}
 	}
 
@@ -84,6 +87,30 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void onDowngrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 		// no downgrades
 		clearData(sqLiteDatabase);
+	}
+
+	private void createIndexes(SQLiteDatabase sqLiteDatabase) {
+		sqLiteDatabase.execSQL("CREATE INDEX users_phones ON " +
+							   Table.LocalUser._NAME +
+							   "(" + Table.LocalUser.PHONE + ")");
+		sqLiteDatabase.execSQL("CREATE INDEX users_names ON " +
+							   Table.LocalUser._NAME + "(" +
+							   Table.LocalUser.CONTACT_NAME + " COLLATE NOCASE)");
+		sqLiteDatabase.execSQL("CREATE INDEX conversations_phones ON " +
+							   Table.Conversation._NAME + "(" +
+							   Table.Conversation.PHONE + ")");
+		sqLiteDatabase.execSQL("CREATE INDEX conversations_last_access ON " +
+							   Table.Conversation._NAME + "(" +
+							   Table.Conversation.LAST_ACCESS + ")");
+		sqLiteDatabase.execSQL("CREATE INDEX conversations_last_message_date ON " +
+							   Table.Conversation._NAME + "(" +
+							   Table.Conversation.LAST_MESSAGE_DATE + ")");
+		sqLiteDatabase.execSQL("CREATE INDEX comments_date ON " +
+							   Table.Comment._NAME + "(" +
+							   Table.Comment.DATE + ")");
+		sqLiteDatabase.execSQL("CREATE INDEX comments_date_created ON " +
+							   Table.Comment._NAME + "(" +
+							   Table.Comment.DATE_CREATED + ")");
 	}
 
 	private void clearData() {
@@ -96,6 +123,13 @@ public class DBHelper extends SQLiteOpenHelper {
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Conversation._NAME);
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.Comment._NAME);
 		sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Table.CommentSync._NAME);
+		sqLiteDatabase.execSQL("DROP INDEX IF EXISTS users_phones");
+		sqLiteDatabase.execSQL("DROP INDEX IF EXISTS users_names");
+		sqLiteDatabase.execSQL("DROP INDEX IF EXISTS conversations_phones");
+		sqLiteDatabase.execSQL("DROP INDEX IF EXISTS conversations_last_access");
+		sqLiteDatabase.execSQL("DROP INDEX IF EXISTS conversations_last_message_date");
+		sqLiteDatabase.execSQL("DROP INDEX IF EXISTS comments_date");
+		sqLiteDatabase.execSQL("DROP INDEX IF EXISTS comments_date_created");
 		onCreate(sqLiteDatabase);
 	}
 }

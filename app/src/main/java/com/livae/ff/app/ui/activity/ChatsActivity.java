@@ -333,10 +333,10 @@ public class ChatsActivity extends AbstractActivity
 
 			buttonsTranslationStep = getResources().getDimensionPixelSize(R.dimen.space_enormous);
 
-			LoaderManager loaderManager = getSupportLoaderManager();
-			loaderManager.initLoader(LOADER_UNREAD_FLATTER, null, this);
-			loaderManager.initLoader(LOADER_UNREAD_FORTHRIGHT, null, this);
-			loaderManager.initLoader(LOADER_UNREAD_PRIVATE, null, this);
+//			LoaderManager loaderManager = getSupportLoaderManager();
+//			loaderManager.initLoader(LOADER_UNREAD_FLATTER, null, this);
+//			loaderManager.initLoader(LOADER_UNREAD_FORTHRIGHT, null, this);
+//			loaderManager.initLoader(LOADER_UNREAD_PRIVATE, null, this);
 		}
 	}
 

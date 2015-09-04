@@ -21,7 +21,7 @@ public class AsyncCache implements OnLifeCycleListener {
 		cache = new HashMap<>();
 	}
 
-	public static AsyncCache instance() {
+	public static synchronized AsyncCache instance() {
 		if (instance == null) {
 			instance = new AsyncCache();
 		}
@@ -36,67 +36,65 @@ public class AsyncCache implements OnLifeCycleListener {
 		return cache.get(name);
 	}
 
-	protected void taskStarted(CustomAsyncTask task) {
+	protected synchronized void taskStarted(CustomAsyncTask task) {
 		getList(task.getLifeCycle()).add(task);
 	}
 
-	protected void taskFinished(CustomAsyncTask task) {
+	protected synchronized void taskFinished(CustomAsyncTask task) {
 		getList(task.getLifeCycle()).remove(task);
 	}
 
-	public CustomAsyncTask getTask(LifeCycle lifeCycle, Class<CustomAsyncTask> c) {
-		synchronized (this) {
-			List<CustomAsyncTask> list = getList(lifeCycle);
-			for (CustomAsyncTask task : list) {
-				if (task.getClass().getCanonicalName().equals(c.getCanonicalName())) {
-					return task;
-				}
+	public synchronized CustomAsyncTask getTask(LifeCycle lifeCycle, Class<CustomAsyncTask> c) {
+		List<CustomAsyncTask> list = new ArrayList<>();
+		list.addAll(getList(lifeCycle)); // this avoids concurrent modifications with iterator
+		for (CustomAsyncTask task : list) {
+			if (task.getClass().getCanonicalName().equals(c.getCanonicalName())) {
+				return task;
 			}
-			return null;
 		}
+		return null;
 	}
 
 	@Override
-	public void onResume(LifeCycle lifeCycle) {
+	public synchronized void onResume(LifeCycle lifeCycle) {
 		// set all lifecycle in tasks and execute the pending ones
-		synchronized (this) {
-			final List<CustomAsyncTask> list = getList(lifeCycle);
-			for (CustomAsyncTask task : list) {
-				task.setLifeCycle(lifeCycle);
-				if (task.getStatus() == CustomAsyncTask.STATUS.WAITING) {
-					task.executeWaitingCallback(lifeCycle);
-				}
+		List<CustomAsyncTask> list = new ArrayList<>();
+		list.addAll(getList(lifeCycle)); // this avoids concurrent modifications with iterator
+		for (CustomAsyncTask task : list) {
+			//noinspection unchecked
+			task.setLifeCycle(lifeCycle);
+			if (task.getStatus() == CustomAsyncTask.STATUS.WAITING) {
+				//noinspection unchecked
+				task.executeWaitingCallback(lifeCycle);
 			}
 		}
 	}
 
 	@Override
-	public void onPause(LifeCycle lifeCycle) {
+	public synchronized void onPause(LifeCycle lifeCycle) {
 		// set lifecycle in tasks as null
-		synchronized (this) {
-			final List<CustomAsyncTask> list = getList(lifeCycle);
-			for (CustomAsyncTask task : list) {
-				task.setLifeCycle(null);
-			}
+		List<CustomAsyncTask> list = new ArrayList<>();
+		list.addAll(getList(lifeCycle)); // this avoids concurrent modifications with iterator
+		for (CustomAsyncTask task : list) {
+			//noinspection unchecked
+			task.setLifeCycle(null);
 		}
 	}
 
 	@Override
-	public void onDestroy(LifeCycle lifeCycle) {
+	public synchronized void onDestroy(LifeCycle lifeCycle) {
 		// nothing
 	}
 
 	@Override
-	public void onCreate(LifeCycle lifeCycle) {
+	public synchronized void onCreate(LifeCycle lifeCycle) {
 		// empty list of lifecycle as the object was created for first time
-		synchronized (this) {
-			final String name = lifeCycle.getClass().getName();
-			cache.remove(name);
-		}
+		final String name = lifeCycle.getClass().getName();
+		cache.remove(name);
 	}
 
 	@Override
-	public void onRecreate(LifeCycle lifeCycle) {
+	public synchronized void onRecreate(LifeCycle lifeCycle) {
 		// nothing
 	}
 }
