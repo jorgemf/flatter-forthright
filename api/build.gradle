@@ -4,7 +4,6 @@ buildscript {
 	}
 	dependencies {
 		classpath 'com.google.appengine:gradle-appengine-plugin:1.9.24'
-		// .20 worked well
 	}
 }
 
@@ -25,7 +24,7 @@ dependencies {
 	compile 'com.google.appengine:appengine-endpoints:1.9.25'
 	compile 'com.google.appengine:appengine-endpoints-deps:1.9.25'
 	compile 'javax.servlet:servlet-api:2.5'
-	compile 'com.googlecode.objectify:objectify:5.1.6'
+	compile 'com.googlecode.objectify:objectify:5.1.7'
 	compile 'com.ganyo:gcm-server:1.0.2'
 	testCompile 'com.google.appengine:appengine-api-labs:1.9.25'
 	testCompile 'com.google.appengine:appengine-api-stubs:1.9.25'

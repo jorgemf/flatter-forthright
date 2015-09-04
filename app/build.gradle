@@ -32,7 +32,7 @@ android {
 		minSdkVersion 16
 		targetSdkVersion 22 // TODO change to 23 when request permissions is done
 		// https://developer.android.com/preview/features/runtime-permissions.html
-		versionCode 17
+		versionCode 18
 		versionName "1.1"
 		buildConfigField "int", "BUILD_DATE", getBuildDate()
 		buildConfigField "boolean", "DEV", "false"
@@ -88,11 +88,11 @@ dependencies {
 	compile project(path: ':api', configuration: 'android-endpoints')
 	compile project(':common')
 
-	compile 'com.android.support:support-v4:23.0.0'
-	compile 'com.android.support:appcompat-v7:23.0.0'
-	compile 'com.android.support:recyclerview-v7:23.0.0'
-	compile 'com.android.support:cardview-v7:23.0.0'
-	compile 'com.android.support:design:23.0.0'
+	compile 'com.android.support:support-v4:23.0.1'
+	compile 'com.android.support:appcompat-v7:23.0.1'
+	compile 'com.android.support:recyclerview-v7:23.0.1'
+	compile 'com.android.support:cardview-v7:23.0.1'
+	compile 'com.android.support:design:23.0.1'
 	compile 'com.google.android.gms:play-services-base:7.8.0'
 	compile 'com.google.android.gms:play-services-analytics:7.8.0'
 	compile 'com.google.android.gms:play-services-gcm:7.8.0'
