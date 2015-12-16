@@ -179,7 +179,8 @@ public class SendStatsEmailServlet extends HttpServlet {
 		msgBody += stats.getForthrightMessages() + ", ";
 
 		try {
-			ApiEndpoint.sendEmail(session, "pensamientos@livae.com", subject, msgBody);
+			// TODO calculate stats but do not send email
+			//ApiEndpoint.sendEmail(session, "pensamientos@livae.com", subject, msgBody);
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
