@@ -37,8 +37,6 @@ public abstract class AbstractActivity extends AppCompatActivity implements Life
 
 	private Toolbar toolbar;
 
-	private List<OnLifeCycleListener> onLifeCycleListenerList;
-
 	protected static void startActivity(AbstractActivity activity,
 										Class<? extends AbstractActivity> activityClass,
 										List<Pair<View, String>> sharedElements,

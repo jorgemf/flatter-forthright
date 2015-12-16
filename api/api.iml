@@ -13,21 +13,21 @@
         <option name="JVM_FLAGS">
           <jvmflags>-Ddatastore.backing_store=/tmp/datastore.bin</jvmflags>
         </option>
-        <option name="WAR_DIR" value="/tmp/gradlebuild/flatter-forthright/api/exploded-app" />
+        <option name="WAR_DIR" value="$MODULE_DIR$/../build/flatter-forthright/api/exploded-app" />
         <option name="WEB_APP_DIR" value="$MODULE_DIR$/src/main/webapp" />
         <option name="APPENGINE_SDKROOT" value="$USER_HOME$/.gradle/appengine-sdk/appengine-java-sdk-1.9.25" />
       </configuration>
     </facet>
     <facet type="java-gradle" name="Java-Gradle">
       <configuration>
-        <option name="BUILD_FOLDER_PATH" value="/tmp/gradlebuild/flatter-forthright/api" />
+        <option name="BUILD_FOLDER_PATH" value="$MODULE_DIR$/../build/flatter-forthright/api" />
         <option name="BUILDABLE" value="true" />
       </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
-    <output url="file:///tmp/gradlebuild/flatter-forthright/api/classes/main" />
-    <output-test url="file:///tmp/gradlebuild/flatter-forthright/api/classes/test" />
+    <output url="file://$MODULE_DIR$/../build/flatter-forthright/api/classes/main" />
+    <output-test url="file://$MODULE_DIR$/../build/flatter-forthright/api/classes/test" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
@@ -39,8 +39,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/functionalTest/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
     </content>
-    <content url="file:///tmp/gradlebuild/flatter-forthright/api/generated-source/endpoints/java">
-      <sourceFolder url="file:///tmp/gradlebuild/flatter-forthright/api/generated-source/endpoints/java" isTestSource="false" />
+    <content url="file:///tmp/gradlebuilds/flatter-forthright/api/generated-source/endpoints/java">
+      <sourceFolder url="file:///tmp/gradlebuilds/flatter-forthright/api/generated-source/endpoints/java" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
